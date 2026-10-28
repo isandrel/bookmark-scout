@@ -18,6 +18,23 @@ export function truncateText(text: string, maxChars: number): string {
   return text.length > maxChars ? `${text.slice(0, maxChars)}${ELLIPSIS}` : text;
 }
 
+let graphemeSegmenter: Intl.Segmenter | undefined;
+
+/**
+ * The longest start of `text` of at most `maxLength` UTF-16 units that ends between graphemes, so
+ * an emoji, a flag, or a letter and its accents is never cut in half.
+ */
+export function sliceGraphemes(text: string, maxLength: number): string {
+  if (text.length <= maxLength) return text;
+  graphemeSegmenter ??= new Intl.Segmenter(undefined, { granularity: 'grapheme' });
+  let end = 0;
+  for (const { index, segment } of graphemeSegmenter.segment(text)) {
+    if (index + segment.length > maxLength) break;
+    end = index + segment.length;
+  }
+  return text.slice(0, end);
+}
+
 /** Equal when both serialize to the same JSON; key order counts, as in stored settings. */
 export function isSameJson(left: unknown, right: unknown): boolean {
   return JSON.stringify(left) === JSON.stringify(right);

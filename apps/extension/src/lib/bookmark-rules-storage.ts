@@ -47,12 +47,17 @@ export function reorderBookmarkRules(ids: readonly string[]): Promise<BookmarkRu
   return bookmarkRulesValue.update((current) => orderByIds(current, (rule) => rule.id, ids));
 }
 
-/** Puts a deleted rule back at `index`, unless a rule with its id is there again. */
+/**
+ * Puts a deleted rule back at `index`, unless a rule with its id is there again. Rejects with
+ * `BookmarkRuleLimitError`, writing nothing, when rules added since fill the list: putting it back
+ * would drop the last rule, so the caller keeps the deleted one to try again.
+ */
 export function restoreBookmarkRule(rule: BookmarkRule, index: number): Promise<BookmarkRule[]> {
   return bookmarkRulesValue.update((current) => {
     if (current.some((entry) => entry.id === rule.id)) return current;
+    if (current.length >= MAX_BOOKMARK_RULES) throw new BookmarkRuleLimitError();
     const next = [...current];
     next.splice(Math.min(index, next.length), 0, rule);
-    return next.slice(0, MAX_BOOKMARK_RULES);
+    return next;
   });
 }

@@ -352,15 +352,34 @@ export function BookmarkRulesPanel() {
     });
   };
 
+  /**
+   * Offers Undo for a deleted rule. When rules added since fill the list, putting it back would
+   * drop another rule, so nothing changes: the toast says why and offers Undo again, for once one
+   * is deleted.
+   */
+  const offerRestore = (rule: BookmarkRule, index: number, title: string, failed = false) => {
+    toast.withUndo({
+      title,
+      ...(failed ? { variant: 'destructive' as const } : {}),
+      onUndo: async () => {
+        try {
+          await restoreBookmarkRule(rule, index);
+        } catch (restoreError) {
+          if (!(restoreError instanceof BookmarkRuleLimitError)) {
+            toast.error({ title: t('rules_errorSaveFailed') });
+            return;
+          }
+          const full = t('rules_restoreLimit', [rule.name, formatCount(MAX_BOOKMARK_RULES)]);
+          offerRestore(rule, index, full, true);
+        }
+      },
+    });
+  };
+
   const remove = async (rule: BookmarkRule) => {
     const index = rules.findIndex((entry) => entry.id === rule.id);
     await deleteBookmarkRule(rule.id);
-    toast.withUndo({
-      title: t('rules_deleted', rule.name),
-      onUndo: async () => {
-        await restoreBookmarkRule(rule, index);
-      },
-    });
+    offerRestore(rule, index, t('rules_deleted', rule.name));
   };
 
   return (

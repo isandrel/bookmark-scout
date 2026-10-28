@@ -23,7 +23,14 @@ import {
   restoreSavedSearchInList,
   type SavedSearch,
 } from '@/lib/saved-searches-storage';
-import { SEARCH_SYNTAX_VERSION } from '@/lib/search-query';
+import { buildSearchDocuments } from '@/lib/search-documents';
+import {
+  parseSearchQuery,
+  SEARCH_SYNTAX_VERSION,
+  type SearchSyntaxVersion,
+  upgradeSearchText,
+} from '@/lib/search-query';
+import { searchDocuments } from '../search-results';
 import { readStoredData, STORAGE_ITEMS, seedStored } from './storage-helpers';
 
 const from = new Date(2026, 0, 5);
@@ -126,11 +133,91 @@ describe('saved search query', () => {
     expect(title).toBe(`"${longest.slice(0, SAVED_SEARCH_TEXT_MAX_LENGTH - 2)}"`);
     // Written back as it is now and read again, it is the same search (0.3.5 review: it was lost).
     expect(parseSavedSearchQuery(upgraded)).toEqual(upgraded);
-    // An emoji is never cut in half.
-    const emoji = `a ${'😀'.repeat(SAVED_SEARCH_TEXT_MAX_LENGTH)}`;
+    // An emoji, even one joined from several, is never cut in half.
+    const emoji = `ab ${'👨‍👩‍👧'.repeat(SAVED_SEARCH_TEXT_MAX_LENGTH)}`;
     const cut = legacyTitleSearch(emoji);
     expect(cut.length).toBeLessThanOrEqual(SAVED_SEARCH_TEXT_MAX_LENGTH);
-    expect(cut).toMatch(/^"a (?:😀)+"$/u);
+    expect(cut).toMatch(/^"ab (?:👨‍👩‍👧)+"$/u);
+  });
+
+  it('keeps a search from an older syntax within the limit when the newer one adds quotes', () => {
+    const max = SAVED_SEARCH_TEXT_MAX_LENGTH;
+    const fromVersion1 = (title: string, filters: SavedSearchQuery['filters'] = {}) =>
+      parseSavedSearchQuery({ filters: { ...filters, title }, syntaxVersion: 1, sorting: [] });
+    // Right at the limit in version 1, where OR and (…) were text; quoting them goes past it.
+    const long = `(${'y'.repeat(max - 'cats OR (draft) ()'.length)})`;
+    const atLimit = `cats OR (draft) ${long}`;
+    const library = buildSearchDocuments(
+      [
+        {
+          id: '0',
+          title: '',
+          children: [
+            {
+              id: '1',
+              parentId: '0',
+              title: 'Bookmarks bar',
+              children: [
+                { id: 'all', parentId: '1', title: atLimit, url: 'https://all.test/' },
+                { id: 'cats', parentId: '1', title: 'cats OR (draft)', url: 'https://cats.test/' },
+                { id: 'other', parentId: '1', title: 'Other', url: 'https://other.test/' },
+              ],
+            },
+          ],
+        },
+      ],
+      {},
+    );
+    const found = (text: string, version: SearchSyntaxVersion = SEARCH_SYNTAX_VERSION) =>
+      searchDocuments(library, parseSearchQuery(text, version).query).map(
+        (result) => result.document.id,
+      );
+
+    expect(atLimit).toHaveLength(max);
+    expect(upgradeSearchText(atLimit, 1).length).toBeGreaterThan(max);
+    const upgraded = fromVersion1(atLimit);
+    // The last term is left out, so it finds at least every bookmark it found (0.3.5 review).
+    expect(upgraded).toEqual(query({ title: 'cats "OR" "(draft)"' }));
+    expect(found(atLimit, 1)).toEqual(['all']);
+    expect(found(upgraded?.filters.title ?? '')).toEqual(expect.arrayContaining(['all']));
+    // Stored again and read back, it is the same search instead of being dropped.
+    expect(parseSavedSearchQuery(upgraded)).toEqual(upgraded);
+
+    // One term at the limit keeps its start.
+    const word = `(${'y'.repeat(max - 2)})`;
+    const start = fromVersion1(word)?.filters.title ?? '';
+    expect(start).toHaveLength(max);
+    expect(start).toBe(`"${word.slice(0, max - 2)}"`);
+    expect(parseSavedSearchQuery(fromVersion1(word))).toEqual(fromVersion1(word));
+
+    // An exclusion cannot be shortened without finding less: the search keeps its other filters.
+    const exclusion = `-tag:${'z'.repeat(max - '-tag:)'.length)})`;
+    expect(exclusion).toHaveLength(max);
+    expect(upgradeSearchText(exclusion, 1).length).toBeGreaterThan(max);
+    expect(fromVersion1(exclusion, { url: '/guide' })).toEqual(query({ url: '/guide' }));
+  });
+
+  it('saves search box text past the limit by whole terms, as the search box reads it', () => {
+    const max = SAVED_SEARCH_TEXT_MAX_LENGTH;
+    const words = `${'x'.repeat(max - 10)} "two words here"`;
+    const captured = captureSavedSearchQuery({
+      columnFilters: [
+        { id: 'title', value: { text: words, matches: new Set(['1']) } },
+        { id: 'url', value: `${'u'.repeat(max - 1)}👨‍👩‍👧` },
+      ],
+      sorting: [],
+      currentFolderOnly: false,
+      currentFolderId: null,
+    });
+    const title = captured.filters.title ?? '';
+    expect(title.length).toBeLessThanOrEqual(max);
+    // Cut at the limit it was `"two wor`, an unclosed phrase (0.3.5 review); the phrase that no
+    // longer fits is left out whole, and what is kept reads without a problem.
+    expect(title).toBe('x'.repeat(max - 10));
+    expect(parseSearchQuery(title).diagnostics).toEqual([]);
+    // The address filter keeps its start without cutting the emoji.
+    expect(captured.filters.url).toBe('u'.repeat(max - 1));
+    expect(parseSavedSearchQuery(captured)).toEqual(captured);
   });
 
   it('reads a search saved before OR and parentheses so it finds what it found (R07)', () => {

@@ -12,7 +12,11 @@ import {
   parseBookmarkRules,
   planBookmarkRules,
 } from '@/lib/bookmark-rules';
-import { SEARCH_SYNTAX_VERSION } from '@/lib/search-query';
+import {
+  SEARCH_MAX_QUERY_LENGTH,
+  SEARCH_SYNTAX_VERSION,
+  upgradeSearchText,
+} from '@/lib/search-query';
 import type { BookmarkTreeNode } from '@/types';
 import { appRoot, readConfigToml } from '../config-files';
 
@@ -292,6 +296,38 @@ describe('parseBookmarkRules', () => {
       query: 'domain:github.com',
       syntaxVersion: SEARCH_SYNTAX_VERSION,
     });
+  });
+
+  it('keeps a version 1 rule its upgrade takes past the query limit, shortened and turned off', () => {
+    const max = SEARCH_MAX_QUERY_LENGTH;
+    // Right at the limit in version 1; quoting OR and (…) takes it past.
+    const atLimit = `Repo OR (draft) (${'y'.repeat(max - 'Repo OR (draft) ()'.length)})`;
+    expect(atLimit).toHaveLength(max);
+    expect(upgradeSearchText(atLimit, 1).length).toBeGreaterThan(max);
+    // It was dropped as too long to run (0.3.5 review); now it leaves out its last term, so it
+    // finds at least what it found, and waits to be turned on again because it finds more.
+    const [shortened] = parseBookmarkRules([
+      { ...valid, id: 'long', enabled: true, query: atLimit, syntaxVersion: 1 },
+    ]);
+    expect(shortened).toMatchObject({
+      id: 'long',
+      query: 'Repo "OR" "(draft)"',
+      enabled: false,
+      syntaxVersion: SEARCH_SYNTAX_VERSION,
+    });
+    // Stored again and read back, it is the same rule.
+    expect(parseBookmarkRules([shortened])).toEqual([shortened]);
+    // One that fits after its upgrade keeps its state.
+    const [fits] = parseBookmarkRules([
+      { ...valid, id: 'fits', enabled: true, query: 'Repo OR (draft)', syntaxVersion: 1 },
+    ]);
+    expect(fits).toMatchObject({ enabled: true, query: 'Repo "OR" "(draft)"' });
+    // Only a term that cannot be shortened without finding less: kept whole, too long to run.
+    const exclusion = `-tag:${'z'.repeat(max - '-tag:)'.length)})`;
+    expect(exclusion).toHaveLength(max);
+    expect(
+      parseBookmarkRules([{ ...valid, id: 'whole', query: exclusion, syntaxVersion: 1 }]),
+    ).toEqual([]);
   });
 
   it(`keeps at most ${MAX_BOOKMARK_RULES} rules`, () => {

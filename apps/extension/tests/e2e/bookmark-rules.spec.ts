@@ -593,6 +593,54 @@ test('a full rules list says so instead of dropping the new rule', async ({
   await expect(page.getByRole('dialog', { name: 'New rule' })).toBeVisible();
 });
 
+test('Undo of a deleted rule in a list filled up meanwhile drops no rule, says why, and works once one is deleted', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const seeded = Array.from({ length: maxRules }, (_, n) => ({
+    id: `r${n}`,
+    name: `Rule ${n}`,
+    enabled: false,
+    query: `title:r${n}`,
+    syntaxVersion: 2,
+    addTags: ['x'],
+  }));
+  await writeStored(extensionWorker, STORAGE_ITEMS.bookmarkRules, seeded);
+  await page.goto(`chrome-extension://${extensionId}/options.html?category=maintenance`);
+  const panel = page.getByTestId('bookmark-rules');
+  await expect(panel.getByTestId('bookmark-rule')).toHaveCount(maxRules);
+  const storedIds = async () =>
+    ((await readStored<{ id: string }[]>(extensionWorker, STORAGE_ITEMS.bookmarkRules)) ?? []).map(
+      (rule) => rule.id,
+    );
+  const toastNamed = (title: string) =>
+    toastRegion(page).getByRole('status').filter({ hasText: title });
+
+  await panel.getByRole('button', { name: 'Delete Rule 0' }).click();
+  const deleted = toastNamed('✓ Deleted rule "Rule 0"');
+  await expect(deleted).toBeVisible();
+  // A template fills the place before Undo.
+  await panel.getByRole('button', { name: 'Start from a template' }).click();
+  await page.getByRole('menuitem').first().click();
+  await expect.poll(async () => (await storedIds()).length).toBe(maxRules);
+  const full = await storedIds();
+
+  await deleted.getByRole('button', { name: 'Undo' }).click();
+  const refused = toastNamed(
+    `× Rule "Rule 0" was not put back: you have ${maxRules} rules, the most you can keep. Delete one, then select Undo again.`,
+  );
+  await expect(refused).toBeVisible();
+  // Nothing was dropped to make room (0.3.5 review: the last rule was).
+  expect(await storedIds()).toEqual(full);
+
+  await panel.getByRole('button', { name: 'Delete Rule 1', exact: true }).click();
+  await expect.poll(async () => (await storedIds()).length).toBe(maxRules - 1);
+  await refused.getByRole('button', { name: 'Undo' }).click();
+  await expect.poll(storedIds).toEqual(['r0', ...full.filter((id) => id !== 'r1')]);
+  await expect(panel.getByTestId('bookmark-rule').first()).toContainText('Rule 0');
+});
+
 test('a rule with a folder cannot be saved before the folder path is read', async ({
   extensionId,
   extensionWorker,

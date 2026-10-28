@@ -102,13 +102,17 @@ type FilterCodec = {
 
 const uniqueSorted = (values: string[]) => [...new Set(values)].sort();
 
-const textCodec: FilterCodec = {
+/**
+ * A text filter, stored within `text_max_length` by `fit` so a long one finds at least what it
+ * found instead of being cut mid-word.
+ */
+const textCodec = (fit: (text: string, maxLength: number) => string): FilterCodec => ({
   toStored: (value) => {
-    const text = titleSearchText(value).trim();
-    return text ? text.slice(0, SAVED_SEARCH_TEXT_MAX_LENGTH) : undefined;
+    const text = fit(titleSearchText(value).trim(), SAVED_SEARCH_TEXT_MAX_LENGTH).trim();
+    return text || undefined;
   },
   toTable: (value: string) => value,
-};
+});
 
 const valueListCodec: FilterCodec = {
   toStored: (value) => {
@@ -140,8 +144,10 @@ const dateRangeCodec: FilterCodec = {
 // Table filter column → how it is stored. Filters on other columns are not saved. The order here
 // is the stored key order, so equal queries serialize identically.
 const FILTER_CODECS: Record<keyof SavedSearchFilters, FilterCodec> = {
-  title: textCodec,
-  url: textCodec,
+  // The search box, in the search query language: what it applies, shortened by whole terms.
+  title: textCodec(fitSearchText),
+  // Found anywhere in the address, so its start finds every bookmark the whole text found.
+  url: textCodec(sliceGraphemes),
   type: valueListCodec,
   parentId: valueListCodec,
   domain: valueListCodec,
@@ -167,8 +173,8 @@ const QUOTE = '"';
  * as typed in the title or address. A single plain word reads the same; anything else (several
  * words, a dash, a colon, quotes) becomes one phrase, matched as typed in any field, so no
  * bookmark it found goes missing. A phrase that would not fit `text_max_length` with its quotes
- * keeps its start: a shorter phrase finds every bookmark the whole one found, and the saved
- * search stays readable when it is stored again.
+ * keeps its start (`serializeSearchQueryWithin`): a shorter phrase finds every bookmark the whole
+ * one found, and the saved search stays readable when it is stored again.
  */
 export function legacyTitleSearch(text: string): string {
   const { query, diagnostics } = parseSearchQuery(text);
@@ -183,12 +189,16 @@ export function legacyTitleSearch(text: string): string {
     term.value === text;
   if (plainWord) return text;
   // The language has no escape for a quote, so quotes inside the phrase are dropped.
-  const phrase = text.replaceAll(QUOTE, '');
-  const room = SAVED_SEARCH_TEXT_MAX_LENGTH - QUOTE.length * 2;
-  let kept = phrase.slice(0, room);
-  // Never end on half of a character written as two code units (an emoji).
-  if (kept.length < phrase.length && /[\uD800-\uDBFF]$/u.test(kept)) kept = kept.slice(0, -1);
-  return `${QUOTE}${kept}${QUOTE}`;
+  const phrase: SearchTerm = {
+    kind: 'text',
+    value: text.replaceAll(QUOTE, ''),
+    phrase: true,
+    negate: false,
+  };
+  return serializeSearchQueryWithin(
+    { syntaxVersion: SEARCH_SYNTAX_VERSION, terms: [phrase] },
+    SAVED_SEARCH_TEXT_MAX_LENGTH,
+  );
 }
 
 /**
@@ -205,7 +215,13 @@ function normalizeQuery(query: SavedSearchQuery): SavedSearchQuery {
       value =
         query.syntaxVersion === undefined
           ? legacyTitleSearch(value as string)
-          : upgradeSearchText(value as string, query.syntaxVersion);
+          : upgradeSearchTextWithin(
+              value as string,
+              query.syntaxVersion,
+              SAVED_SEARCH_TEXT_MAX_LENGTH,
+            );
+      // Nothing shorter finds everything it found: no text filter does.
+      if (value === '') continue;
     }
     const normalized = Array.isArray(value) ? uniqueSorted(value) : value;
     Object.assign(filters, { [id]: normalized });

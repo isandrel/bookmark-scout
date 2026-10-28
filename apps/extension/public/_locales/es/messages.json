@@ -9985,6 +9985,10 @@
         "message": "Se eliminó la regla \"$1\"",
         "description": "Toast after deleting a rule; $1 is its name"
     },
+    "rules_restoreLimit": {
+        "message": "No se restauró la regla \"$1\": tienes $2 reglas, el máximo permitido. Elimina una y vuelve a seleccionar Deshacer.",
+        "description": "Toast when Undo cannot put a deleted rule back because the rules list filled up meanwhile; it offers Undo again. $1 is the rule name, $2 the most rules allowed"
+    },
     "rules_copyName": {
         "message": "$1 (copia)",
         "description": "Name of a duplicated rule; $1 is the original name"

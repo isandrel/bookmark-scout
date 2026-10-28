@@ -1,12 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import { buildSearchDocuments, type SearchDocument } from '@/lib/search-documents';
 import {
+  fitSearchText,
   hasSearchOperators,
   parseSearchQuery,
   SEARCH_SYNTAX_VERSION,
   type SearchNode,
+  type SearchQuery,
   searchQueryTerms,
   serializeSearchQuery,
+  serializeSearchQueryWithin,
   upgradeSearchText,
 } from '@/lib/search-query';
 import type { BookmarkTreeNode } from '@/types';
@@ -592,5 +595,77 @@ describe('OR and parentheses (R07)', () => {
       ['d', true],
       ['e', false],
     ]);
+  });
+});
+
+describe('a query kept within a length limit', () => {
+  const graphemes = (text: string) =>
+    [...new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(text)].map(
+      ({ segment }) => segment,
+    );
+  const family = '👨‍👩‍👧';
+  const documents = buildSearchDocuments(
+    tree([
+      bookmark('long', `Notes (${'x'.repeat(40)}) and more`, 'https://notes.test/'),
+      bookmark('cats', 'cats OR dogs (draft)', 'https://pets.test/'),
+      bookmark('family', `${family.repeat(3)} photos`, 'https://photos.test/'),
+      bookmark('other', 'Other', 'https://other.test/'),
+    ]),
+    { cats: { tags: ['pets'] } },
+  );
+  const found = (query: SearchQuery) =>
+    searchDocuments(documents, query).map((result) => result.document.id);
+
+  it('writes a query that fits as it is', () => {
+    const { query } = parseSearchQuery('cats -tag:old (a OR b)');
+    expect(serializeSearchQueryWithin(query, 100)).toBe(serializeSearchQuery(query));
+    expect(serializeSearchQueryWithin(query, serializeSearchQuery(query).length)).toBe(
+      serializeSearchQuery(query),
+    );
+  });
+
+  it('leaves out the last terms, so it finds at least what the whole query found', () => {
+    const { query } = parseSearchQuery('cats OR (draft) dogs -tag:old', 1);
+    const whole = serializeSearchQuery(query);
+    expect(whole).toBe(`cats "OR" "(draft)" dogs -tag:old`);
+    expect(found(query)).toEqual(['cats']);
+    const kept = serializeSearchQueryWithin(query, whole.length - 1);
+    expect(kept).toBe(`cats "OR" "(draft)" dogs`);
+    expect(serializeSearchQueryWithin(query, `cats "OR"`.length + 1)).toBe(`cats "OR"`);
+    for (const limit of [whole.length - 1, 10, 4]) {
+      const fitted = serializeSearchQueryWithin(query, limit);
+      expect(fitted.length).toBeLessThanOrEqual(limit);
+      expect(found(parseSearchQuery(fitted).query)).toEqual(expect.arrayContaining(found(query)));
+    }
+  });
+
+  it('keeps the start of one term found anywhere, never cutting a grapheme', () => {
+    const long = parseSearchQuery(`title:"Notes (${'x'.repeat(40)})"`).query;
+    const start = serializeSearchQueryWithin(long, 20);
+    expect(start).toBe(`title:"Notes (${'x'.repeat(5)}"`);
+    expect(start).toHaveLength(20);
+    expect(found(parseSearchQuery(start).query)).toEqual(['long']);
+
+    const emoji = parseSearchQuery(family.repeat(3)).query;
+    // Room for one family and a half: the half is left out, not cut into its code points.
+    const cut = serializeSearchQueryWithin(emoji, family.length + 2 + family.length / 2);
+    expect(cut).toBe(`"${family}"`);
+    expect(graphemes(cut.slice(1, -1))).toEqual([family]);
+    expect(found(parseSearchQuery(cut).query)).toEqual(['family']);
+  });
+
+  it('fits search box text by whole terms, as typed when it fits', () => {
+    expect(fitSearchText('alpha  beta', 20)).toBe('alpha  beta');
+    // Cutting at 15 would leave -tag:a, which excludes another tag: the term is left out instead.
+    expect(fitSearchText('alpha beta -tag:archived', 15)).toBe('alpha beta');
+    expect(fitSearchText('"two words" three', 13)).toBe('"two words"');
+  });
+
+  it('writes nothing when its only term cannot be shortened without finding less', () => {
+    for (const text of ['-cats', 'tag:pets', 'domain:pets.test', 'folder:Work', 'is:bookmark']) {
+      expect(serializeSearchQueryWithin(parseSearchQuery(text).query, 3)).toBe('');
+    }
+    // A phrase with no room left for any of its text.
+    expect(serializeSearchQueryWithin(parseSearchQuery('cats').query, 2)).toBe('');
   });
 });
