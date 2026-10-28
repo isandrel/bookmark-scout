@@ -9573,6 +9573,10 @@
         "message": "已删除规则“$1”",
         "description": "Toast after deleting a rule; $1 is its name"
     },
+    "rules_restoreLimit": {
+        "message": "未能恢复规则“$1”：你已有 $2 条规则，已达上限。请删除一条，然后再次选择“撤消”。",
+        "description": "Toast when Undo cannot put a deleted rule back because the rules list filled up meanwhile; it offers Undo again. $1 is the rule name, $2 the most rules allowed"
+    },
     "rules_copyName": {
         "message": "$1（副本）",
         "description": "Name of a duplicated rule; $1 is the original name"

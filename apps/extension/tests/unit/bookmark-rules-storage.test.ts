@@ -65,6 +65,30 @@ describe('stored smart rules', () => {
     expect(await ids()).toEqual(['c', 'a', 'b']);
   });
 
+  it('refuses to put a deleted rule back into a full list, losing no rule, and restores it later', async () => {
+    await bookmarkRulesValue.set(
+      Array.from({ length: MAX_BOOKMARK_RULES }, (_, n) => rule(`r${n}`)),
+    );
+    const [deleted] = await bookmarkRulesValue.get();
+    await deleteBookmarkRule('r0');
+    // Another rule takes its place before Undo.
+    await saveBookmarkRule(rule('newer'));
+    const full = await ids();
+    expect(full).toHaveLength(MAX_BOOKMARK_RULES);
+    // Undo used to put it back and silently drop the last rule (0.3.5 review).
+    await expect(restoreBookmarkRule(deleted as BookmarkRule, 0)).rejects.toBeInstanceOf(
+      BookmarkRuleLimitError,
+    );
+    expect(await ids()).toEqual(full);
+    // Once one is deleted, the same Undo puts it back at its place.
+    await deleteBookmarkRule('r1');
+    await restoreBookmarkRule(deleted as BookmarkRule, 0);
+    const restored = await ids();
+    expect(restored).toHaveLength(MAX_BOOKMARK_RULES);
+    expect(restored[0]).toBe('r0');
+    expect(restored).toContain('newer');
+  });
+
   it('duplicates a rule as a new one and edits the copy alone, across a reload (R18)', async () => {
     await saveBookmarkRule(rule('a', { moveTo: { folderId: 'f1', path: 'Work' } }));
     const [original] = await bookmarkRulesValue.get();

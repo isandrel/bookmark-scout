@@ -9985,6 +9985,10 @@
         "message": "Regel „$1“ gelöscht",
         "description": "Toast after deleting a rule; $1 is its name"
     },
+    "rules_restoreLimit": {
+        "message": "Regel „$1“ wurde nicht wiederhergestellt: Sie haben $2 Regeln, mehr sind nicht möglich. Löschen Sie eine und wählen Sie dann erneut Rückgängig.",
+        "description": "Toast when Undo cannot put a deleted rule back because the rules list filled up meanwhile; it offers Undo again. $1 is the rule name, $2 the most rules allowed"
+    },
     "rules_copyName": {
         "message": "$1 (Kopie)",
         "description": "Name of a duplicated rule; $1 is the original name"

@@ -9549,6 +9549,10 @@
         "message": "Aturan \"$1\" dihapus",
         "description": "Toast after deleting a rule; $1 is its name"
     },
+    "rules_restoreLimit": {
+        "message": "Aturan \"$1\" tidak dikembalikan: Anda memiliki $2 aturan, jumlah terbanyak yang dapat disimpan. Hapus satu, lalu pilih Urungkan lagi.",
+        "description": "Toast when Undo cannot put a deleted rule back because the rules list filled up meanwhile; it offers Undo again. $1 is the rule name, $2 the most rules allowed"
+    },
     "rules_copyName": {
         "message": "$1 (salinan)",
         "description": "Name of a duplicated rule; $1 is the original name"

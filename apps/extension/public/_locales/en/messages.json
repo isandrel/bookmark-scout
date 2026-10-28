@@ -9985,6 +9985,10 @@
         "message": "Deleted rule \"$1\"",
         "description": "Toast after deleting a rule; $1 is its name"
     },
+    "rules_restoreLimit": {
+        "message": "Rule \"$1\" was not put back: you have $2 rules, the most you can keep. Delete one, then select Undo again.",
+        "description": "Toast when Undo cannot put a deleted rule back because the rules list filled up meanwhile; it offers Undo again. $1 is the rule name, $2 the most rules allowed"
+    },
     "rules_copyName": {
         "message": "$1 (copy)",
         "description": "Name of a duplicated rule; $1 is the original name"

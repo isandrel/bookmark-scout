@@ -9917,6 +9917,10 @@
         "message": "ルール「$1」を削除しました",
         "description": "Toast after deleting a rule; $1 is its name"
     },
+    "rules_restoreLimit": {
+        "message": "ルール「$1」を元に戻せませんでした。ルールは $2 件あり、これ以上は保存できません。いずれかを削除してから、もう一度「元に戻す」を選択してください。",
+        "description": "Toast when Undo cannot put a deleted rule back because the rules list filled up meanwhile; it offers Undo again. $1 is the rule name, $2 the most rules allowed"
+    },
     "rules_copyName": {
         "message": "$1（コピー）",
         "description": "Name of a duplicated rule; $1 is the original name"
