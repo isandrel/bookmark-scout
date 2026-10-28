@@ -197,6 +197,29 @@ describe('saved search query', () => {
     expect(fromVersion1(exclusion, { url: '/guide' })).toEqual(query({ url: '/guide' }));
   });
 
+  it('saves search box text past the limit by whole terms, as the search box reads it', () => {
+    const max = SAVED_SEARCH_TEXT_MAX_LENGTH;
+    const words = `${'x'.repeat(max - 10)} "two words here"`;
+    const captured = captureSavedSearchQuery({
+      columnFilters: [
+        { id: 'title', value: { text: words, matches: new Set(['1']) } },
+        { id: 'url', value: `${'u'.repeat(max - 1)}👨‍👩‍👧` },
+      ],
+      sorting: [],
+      currentFolderOnly: false,
+      currentFolderId: null,
+    });
+    const title = captured.filters.title ?? '';
+    expect(title.length).toBeLessThanOrEqual(max);
+    // Cut at the limit it was `"two wor`, an unclosed phrase (0.3.5 review); the phrase that no
+    // longer fits is left out whole, and what is kept reads without a problem.
+    expect(title).toBe('x'.repeat(max - 10));
+    expect(parseSearchQuery(title).diagnostics).toEqual([]);
+    // The address filter keeps its start without cutting the emoji.
+    expect(captured.filters.url).toBe('u'.repeat(max - 1));
+    expect(parseSavedSearchQuery(captured)).toEqual(captured);
+  });
+
   it('reads a search saved before OR and parentheses so it finds what it found (R07)', () => {
     // In version 1, OR and "(draft)" were text; they are kept as text, in quotes.
     expect(

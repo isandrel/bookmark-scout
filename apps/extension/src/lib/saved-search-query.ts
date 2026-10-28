@@ -102,13 +102,17 @@ type FilterCodec = {
 
 const uniqueSorted = (values: string[]) => [...new Set(values)].sort();
 
-const textCodec: FilterCodec = {
+/**
+ * A text filter, stored within `text_max_length` by `fit` so a long one finds at least what it
+ * found instead of being cut mid-word.
+ */
+const textCodec = (fit: (text: string, maxLength: number) => string): FilterCodec => ({
   toStored: (value) => {
-    const text = titleSearchText(value).trim();
-    return text ? text.slice(0, SAVED_SEARCH_TEXT_MAX_LENGTH) : undefined;
+    const text = fit(titleSearchText(value).trim(), SAVED_SEARCH_TEXT_MAX_LENGTH).trim();
+    return text || undefined;
   },
   toTable: (value: string) => value,
-};
+});
 
 const valueListCodec: FilterCodec = {
   toStored: (value) => {
@@ -140,8 +144,10 @@ const dateRangeCodec: FilterCodec = {
 // Table filter column → how it is stored. Filters on other columns are not saved. The order here
 // is the stored key order, so equal queries serialize identically.
 const FILTER_CODECS: Record<keyof SavedSearchFilters, FilterCodec> = {
-  title: textCodec,
-  url: textCodec,
+  // The search box, in the search query language: what it applies, shortened by whole terms.
+  title: textCodec(fitSearchText),
+  // Found anywhere in the address, so its start finds every bookmark the whole text found.
+  url: textCodec(sliceGraphemes),
   type: valueListCodec,
   parentId: valueListCodec,
   domain: valueListCodec,
@@ -196,21 +202,6 @@ export function legacyTitleSearch(text: string): string {
 }
 
 /**
- * A search box text saved in `syntaxVersion`, in the current version. Quotes the rewrite adds
- * (`"OR"`, `"(draft)"`) can take it past `text_max_length`, where it would be dropped the next
- * time it is stored; then it keeps what fits and still finds every bookmark it found
- * (`serializeSearchQueryWithin`).
- */
-function upgradedTitleSearch(text: string, syntaxVersion: SearchSyntaxVersion): string {
-  const upgraded = upgradeSearchText(text, syntaxVersion);
-  if (upgraded.length <= SAVED_SEARCH_TEXT_MAX_LENGTH) return upgraded;
-  return serializeSearchQueryWithin(
-    parseSearchQuery(text, syntaxVersion).query,
-    SAVED_SEARCH_TEXT_MAX_LENGTH,
-  );
-}
-
-/**
  * Rebuilds a query in canonical key and value order, reading a search box text saved before the
  * search query language as `legacyTitleSearch` does, and one saved in an older version of it in
  * the current one.
@@ -224,7 +215,11 @@ function normalizeQuery(query: SavedSearchQuery): SavedSearchQuery {
       value =
         query.syntaxVersion === undefined
           ? legacyTitleSearch(value as string)
-          : upgradedTitleSearch(value as string, query.syntaxVersion);
+          : upgradeSearchTextWithin(
+              value as string,
+              query.syntaxVersion,
+              SAVED_SEARCH_TEXT_MAX_LENGTH,
+            );
       // Nothing shorter finds everything it found: no text filter does.
       if (value === '') continue;
     }
