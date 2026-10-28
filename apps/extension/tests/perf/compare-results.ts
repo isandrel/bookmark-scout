@@ -233,7 +233,7 @@ function cells(rows: Comparison[]): string[][] {
     formatSide(row.base, row.unit),
     formatSide(row.head, row.unit),
     formatChange(row),
-    row.pValue === null ? '-' : row.pValue.toFixed(3),
+    row.pValue === null ? '-' : row.pValue < 0.001 ? '<0.001' : row.pValue.toFixed(3),
     formatBudget(row),
     row.verdict,
   ]);

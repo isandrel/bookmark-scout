@@ -73,7 +73,9 @@ instead of holding absolute numbers, as benchmark runners for noisy machines do
   median is over `max_ratio` times base's, over it by more than `min_delta` for the metric's unit,
   and, when both sides have `min_samples` or more samples, a one-sided Wilcoxon rank-sum
   (Mann-Whitney U) test gives a p-value of at most `max_p_value`. A head that timed out where
-  base did not also fails, and so does a head scenario that fails.
+  base did not also fails, and so does a head scenario that fails. A scenario with a metric that
+  looks slower first runs `confirm_rounds` more rounds on both sides and is judged again on all
+  its samples, so one burst of noise does not fail the run alone.
 - The table prints both sides' absolute medians and sample counts, the change, the p-value, and
   the budget (marked `over` when head's median is over it, which alone does not fail). It is also
   written to the job summary and to `test-results/perf-compare/` (`summary.md`,

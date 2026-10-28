@@ -21,6 +21,7 @@ import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 import { z } from 'zod';
 import {
+  type Comparison,
   compareResults,
   comparisonMarkdown,
   comparisonText,
@@ -154,38 +155,64 @@ function main() {
   const dists: Record<Side, string> = { base: base.dist, head: headDist };
   const failed: Record<Side, string[]> = { base: [], head: [] };
   rmSync(RESULTS, { recursive: true, force: true });
+  // One folder per scenario (zero-padded, so reading them back keeps the scenarios' order).
+  const scenarioDir = (side: Side, index: number) =>
+    path.join(RESULTS, side, String(index).padStart(2, '0'));
+  const roundsDone = scenarios.map(() => 0);
+  /** Runs scenario `index` once for base and once for head, alternating which goes first. */
+  const measure = (index: number, label: string) => {
+    const { location, title } = scenarios[index];
+    const round = roundsDone[index]++;
+    // Alternate which side goes first, so a runner that slows down over time favors neither.
+    const order: Side[] = (index + round) % 2 === 0 ? ['base', 'head'] : ['head', 'base'];
+    for (const side of order) {
+      console.log(`\n== ${side} (${side === 'base' ? baseSha : headSha}) ${label}: ${title}`);
+      const code = run([...PLAYWRIGHT_PERF, '--reporter=line', location], {
+        cwd: appRoot,
+        env: {
+          [PERF_ENV.extensionDir]: dists[side],
+          [PERF_ENV.resultsDir]: path.join(scenarioDir(side, index), `round-${round + 1}`),
+          [PERF_ENV.compare]: '1',
+        },
+      });
+      if (code !== 0) failed[side].push(`${title} (${label})`);
+    }
+  };
+  const judge = () =>
+    compareResults(
+      readSide(path.join(RESULTS, 'base')),
+      readSide(path.join(RESULTS, 'head')),
+      perfConfig.compare,
+    );
+
+  let rows: Comparison[];
+  const confirmed: string[] = [];
   try {
-    for (const [index, { file, location, title }] of scenarios.entries()) {
+    for (const [index, { file }] of scenarios.entries()) {
       const rounds =
         perfConfig.compare.rounds_by_file[path.basename(file)] ?? perfConfig.compare.rounds;
-      for (let round = 0; round < rounds; round++) {
-        // Alternate which side goes first, so a runner that slows down over time favors neither.
-        const order: Side[] = (index + round) % 2 === 0 ? ['base', 'head'] : ['head', 'base'];
-        for (const side of order) {
-          console.log(
-            `\n== ${side} (${side === 'base' ? baseSha : headSha}) round ${round + 1}/${rounds}: ${title}`,
-          );
-          const code = run([...PLAYWRIGHT_PERF, '--reporter=line', location], {
-            cwd: appRoot,
-            env: {
-              [PERF_ENV.extensionDir]: dists[side],
-              [PERF_ENV.resultsDir]: path.join(RESULTS, side, `round-${round + 1}`),
-              [PERF_ENV.compare]: '1',
-            },
-          });
-          if (code !== 0) failed[side].push(`${title} (round ${round + 1})`);
-        }
+      for (let round = 0; round < rounds; round++) measure(index, `round ${round + 1}/${rounds}`);
+    }
+    rows = judge();
+    // A scenario that looks slower runs again before it fails the comparison, so one burst of
+    // noise on either side does not decide it alone.
+    const slower = new Set(rows.filter(isRegression).map(({ metric }) => metric));
+    const suspects = scenarios
+      .map((_, index) => index)
+      .filter((index) =>
+        [...readSide(scenarioDir('head', index)).keys()].some((metric) => slower.has(metric)),
+      );
+    for (const index of suspects) {
+      confirmed.push(scenarios[index].title);
+      for (let round = 0; round < perfConfig.compare.confirm_rounds; round++) {
+        measure(index, `confirmation ${round + 1}/${perfConfig.compare.confirm_rounds}`);
       }
     }
+    if (suspects.length) rows = judge();
   } finally {
     base.remove();
   }
 
-  const rows = compareResults(
-    readSide(path.join(RESULTS, 'base')),
-    readSide(path.join(RESULTS, 'head')),
-    perfConfig.compare,
-  );
   const regressions = rows.filter(isRegression);
   const { max_ratio, min_delta, max_p_value, min_samples } = perfConfig.compare;
   const margins = Object.entries(min_delta)
@@ -197,6 +224,7 @@ function main() {
     `have ${min_samples} or more samples.`,
   ].join(' ');
   const notes = [
+    ...confirmed.map((title) => `Measured again because it looked slower: ${title}`),
     ...failed.head.map((title) => `Head scenario failed: ${title}`),
     ...failed.base.map((title) => `Base scenario failed (its metrics are not compared): ${title}`),
     ...regressions.map(({ metric, verdict }) => `Regression: ${metric} (${verdict})`),

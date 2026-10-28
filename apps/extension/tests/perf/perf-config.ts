@@ -58,6 +58,7 @@ const perfConfigSchema = z.strictObject({
     default_base: z.string().min(1),
     rounds: z.number().int().positive(),
     rounds_by_file: z.record(z.string().regex(/\.perf\.spec\.ts$/), z.number().int().positive()),
+    confirm_rounds: z.number().int().nonnegative(),
     max_ratio: z.number().gt(1),
     min_delta: z.record(z.string(), z.number().nonnegative()),
     max_p_value: z.number().gt(0).lt(1),

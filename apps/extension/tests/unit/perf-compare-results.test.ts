@@ -17,6 +17,7 @@ const settings: CompareSettings = {
   default_base: 'origin/main',
   rounds: 1,
   rounds_by_file: {},
+  confirm_rounds: 1,
   max_ratio: 1.25,
   min_delta: { ms: 50, frames: 10 },
   max_p_value: 0.05,
@@ -256,6 +257,12 @@ describe('compareResults', () => {
     expect(comparisonMarkdown(rows)).toContain(
       '| manager.open | 2005 ms (n=5) | 2100 ms (n=5) | +5% (+95 ms) | 0.004 | 2000 (over) | same |',
     );
+    const pooled = compareResults(
+      poolReports([{ metrics: [report([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])] }]),
+      poolReports([{ metrics: [report([11, 12, 13, 14, 15, 16, 17, 18, 19, 20])] }]),
+      settings,
+    );
+    expect(comparisonText(pooled)).toContain('<0.001');
     expect(comparisonText(rows).split('\n')[0]).toMatch(
       /^Metric\s+Base\s+Head\s+Change\s+p\s+Budget\s+Result$/,
     );

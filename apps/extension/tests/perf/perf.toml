@@ -155,6 +155,11 @@ rounds = 1
 # jobs.accept as 2,113 against 1,563 ms; three rounds give the rank-sum test three samples a side,
 # for about 10 more minutes on a runner.
 rounds_by_file = { "jobs.perf.spec.ts" = 3 }
+# Rounds more for a scenario that looks slower, judged again on all its samples, before it fails
+# the run. On 2026-10-28 a local comparison of identical code read manager.openFolder as 146 against
+# 12 ms (p 0.032): three of base's five samples were 146 to 308 ms. A burst like that on head's side
+# would have failed a run that one more round settles.
+confirm_rounds = 1
 # Head's median over base's median above this.
 max_ratio = 1.25
 # And head's median above base's by more than this, per unit: frame times are 16.7 ms steps and a
