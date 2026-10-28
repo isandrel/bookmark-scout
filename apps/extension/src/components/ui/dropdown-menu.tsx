@@ -6,19 +6,13 @@ const DropdownMenu = DropdownMenuPrimitive.Root;
 
 const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
 
-/**
- * Connects one `DropdownMenu` to triggers rendered elsewhere (`handle` on both), so a long list
- * shares one menu instead of mounting one per row; each trigger passes its `payload`.
- */
-const createDropdownMenuHandle = DropdownMenuPrimitive.createHandle;
-
 const DropdownMenuGroup = DropdownMenuPrimitive.Group;
 
 const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
 
 type PositionerProps = Pick<
   DropdownMenuPrimitive.Positioner.Props,
-  'align' | 'alignOffset' | 'side' | 'sideOffset'
+  'align' | 'alignOffset' | 'anchor' | 'side' | 'sideOffset'
 >;
 
 const DropdownMenuContent = React.forwardRef<
@@ -26,13 +20,22 @@ const DropdownMenuContent = React.forwardRef<
   Omit<DropdownMenuPrimitive.Popup.Props, 'className'> & PositionerProps & { className?: string }
 >(
   (
-    { className, align = 'center', alignOffset = 0, side = 'bottom', sideOffset = 4, ...props },
+    {
+      className,
+      align = 'center',
+      alignOffset = 0,
+      anchor,
+      side = 'bottom',
+      sideOffset = 4,
+      ...props
+    },
     ref,
   ) => (
     <DropdownMenuPrimitive.Portal>
       <DropdownMenuPrimitive.Positioner
         align={align}
         alignOffset={alignOffset}
+        anchor={anchor}
         side={side}
         sideOffset={sideOffset}
         className="isolate z-[110] outline-none"
@@ -144,7 +147,6 @@ const DropdownMenuSeparator = React.forwardRef<
 DropdownMenuSeparator.displayName = 'DropdownMenuSeparator';
 
 export {
-  createDropdownMenuHandle,
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
