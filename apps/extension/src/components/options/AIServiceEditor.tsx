@@ -46,23 +46,41 @@ const EXTRA_FIELD_COPY: Record<
 };
 
 /**
- * A field of the AI services panel and the text settings search matches it by, label first.
- * `editor` fields are inside a hosted service's editor, so they show only while one is open.
+ * A field of the AI services panel and the texts settings search matches it by: its name and, for
+ * most, its description. `editor` fields are inside a hosted service's editor, so they show only
+ * while one is open.
  */
-export type AIServicesSearchField = { advanced: boolean; editor: boolean; text: string[] };
+export type AIServicesSearchField = {
+  advanced: boolean;
+  editor: boolean;
+  label: string;
+  description?: string;
+};
+
+/** The settings search sources a panel field has (it has no keywords or setting ID). */
+const AI_FIELD_SEARCH_SOURCES = [
+  'label',
+  'description',
+] as const satisfies readonly SettingSearchSource[];
 
 /** Fields of the AI services panel; advanced ones sit under More settings. */
 export function getAIServicesSearchFields(): AIServicesSearchField[] {
-  const field = (advanced: boolean, ...keys: MessageKey[]): AIServicesSearchField => ({
+  const field = (
+    advanced: boolean,
+    label: MessageKey,
+    description?: MessageKey,
+  ): AIServicesSearchField => ({
     advanced,
     editor: true,
-    text: keys.map((key) => t(key)),
+    label: t(label),
+    ...(description ? { description: t(description) } : {}),
   });
   return [
     {
       advanced: false,
       editor: false,
-      text: [t('options_aiServices'), t('options_aiServicesDescription')],
+      label: t('options_aiServices'),
+      description: t('options_aiServicesDescription'),
     },
     field(false, 'options_apiKey', 'options_apiKeyDescription'),
     field(false, 'options_requiresApiKey'),
@@ -75,10 +93,19 @@ export function getAIServicesSearchFields(): AIServicesSearchField[] {
   ];
 }
 
-/** The panel fields a settings search matches. */
-export function matchAIServicesSearch(query: TextQuery | undefined): AIServicesSearchField[] {
+/** The panel fields a settings search matches, by the texts Search In names. */
+export function matchAIServicesSearch(
+  query: TextQuery | undefined,
+  sources: readonly SettingSearchSource[],
+): AIServicesSearchField[] {
   if (!query) return [];
-  return getAIServicesSearchFields().filter(({ text }) => matchesEveryTerm(text, query));
+  const searched = AI_FIELD_SEARCH_SOURCES.filter((source) => sources.includes(source));
+  return getAIServicesSearchFields().filter((field) =>
+    matchesEveryTerm(
+      searched.flatMap((source) => field[source] ?? []),
+      query,
+    ),
+  );
 }
 
 type FieldErrors = { apiKey?: string; baseUrl?: string; extraHeaders?: string };

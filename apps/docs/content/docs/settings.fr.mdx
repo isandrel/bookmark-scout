@@ -8,7 +8,7 @@ Ouvrez la page des paramètres depuis l'entrée **Options** de l'extension, par 
 ## Utiliser la page des paramètres [#using-the-settings-page]
 
 - La page s'ouvre sur **L'essentiel**, les quelques paramètres que la plupart des gens modifient. Tous les autres onglets sont listés sous **Avancé**, et chaque paramètre de **L'essentiel** se trouve aussi dans son propre onglet : le modifier à l'un ou l'autre endroit change le même paramètre.
-- **Rechercher dans les paramètres…**, en haut de la page, trouve un paramètre dans n'importe quel onglet et indique le nombre de correspondances. Chaque mot saisi doit correspondre, dans n'importe quel ordre, sans tenir compte des majuscules ni des accents. Les mots sont surlignés là où ils correspondent, les onglets qui contiennent des résultats affichent leur nombre surligné, et une courte note sous un paramètre indique où il correspond quand ce texte n'est pas affiché, comme sa description ou son identifiant de paramètre.
+- **Rechercher dans les paramètres…**, en haut de la page, trouve un paramètre dans n'importe quel onglet et indique le nombre de correspondances. Chaque mot saisi doit correspondre, dans n'importe quel ordre, sans tenir compte des majuscules ni des accents. Les mots sont surlignés là où ils correspondent, les onglets qui contiennent des résultats affichent leur nombre surligné, et une courte note sous un paramètre indique où il correspond quand ce texte n'est pas affiché, comme sa description ou son identifiant de paramètre. Certains paramètres se trouvent aussi par d'autres mots sous lesquels on les connaît, comme « mode nuit » pour **Thème**. Où elle cherche, comment les mots correspondent et ce qu'elle affiche se règlent dans [Recherche dans les paramètres](#settings-search).
 - Chaque onglet est divisé en sections avec un titre. L'interrupteur de chaque outil se trouve à côté de son titre ; tant qu'il est désactivé, le reste de ses paramètres est replié. Les paramètres techniques, comme les délais d'attente et la longueur des noms de fichier, se trouvent dans **Paramètres avancés**, qui reste fermé jusqu'à ce que vous l'ouvriez ou qu'une recherche y trouve quelque chose.
 - Un paramètre modifié est signalé par **Modifié**, avec un bouton pour rétablir sa valeur par défaut. **Réinitialiser tous les raccourcis** rétablit tous les paramètres.
 - **Sauvegarder les paramètres** enregistre un fichier de sauvegarde avec les parties que vous sélectionnez : paramètres, paramètres de cet ordinateur, recherches enregistrées et vue tableau, prompts et À propos de moi, règles intelligentes, services d'IA (avec l'**URL de base** et les champs propres au fournisseur), couvertures et, seulement si vous les sélectionnez et confirmez, les clés des services d'IA, protégées par défaut par un mot de passe. **Restaurer les paramètres** montre ce que chaque partie d'une sauvegarde modifierait, vous laisse choisir les parties et **Fusionner** ou **Remplacer**, et conserve une copie de sécurité pour **Annuler l'importation** ; il fusionne aussi un simple fichier de paramètres avec vos paramètres actuels. Aucun des deux ne touche à vos favoris. **Exporter les favoris**, à côté d'eux, ouvre le gestionnaire de favoris sur son outil d'exportation. Voir [Sauvegarder et restaurer les paramètres](/guides/import-export#back-up-and-restore-settings).
@@ -85,6 +85,16 @@ En dessous, **Raccourcis clavier** affiche les touches attribuées à chaque rac
 | **Dossiers récents dans le menu** | <SettingDefault path="search.context_menu.recent_max" /> | Nombre de dossiers récents listés dans le menu, indépendamment du **Nombre maximal de dossiers récents** de la fenêtre pop-up |
 
 **Entrées du menu** choisit ce que propose le menu, dans l’ordre : **Dossiers récents** (un sous-menu) et **Barre de favoris**. Cochez une entrée pour l’afficher et faites-la glisser par sa poignée (ou utilisez le menu de la poignée) pour la déplacer ; **Rétablir les valeurs par défaut** les affiche de nouveau toutes les deux dans leur ordre initial.
+
+### Recherche dans les paramètres [#settings-search]
+
+| Paramètre | Valeur par défaut | Effet |
+| --- | --- | --- |
+| **Rechercher dans** | Noms, Descriptions, Mots-clés, Identifiants de paramètre | Les textes de chaque paramètre que parcourt la recherche en haut de cette page |
+| **Correspondance des mots** | Tous les mots, dans n'importe quel ordre | Si chaque mot saisi peut correspondre n'importe où et dans n'importe quel ordre, ou si toute la recherche doit correspondre telle qu'elle est saisie |
+| **Surligner les correspondances** | Activé | Marquer les mots recherchés et les onglets qui contiennent des résultats |
+| **Expliquer les correspondances cachées** | Activé | Indiquer sous un paramètre où il a été trouvé quand ce texte n'est pas affiché, comme sa description ou son identifiant de paramètre |
+| **Nombre de résultats sur les onglets** | Activé | Afficher à côté de chaque onglet combien de ses paramètres correspondent |
 
 ## Apparence [#appearance]
 

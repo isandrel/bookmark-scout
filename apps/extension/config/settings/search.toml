@@ -82,3 +82,22 @@ cover_source = "same"
 # When the Bookmark Already Has a Cover: "keep" leaves a cover it has, "replace" puts the new one
 # in its place. Neither ever replaces a cover chosen with Use this view as the cover.
 cover_existing = "keep"
+
+[settings_search]
+# The search field at the top of the Options page (src/lib/settings-search.ts; how it compares
+# words is config/ui/settings-search.toml).
+# Search In: the texts of each setting it looks in, ids from SETTING_SEARCH_SOURCE_IDS in
+# src/lib/settings-schema.ts: "label" (its name), "description", "keywords" (other words some
+# settings are known by, the settings_<stem>Keywords messages), and "id" (its setting ID, such as
+# popupWidth, the same in every language). At least one; all of them by default
+sources = { default = ["label", "description", "keywords", "id"], max_items = 4, max_length = 11 }
+# Word Matching: "allWords" (each word anywhere, in any order, as the bookmark search does) or
+# "phrase" (the whole search as typed, as Chrome's own settings search does)
+match = "allWords"
+# Mark the searched words in the results, and the tabs that hold matches, in the marker color
+highlight = true
+# Under a result, say where it matched when its row does not show that text (its description,
+# keywords, or setting ID)
+notes = true
+# Show beside each tab how many of its settings match
+tab_counts = true

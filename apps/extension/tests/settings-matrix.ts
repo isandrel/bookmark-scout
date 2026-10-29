@@ -208,6 +208,13 @@ const quickSaveCoverRun = e2e(
   "quick save keeps the page's own image as the new bookmark's cover, and Remove cover in the notification deletes it",
 );
 const BROWSE_COVERS_UNIT = 'browse-covers.test.ts';
+const OPTIONS_PAGE = 'components/page/OptionsPage.tsx';
+const OPTIONS_SPEC = 'options-settings.spec.ts';
+const SETTINGS_SEARCH_UNIT = 'settings-search.test.ts';
+const SETTINGS_SEARCH_DISPLAY_TEST =
+  'settings search settings turn off marks, notes, and tab counts, live';
+const SETTINGS_SEARCH_IN_TEST =
+  'settings search looks only in the texts Search In names, and matches an exact phrase';
 const browseCaptureRun = e2e(
   'browse-covers.spec.ts',
   'a bookmarked page that loads in the active tab gets a cover captured while browsing once it settles',
@@ -300,6 +307,21 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     ),
     unit('folder-match.test.ts', 'accepts one typo in longer words only'),
   ]),
+  settingsSearchSources: tested(OPTIONS_PAGE, [
+    e2e(OPTIONS_SPEC, SETTINGS_SEARCH_IN_TEST),
+    unit(
+      SETTINGS_SEARCH_UNIT,
+      'searches only the sources Search In names, but counts what the row shows as visible',
+    ),
+    unit('ai-services.test.ts', 'looks in the names and descriptions Search In names'),
+  ]),
+  settingsSearchMatch: tested(OPTIONS_PAGE, [
+    e2e(OPTIONS_SPEC, SETTINGS_SEARCH_IN_TEST),
+    unit(SETTINGS_SEARCH_UNIT, 'matches an exact phrase only as typed'),
+  ]),
+  settingsSearchHighlight: tested(OPTIONS_PAGE, [e2e(OPTIONS_SPEC, SETTINGS_SEARCH_DISPLAY_TEST)]),
+  settingsSearchNotes: tested(OPTIONS_PAGE, [e2e(OPTIONS_SPEC, SETTINGS_SEARCH_DISPLAY_TEST)]),
+  settingsSearchTabCounts: tested(OPTIONS_PAGE, [e2e(OPTIONS_SPEC, SETTINGS_SEARCH_DISPLAY_TEST)]),
 
   // Behavior
   sortOrder: tested(POPUP, [

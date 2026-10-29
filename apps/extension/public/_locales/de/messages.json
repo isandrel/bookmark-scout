@@ -515,6 +515,102 @@
         "message": "Gefunden in der Einstellungs-ID:",
         "description": "Settings search: before a setting's internal ID (such as popupWidth), with the matched words marked, when the search matched only the ID"
     },
+    "settings_searchMatchedKeywordList": {
+        "message": "Gefunden in den Stichwörtern:",
+        "description": "Settings search: before the other words a setting can be found by (its keywords, which rows never show), with the matched words marked"
+    },
+    "settings_sectionSettingsSearch": {
+        "message": "Einstellungssuche",
+        "description": "Options section heading (Saving & Search tab): the search field at the top of the settings page"
+    },
+    "settings_settingsSearchSources": {
+        "message": "Suchen in",
+        "description": "Setting label: which texts of each setting the settings search looks in (a checklist)"
+    },
+    "settings_settingsSearchSourcesDesc": {
+        "message": "Welche Texte jeder Einstellung die Suche oben auf dieser Seite durchsucht",
+        "description": "Setting description for Search In"
+    },
+    "settings_settingsSearchSourceLabel": {
+        "message": "Namen",
+        "description": "Search In choice: the names of settings"
+    },
+    "settings_settingsSearchSourceDescription": {
+        "message": "Beschreibungen",
+        "description": "Search In choice: the descriptions of settings"
+    },
+    "settings_settingsSearchSourceKeywordList": {
+        "message": "Stichwörter",
+        "description": "Search In choice: other words some settings can be found by"
+    },
+    "settings_settingsSearchSourceId": {
+        "message": "Einstellungs-IDs",
+        "description": "Search In choice: internal setting IDs such as popupWidth"
+    },
+    "settings_settingsSearchMatch": {
+        "message": "Wortsuche",
+        "description": "Setting label: how the words of a settings search must match"
+    },
+    "settings_settingsSearchMatchDesc": {
+        "message": "Ob jedes eingegebene Wort irgendwo und in beliebiger Reihenfolge passen darf oder die ganze Suche genau so passen muss, wie sie eingegeben wurde",
+        "description": "Setting description for Word Matching"
+    },
+    "settings_settingsSearchMatchAllWords": {
+        "message": "Alle Wörter, in beliebiger Reihenfolge",
+        "description": "Word Matching option: every word must match, anywhere and in any order"
+    },
+    "settings_settingsSearchMatchPhrase": {
+        "message": "Genaue Wortfolge",
+        "description": "Word Matching option: the whole search must match as typed"
+    },
+    "settings_groupSettingsSearchShow": {
+        "message": "Suchergebnisse zeigen",
+        "description": "Checklist title: what settings search results show besides the settings"
+    },
+    "settings_groupSettingsSearchShowDesc": {
+        "message": "Was die Einstellungssuche zu den gefundenen Einstellungen hinzufügt",
+        "description": "Checklist description"
+    },
+    "settings_settingsSearchHighlight": {
+        "message": "Treffer hervorheben",
+        "description": "Checklist option: mark the searched words in the results"
+    },
+    "settings_settingsSearchHighlightDesc": {
+        "message": "Die gesuchten Wörter und die Tabs mit Treffern markieren",
+        "description": "Checklist option description"
+    },
+    "settings_settingsSearchNotes": {
+        "message": "Versteckte Treffer erklären",
+        "description": "Checklist option: the \"Found in\" notes under results"
+    },
+    "settings_settingsSearchNotesDesc": {
+        "message": "Unter einer Einstellung angeben, wo sie gefunden wurde, wenn dieser Text nicht angezeigt wird, etwa ihre Beschreibung oder Einstellungs-ID",
+        "description": "Checklist option description"
+    },
+    "settings_settingsSearchTabCounts": {
+        "message": "Trefferzahl an Tabs",
+        "description": "Checklist option: the number of matches beside each tab"
+    },
+    "settings_settingsSearchTabCountsDesc": {
+        "message": "Neben jedem Tab anzeigen, wie viele seiner Einstellungen passen",
+        "description": "Checklist option description"
+    },
+    "settings_themeKeywords": {
+        "message": "Dunkelmodus, Hellmodus, Nachtmodus, Farben, Dark Mode",
+        "description": "Other words the Theme setting can be found by in the settings search, separated by commas; never shown in the row"
+    },
+    "settings_languageKeywords": {
+        "message": "Gebietsschema, Übersetzung, übersetzen",
+        "description": "Other words the Language setting can be found by in the settings search, separated by commas; never shown in the row"
+    },
+    "settings_treeDensityKeywords": {
+        "message": "kompakt, Zeilenhöhe, Abstand",
+        "description": "Other words the Tree Density setting can be found by in the settings search, separated by commas; never shown in the row"
+    },
+    "settings_toastDurationKeywords": {
+        "message": "Toast, Meldung, Hinweis, Zeitlimit",
+        "description": "Other words the Toast Duration setting can be found by in the settings search, separated by commas; never shown in the row"
+    },
     "state_loadingSettings": {
         "message": "Einstellungen werden geladen...",
         "description": "Settings loading state"

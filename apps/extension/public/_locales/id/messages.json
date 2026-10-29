@@ -507,6 +507,102 @@
         "message": "Ditemukan di ID setelannya:",
         "description": "Settings search: before a setting's internal ID (such as popupWidth), with the matched words marked, when the search matched only the ID"
     },
+    "settings_searchMatchedKeywordList": {
+        "message": "Ditemukan di kata kuncinya:",
+        "description": "Settings search: before the other words a setting can be found by (its keywords, which rows never show), with the matched words marked"
+    },
+    "settings_sectionSettingsSearch": {
+        "message": "Penelusuran Setelan",
+        "description": "Options section heading (Saving & Search tab): the search field at the top of the settings page"
+    },
+    "settings_settingsSearchSources": {
+        "message": "Telusuri di",
+        "description": "Setting label: which texts of each setting the settings search looks in (a checklist)"
+    },
+    "settings_settingsSearchSourcesDesc": {
+        "message": "Teks setiap setelan yang ditelusuri oleh kotak penelusuran di bagian atas halaman ini",
+        "description": "Setting description for Search In"
+    },
+    "settings_settingsSearchSourceLabel": {
+        "message": "Nama",
+        "description": "Search In choice: the names of settings"
+    },
+    "settings_settingsSearchSourceDescription": {
+        "message": "Deskripsi",
+        "description": "Search In choice: the descriptions of settings"
+    },
+    "settings_settingsSearchSourceKeywordList": {
+        "message": "Kata kunci",
+        "description": "Search In choice: other words some settings can be found by"
+    },
+    "settings_settingsSearchSourceId": {
+        "message": "ID setelan",
+        "description": "Search In choice: internal setting IDs such as popupWidth"
+    },
+    "settings_settingsSearchMatch": {
+        "message": "Pencocokan Kata",
+        "description": "Setting label: how the words of a settings search must match"
+    },
+    "settings_settingsSearchMatchDesc": {
+        "message": "Apakah setiap kata yang Anda ketik boleh cocok di mana saja dengan urutan apa pun, atau seluruh penelusuran harus cocok persis seperti yang diketik",
+        "description": "Setting description for Word Matching"
+    },
+    "settings_settingsSearchMatchAllWords": {
+        "message": "Semua kata, urutan apa pun",
+        "description": "Word Matching option: every word must match, anywhere and in any order"
+    },
+    "settings_settingsSearchMatchPhrase": {
+        "message": "Frasa persis",
+        "description": "Word Matching option: the whole search must match as typed"
+    },
+    "settings_groupSettingsSearchShow": {
+        "message": "Hasil Penelusuran Menampilkan",
+        "description": "Checklist title: what settings search results show besides the settings"
+    },
+    "settings_groupSettingsSearchShowDesc": {
+        "message": "Hal yang ditambahkan penelusuran setelan ke setelan yang ditemukannya",
+        "description": "Checklist description"
+    },
+    "settings_settingsSearchHighlight": {
+        "message": "Sorot Kecocokan",
+        "description": "Checklist option: mark the searched words in the results"
+    },
+    "settings_settingsSearchHighlightDesc": {
+        "message": "Tandai kata yang Anda telusuri dan tab yang memiliki kecocokan",
+        "description": "Checklist option description"
+    },
+    "settings_settingsSearchNotes": {
+        "message": "Jelaskan Kecocokan Tersembunyi",
+        "description": "Checklist option: the \"Found in\" notes under results"
+    },
+    "settings_settingsSearchNotesDesc": {
+        "message": "Sebutkan di bawah setelan tempat kecocokannya jika teks itu tidak ditampilkan, seperti deskripsi atau ID setelannya",
+        "description": "Checklist option description"
+    },
+    "settings_settingsSearchTabCounts": {
+        "message": "Jumlah Kecocokan di Tab",
+        "description": "Checklist option: the number of matches beside each tab"
+    },
+    "settings_settingsSearchTabCountsDesc": {
+        "message": "Tampilkan di samping setiap tab berapa banyak setelannya yang cocok",
+        "description": "Checklist option description"
+    },
+    "settings_themeKeywords": {
+        "message": "mode gelap, mode terang, mode malam, warna",
+        "description": "Other words the Theme setting can be found by in the settings search, separated by commas; never shown in the row"
+    },
+    "settings_languageKeywords": {
+        "message": "lokal, terjemahan, terjemahkan",
+        "description": "Other words the Language setting can be found by in the settings search, separated by commas; never shown in the row"
+    },
+    "settings_treeDensityKeywords": {
+        "message": "ringkas, tinggi baris, jarak",
+        "description": "Other words the Tree Density setting can be found by in the settings search, separated by commas; never shown in the row"
+    },
+    "settings_toastDurationKeywords": {
+        "message": "toast, pesan, pemberitahuan, batas waktu",
+        "description": "Other words the Toast Duration setting can be found by in the settings search, separated by commas; never shown in the row"
+    },
     "state_loadingSettings": {
         "message": "Memuat setelan...",
         "description": "Settings loading state"

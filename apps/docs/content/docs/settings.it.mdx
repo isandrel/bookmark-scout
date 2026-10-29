@@ -8,7 +8,7 @@ Apri la pagina delle impostazioni dalla voce **Opzioni** dell'estensione, ad ese
 ## Usare la pagina delle impostazioni [#using-the-settings-page]
 
 - La pagina si apre su **Essenziali**, le poche impostazioni che la maggior parte delle persone cambia. Tutte le altre schede sono elencate in **Avanzate**, e ogni impostazione di **Essenziali** si trova anche nella propria scheda lì: cambiarla in uno dei due punti cambia la stessa impostazione.
-- **Cerca nelle impostazioni...** in alto trova un'impostazione in qualsiasi scheda e indica quante corrispondenze ci sono. Ogni parola digitata deve corrispondere, in qualsiasi ordine, senza distinguere maiuscole e accenti. Le parole sono evidenziate dove corrispondono, le schede con risultati mostrano il loro numero evidenziato e una breve nota sotto un'impostazione dice dove ha trovato la corrispondenza quando quel testo non è mostrato, come la descrizione o l'ID dell'impostazione.
+- **Cerca nelle impostazioni...** in alto trova un'impostazione in qualsiasi scheda e indica quante corrispondenze ci sono. Ogni parola digitata deve corrispondere, in qualsiasi ordine, senza distinguere maiuscole e accenti. Le parole sono evidenziate dove corrispondono, le schede con risultati mostrano il loro numero evidenziato e una breve nota sotto un'impostazione dice dove ha trovato la corrispondenza quando quel testo non è mostrato, come la descrizione o l'ID dell'impostazione. Alcune impostazioni si trovano anche con altre parole con cui sono note, come "modalità notte" per **Tema**. Dove cerca, come corrispondono le parole e cosa mostra si cambiano in [Ricerca nelle impostazioni](#settings-search).
 - Ogni scheda è divisa in sezioni con un titolo. L'interruttore di uno strumento si trova accanto alla sua intestazione; mentre è disattivato, le altre impostazioni dello strumento restano nascoste. Le impostazioni tecniche, come i timeout e la lunghezza dei nomi dei file, si trovano in **Impostazioni avanzate**, che resta chiusa finché non la apri o finché una ricerca non vi trova qualcosa.
 - Un'impostazione cambiata è contrassegnata come **Modificata**, con un pulsante per riportarla al valore predefinito. **Ripristina tutte le scorciatoie** reimposta tutte le impostazioni.
 - **Esegui il backup delle impostazioni** salva un file di backup con le parti che selezioni: impostazioni, impostazioni di questo computer, ricerche salvate e vista tabella, prompt e Su di me, regole intelligenti, servizi IA (con **URL di base** e campi specifici del provider), copertine e, solo se le selezioni e confermi, le chiavi dei servizi IA, protette con una password per impostazione predefinita. **Ripristina le impostazioni** mostra cosa cambierebbe ogni parte di un backup, ti fa scegliere le parti e **Unisci** o **Sostituisci**, e conserva una copia di sicurezza per **Annulla importazione**; inoltre unisce un semplice file di impostazioni alle tue impostazioni. Nessuna delle due operazioni tocca i preferiti. **Esporta preferiti**, accanto a esse, apre la gestione preferiti sul suo strumento di esportazione. Vedi [Backup e ripristino delle impostazioni](/guides/import-export#back-up-and-restore-settings).
@@ -85,6 +85,16 @@ Sotto di esse, **Scorciatoie da tastiera** mostra i tasti di ogni scorciatoia ne
 | **Cartelle recenti nel menu** | <SettingDefault path="search.context_menu.recent_max" /> | Quante cartelle recenti elenca il menu, indipendentemente dal **Numero massimo di cartelle recenti** del popup |
 
 **Voci del menu** sceglie cosa offre il menu, in ordine: **Cartelle recenti** (un sottomenu) e **Barra dei preferiti**. Seleziona una voce per mostrarla e trascinala dalla maniglia (o usa il menu della maniglia) per spostarla; **Ripristina predefiniti** le mostra di nuovo entrambe nell’ordine iniziale.
+
+### Ricerca nelle impostazioni [#settings-search]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Cerca in** | Nomi, Descrizioni, Parole chiave, ID delle impostazioni | I testi di ogni impostazione in cui cerca la casella in cima a questa pagina |
+| **Corrispondenza delle parole** | Tutte le parole, in qualsiasi ordine | Se ogni parola digitata può corrispondere ovunque e in qualsiasi ordine, o se l'intera ricerca deve corrispondere così come è scritta |
+| **Evidenzia le corrispondenze** | Attivo | Segna le parole cercate e le schede con corrispondenze |
+| **Spiega le corrispondenze nascoste** | Attivo | Indica sotto un'impostazione dove è stata trovata quando quel testo non è mostrato, come la descrizione o l'ID dell'impostazione |
+| **Conteggio sulle schede** | Attivo | Mostra accanto a ogni scheda quante delle sue impostazioni corrispondono |
 
 ## Aspetto [#appearance]
 

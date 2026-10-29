@@ -8,7 +8,7 @@ Abra a página de configurações pela opção **Opções** da extensão, por ex
 ## Usar a página de configurações [#using-the-settings-page]
 
 - A página abre em **Essenciais**, com as poucas configurações que a maioria das pessoas altera. Todas as outras guias aparecem em **Avançado**, e cada configuração de **Essenciais** também está na própria guia: alterá-la em qualquer um dos dois lugares altera a mesma configuração.
-- **Pesquisar configurações...**, no topo, encontra uma configuração em qualquer guia e informa quantas correspondem. Cada palavra digitada precisa corresponder, em qualquer ordem, sem diferenciar maiúsculas nem acentos. As palavras ficam destacadas onde corresponderam, as guias com resultados mostram a contagem destacada e uma nota curta abaixo de uma configuração diz onde ela correspondeu quando esse texto não aparece, como a descrição ou o ID da configuração.
+- **Pesquisar configurações...**, no topo, encontra uma configuração em qualquer guia e informa quantas correspondem. Cada palavra digitada precisa corresponder, em qualquer ordem, sem diferenciar maiúsculas nem acentos. As palavras ficam destacadas onde corresponderam, as guias com resultados mostram a contagem destacada e uma nota curta abaixo de uma configuração diz onde ela correspondeu quando esse texto não aparece, como a descrição ou o ID da configuração. Algumas configurações também são encontradas por outras palavras pelas quais são conhecidas, como "modo noturno" para **Tema**. Onde pesquisa, como as palavras correspondem e o que mostra podem ser alterados em [Pesquisa nas configurações](#settings-search).
 - Cada aba é dividida em seções com título. O interruptor de cada ferramenta fica ao lado do título; enquanto está desativado, o restante das configurações fica recolhido. Configurações técnicas, como tempos limite e tamanho de nomes de arquivo, ficam em **Configurações avançadas**, que permanece fechado até você abrir ou uma pesquisa encontrar algo nele.
 - Uma configuração alterada é marcada como **Modificado**, com um botão para redefini-la para o padrão. **Redefinir todos os atalhos** redefine todas as configurações.
 - **Fazer backup das configurações** salva um arquivo de backup com as partes que você seleciona: configurações, configurações deste computador, pesquisas salvas e a visualização da tabela, prompts e Sobre mim, regras inteligentes, serviços de IA (com **URL base** e campos específicos do provedor), capas e, só quando você as seleciona e confirma, as chaves dos serviços de IA, protegidas com senha por padrão. **Restaurar configurações** mostra o que cada parte de um backup alteraria, permite escolher as partes e **Mesclar** ou **Substituir**, e guarda uma cópia de segurança para **Desfazer importação**; também mescla um arquivo simples de configurações com as suas configurações. Nenhum dos dois mexe nos seus favoritos. **Exportar favoritos**, ao lado deles, abre o gerenciador de favoritos na ferramenta de exportação. Veja [Fazer backup e restaurar configurações](/guides/import-export#back-up-and-restore-settings).
@@ -85,6 +85,16 @@ Abaixo delas, **Atalhos de teclado** mostra as teclas de cada atalho no seu nave
 | **Pastas recentes no menu** | <SettingDefault path="search.context_menu.recent_max" /> | Quantas pastas recentes o menu lista, à parte do **Máximo de pastas recentes** do pop-up |
 
 **Itens do menu** escolhe o que o menu oferece, nesta ordem: **Pastas recentes** (um submenu) e **Barra de favoritos**. Marque um item para mostrá-lo e arraste-o pela alça (ou use o menu da alça) para movê-lo; **Restaurar padrões** mostra os dois de novo na ordem inicial.
+
+### Pesquisa nas configurações [#settings-search]
+
+| Configuração | Padrão | O que faz |
+| --- | --- | --- |
+| **Pesquisar em** | Nomes, Descrições, Palavras-chave, IDs das configurações | Quais textos de cada configuração a pesquisa no topo desta página verifica |
+| **Correspondência de palavras** | Todas as palavras, em qualquer ordem | Se cada palavra digitada pode corresponder em qualquer lugar e ordem, ou se a pesquisa inteira precisa corresponder exatamente como foi digitada |
+| **Destacar correspondências** | Ativado | Marcar as palavras pesquisadas e as guias com correspondências |
+| **Explicar correspondências ocultas** | Ativado | Informar abaixo de uma configuração onde ela correspondeu quando esse texto não aparece, como a descrição ou o ID da configuração |
+| **Contagem nas guias** | Ativado | Mostrar ao lado de cada guia quantas das suas configurações correspondem |
 
 ## Aparência [#appearance]
 

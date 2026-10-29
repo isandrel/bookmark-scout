@@ -1,14 +1,20 @@
 import { describe, expect, it } from 'vitest';
 import {
   compileTextQuery,
+  findFoldedRanges,
   findTextMatches,
+  foldText,
   joinRanges,
   matchesEveryTerm,
+  type TextFoldRules,
   type TextQuery,
 } from '@/lib/text-match';
 
+// The settings search's rules: case, accents, and width all ignored.
+const ALL: TextFoldRules = { ignoreCase: true, ignoreAccents: true, ignoreWidth: true };
+
 function query(text: string): TextQuery {
-  const compiled = compileTextQuery(text);
+  const compiled = compileTextQuery(text, ALL, 'allWords');
   if (!compiled) throw new Error(`no words in "${text}"`);
   return compiled;
 }
@@ -20,13 +26,22 @@ function marked(text: string, search: string): string[] {
 
 describe('compileTextQuery', () => {
   it('reads words, folded, once each, and nothing from blank input', () => {
-    expect(compileTextQuery('  Popup   WIDTH ')).toEqual({ terms: ['popup', 'width'] });
-    expect(compileTextQuery('tab Tab TAB')).toEqual({ terms: ['tab'] });
-    expect(compileTextQuery('Café')).toEqual({ terms: ['cafe'] });
+    expect(compileTextQuery('  Popup   WIDTH ', ALL, 'allWords')).toEqual({
+      terms: ['popup', 'width'],
+      rules: ALL,
+    });
+    expect(compileTextQuery('tab Tab TAB', ALL, 'allWords')).toEqual({
+      terms: ['tab'],
+      rules: ALL,
+    });
+    expect(compileTextQuery('Café', ALL, 'allWords')).toEqual({ terms: ['cafe'], rules: ALL });
     // Ideographic space separates words too.
-    expect(compileTextQuery('書籤　資料夾')).toEqual({ terms: ['書籤', '資料夾'] });
-    expect(compileTextQuery('   ')).toBeUndefined();
-    expect(compileTextQuery('')).toBeUndefined();
+    expect(compileTextQuery('書籤　資料夾', ALL, 'allWords')).toEqual({
+      terms: ['書籤', '資料夾'],
+      rules: ALL,
+    });
+    expect(compileTextQuery('   ', ALL, 'allWords')).toBeUndefined();
+    expect(compileTextQuery('', ALL, 'allWords')).toBeUndefined();
   });
 });
 
@@ -118,5 +133,63 @@ describe('joinRanges', () => {
       [5, 7],
       [9, 10],
     ]);
+  });
+});
+
+describe('query modes', () => {
+  it('reads an exact phrase as one term, with runs of spaces as one', () => {
+    expect(compileTextQuery('  Popup   WIDTH ', ALL, 'phrase')).toEqual({
+      terms: ['popup width'],
+      rules: ALL,
+    });
+    expect(compileTextQuery('   ', ALL, 'phrase')).toBeUndefined();
+    const phrase = compileTextQuery('width popup', ALL, 'phrase');
+    expect(phrase && matchesEveryTerm(['Popup Width'], phrase)).toBe(false);
+    expect(phrase && matchesEveryTerm(['Width popup window'], phrase)).toBe(true);
+  });
+});
+
+describe('fold rules', () => {
+  const rules = (overrides: Partial<TextFoldRules>): TextFoldRules => ({ ...ALL, ...overrides });
+  const marks = (text: string, search: string, fold: TextFoldRules) => {
+    const compiled = compileTextQuery(search, fold, 'allWords');
+    if (!compiled) throw new Error(`no words in "${search}"`);
+    return findTextMatches(text, compiled).ranges.map(([start, end]) => text.slice(start, end));
+  };
+
+  it('keeps case when told to', () => {
+    expect(marks('Popup popup', 'popup', rules({ ignoreCase: false }))).toEqual(['popup']);
+  });
+
+  it('keeps accents when told to, without letting an accented letter match a plain one', () => {
+    const keepAccents = rules({ ignoreAccents: false });
+    expect(marks('résumé resume', 'resume', keepAccents)).toEqual(['resume']);
+    expect(marks('résumé resume', 'résumé', keepAccents)).toEqual(['résumé']);
+    // Full-width forms still fold.
+    expect(marks('ＡＩ設定', 'ai', keepAccents)).toEqual(['ＡＩ']);
+  });
+
+  it('keeps width when told to', () => {
+    const keepWidth = rules({ ignoreWidth: false });
+    expect(marks('ＡＩ設定 AI', 'ai', keepWidth)).toEqual(['AI']);
+    expect(marks('Café', 'cafe', keepWidth)).toEqual(['Café']);
+  });
+
+  it('folds case alone as the bookmark search does, keeping offsets for longer lowercase', () => {
+    const caseOnly = rules({ ignoreAccents: false, ignoreWidth: false });
+    expect(foldText('Hello', caseOnly)).toEqual({ text: 'hello' });
+    expect(foldText('Größe', caseOnly)).toEqual({ text: 'größe' });
+    // İ lowercases to two code units; a match on its first one marks the whole letter.
+    expect(marks('İstanbul', 'i', caseOnly)).toEqual(['İ']);
+    expect(marks('Café', 'cafe', caseOnly)).toEqual([]);
+  });
+
+  it('finds overlapping repeats and nothing for an empty term', () => {
+    const folded = foldText('aaa', ALL);
+    expect(findFoldedRanges(folded, 'aa')).toEqual([
+      [0, 2],
+      [1, 3],
+    ]);
+    expect(findFoldedRanges(folded, '')).toEqual([]);
   });
 });

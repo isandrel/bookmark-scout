@@ -20,8 +20,9 @@ import {
   setDefaultAIService,
   updateAIService,
 } from '@/lib/ai-services-storage';
+import { SETTING_SEARCH_SOURCE_IDS } from '@/lib/settings-schema';
+import { compileSettingsQuery } from '@/lib/settings-search';
 import { saveSettings } from '@/lib/settings-storage';
-import { compileTextQuery } from '@/lib/text-match';
 import { getActiveAISettings } from '@/services/ai-settings';
 import { readStoredRaw, STORAGE_ITEMS, seedStored } from './storage-helpers';
 
@@ -33,24 +34,37 @@ beforeEach(async () => {
 });
 
 describe('AI services search text', () => {
+  const search = (text: string, sources = SETTING_SEARCH_SOURCE_IDS) =>
+    matchAIServicesSearch(compileSettingsQuery(text, 'allWords'), sources);
+
   it('matches editor fields and marks the ones under More settings', () => {
-    expect(matchAIServicesSearch(compileTextQuery('api key'))).toEqual([
+    expect(search('api key')).toEqual([
       expect.objectContaining({
         advanced: false,
         editor: true,
-        text: ['API Key', expect.any(String)],
+        label: 'API Key',
+        description: expect.any(String),
       }),
-      expect.objectContaining({ advanced: false, editor: true, text: ['Requires an API key'] }),
+      expect.objectContaining({ advanced: false, editor: true, label: 'Requires an API key' }),
     ]);
     // The panel's own title is always shown; editor fields only inside an open service.
-    expect(matchAIServicesSearch(compileTextQuery('ai services'))).toEqual([
-      expect.objectContaining({ editor: false }),
+    expect(search('ai services')).toEqual([expect.objectContaining({ editor: false })]);
+    expect(search('base url')).toEqual([expect.objectContaining({ advanced: true })]);
+    expect(search('extra headers')).toHaveLength(1);
+    expect(search('  ')).toEqual([]);
+  });
+
+  it('looks in the names and descriptions Search In names', () => {
+    // "provider" is in the descriptions of Base URL and Extra Headers, not in their names.
+    const inDescriptions = search('base url provider');
+    expect(inDescriptions).toHaveLength(1);
+    expect(search('base url provider', ['label', 'id'])).toEqual([]);
+    expect(search('endpoint override', ['description'])).toEqual([
+      expect.objectContaining({ label: 'Base URL' }),
     ]);
-    expect(matchAIServicesSearch(compileTextQuery('base url'))).toEqual([
-      expect.objectContaining({ advanced: true }),
-    ]);
-    expect(matchAIServicesSearch(compileTextQuery('extra headers'))).toHaveLength(1);
-    expect(matchAIServicesSearch(compileTextQuery('  '))).toEqual([]);
+    expect(search('endpoint override', ['label'])).toEqual([]);
+    // Panel fields have no keywords or setting ID.
+    expect(search('base url', ['keywords', 'id'])).toEqual([]);
   });
 });
 

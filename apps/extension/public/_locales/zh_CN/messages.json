@@ -507,6 +507,102 @@
         "message": "在设置 ID 中找到：",
         "description": "Settings search: before a setting's internal ID (such as popupWidth), with the matched words marked, when the search matched only the ID"
     },
+    "settings_searchMatchedKeywordList": {
+        "message": "在关键词中找到：",
+        "description": "Settings search: before the other words a setting can be found by (its keywords, which rows never show), with the matched words marked"
+    },
+    "settings_sectionSettingsSearch": {
+        "message": "设置搜索",
+        "description": "Options section heading (Saving & Search tab): the search field at the top of the settings page"
+    },
+    "settings_settingsSearchSources": {
+        "message": "搜索范围",
+        "description": "Setting label: which texts of each setting the settings search looks in (a checklist)"
+    },
+    "settings_settingsSearchSourcesDesc": {
+        "message": "本页顶部的搜索在每个设置的哪些文字中查找",
+        "description": "Setting description for Search In"
+    },
+    "settings_settingsSearchSourceLabel": {
+        "message": "名称",
+        "description": "Search In choice: the names of settings"
+    },
+    "settings_settingsSearchSourceDescription": {
+        "message": "说明",
+        "description": "Search In choice: the descriptions of settings"
+    },
+    "settings_settingsSearchSourceKeywordList": {
+        "message": "关键词",
+        "description": "Search In choice: other words some settings can be found by"
+    },
+    "settings_settingsSearchSourceId": {
+        "message": "设置 ID",
+        "description": "Search In choice: internal setting IDs such as popupWidth"
+    },
+    "settings_settingsSearchMatch": {
+        "message": "词语匹配",
+        "description": "Setting label: how the words of a settings search must match"
+    },
+    "settings_settingsSearchMatchDesc": {
+        "message": "输入的每个词可以按任意顺序出现在任意位置，还是整个搜索内容必须按输入原样匹配",
+        "description": "Setting description for Word Matching"
+    },
+    "settings_settingsSearchMatchAllWords": {
+        "message": "所有词语，顺序不限",
+        "description": "Word Matching option: every word must match, anywhere and in any order"
+    },
+    "settings_settingsSearchMatchPhrase": {
+        "message": "完整短语",
+        "description": "Word Matching option: the whole search must match as typed"
+    },
+    "settings_groupSettingsSearchShow": {
+        "message": "搜索结果显示",
+        "description": "Checklist title: what settings search results show besides the settings"
+    },
+    "settings_groupSettingsSearchShowDesc": {
+        "message": "设置搜索在找到的设置之外还显示的内容",
+        "description": "Checklist description"
+    },
+    "settings_settingsSearchHighlight": {
+        "message": "高亮匹配项",
+        "description": "Checklist option: mark the searched words in the results"
+    },
+    "settings_settingsSearchHighlightDesc": {
+        "message": "标出你搜索的词语，以及有匹配项的标签页",
+        "description": "Checklist option description"
+    },
+    "settings_settingsSearchNotes": {
+        "message": "说明隐藏的匹配",
+        "description": "Checklist option: the \"Found in\" notes under results"
+    },
+    "settings_settingsSearchNotesDesc": {
+        "message": "匹配的文字未显示（例如说明或设置 ID）时，在设置下方说明在哪里找到",
+        "description": "Checklist option description"
+    },
+    "settings_settingsSearchTabCounts": {
+        "message": "在标签页上显示匹配数",
+        "description": "Checklist option: the number of matches beside each tab"
+    },
+    "settings_settingsSearchTabCountsDesc": {
+        "message": "在每个标签页旁显示其中有多少个设置匹配",
+        "description": "Checklist option description"
+    },
+    "settings_themeKeywords": {
+        "message": "深色模式、浅色模式、夜间模式、暗黑模式、颜色",
+        "description": "Other words the Theme setting can be found by in the settings search, separated by commas; never shown in the row"
+    },
+    "settings_languageKeywords": {
+        "message": "区域设置、翻译、界面语言",
+        "description": "Other words the Language setting can be found by in the settings search, separated by commas; never shown in the row"
+    },
+    "settings_treeDensityKeywords": {
+        "message": "紧凑、行高、间距",
+        "description": "Other words the Tree Density setting can be found by in the settings search, separated by commas; never shown in the row"
+    },
+    "settings_toastDurationKeywords": {
+        "message": "提示、消息、弹窗、时长",
+        "description": "Other words the Toast Duration setting can be found by in the settings search, separated by commas; never shown in the row"
+    },
     "state_loadingSettings": {
         "message": "正在加载设置…",
         "description": "Settings loading state"

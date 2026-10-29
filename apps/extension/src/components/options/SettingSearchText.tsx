@@ -3,17 +3,21 @@
  * visible text marks the search's words wherever it holds them (labels, descriptions, section
  * headings, group titles), as Chrome's settings search does, so a user sees each word they typed;
  * the category's own title and intro stay unmarked. A setting found by a word in text its row does
- * not show gets a note saying where, so every result says why it is there.
+ * not show gets a note saying where, so every result says why it is there. Highlight Matches and
+ * Explain Hidden Matches (Saving & Search > Settings Search) turn the marks and notes off.
  */
 import { TextSearch } from 'lucide-react';
 
+/** The marks for `text`, or none outside a search or with Highlight Matches off. */
+function markedRanges(text: string, search: SettingsSearchState | undefined) {
+  return search?.highlight ? findTextMatches(text, search.query).ranges : undefined;
+}
+
 /** Text shown in the search results, with the search's words marked; plain outside a search. */
 export function SearchMatchText({ text }: { text: string }) {
-  const query = useSettingsSearchQuery();
-  if (!query) return text;
-  return (
-    <HighlightedText text={text} ranges={findTextMatches(text, query).ranges} showTitle={false} />
-  );
+  const ranges = markedRanges(text, useSettingsSearch());
+  if (!ranges) return text;
+  return <HighlightedText text={text} ranges={ranges} showTitle={false} />;
 }
 
 /** A setting's label or description, with the search's words marked. */
@@ -22,21 +26,17 @@ export function SettingSearchText({
   source,
 }: {
   fieldKey: keyof Settings;
-  source: Exclude<SettingSearchSource, 'id'>;
+  source: 'label' | 'description';
 }) {
-  return <SearchMatchText text={getSettingsFieldMeta()[fieldKey][source]} />;
+  const text = SETTING_SEARCH_SOURCES[source].read(fieldKey, getSettingsFieldMeta()[fieldKey]);
+  return <SearchMatchText text={text} />;
 }
 
-const NOTE_MESSAGES = {
-  label: 'settings_searchMatchedLabel',
-  description: 'settings_searchMatchedDescription',
-  id: 'settings_searchMatchedId',
-} as const satisfies Record<SettingSearchSource, MessageKey>;
-
 /**
- * For a matched setting, the texts it was found in that its row does not show (`shown` lists the
- * ones it does), each with the words marked. Nothing when the visible text explains the match:
- * the shown texts, and `nearby` text such as the heading above a section's switch.
+ * For a matched setting, the searched texts it was found in that its row does not show (`shown`
+ * lists the ones it does), each with the words marked. Nothing when the visible text explains the
+ * match (the shown texts, and `nearby` text such as the heading above a section's switch), or
+ * with Explain Hidden Matches off.
  */
 export function SettingSearchNote({
   fieldKey,
@@ -47,20 +47,18 @@ export function SettingSearchNote({
   shown: readonly SettingSearchSource[];
   nearby?: string;
 }) {
-  const query = useSettingsSearchQuery();
+  const search = useSettingsSearch();
   const match = useSettingSearchMatch(fieldKey);
-  const hidden =
-    match && query
-      ? hiddenSettingMatches(
-          match,
-          shown,
-          nearby ? findTextMatches(nearby, query).terms : undefined,
-        )
-      : [];
-  if (!match || hidden.length === 0) return null;
+  if (!search?.notes || !match) return null;
+  const hidden = hiddenSettingMatches(
+    match,
+    shown,
+    nearby ? findTextMatches(nearby, search.query).terms : undefined,
+  );
+  if (hidden.length === 0) return null;
   return (
     <div data-testid="setting-search-note" data-setting-note={fieldKey} className="space-y-0.5">
-      {hidden.map((source) => (
+      {hidden.map(({ source, text, ranges }) => (
         <p
           key={source}
           data-source={source}
@@ -68,12 +66,12 @@ export function SettingSearchNote({
         >
           <TextSearch aria-hidden="true" className="mt-px size-3.5 shrink-0" />
           <span className="min-w-0 break-words">
-            {t(NOTE_MESSAGES[source])}{' '}
+            {t(SETTING_SEARCH_SOURCES[source].note)}{' '}
             <HighlightedText
-              text={match[source].text}
-              ranges={match[source].ranges}
+              text={text}
+              ranges={search.highlight ? ranges : undefined}
               showTitle={false}
-              className={source === 'id' ? 'font-mono' : undefined}
+              className={'code' in SETTING_SEARCH_SOURCES[source] ? 'font-mono' : undefined}
             />
           </span>
         </p>

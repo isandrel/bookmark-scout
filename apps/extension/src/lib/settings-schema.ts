@@ -19,6 +19,11 @@ export type SettingsFieldMeta = {
    * `settings_<stem>Help` message exists.
    */
   help?: string;
+  /**
+   * Other words a user may search for it by, separated by commas, which the row never shows
+   * (`settings_<stem>Keywords`): only the settings search reads them.
+   */
+  keywords?: string;
   type: SettingsFieldType;
   options?: { value: string | number; label: string; group?: string; iconUrl?: string }[];
   /** Long option lists get a search box instead of a plain select. */
@@ -244,6 +249,26 @@ function assertEverySettingsKeyRead(node: Record<string, unknown>, prefix = ''):
 
 export const themeSchema = z.enum(['system', 'light', 'dark']);
 export type Theme = z.infer<typeof themeSchema>;
+
+/**
+ * The texts the Options settings search can find a setting by (`SETTING_SEARCH_SOURCES` in
+ * `settings-search.ts` reads each): its name, description, extra words (`settings_<stem>Keywords`),
+ * and setting ID. A new source is an id here, an entry there, and its label below.
+ */
+export const SETTING_SEARCH_SOURCE_IDS = ['label', 'description', 'keywords', 'id'] as const;
+export type SettingSearchSource = (typeof SETTING_SEARCH_SOURCE_IDS)[number];
+
+const SETTING_SEARCH_SOURCE_LABELS = {
+  label: 'settings_settingsSearchSourceLabel',
+  description: 'settings_settingsSearchSourceDescription',
+  keywords: 'settings_settingsSearchSourceKeywordList',
+  id: 'settings_settingsSearchSourceId',
+} as const satisfies Record<SettingSearchSource, string>;
+
+const SETTING_SEARCH_MATCH_LABELS = {
+  allWords: 'settings_settingsSearchMatchAllWords',
+  phrase: 'settings_settingsSearchMatchPhrase',
+} as const satisfies Record<TextQueryMode, string>;
 
 export const sortOrderSchema = z.enum(['browser', 'date', 'alphabetical', 'folders']);
 export type SortOrder = z.infer<typeof sortOrderSchema>;
@@ -486,12 +511,16 @@ function extrasMeta({ unit, display, ...extras }: FieldExtras): Partial<Settings
 const IN_SECONDS = { unit: 's', scale: 1000 } as const;
 
 /** Labels follow `settings_<stem>` and `settings_<stem>Desc` in the locale files. */
-function fieldLabels(stem: string): Pick<SettingsFieldMeta, 'label' | 'description' | 'help'> {
+function fieldLabels(
+  stem: string,
+): Pick<SettingsFieldMeta, 'label' | 'description' | 'help' | 'keywords'> {
   const help = tOptional(`settings_${stem}Help`);
+  const keywords = tOptional(`settings_${stem}Keywords`);
   return {
     label: t(`settings_${stem}`),
     description: t(`settings_${stem}Desc`),
     ...(help ? { help } : {}),
+    ...(keywords ? { keywords } : {}),
   };
 }
 
@@ -943,6 +972,27 @@ const fields = {
   folderMatchesEnabled: switchField('search.folder_matches.enabled', 'folderMatchesEnabled'),
   folderMatchesMax: numberField('search.folder_matches.max', 'folderMatchesMax'),
   folderMatchesTypos: switchField('search.folder_matches.typos', 'folderMatchesTypos'),
+  settingsSearchSources: choiceListField(
+    'search.settings_search.sources',
+    'settingsSearchSources',
+    SETTING_SEARCH_SOURCE_IDS,
+    (value) => t(SETTING_SEARCH_SOURCE_LABELS[value]),
+  ),
+  settingsSearchMatch: enumField(
+    'search.settings_search.match',
+    'settingsSearchMatch',
+    z.enum(TEXT_QUERY_MODES),
+    (value) => t(SETTING_SEARCH_MATCH_LABELS[value]),
+  ),
+  settingsSearchHighlight: switchField(
+    'search.settings_search.highlight',
+    'settingsSearchHighlight',
+  ),
+  settingsSearchNotes: switchField('search.settings_search.notes', 'settingsSearchNotes'),
+  settingsSearchTabCounts: switchField(
+    'search.settings_search.tab_counts',
+    'settingsSearchTabCounts',
+  ),
 
   sortOrder: enumField('behavior.tree.sort_order', 'sortOrder', sortOrderSchema, getSortOrderLabel),
   groupByFolders: switchField('behavior.tree.group_by_folders', 'groupByFolders'),
@@ -1849,6 +1899,17 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         fields: ['contextMenuContexts', 'contextMenuBookmarkNaming', 'contextMenuRecentMax'],
         panel: 'contextMenuEntries',
       },
+      {
+        id: 'settingsSearch',
+        labelKey: 'settings_sectionSettingsSearch',
+        fields: [
+          'settingsSearchSources',
+          'settingsSearchMatch',
+          'settingsSearchHighlight',
+          'settingsSearchNotes',
+          'settingsSearchTabCounts',
+        ],
+      },
     ]),
     appearance: category('settings_appearance', 'settings_appearanceDesc', [
       {
@@ -2485,6 +2546,11 @@ const CHECKLISTS: readonly { id: string; labelKey: string; fields: readonly (key
         'statisticsIncludeProtocols',
         'statisticsIncludeDepthBreakdown',
       ],
+    },
+    {
+      id: 'settingsSearchShow',
+      labelKey: 'settings_groupSettingsSearchShow',
+      fields: ['settingsSearchHighlight', 'settingsSearchNotes', 'settingsSearchTabCounts'],
     },
     {
       id: 'dataShow',

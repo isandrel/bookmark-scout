@@ -67,51 +67,24 @@ export type SearchResult = {
   reasons: SearchMatchReason[];
 };
 
-/**
- * Text without case, and where each of its characters came from. Lowercasing all but a few
- * characters keeps the length, and then offsets are the same (`origin` unset); a text where it does
- * not (`İ` becomes two code units) is mapped one code point at a time.
- */
-type Folded = { text: string; origin?: number[] };
+// Bookmark text compares without case only; accents and width stay as typed (`text-match.ts`).
+const BOOKMARK_TEXT_FOLD: TextFoldRules = {
+  ignoreCase: true,
+  ignoreAccents: false,
+  ignoreWidth: false,
+};
 
-function fold(text: string): Folded {
-  const lower = text.toLowerCase();
-  if (lower.length === text.length) return { text: lower };
-  let folded = '';
-  const origin: number[] = [];
-  let index = 0;
-  for (const character of text) {
-    const part = character.toLowerCase();
-    for (let unit = 0; unit < part.length; unit += 1) origin.push(index);
-    folded += part;
-    index += character.length;
-  }
-  origin.push(index);
-  return { text: folded, origin };
-}
-
-/** Every place `needle` is in `haystack`, as ranges of the original text. */
-function findAll(haystack: Folded, needle: string): SearchMatchRange[] {
-  const ranges: SearchMatchRange[] = [];
-  if (!needle) return ranges;
-  const original = (at: number) => haystack.origin?.[at] ?? at;
-  for (let at = haystack.text.indexOf(needle); at !== -1; ) {
-    const end = at + needle.length;
-    ranges.push([original(at), original(end)]);
-    at = haystack.text.indexOf(needle, end);
-  }
-  return ranges;
-}
+const fold = (text: string): FoldedText => foldText(text, BOOKMARK_TEXT_FOLD);
 
 /** A document's text without case, worked out once, the first time a search reads it. */
 type FoldedDocument = {
-  title: Folded;
-  url?: Folded;
-  folderPath: Folded;
+  title: FoldedText;
+  url?: FoldedText;
+  folderPath: FoldedText;
   folders: readonly string[];
-  summary?: Folded;
-  content?: Folded;
-  tags: readonly Folded[];
+  summary?: FoldedText;
+  content?: FoldedText;
+  tags: readonly FoldedText[];
   tagKeys: readonly string[];
 };
 
@@ -365,7 +338,7 @@ function matchText(document: SearchDocument, compiled: CompiledText): TermMatch 
         : folded.title.text.startsWith(needle)
           ? SEARCH_WEIGHTS.title_prefix
           : SEARCH_WEIGHTS.title;
-    add({ field: 'title', ranges: findAll(folded.title, needle) }, weight);
+    add({ field: 'title', ranges: findFoldedRanges(folded.title, needle) }, weight);
   }
   if (wants('tag')) {
     document.tags.forEach((tag, index) => {
@@ -378,7 +351,10 @@ function matchText(document: SearchDocument, compiled: CompiledText): TermMatch 
       }
       const text = folded.tags[index];
       if (text?.text.includes(needle)) {
-        add({ field: 'tag', value: tag, ranges: findAll(text, needle) }, SEARCH_WEIGHTS.tag);
+        add(
+          { field: 'tag', value: tag, ranges: findFoldedRanges(text, needle) },
+          SEARCH_WEIGHTS.tag,
+        );
       }
     });
   }
@@ -387,7 +363,7 @@ function matchText(document: SearchDocument, compiled: CompiledText): TermMatch 
       term.field === 'folder'
         ? matchFolderReadings(document, folded, compiled.folders)
         : folded.folderPath.text.includes(needle)
-          ? findAll(folded.folderPath, needle)
+          ? findFoldedRanges(folded.folderPath, needle)
           : [];
     if (ranges.length > 0) add({ field: 'folder', ranges }, SEARCH_WEIGHTS.folder);
   }
@@ -397,14 +373,17 @@ function matchText(document: SearchDocument, compiled: CompiledText): TermMatch 
     }
   } else if (wants('url') && folded.url?.text.includes(needle)) {
     const weight = document.host.includes(needle) ? SEARCH_WEIGHTS.domain : SEARCH_WEIGHTS.url;
-    add({ field: 'url', ranges: findAll(folded.url, needle) }, weight);
+    add({ field: 'url', ranges: findFoldedRanges(folded.url, needle) }, weight);
   }
   if (wants('summary') && folded.summary?.text.includes(needle)) {
-    add({ field: 'summary', ranges: findAll(folded.summary, needle) }, SEARCH_WEIGHTS.summary);
+    add(
+      { field: 'summary', ranges: findFoldedRanges(folded.summary, needle) },
+      SEARCH_WEIGHTS.summary,
+    );
   }
   const { contentNeedle } = compiled;
   if (wants('content') && document.content && folded.content?.text.includes(contentNeedle)) {
-    const ranges = findAll(folded.content, contentNeedle);
+    const ranges = findFoldedRanges(folded.content, contentNeedle);
     const { contentSource: source } = document;
     add(
       {
