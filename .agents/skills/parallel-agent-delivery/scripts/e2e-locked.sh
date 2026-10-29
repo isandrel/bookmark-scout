@@ -7,6 +7,8 @@
 #        zsh .agents/skills/parallel-agent-delivery/scripts/e2e-locked.sh <abs-worktree> specs tests/e2e/a.spec.ts [more...]
 #        zsh .agents/skills/parallel-agent-delivery/scripts/e2e-locked.sh <abs-worktree> firefox [Playwright args...]
 #        zsh .agents/skills/parallel-agent-delivery/scripts/e2e-locked.sh <abs-worktree> built chromium|bridge [Playwright args...]
+#        zsh .agents/skills/parallel-agent-delivery/scripts/e2e-locked.sh <abs-worktree> perf [Playwright args...]
+#        zsh .agents/skills/parallel-agent-delivery/scripts/e2e-locked.sh <abs-worktree> perf-compare [--base <ref>] [--grep <pattern>]
 # Logs use XDG_CACHE_HOME (or ~/.cache); the lock is shared per user under /tmp regardless of
 # each run's cache directory. Every browser suite on the machine must use this wrapper.
 # The exit code is the test run's. A lock left by a dead process is taken over. Nx runs with
@@ -19,7 +21,7 @@ wt=$1
 mode=$2
 shift 2
 if [[ -z $wt || -z $mode ]]; then
-  echo "usage: e2e-locked.sh <abs-worktree> full|specs <files...>|firefox|built chromium|bridge [Playwright args...]" >&2
+  echo "usage: e2e-locked.sh <abs-worktree> full|specs <files...>|firefox|built chromium|bridge|perf [Playwright args...]|perf-compare [--base <ref>] [--grep <pattern>]" >&2
   exit 64
 fi
 mkdir -p $logs
@@ -47,6 +49,12 @@ case $mode in
     bunx playwright test --config playwright.config.ts --project=chromium --reporter=line "$@" 2>&1 | tee $log; rc=${pipestatus[1]} ;;
   firefox)
     SE_OFFLINE=true bunx nx run extension:test:e2e:firefox --skip-nx-cache --output-style=static -- "$@" 2>&1 | tee $log; rc=${pipestatus[1]} ;;
+  perf)
+    # Absolute budgets (apps/extension/tests/perf/README.md); a measurement wants the CPU to itself.
+    bunx nx run extension:test:perf --skip-nx-cache --output-style=static -- "$@" 2>&1 | tee $log; rc=${pipestatus[1]} ;;
+  perf-compare)
+    # Base against head on this machine (tests/perf/compare.ts).
+    bunx nx run extension:test:perf:compare --output-style=static -- "$@" 2>&1 | tee $log; rc=${pipestatus[1]} ;;
   built)
     # The caller has built the extension (and native host for bridge) and installed Chromium.
     # Avoid reinstalling host packages on managed runners without root access.

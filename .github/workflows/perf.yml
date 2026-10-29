@@ -1,12 +1,22 @@
 name: Performance
 
 # Latency and scrolling measurements of the extension on a large library (apps/extension/tests/perf).
-# Not a pull request check: timings vary between runners, so a slow run is reported here and fixed
-# in a follow-up rather than blocking unrelated merges. Run it by hand to measure a branch.
+# Runners differ in speed by more than most regressions (the same commit measured 1.3 to 1.7x slower
+# on a slow one), so this builds a base commit too, measures base and head in turn on the same
+# runner, and fails only when head is slower than base ([compare] in perf.toml). Absolute budgets
+# are for one machine: `nx run extension:test:perf`. Not a pull request check; run it by hand to
+# measure a branch against main.
 on:
   schedule:
     - cron: "17 9 * * *"
   workflow_dispatch:
+    inputs:
+      base:
+        description: >-
+          Commit, tag, or branch to compare against. Default: on the default branch, the commit of
+          its last successful Performance run; elsewhere, the default branch.
+        required: false
+        default: ""
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -14,15 +24,21 @@ concurrency:
 
 permissions:
   contents: read
+  # Reading the last successful run of this workflow, whose commit is the default base.
+  actions: read
 
 jobs:
   perf:
     name: Extension performance
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    # Both sides of the suite (about 11 to 16 minutes each) plus a second install and build.
+    timeout-minutes: 90
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          # The base commit is checked out from history as a worktree.
+          fetch-depth: 0
 
       - name: Set up workspace
         uses: ./.github/actions/setup-workspace
@@ -31,14 +47,38 @@ jobs:
         working-directory: apps/extension
         run: bunx playwright install --with-deps --no-shell chromium
 
-      - name: Measure
-        run: bunx nx run extension:test:perf
+      # On the default branch the base is the commit of the last run that passed, so a regression
+      # keeps failing until it is fixed; to accept one, run this by hand with `base` set to the
+      # current commit. Elsewhere the base is the default branch.
+      - name: Choose the base
+        id: base
+        env:
+          GH_TOKEN: ${{ github.token }}
+          INPUT_BASE: ${{ inputs.base }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          base=$INPUT_BASE
+          if [ -z "$base" ] && [ "$GITHUB_REF_NAME" = "$DEFAULT_BRANCH" ]; then
+            base=$(gh run list --workflow perf.yml --branch "$DEFAULT_BRANCH" --status success \
+              --limit 1 --json headSha --jq '.[0].headSha // empty')
+            base=${base:-HEAD^}
+          fi
+          base=${base:-origin/$DEFAULT_BRANCH}
+          echo "Base: $base"
+          echo "ref=$base" >> "$GITHUB_OUTPUT"
+
+      - name: Measure base and head
+        env:
+          BASE_REF: ${{ steps.base.outputs.ref }}
+        run: bunx nx run extension:test:perf:compare --output-style=static -- --base "$BASE_REF"
 
       - name: Upload the report
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v7
         with:
           name: perf-report
-          path: apps/extension/test-results/perf/*.json
+          path: |
+            apps/extension/test-results/perf-compare/**/*.json
+            apps/extension/test-results/perf-compare/summary.md
           if-no-files-found: ignore
           retention-days: 30

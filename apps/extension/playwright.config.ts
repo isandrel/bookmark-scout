@@ -1,6 +1,7 @@
 import { availableParallelism } from 'node:os';
 import { defineConfig } from '@playwright/test';
 import type { ExtensionProjectOptions } from './tests/e2e/fixtures';
+import { PERF_ENV } from './tests/perf/perf-env';
 
 const isCI = Boolean(process.env.CI);
 
@@ -76,7 +77,8 @@ export default defineConfig<ExtensionProjectOptions>({
       timeout: 20 * 60_000,
       use: {
         extensionBrowser: 'chromium',
-        extensionBuild: 'chrome-mv3',
+        // The base build when the base-versus-head comparison runs it (tests/perf/compare.ts).
+        extensionBuild: process.env[PERF_ENV.extensionDir] ?? 'chrome-mv3',
         screenshot: 'off',
         trace: 'off',
       },
