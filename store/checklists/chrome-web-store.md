@@ -55,7 +55,7 @@ All answers are in [`../privacy-disclosures.md`](../privacy-disclosures.md) and 
 
 ## 5. Reviewer notes ("Test instructions")
 
-No test account or login is needed. The dashboard field (Additional instructions) takes at most 500 characters, so this is the short form; the permission details are in [`../permissions.md`](../permissions.md). Paste at the next submission (469 characters); it replaces the text entered on 2026-10-18, which did not name `<all_urls>`. Record the date here once it is in the dashboard:
+No test account or login is needed. The dashboard field (Additional instructions) takes at most 500 characters, so this is the short form; the permission details are in [`../permissions.md`](../permissions.md). In the dashboard since 2026-10-28 (469 characters), with the 0.3.5 package; it replaced the text entered on 2026-10-18, which did not name `<all_urls>`. The Privacy tab justifications from `../permissions.md` (including the new `alarms` one) were pasted the same day:
 
 ```text
 No login needed. Popup: toolbar icon. Manager: chrome://bookmarks (Tools, top right). Alt+Shift+S quick-saves the page. AI is off by default; test it free with Chrome's built-in AI (Settings > AI), Ollama, or your own key. Nothing goes to the developer; with AI on, titles and URLs go straight to the user's provider. Optional permissions are asked only when used; <all_urls> only for opt-in Capture Covers While Browsing (pictures of bookmarked pages, kept on device).

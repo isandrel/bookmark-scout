@@ -1,0 +1,11 @@
+# Character limits of the store dashboard fields that are pasted from this folder by hand.
+# scripts/store-field-limits.test.ts checks every block against them, so a justification that
+# outgrows its field fails before it reaches the dashboard. Measured in the Chrome Web Store
+# Developer Dashboard on 2026-10-29 (its counters read "of 1000 characters entered").
+
+[chrome_web_store]
+# Privacy tab: "Single purpose description" and each "<permission> justification" field.
+single_purpose = 1000
+permission_justification = 1000
+# Test instructions tab: "Additional instructions".
+test_instructions = 500
