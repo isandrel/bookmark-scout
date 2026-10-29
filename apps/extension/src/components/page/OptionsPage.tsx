@@ -68,14 +68,6 @@ const tabIcons: Record<string, React.ReactNode> = {
 
 type SettingValue = Settings[keyof Settings];
 
-function matchesQuery(fieldKey: keyof Settings, query: string): boolean {
-  const meta = getSettingsFieldMeta()[fieldKey];
-  const needle = query.trim().toLowerCase();
-  return [meta.label, meta.description, fieldKey].some((text) =>
-    text.toLowerCase().includes(needle),
-  );
-}
-
 const OptionsPage: React.FC = () => {
   const { settings, isLoading, resetToDefaults } = useSettings();
   const { resolvedTheme, setTheme } = useTheme();
@@ -267,17 +259,19 @@ const OptionsPage: React.FC = () => {
       }),
   });
 
+  // Rows and panels read the compiled query (SettingsSearchContext) to mark what it matched.
+  const textQuery = useMemo(() => compileTextQuery(searchQuery), [searchQuery]);
   const searchResults = useMemo(() => {
-    if (!searchQuery.trim()) return null;
+    if (!textQuery) return null;
     return Object.fromEntries(
       Object.entries(categories).map(([key, category]) => [
         key,
-        category.fields.filter((fieldKey) => matchesQuery(fieldKey, searchQuery)),
+        category.fields.filter((fieldKey) => matchSetting(fieldKey, textQuery) !== undefined),
       ]),
     ) as Record<string, (keyof Settings)[]>;
-  }, [categories, searchQuery]);
+  }, [categories, textQuery]);
   // AI services are not synced settings, so their fields are matched separately.
-  const aiPanelFieldMatches = useMemo(() => matchAIServicesSearch(searchQuery), [searchQuery]);
+  const aiPanelFieldMatches = useMemo(() => matchAIServicesSearch(textQuery), [textQuery]);
   const aiPanelMatches = aiPanelFieldMatches.length;
   const searchMatchCount = searchResults
     ? Object.values(searchResults).reduce((total, fields) => total + fields.length, 0) +
@@ -468,6 +462,9 @@ const OptionsPage: React.FC = () => {
           const folded =
             !matches && section.toggle !== undefined && shownValues[section.toggle] !== true;
           const headingId = `settings-section-${categoryKey}-${section.id}`;
+          // A heading that reads as its switch's label is where a search marks that label.
+          const headingNamesToggle =
+            section.toggle !== undefined && section.label === meta[section.toggle].label;
           const unmet =
             section.requires !== undefined && shownValues[section.requires] !== true
               ? section.requires
@@ -497,11 +494,22 @@ const OptionsPage: React.FC = () => {
                 {section.label ? (
                   <div className="flex items-center justify-between gap-3">
                     <h3 id={headingId} className="text-base font-semibold text-foreground">
-                      {section.label}
+                      {headingNamesToggle && section.toggle ? (
+                        <SettingSearchText fieldKey={section.toggle} source="label" />
+                      ) : (
+                        section.label
+                      )}
                     </h3>
                     {section.toggle && renderSectionToggle(section.toggle, headingId)}
                   </div>
                 ) : null}
+                {/* The heading switch shows no description, and often another name. */}
+                {section.toggle && (
+                  <SettingSearchNote
+                    fieldKey={section.toggle}
+                    shown={headingNamesToggle ? ['label'] : []}
+                  />
+                )}
                 {folded ? (
                   <p className="text-sm text-muted-foreground">{t('settings_sectionOff')}</p>
                 ) : (
@@ -659,7 +667,16 @@ const OptionsPage: React.FC = () => {
                       {tabIcons[key]}
                       <span className="flex-1 truncate text-left">{category.label}</span>
                       {count !== undefined && (
-                        <span className="rounded-full bg-muted px-1.5 font-mono text-xs tabular-nums text-muted-foreground">
+                        // Tabs holding matches stand out in the search's marker color.
+                        <span
+                          data-testid="settings-tab-match-count"
+                          className={cn(
+                            'rounded-full px-1.5 font-mono text-xs tabular-nums',
+                            count > 0
+                              ? 'bg-marker font-semibold text-marker-foreground'
+                              : 'bg-muted text-muted-foreground',
+                          )}
+                        >
                           {count}
                         </span>
                       )}
@@ -672,28 +689,30 @@ const OptionsPage: React.FC = () => {
 
           <div className="min-w-0 flex-1">
             {searchResults ? (
-              <section aria-live="polite" className="space-y-6">
-                <p className="text-sm text-muted-foreground">
-                  {tPlural('settings_searchResultsCount', searchMatchCount)}
-                </p>
-                {searchMatchCount === 0 ? (
-                  <div className="py-8 text-center text-muted-foreground">
-                    {t('state_noSettingsMatch')}
-                  </div>
-                ) : (
-                  Object.entries(searchResults)
-                    .filter(
-                      ([categoryKey, fields]) =>
-                        fields.length > 0 || (categoryKey === 'ai' && aiPanelMatches > 0),
-                    )
-                    .map(([categoryKey, fields]) => (
-                      <div key={categoryKey} data-search-category={categoryKey}>
-                        {renderCategoryHeader(categoryKey)}
-                        {renderSections(categoryKey, new Set(fields))}
-                      </div>
-                    ))
-                )}
-              </section>
+              <SettingsSearchContext value={textQuery}>
+                <section aria-live="polite" className="space-y-6">
+                  <p className="text-sm text-muted-foreground">
+                    {tPlural('settings_searchResultsCount', searchMatchCount)}
+                  </p>
+                  {searchMatchCount === 0 ? (
+                    <div className="py-8 text-center text-muted-foreground">
+                      {t('state_noSettingsMatch')}
+                    </div>
+                  ) : (
+                    Object.entries(searchResults)
+                      .filter(
+                        ([categoryKey, fields]) =>
+                          fields.length > 0 || (categoryKey === 'ai' && aiPanelMatches > 0),
+                      )
+                      .map(([categoryKey, fields]) => (
+                        <div key={categoryKey} data-search-category={categoryKey}>
+                          {renderCategoryHeader(categoryKey)}
+                          {renderSections(categoryKey, new Set(fields))}
+                        </div>
+                      ))
+                  )}
+                </section>
+              </SettingsSearchContext>
             ) : (
               Object.keys(tabs).map((categoryKey) => (
                 <TabsContent key={categoryKey} value={categoryKey} className="mt-0">

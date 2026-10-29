@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import type { Page, Worker } from '@playwright/test';
 import { expect, test } from './fixtures';
+import { settingRow } from './options-helpers';
 import { readSettings, setSettings } from './storage';
 import { showAllTools, showToolsTab } from './tool-helpers';
 
@@ -161,10 +162,8 @@ test('unsupported and malformed saved scopes fall back without resetting other t
   await optionsPage
     .getByRole('searchbox', { name: 'Search settings...' })
     .fill('scope used when cleaning');
-  const cleanerScopeSetting = optionsPage
-    .getByText('Default scope used when cleaning bookmark URLs')
-    .locator('..')
-    .locator('..');
+  const cleanerScopeSetting = settingRow(optionsPage, 'urlCleanerDefaultScope');
+  await expect(cleanerScopeSetting).toContainText('Default scope used when cleaning bookmark URLs');
   await expect(cleanerScopeSetting.getByRole('radio')).toHaveText([
     'Current Folder',
     'All Bookmarks',

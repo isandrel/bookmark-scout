@@ -503,6 +503,18 @@
         "message": "Buscar en la configuración...",
         "description": "Settings search placeholder"
     },
+    "settings_searchMatchedLabel": {
+        "message": "Encontrado en su nombre:",
+        "description": "Settings search: before a setting's name, with the matched words marked, when the row shows another name (a section's on/off switch)"
+    },
+    "settings_searchMatchedDescription": {
+        "message": "Encontrado en su descripción:",
+        "description": "Settings search: before a setting's description, with the matched words marked, when the row does not show its description"
+    },
+    "settings_searchMatchedId": {
+        "message": "Encontrado en su ID de configuración:",
+        "description": "Settings search: before a setting's internal ID (such as popupWidth), with the matched words marked, when the search matched only the ID"
+    },
     "state_loadingSettings": {
         "message": "Cargando la configuración...",
         "description": "Settings loading state"

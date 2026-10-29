@@ -529,6 +529,101 @@ test('settings search finds AI service fields, including ones under More setting
     await expect(page.getByText('1 matching setting in all tabs')).toBeVisible();
   }
   await expect(page.getByTestId('ai-services-search-hint')).toHaveCount(0);
+  // The matched field's label marks the words, inside the service editor too.
+  await expect(
+    page
+      .getByTestId('ai-services')
+      .locator('label', { hasText: 'Extra Headers JSON' })
+      .locator('mark'),
+  ).toHaveText(['Extra', 'Headers']);
+});
+
+/** Red, green, and blue of a computed `rgb()` or `rgba()` color. */
+function rgbOf(color: string): [number, number, number] {
+  const [red, green, blue] = (color.match(/[\d.]+/g) ?? []).map(Number);
+  return [red, green, blue];
+}
+
+/** WCAG contrast ratio of two computed colors. */
+function contrastRatio(first: string, second: string): number {
+  const luminance = (color: string) => {
+    const [red, green, blue] = rgbOf(color).map((channel) => {
+      const value = channel / 255;
+      return value <= 0.03928 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+    });
+    return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+  };
+  const [light, dark] = [luminance(first), luminance(second)].sort((a, b) => b - a);
+  return (light + 0.05) / (dark + 0.05);
+}
+
+test('settings search marks the matched words and says where hidden matches are', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await setSettings(extensionWorker, { language: 'en', theme: 'dark' });
+  await openOptions(page, extensionId);
+  const search = page.getByRole('searchbox', { name: 'Search settings...' });
+  const width = settingRow(page, 'popupWidth');
+  const height = settingRow(page, 'popupHeight');
+
+  // Each word is marked where it was found, ignoring case and accents, in any order.
+  await search.fill('WIDTH pópup');
+  await expect(width.locator('mark')).toHaveText(['Popup', 'Width']);
+  // The pair keeps its other number, which did not match, unmarked.
+  await expect(height).toBeVisible();
+  await expect(height.locator('mark')).toHaveCount(0);
+  // The group's own title is not searched, so it is not marked.
+  await expect(page.locator('[data-setting-group="popupSize"] mark')).toHaveCount(2);
+  await expect(page.getByTestId('setting-search-note')).toHaveCount(0);
+
+  // "window" is only in the description, which the pair does not show: a note shows it, marked.
+  await search.fill('width window');
+  await expect(page.getByText('1 matching setting in all tabs')).toBeVisible();
+  await expect(
+    page.getByRole('tab', { name: /^Appearance/ }).getByTestId('settings-tab-match-count'),
+  ).toHaveText('1');
+  const note = page.locator('[data-setting-note="popupWidth"] [data-source="description"]');
+  await expect(note).toHaveText(
+    'Found in its description: Width of the popup window (browsers allow at most 800 px)',
+  );
+  await expect(note.locator('mark')).toHaveText(['Width', 'window']);
+
+  // A match in the setting id only (aiAutoTriggerOnOpen, "Auto-recommend on Open").
+  await search.fill('autotrigger');
+  const idNote = page.locator('[data-setting-note="aiAutoTriggerOnOpen"] [data-source="id"]');
+  await expect(idNote).toHaveText('Found in its setting ID: aiAutoTriggerOnOpen');
+  await expect(idNote.locator('mark')).toHaveText(['AutoTrigger']);
+  await expect(settingRow(page, 'aiAutoTriggerOnOpen').getByRole('switch')).toHaveAccessibleName(
+    'Auto-recommend on Open',
+  );
+
+  // The mark keeps its text readable in the dark theme, and stays a visible fill under forced
+  // colors (Windows contrast themes).
+  await search.fill('width');
+  const mark = width.locator('mark').first();
+  const colors = () =>
+    mark.evaluate((element) => {
+      const style = getComputedStyle(element);
+      const row = getComputedStyle(element.closest('[data-setting-group]') as Element);
+      return { text: style.color, fill: style.backgroundColor, row: row.backgroundColor };
+    });
+  const dark = await colors();
+  expect(contrastRatio(dark.text, dark.fill)).toBeGreaterThanOrEqual(4.5);
+  expect(await mark.evaluate((element) => getComputedStyle(element).fontWeight)).toBe('600');
+  await page.emulateMedia({ forcedColors: 'active' });
+  const forced = await colors();
+  expect(forced.fill).not.toBe(forced.row);
+  expect(contrastRatio(forced.text, forced.fill)).toBeGreaterThanOrEqual(4.5);
+  await page.emulateMedia({ forcedColors: 'none' });
+
+  // Clearing the search removes every mark and note.
+  await search.fill('');
+  await page.getByRole('tab', { name: 'Appearance' }).click();
+  await expect(width).toBeVisible();
+  await expect(page.locator('mark')).toHaveCount(0);
+  await expect(page.getByTestId('setting-search-note')).toHaveCount(0);
 });
 
 test('settings search says where AI service fields are when no service shows them', async ({

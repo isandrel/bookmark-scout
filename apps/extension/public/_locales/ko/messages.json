@@ -495,6 +495,18 @@
         "message": "설정 검색...",
         "description": "Settings search placeholder"
     },
+    "settings_searchMatchedLabel": {
+        "message": "이름에서 찾음:",
+        "description": "Settings search: before a setting's name, with the matched words marked, when the row shows another name (a section's on/off switch)"
+    },
+    "settings_searchMatchedDescription": {
+        "message": "설명에서 찾음:",
+        "description": "Settings search: before a setting's description, with the matched words marked, when the row does not show its description"
+    },
+    "settings_searchMatchedId": {
+        "message": "설정 ID에서 찾음:",
+        "description": "Settings search: before a setting's internal ID (such as popupWidth), with the matched words marked, when the search matched only the ID"
+    },
     "state_loadingSettings": {
         "message": "설정 로딩 중...",
         "description": "Settings loading state"
