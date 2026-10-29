@@ -531,6 +531,102 @@
         "message": "Найдено в ID настройки:",
         "description": "Settings search: before a setting's internal ID (such as popupWidth), with the matched words marked, when the search matched only the ID"
     },
+    "settings_searchMatchedKeywordList": {
+        "message": "Найдено в ключевых словах:",
+        "description": "Settings search: before the other words a setting can be found by (its keywords, which rows never show), with the matched words marked"
+    },
+    "settings_sectionSettingsSearch": {
+        "message": "Поиск по настройкам",
+        "description": "Options section heading (Saving & Search tab): the search field at the top of the settings page"
+    },
+    "settings_settingsSearchSources": {
+        "message": "Искать в",
+        "description": "Setting label: which texts of each setting the settings search looks in (a checklist)"
+    },
+    "settings_settingsSearchSourcesDesc": {
+        "message": "Какие тексты каждой настройки просматривает поиск вверху этой страницы",
+        "description": "Setting description for Search In"
+    },
+    "settings_settingsSearchSourceLabel": {
+        "message": "Названиях",
+        "description": "Search In choice: the names of settings"
+    },
+    "settings_settingsSearchSourceDescription": {
+        "message": "Описаниях",
+        "description": "Search In choice: the descriptions of settings"
+    },
+    "settings_settingsSearchSourceKeywordList": {
+        "message": "Ключевых словах",
+        "description": "Search In choice: other words some settings can be found by"
+    },
+    "settings_settingsSearchSourceId": {
+        "message": "ID настроек",
+        "description": "Search In choice: internal setting IDs such as popupWidth"
+    },
+    "settings_settingsSearchMatch": {
+        "message": "Совпадение слов",
+        "description": "Setting label: how the words of a settings search must match"
+    },
+    "settings_settingsSearchMatchDesc": {
+        "message": "Может ли каждое введённое слово совпадать где угодно и в любом порядке, или весь запрос должен совпадать в точности так, как введён",
+        "description": "Setting description for Word Matching"
+    },
+    "settings_settingsSearchMatchAllWords": {
+        "message": "Все слова, в любом порядке",
+        "description": "Word Matching option: every word must match, anywhere and in any order"
+    },
+    "settings_settingsSearchMatchPhrase": {
+        "message": "Точная фраза",
+        "description": "Word Matching option: the whole search must match as typed"
+    },
+    "settings_groupSettingsSearchShow": {
+        "message": "В результатах поиска",
+        "description": "Checklist title: what settings search results show besides the settings"
+    },
+    "settings_groupSettingsSearchShowDesc": {
+        "message": "Что поиск по настройкам добавляет к найденным настройкам",
+        "description": "Checklist description"
+    },
+    "settings_settingsSearchHighlight": {
+        "message": "Выделять совпадения",
+        "description": "Checklist option: mark the searched words in the results"
+    },
+    "settings_settingsSearchHighlightDesc": {
+        "message": "Отмечать искомые слова и вкладки с совпадениями",
+        "description": "Checklist option description"
+    },
+    "settings_settingsSearchNotes": {
+        "message": "Пояснять скрытые совпадения",
+        "description": "Checklist option: the \"Found in\" notes under results"
+    },
+    "settings_settingsSearchNotesDesc": {
+        "message": "Указывать под настройкой, где она найдена, если этот текст не показан, например в описании или ID настройки",
+        "description": "Checklist option description"
+    },
+    "settings_settingsSearchTabCounts": {
+        "message": "Число совпадений на вкладках",
+        "description": "Checklist option: the number of matches beside each tab"
+    },
+    "settings_settingsSearchTabCountsDesc": {
+        "message": "Показывать рядом с каждой вкладкой, сколько её настроек совпадает",
+        "description": "Checklist option description"
+    },
+    "settings_themeKeywords": {
+        "message": "тёмный режим, светлый режим, ночной режим, цвета",
+        "description": "Other words the Theme setting can be found by in the settings search, separated by commas; never shown in the row"
+    },
+    "settings_languageKeywords": {
+        "message": "локаль, перевод, переводить",
+        "description": "Other words the Language setting can be found by in the settings search, separated by commas; never shown in the row"
+    },
+    "settings_treeDensityKeywords": {
+        "message": "компактный, высота строк, отступы",
+        "description": "Other words the Tree Density setting can be found by in the settings search, separated by commas; never shown in the row"
+    },
+    "settings_toastDurationKeywords": {
+        "message": "всплывающее сообщение, тост, уведомление, время",
+        "description": "Other words the Toast Duration setting can be found by in the settings search, separated by commas; never shown in the row"
+    },
     "state_loadingSettings": {
         "message": "Загрузка настроек...",
         "description": "Settings loading state"

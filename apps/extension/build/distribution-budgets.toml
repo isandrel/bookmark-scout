@@ -324,19 +324,25 @@
 # ZIP 2,192,108 / 2,192,104 / 2,192,254 B, uncompressed 7,411,888 / 7,411,884 / 7,412,047 B
 # (Chrome / Edge / Firefox), 4,108,635 B of JavaScript, 2,733,816 B of locales, and other
 # 29,517 / 29,517 / 29,674 B.
+# Raised on 2026-10-29 (uncompressed 7,425,000 to 7,450,000, locales 2,745,000 to 2,775,000) for the
+# settings search's own settings (Search In, Word Matching, and what the results show), keywords
+# for four settings, and their copy in 12 languages, which add 26,467 B to the locales. Measured on
+# feat/settings-search-config from d6f0a00d: ZIP 2,198,100 / 2,198,105 / 2,198,168 B, uncompressed
+# 7,439,607 / 7,439,603 / 7,439,766 B (Chrome / Edge / Firefox), 4,103,169 B of JavaScript, and
+# 2,766,828 B of locales.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
 zip_bytes = 2_200_000
-raw_bytes = 7_425_000
+raw_bytes = 7_450_000
 
 [targets.edge]
 zip_bytes = 2_200_000
-raw_bytes = 7_425_000
+raw_bytes = 7_450_000
 
 [targets.firefox]
 zip_bytes = 2_200_000
-raw_bytes = 7_425_000
+raw_bytes = 7_450_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
@@ -345,6 +351,6 @@ raw_bytes = 7_425_000
 javascript = 4_120_000
 css = 92_000
 fonts = 143_000
-locales = 2_745_000
+locales = 2_775_000
 images = 320_000
 other = 30_000

@@ -8,7 +8,7 @@ Abre la página de configuración desde la entrada **Opciones** de la extensión
 ## Usar la página de configuración [#using-the-settings-page]
 
 - La página se abre en **Lo esencial**, con los pocos ajustes que la mayoría de la gente cambia. Todas las demás pestañas aparecen en **Avanzado**, y cada ajuste de **Lo esencial** también está en su propia pestaña: cambiarlo en cualquiera de los dos sitios cambia el mismo ajuste.
-- **Buscar en la configuración...**, en la parte superior, encuentra un ajuste en cualquier pestaña e indica cuántos coinciden. Cada palabra que escribas debe coincidir, en cualquier orden, sin importar mayúsculas ni acentos. Las palabras se resaltan donde coinciden, las pestañas con resultados muestran su número resaltado y una breve nota bajo un ajuste indica dónde coincidió cuando ese texto no se muestra, como su descripción o su ID de configuración.
+- **Buscar en la configuración...**, en la parte superior, encuentra un ajuste en cualquier pestaña e indica cuántos coinciden. Cada palabra que escribas debe coincidir, en cualquier orden, sin importar mayúsculas ni acentos. Las palabras se resaltan donde coinciden, las pestañas con resultados muestran su número resaltado y una breve nota bajo un ajuste indica dónde coincidió cuando ese texto no se muestra, como su descripción o su ID de configuración. Algunos ajustes también se encuentran por otras palabras con las que se conocen, como «modo nocturno» para **Tema**. Dónde busca, cómo coinciden las palabras y qué muestra se puede cambiar en [Búsqueda en la configuración](#settings-search).
 - Cada pestaña se divide en secciones con título. El interruptor de cada herramienta está junto a su título; mientras está desactivado, el resto de sus ajustes se pliega. Los ajustes técnicos, como los tiempos de espera y la longitud de los nombres de archivo, están en **Configuración avanzada**, que permanece cerrada hasta que la abres o una búsqueda encuentra algo dentro.
 - Un ajuste cambiado se marca como **Modificado**, con un botón para restablecer su valor predeterminado. **Restablecer todos los atajos** restablece todos los ajustes.
 - **Hacer copia de los ajustes** guarda un archivo de copia de seguridad con las partes que selecciones: ajustes, ajustes de este equipo, búsquedas guardadas y vista de tabla, prompts y Sobre mí, reglas inteligentes, servicios de IA (con **URL base** y campos propios del proveedor), portadas y, solo si las seleccionas y lo confirmas, las claves de los servicios de IA, protegidas con contraseña de forma predeterminada. **Restaurar ajustes** muestra lo que cambiaría cada parte de una copia, te deja elegir partes y **Combinar** o **Reemplazar**, y guarda una copia de resguardo para **Deshacer importación**; también combina un archivo de ajustes simple con tu configuración. Ninguno de los dos toca tus marcadores. **Exportar marcadores**, junto a ellos, abre el administrador de marcadores en su herramienta de exportación. Consulta [Copia y restauración de los ajustes](/guides/import-export#back-up-and-restore-settings).
@@ -85,6 +85,16 @@ Debajo, **Atajos de teclado** muestra las teclas que tiene cada atajo en tu nave
 | **Carpetas recientes en el menú** | <SettingDefault path="search.context_menu.recent_max" /> | Cuántas carpetas recientes muestra el menú, aparte del **Máximo de carpetas recientes** de la ventana emergente |
 
 **Opciones del menú** elige lo que ofrece el menú, en orden: **Carpetas recientes** (un submenú) y **Barra de marcadores**. Marca una opción para mostrarla y arrástrala por su asa (o usa el menú del asa) para moverla; **Restablecer valores predeterminados** vuelve a mostrar ambas en su orden inicial.
+
+### Búsqueda en la configuración [#settings-search]
+
+| Ajuste | Predeterminado | Qué hace |
+| --- | --- | --- |
+| **Buscar en** | Nombres, Descripciones, Palabras clave, ID de configuración | Qué textos de cada ajuste revisa la búsqueda de la parte superior de esta página |
+| **Coincidencia de palabras** | Todas las palabras, en cualquier orden | Si cada palabra que escribes puede coincidir en cualquier lugar y orden, o si toda la búsqueda debe coincidir tal como la escribes |
+| **Resaltar coincidencias** | Activado | Marcar las palabras que buscaste y las pestañas con coincidencias |
+| **Explicar coincidencias ocultas** | Activado | Indicar bajo un ajuste dónde coincidió cuando ese texto no se muestra, como su descripción o su ID de configuración |
+| **Coincidencias en las pestañas** | Activado | Mostrar junto a cada pestaña cuántos de sus ajustes coinciden |
 
 ## Aspecto [#appearance]
 

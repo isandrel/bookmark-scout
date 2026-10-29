@@ -1,0 +1,16 @@
+# The Options page's settings search (the search field above the tabs). Read by
+# src/lib/settings-search.ts. What it searches, how words must match, and what the results show
+# are user settings (Saving & Search > Settings Search, config/settings/search.toml).
+
+# The texts a setting can be found by, ids from SETTING_SEARCH_SOURCE_IDS in
+# src/lib/settings-schema.ts, in the order a result's "Found in" notes list the ones its row does
+# not show. Each id once; which of them are searched is the Search In setting.
+note_order = ["label", "description", "keywords", "id"]
+
+# What a typed word and a setting's text may differ in and still match (src/lib/text-match.ts).
+# Accents are the combining marks Chrome's own settings search strips (`é` finds `e`), and width
+# is full-width forms (`Ａ` finds `a`).
+[fold]
+ignore_case = true
+ignore_accents = true
+ignore_width = true

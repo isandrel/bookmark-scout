@@ -1,7 +1,7 @@
 import type { Page, Worker } from '@playwright/test';
 import { dropFile } from './file-drop';
 import { expect, test, toastRegion } from './fixtures';
-import { settingRow } from './options-helpers';
+import { openOptionsTab, settingRow } from './options-helpers';
 import {
   readSettings,
   readStored,
@@ -653,6 +653,113 @@ test('settings search says where AI service fields are when no service shows the
   await expect(page.getByTestId('ai-services-search-hint')).toHaveText(
     'In each AI service: API Key and Requires an API key. Add one, or open one with a key, to see it.',
   );
+});
+
+test('settings search finds a setting by its keywords and says so', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await setSettings(extensionWorker, { language: 'en' });
+  await openOptions(page, extensionId);
+  // Theme's keywords ("dark mode, light mode, night mode, colors") are never shown in its row.
+  await page.getByRole('searchbox', { name: 'Search settings...' }).fill('night mode');
+  await expect(settingRow(page, 'theme')).toBeVisible();
+  const note = page.locator('[data-setting-note="theme"] [data-source="keywords"]');
+  await expect(note).toHaveText('Found in its keywords: dark mode, light mode, night mode, colors');
+  await expect(note.locator('mark')).toHaveText(['mode', 'mode', 'night', 'mode']);
+});
+
+test('settings search settings turn off marks, notes, and tab counts, live', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await setSettings(extensionWorker, { language: 'en' });
+  await openOptionsTab(page, extensionId, 'Saving & Search');
+  const search = page.getByRole('searchbox', { name: 'Search settings...' });
+  const show = page.getByRole('group', { name: 'Search Results Show' });
+  const appearanceCount = page
+    .getByRole('tab', { name: /^Appearance/ })
+    .getByTestId('settings-tab-match-count');
+  const weightOf = async () =>
+    appearanceCount.evaluate((element) => getComputedStyle(element).fontWeight);
+
+  // By default the words are marked, a hidden match is explained, and the count stands out.
+  await search.fill('width window');
+  // The caption marks "Width", and the note under it the description's "Width" and "window".
+  await expect(settingRow(page, 'popupWidth').locator('mark')).toHaveText([
+    'Width',
+    'Width',
+    'window',
+  ]);
+  await expect(page.getByTestId('setting-search-note')).toHaveCount(1);
+  await expect(appearanceCount).toHaveText('1');
+  expect(await weightOf()).toBe('600');
+
+  await search.fill('');
+  await show.getByRole('checkbox', { name: 'Highlight Matches' }).click();
+  await show.getByRole('checkbox', { name: 'Explain Hidden Matches' }).click();
+  await expect
+    .poll(async () => {
+      const stored = await readSettings(extensionWorker);
+      return [stored.settingsSearchHighlight, stored.settingsSearchNotes];
+    })
+    .toEqual([false, false]);
+
+  // The same search now shows plain text, no note, and the count in the plain style.
+  await search.fill('width window');
+  await expect(page.getByText('1 matching setting in all tabs')).toBeVisible();
+  await expect(settingRow(page, 'popupWidth')).toBeVisible();
+  await expect(page.locator('mark')).toHaveCount(0);
+  await expect(page.getByTestId('setting-search-note')).toHaveCount(0);
+  await expect(appearanceCount).toHaveText('1');
+  expect(await weightOf()).not.toBe('600');
+
+  await search.fill('');
+  await show.getByRole('checkbox', { name: 'Match Counts on Tabs' }).click();
+  await expect
+    .poll(async () => (await readSettings(extensionWorker)).settingsSearchTabCounts)
+    .toBe(false);
+  await search.fill('width window');
+  await expect(page.getByText('1 matching setting in all tabs')).toBeVisible();
+  await expect(page.getByTestId('settings-tab-match-count')).toHaveCount(0);
+});
+
+test('settings search looks only in the texts Search In names, and matches an exact phrase', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await setSettings(extensionWorker, { language: 'en' });
+  await openOptionsTab(page, extensionId, 'Saving & Search');
+  const search = page.getByRole('searchbox', { name: 'Search settings...' });
+  const searchIn = page.getByRole('group', { name: 'Search In' });
+
+  // "aiAutoTriggerOnOpen" is the id of "Auto-recommend on Open"; without IDs it is not found.
+  await search.fill('autotrigger');
+  await expect(page.getByText('1 matching setting in all tabs')).toBeVisible();
+  await search.fill('');
+  await searchIn.getByRole('checkbox', { name: 'Setting IDs' }).click();
+  await expect
+    .poll(async () => (await readSettings(extensionWorker)).settingsSearchSources)
+    .toEqual(['label', 'description', 'keywords']);
+  await search.fill('autotrigger');
+  await expect(page.getByText('0 matching settings in all tabs')).toBeVisible();
+
+  // Exact phrase: the words must be together and in the typed order.
+  await search.fill('');
+  await settingRow(page, 'settingsSearchMatch')
+    .getByRole('radio', { name: 'Exact phrase' })
+    .click();
+  await expect
+    .poll(async () => (await readSettings(extensionWorker)).settingsSearchMatch)
+    .toBe('phrase');
+  await search.fill('popup width');
+  await expect(settingRow(page, 'popupWidth')).toBeVisible();
+  await expect(settingRow(page, 'popupWidth').locator('mark')).toHaveText(['Popup Width']);
+  await search.fill('width popup');
+  await expect(page.getByText('0 matching settings in all tabs')).toBeVisible();
 });
 
 test('number steppers step, accept typing, and leave an unlimited field empty for "No limit"', async ({

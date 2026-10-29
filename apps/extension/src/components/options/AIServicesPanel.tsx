@@ -189,10 +189,7 @@ export function AIServicesPanel({
       )}
       {!isLoading && hiddenMatches.length > 0 && (
         <p data-testid="ai-services-search-hint" className="text-sm text-muted-foreground">
-          {t(
-            'qaOptions_searchInService',
-            formatList(hiddenMatches.flatMap((field) => field.text.slice(0, 1))),
-          )}
+          {t('qaOptions_searchInService', formatList(hiddenMatches.map((field) => field.label)))}
         </p>
       )}
 

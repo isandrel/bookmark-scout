@@ -259,19 +259,45 @@ const OptionsPage: React.FC = () => {
       }),
   });
 
-  // Rows and panels read the compiled query (SettingsSearchContext) to mark what it matched.
-  const textQuery = useMemo(() => compileTextQuery(searchQuery), [searchQuery]);
+  // Rows and panels read the search (SettingsSearchContext) to mark what it matched. Its settings
+  // (Saving & Search > Settings Search) apply live, as they are edited.
+  const {
+    settingsSearchMatch: searchMatchMode,
+    settingsSearchSources: searchSources,
+    settingsSearchHighlight: searchHighlight,
+    settingsSearchNotes: searchNotes,
+    settingsSearchTabCounts: searchTabCounts,
+  } = values;
+  const textQuery = useMemo(
+    () => compileSettingsQuery(searchQuery, searchMatchMode),
+    [searchQuery, searchMatchMode],
+  );
+  const searchState = useMemo(
+    () =>
+      textQuery && {
+        query: textQuery,
+        sources: searchSources,
+        highlight: searchHighlight,
+        notes: searchNotes,
+      },
+    [textQuery, searchSources, searchHighlight, searchNotes],
+  );
   const searchResults = useMemo(() => {
     if (!textQuery) return null;
     return Object.fromEntries(
       Object.entries(categories).map(([key, category]) => [
         key,
-        category.fields.filter((fieldKey) => matchSetting(fieldKey, textQuery) !== undefined),
+        category.fields.filter(
+          (fieldKey) => matchSetting(fieldKey, textQuery, searchSources) !== undefined,
+        ),
       ]),
     ) as Record<string, (keyof Settings)[]>;
-  }, [categories, textQuery]);
+  }, [categories, textQuery, searchSources]);
   // AI services are not synced settings, so their fields are matched separately.
-  const aiPanelFieldMatches = useMemo(() => matchAIServicesSearch(textQuery), [textQuery]);
+  const aiPanelFieldMatches = useMemo(
+    () => matchAIServicesSearch(textQuery, searchSources),
+    [textQuery, searchSources],
+  );
   const aiPanelMatches = aiPanelFieldMatches.length;
   const searchMatchCount = searchResults
     ? Object.values(searchResults).reduce((total, fields) => total + fields.length, 0) +
@@ -656,13 +682,13 @@ const OptionsPage: React.FC = () => {
                     >
                       {tabIcons[key]}
                       <span className="flex-1 truncate text-left">{category.label}</span>
-                      {count !== undefined && (
-                        // Tabs holding matches stand out in the search's marker color.
+                      {count !== undefined && searchTabCounts && (
+                        // With Highlight Matches on, tabs holding matches use the marker color.
                         <span
                           data-testid="settings-tab-match-count"
                           className={cn(
                             'rounded-full px-1.5 font-mono text-xs tabular-nums',
-                            count > 0
+                            count > 0 && searchHighlight
                               ? 'bg-marker font-semibold text-marker-foreground'
                               : 'bg-muted text-muted-foreground',
                           )}
@@ -679,7 +705,7 @@ const OptionsPage: React.FC = () => {
 
           <div className="min-w-0 flex-1">
             {searchResults ? (
-              <SettingsSearchContext value={textQuery}>
+              <SettingsSearchContext value={searchState}>
                 <section aria-live="polite" className="space-y-6">
                   <p className="text-sm text-muted-foreground">
                     {tPlural('settings_searchResultsCount', searchMatchCount)}

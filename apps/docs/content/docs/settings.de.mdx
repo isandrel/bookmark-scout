@@ -8,7 +8,7 @@ description: Jede Einstellung auf der Einstellungsseite von Bookmark Scout, Tab 
 ## Die Einstellungsseite verwenden [#using-the-settings-page]
 
 - Die Seite öffnet sich auf **Das Wichtigste**, mit den wenigen Einstellungen, die die meisten Menschen ändern. Alle anderen Tabs stehen unter **Erweitert**, und jede Einstellung aus **Das Wichtigste** steht dort auch in ihrem eigenen Tab: Ändern Sie sie an einer der beiden Stellen, ändert sich dieselbe Einstellung.
-- **Einstellungen durchsuchen...** oben auf der Seite findet eine Einstellung in jedem Tab und zeigt an, wie viele Treffer es gibt. Jedes eingegebene Wort muss vorkommen, in beliebiger Reihenfolge, ohne Rücksicht auf Groß- und Kleinschreibung oder Akzente. Die Wörter werden dort hervorgehoben, wo sie gefunden wurden, Tabs mit Treffern zeigen ihre Anzahl hervorgehoben, und ein kurzer Hinweis unter einer Einstellung sagt, wo sie gefunden wurde, wenn dieser Text nicht angezeigt wird, etwa ihre Beschreibung oder ihre Einstellungs-ID.
+- **Einstellungen durchsuchen...** oben auf der Seite findet eine Einstellung in jedem Tab und zeigt an, wie viele Treffer es gibt. Jedes eingegebene Wort muss vorkommen, in beliebiger Reihenfolge, ohne Rücksicht auf Groß- und Kleinschreibung oder Akzente. Die Wörter werden dort hervorgehoben, wo sie gefunden wurden, Tabs mit Treffern zeigen ihre Anzahl hervorgehoben, und ein kurzer Hinweis unter einer Einstellung sagt, wo sie gefunden wurde, wenn dieser Text nicht angezeigt wird, etwa ihre Beschreibung oder ihre Einstellungs-ID. Manche Einstellungen werden auch über andere Wörter gefunden, unter denen man sie kennt, etwa „Nachtmodus“ für **Design**. Worin gesucht wird, wie Wörter passen und was angezeigt wird, lässt sich unter [Einstellungssuche](#settings-search) ändern.
 - Jeder Tab ist in Abschnitte mit Überschriften gegliedert. Der Ein-/Aus-Schalter eines Tools steht neben seiner Überschrift; solange er aus ist, sind die übrigen Einstellungen eingeklappt. Technische Einstellungen wie Zeitlimits und Dateinamenlängen stehen unter **Erweiterte Einstellungen**, die geschlossen bleiben, bis Sie sie öffnen oder eine Suche darin etwas findet.
 - Eine geänderte Einstellung ist als **Geändert** markiert und hat eine Schaltfläche, um sie auf den Standardwert zurückzusetzen. **Alle Kürzel zurücksetzen** setzt alle Einstellungen zurück.
 - **Einstellungen sichern** speichert eine Sicherungsdatei mit den Teilen, die Sie auswählen: Einstellungen, Einstellungen dieses Computers, gespeicherte Suchen und Tabellenansicht, Prompts und „Über mich“, intelligente Regeln, KI-Dienste (mit **Basis-URL** und anbieterspezifischen Feldern), Titelbilder und, nur wenn Sie sie auswählen und bestätigen, die Schlüssel der KI-Dienste, standardmäßig mit einem Passwort geschützt. **Einstellungen wiederherstellen** zeigt, was jeder Teil einer Sicherung ändern würde, lässt Sie Teile auswählen und **Zusammenführen** oder **Ersetzen** wählen und bewahrt eine Sicherheitskopie für **Import rückgängig machen** auf; außerdem führt es eine einfache Einstellungsdatei mit Ihren Einstellungen zusammen. Beides lässt Ihre Lesezeichen unberührt. **Lesezeichen exportieren** daneben öffnet den Lesezeichen-Manager mit seinem Export-Tool. Siehe [Einstellungen sichern und wiederherstellen](/guides/import-export#back-up-and-restore-settings).
@@ -85,6 +85,16 @@ Darunter zeigt **Tastenkürzel** die Tasten, die jedes Tastenkürzel in Ihrem Br
 | **Letzte Ordner im Menü** | <SettingDefault path="search.context_menu.recent_max" /> | Wie viele zuletzt verwendete Ordner das Menü zeigt, unabhängig von **Max. letzte Ordner** im Pop-up |
 
 **Menüeinträge** legt fest, was das Menü anbietet, in dieser Reihenfolge: **Letzte Ordner** (ein Untermenü) und **Lesezeichenleiste**. Haken Sie einen Eintrag an, um ihn anzuzeigen, und ziehen Sie ihn am Griff (oder nutzen Sie das Menü des Griffs), um ihn zu verschieben; **Standard wiederherstellen** zeigt wieder beide in der ursprünglichen Reihenfolge.
+
+### Einstellungssuche [#settings-search]
+
+| Einstellung | Standard | Wirkung |
+| --- | --- | --- |
+| **Suchen in** | Namen, Beschreibungen, Stichwörter, Einstellungs-IDs | Welche Texte jeder Einstellung die Suche oben auf dieser Seite durchsucht |
+| **Wortsuche** | Alle Wörter, in beliebiger Reihenfolge | Ob jedes eingegebene Wort irgendwo und in beliebiger Reihenfolge passen darf oder die ganze Suche genau so passen muss, wie sie eingegeben wurde |
+| **Treffer hervorheben** | An | Die gesuchten Wörter und die Tabs mit Treffern markieren |
+| **Versteckte Treffer erklären** | An | Unter einer Einstellung angeben, wo sie gefunden wurde, wenn dieser Text nicht angezeigt wird, etwa ihre Beschreibung oder Einstellungs-ID |
+| **Trefferzahl an Tabs** | An | Neben jedem Tab anzeigen, wie viele seiner Einstellungen passen |
 
 ## Darstellung [#appearance]
 

@@ -507,6 +507,102 @@
         "message": "설정 ID에서 찾음:",
         "description": "Settings search: before a setting's internal ID (such as popupWidth), with the matched words marked, when the search matched only the ID"
     },
+    "settings_searchMatchedKeywordList": {
+        "message": "키워드에서 찾음:",
+        "description": "Settings search: before the other words a setting can be found by (its keywords, which rows never show), with the matched words marked"
+    },
+    "settings_sectionSettingsSearch": {
+        "message": "설정 검색",
+        "description": "Options section heading (Saving & Search tab): the search field at the top of the settings page"
+    },
+    "settings_settingsSearchSources": {
+        "message": "검색 대상",
+        "description": "Setting label: which texts of each setting the settings search looks in (a checklist)"
+    },
+    "settings_settingsSearchSourcesDesc": {
+        "message": "이 페이지 위쪽의 검색이 각 설정에서 찾아볼 텍스트",
+        "description": "Setting description for Search In"
+    },
+    "settings_settingsSearchSourceLabel": {
+        "message": "이름",
+        "description": "Search In choice: the names of settings"
+    },
+    "settings_settingsSearchSourceDescription": {
+        "message": "설명",
+        "description": "Search In choice: the descriptions of settings"
+    },
+    "settings_settingsSearchSourceKeywordList": {
+        "message": "키워드",
+        "description": "Search In choice: other words some settings can be found by"
+    },
+    "settings_settingsSearchSourceId": {
+        "message": "설정 ID",
+        "description": "Search In choice: internal setting IDs such as popupWidth"
+    },
+    "settings_settingsSearchMatch": {
+        "message": "단어 일치",
+        "description": "Setting label: how the words of a settings search must match"
+    },
+    "settings_settingsSearchMatchDesc": {
+        "message": "입력한 단어가 각각 순서와 관계없이 어디에든 있으면 되는지, 검색어 전체가 입력한 그대로 일치해야 하는지",
+        "description": "Setting description for Word Matching"
+    },
+    "settings_settingsSearchMatchAllWords": {
+        "message": "모든 단어, 순서 무관",
+        "description": "Word Matching option: every word must match, anywhere and in any order"
+    },
+    "settings_settingsSearchMatchPhrase": {
+        "message": "정확한 구문",
+        "description": "Word Matching option: the whole search must match as typed"
+    },
+    "settings_groupSettingsSearchShow": {
+        "message": "검색 결과에 표시",
+        "description": "Checklist title: what settings search results show besides the settings"
+    },
+    "settings_groupSettingsSearchShowDesc": {
+        "message": "설정 검색이 찾은 설정과 함께 보여 주는 것",
+        "description": "Checklist description"
+    },
+    "settings_settingsSearchHighlight": {
+        "message": "일치 항목 강조",
+        "description": "Checklist option: mark the searched words in the results"
+    },
+    "settings_settingsSearchHighlightDesc": {
+        "message": "검색한 단어와 일치 항목이 있는 탭을 표시합니다",
+        "description": "Checklist option description"
+    },
+    "settings_settingsSearchNotes": {
+        "message": "숨은 일치 항목 설명",
+        "description": "Checklist option: the \"Found in\" notes under results"
+    },
+    "settings_settingsSearchNotesDesc": {
+        "message": "설명이나 설정 ID처럼 표시되지 않는 텍스트에서 찾았을 때 설정 아래에 어디서 찾았는지 알려 줍니다",
+        "description": "Checklist option description"
+    },
+    "settings_settingsSearchTabCounts": {
+        "message": "탭에 일치 개수 표시",
+        "description": "Checklist option: the number of matches beside each tab"
+    },
+    "settings_settingsSearchTabCountsDesc": {
+        "message": "각 탭 옆에 일치하는 설정 수를 표시합니다",
+        "description": "Checklist option description"
+    },
+    "settings_themeKeywords": {
+        "message": "다크 모드, 라이트 모드, 야간 모드, 색상",
+        "description": "Other words the Theme setting can be found by in the settings search, separated by commas; never shown in the row"
+    },
+    "settings_languageKeywords": {
+        "message": "로캘, 번역, 표시 언어",
+        "description": "Other words the Language setting can be found by in the settings search, separated by commas; never shown in the row"
+    },
+    "settings_treeDensityKeywords": {
+        "message": "촘촘하게, 행 높이, 간격",
+        "description": "Other words the Tree Density setting can be found by in the settings search, separated by commas; never shown in the row"
+    },
+    "settings_toastDurationKeywords": {
+        "message": "토스트, 메시지, 팝업, 시간",
+        "description": "Other words the Toast Duration setting can be found by in the settings search, separated by commas; never shown in the row"
+    },
     "state_loadingSettings": {
         "message": "설정 로딩 중...",
         "description": "Settings loading state"
