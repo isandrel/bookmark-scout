@@ -28,6 +28,11 @@ type FieldProps = {
   badge?: ReactNode;
   /** Setting layout: shown after the control, such as a reset button. */
   actions?: ReactNode;
+  /**
+   * Setting layout: shown under the description and error, outside the control's description,
+   * such as where a settings search matched the setting.
+   */
+  note?: ReactNode;
   children: (control: FieldControlProps) => ReactNode;
 };
 
@@ -47,6 +52,7 @@ export function Field({
   layout = 'stacked',
   badge,
   actions,
+  note,
   children,
 }: FieldProps) {
   const ids = getFieldIds(id);
@@ -82,6 +88,7 @@ export function Field({
                 {error}
               </p>
             )}
+            {note}
           </div>
           {actions}
         </div>
@@ -110,6 +117,7 @@ export function Field({
               {error}
             </p>
           )}
+          {note}
         </div>
         <div className="flex w-full items-center gap-2 sm:w-auto sm:shrink-0">
           {children(control)}

@@ -361,6 +361,18 @@ body {
 }
 
 /*
+ * Search matches (`HighlightedText`) keep a visible mark in Windows contrast themes: the system's
+ * own highlight pair, which the theme chose to contrast, instead of a fill forced to Canvas.
+ */
+@media (forced-colors: active) {
+  mark {
+    forced-color-adjust: none;
+    background-color: Mark;
+    color: MarkText;
+  }
+}
+
+/*
  * Exit animations hold their last frame until Base UI removes the element. With the default fill
  * mode, a closing dialog backdrop snapped back to full opacity for a frame between the end of its
  * fade and its removal, which showed as a dark flash.

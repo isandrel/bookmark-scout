@@ -21,6 +21,7 @@ import {
   updateAIService,
 } from '@/lib/ai-services-storage';
 import { saveSettings } from '@/lib/settings-storage';
+import { compileTextQuery } from '@/lib/text-match';
 import { getActiveAISettings } from '@/services/ai-settings';
 import { readStoredRaw, STORAGE_ITEMS, seedStored } from './storage-helpers';
 
@@ -33,7 +34,7 @@ beforeEach(async () => {
 
 describe('AI services search text', () => {
   it('matches editor fields and marks the ones under More settings', () => {
-    expect(matchAIServicesSearch('api key')).toEqual([
+    expect(matchAIServicesSearch(compileTextQuery('api key'))).toEqual([
       expect.objectContaining({
         advanced: false,
         editor: true,
@@ -42,14 +43,14 @@ describe('AI services search text', () => {
       expect.objectContaining({ advanced: false, editor: true, text: ['Requires an API key'] }),
     ]);
     // The panel's own title is always shown; editor fields only inside an open service.
-    expect(matchAIServicesSearch('ai services')).toEqual([
+    expect(matchAIServicesSearch(compileTextQuery('ai services'))).toEqual([
       expect.objectContaining({ editor: false }),
     ]);
-    expect(matchAIServicesSearch('base url')).toEqual([
+    expect(matchAIServicesSearch(compileTextQuery('base url'))).toEqual([
       expect.objectContaining({ advanced: true }),
     ]);
-    expect(matchAIServicesSearch('extra headers')).toHaveLength(1);
-    expect(matchAIServicesSearch('  ')).toEqual([]);
+    expect(matchAIServicesSearch(compileTextQuery('extra headers'))).toHaveLength(1);
+    expect(matchAIServicesSearch(compileTextQuery('  '))).toEqual([]);
   });
 });
 

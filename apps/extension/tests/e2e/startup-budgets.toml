@@ -128,7 +128,9 @@
 # settings on top of the shortcut remapping (1,316).
 # Raised from 1325 on 2026-10-22 for Requires an API key per AI service on top of the sync list
 # shards (1,326).
-"options.html" = 1335
+# Raised from 1335 on 2026-10-29 for the settings search highlights (matched words marked, notes
+# for matches in hidden text, accent-insensitive word matching): 1,333 before, 1,337 after.
+"options.html" = 1345
 # Raised from 1370 for the Bookmark Audit History (1,380 on 2026-10-20: `idb` and the record
 # written around every bookmark change), which the manager needs from its first change.
 # Raised from 1400 on 2026-10-21 for the config modules the manager now reads at start (1,403),

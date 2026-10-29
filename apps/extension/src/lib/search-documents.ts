@@ -561,14 +561,3 @@ function mergeReasons(reasons: readonly SearchMatchReason[]): SearchMatchReason[
   }
   return [...byField.values()].map((reason) => ({ ...reason, ranges: joinRanges(reason.ranges) }));
 }
-
-function joinRanges(ranges: readonly SearchMatchRange[]): SearchMatchRange[] {
-  const sorted = [...ranges].sort((left, right) => left[0] - right[0] || left[1] - right[1]);
-  const joined: [number, number][] = [];
-  for (const [start, end] of sorted) {
-    const last = joined.at(-1);
-    if (last && start <= last[1]) last[1] = Math.max(last[1], end);
-    else joined.push([start, end]);
-  }
-  return joined;
-}

@@ -1,17 +1,21 @@
 /**
- * HighlightedText component.
- * Renders untrusted text as plain React text, wrapping search matches in `<mark>` elements.
+ * Text with search matches wrapped in `<mark>`, for every search that shows what it matched: the
+ * popup and manager trees, folder matches, and the Options settings search. The text is rendered
+ * as plain React text, never HTML, because bookmark titles are untrusted.
+ *
+ * The mark is the `marker` fill with `marker-ink` text and bold weight, so it does not rely on
+ * color alone; under forced colors `theme.css` gives it the system `Mark` colors.
  */
 
 import type { ReactNode } from 'react';
 
-interface HighlightedTextProps {
+type HighlightedTextProps = {
   text: string;
   ranges?: ReadonlyArray<readonly [start: number, end: number]>;
   className?: string;
   /** Show the whole text on hover; off where the row around it has its own tooltip. */
   showTitle?: boolean;
-}
+};
 
 export function HighlightedText({
   text,

@@ -76,12 +76,9 @@ export function getAIServicesSearchFields(): AIServicesSearchField[] {
 }
 
 /** The panel fields a settings search matches. */
-export function matchAIServicesSearch(query: string): AIServicesSearchField[] {
-  const needle = query.trim().toLowerCase();
-  if (!needle) return [];
-  return getAIServicesSearchFields().filter(({ text }) =>
-    text.some((item) => item.toLowerCase().includes(needle)),
-  );
+export function matchAIServicesSearch(query: TextQuery | undefined): AIServicesSearchField[] {
+  if (!query) return [];
+  return getAIServicesSearchFields().filter(({ text }) => matchesEveryTerm(text, query));
 }
 
 type FieldErrors = { apiKey?: string; baseUrl?: string; extraHeaders?: string };
@@ -479,13 +476,17 @@ export function AIServiceEditor({
         <AIServiceNameField service={service} />
         <Field
           id={`${idPrefix}-apiKey`}
-          label={t('options_apiKey')}
+          label={<SearchMatchText text={t('options_apiKey')} />}
           description={
-            requiresKey
-              ? t('options_apiKeyDescription')
-              : keyTurnedOff
-                ? t('options_apiKeyTurnedOffDescription')
-                : t('options_apiKeyOptionalDescription', providerName)
+            <SearchMatchText
+              text={
+                requiresKey
+                  ? t('options_apiKeyDescription')
+                  : keyTurnedOff
+                    ? t('options_apiKeyTurnedOffDescription')
+                    : t('options_apiKeyOptionalDescription', providerName)
+              }
+            />
           }
           error={errors.apiKey}
         >
@@ -542,7 +543,7 @@ export function AIServiceEditor({
             data-testid="ai-service-requires-key"
           />
           <Label htmlFor={`${idPrefix}-requiresApiKey`} className="text-sm">
-            {t('options_requiresApiKey')}
+            <SearchMatchText text={t('options_requiresApiKey')} />
           </Label>
           <SettingHelp label={t('options_requiresApiKey')} help={t('options_requiresApiKeyHelp')} />
         </div>
@@ -550,7 +551,7 @@ export function AIServiceEditor({
 
       <div className="space-y-1.5">
         <Label id={`${idPrefix}-model-label`} className="text-sm font-medium">
-          {t('settings_aiModel')}
+          <SearchMatchText text={t('settings_aiModel')} />
         </Label>
         <div className="flex flex-wrap items-center gap-2">
           <SearchableSelect
@@ -585,7 +586,7 @@ export function AIServiceEditor({
         {providerSupportsCustomModel(provider) && (
           <div className="flex flex-wrap items-center gap-2 pt-1">
             <Label htmlFor={`${idPrefix}-customModel`} className="text-xs text-muted-foreground">
-              {t('options_customModel')}
+              <SearchMatchText text={t('options_customModel')} />
             </Label>
             <Input
               id={`${idPrefix}-customModel`}
@@ -607,7 +608,7 @@ export function AIServiceEditor({
               id={`${idPrefix}-customModel-description`}
               className="w-full text-xs text-muted-foreground"
             >
-              {t('options_customModelDescription')}
+              <SearchMatchText text={t('options_customModelDescription')} />
             </p>
           </div>
         )}
@@ -624,8 +625,8 @@ export function AIServiceEditor({
         <CollapsibleContent className="mt-3 space-y-4 border-l pl-4">
           <Field
             id={`${idPrefix}-baseUrl`}
-            label={t('options_baseUrl')}
-            description={t('options_baseUrlDescription')}
+            label={<SearchMatchText text={t('options_baseUrl')} />}
+            description={<SearchMatchText text={t('options_baseUrlDescription')} />}
             error={errors.baseUrl}
           >
             {(control) => (
@@ -647,8 +648,8 @@ export function AIServiceEditor({
             <Field
               key={field}
               id={`${idPrefix}-option-${field}`}
-              label={t(EXTRA_FIELD_COPY[field].label)}
-              description={t(EXTRA_FIELD_COPY[field].description)}
+              label={<SearchMatchText text={t(EXTRA_FIELD_COPY[field].label)} />}
+              description={<SearchMatchText text={t(EXTRA_FIELD_COPY[field].description)} />}
             >
               {(control) => (
                 <Input
@@ -666,8 +667,8 @@ export function AIServiceEditor({
           ))}
           <Field
             id={`${idPrefix}-extraHeaders`}
-            label={t('options_extraHeaders')}
-            description={t('options_extraHeadersDescription')}
+            label={<SearchMatchText text={t('options_extraHeaders')} />}
+            description={<SearchMatchText text={t('options_extraHeadersDescription')} />}
             error={errors.extraHeaders}
           >
             {(control) => (

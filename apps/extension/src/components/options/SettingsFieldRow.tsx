@@ -237,6 +237,10 @@ function NumberStepper({
   );
 }
 
+/** What a settings row shows of a setting, for `SettingSearchNote`. */
+const LABEL_AND_DESCRIPTION: readonly SettingSearchSource[] = ['label', 'description'];
+const LABEL_ONLY: readonly SettingSearchSource[] = ['label'];
+
 type SettingsGroupRowProps = {
   group: SettingsFieldGroup;
   values: Settings;
@@ -245,7 +249,6 @@ type SettingsGroupRowProps = {
 
 /** Related on/off settings as one checklist; each option still saves to its own setting. */
 export function SettingsGroupRow({ group, values, onChange }: SettingsGroupRowProps) {
-  const meta = getSettingsFieldMeta();
   const changed = group.fields.filter((fieldKey) => values[fieldKey] !== defaultSettings[fieldKey]);
   const labelId = `setting-group-${group.id}-label`;
 
@@ -262,12 +265,12 @@ export function SettingsGroupRow({ group, values, onChange }: SettingsGroupRowPr
         <div className="space-y-1">
           <div className="flex flex-wrap items-center gap-2">
             <span id={labelId} className="text-base font-medium">
-              {group.label}
+              <SearchMatchText text={group.label} />
             </span>
             {changed.length > 0 && <ModifiedBadge />}
           </div>
           <p id={`${labelId}-description`} className="text-sm text-muted-foreground">
-            {group.description}
+            <SearchMatchText text={group.description} />
           </p>
         </div>
         <fieldset
@@ -292,13 +295,16 @@ export function SettingsGroupRow({ group, values, onChange }: SettingsGroupRowPr
                   className="mt-0.5"
                 />
                 <span className="min-w-0">
-                  <span className="block text-sm font-medium">{meta[fieldKey].label}</span>
+                  <span className="block text-sm font-medium">
+                    <SettingSearchText fieldKey={fieldKey} source="label" />
+                  </span>
                   <span
                     id={`${controlId}-description`}
                     className="block text-xs text-muted-foreground"
                   >
-                    {meta[fieldKey].description}
+                    <SettingSearchText fieldKey={fieldKey} source="description" />
                   </span>
+                  <SettingSearchNote fieldKey={fieldKey} shown={LABEL_AND_DESCRIPTION} />
                 </span>
               </label>
             );
@@ -330,12 +336,15 @@ function GroupRowFrame({
   fields,
   onChange,
   aside,
+  lead,
   children,
 }: {
   group: SettingsFieldGroup;
   values: Settings;
   fields: readonly (keyof Settings)[];
   onChange: (fieldKey: keyof Settings, value: SettingValue) => void;
+  /** The setting whose label and description the group shows as its own (a `switch` group). */
+  lead?: keyof Settings;
   /** A control beside the label, such as the lead switch of a `switch` group. */
   aside?: React.ReactNode;
   children: React.ReactNode;
@@ -356,13 +365,14 @@ function GroupRowFrame({
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
               <span id={labelId} className="text-base font-medium">
-                {group.label}
+                <SearchMatchText text={group.label} />
               </span>
               {changed.length > 0 && <ModifiedBadge />}
             </div>
             <p id={`${labelId}-description`} className="text-sm text-muted-foreground">
-              {group.description}
+              <SearchMatchText text={group.description} />
             </p>
+            {lead && <SettingSearchNote fieldKey={lead} shown={LABEL_AND_DESCRIPTION} />}
           </div>
           {aside}
         </div>
@@ -406,7 +416,7 @@ function InlineSetting({
   return (
     <div data-setting={fieldKey} className="space-y-1">
       <span id={captionId} className="block text-xs font-medium text-muted-foreground">
-        {meta.label}
+        <SettingSearchText fieldKey={fieldKey} source="label" />
       </span>
       {meta.type === 'select' && fitsSegmentedControl(choices) ? (
         <SegmentedControl
@@ -454,6 +464,8 @@ function InlineSetting({
           onChange={onChange}
         />
       )}
+      {/* The caption is the label only, so a match in the description is said here. */}
+      <SettingSearchNote fieldKey={fieldKey} shown={LABEL_ONLY} />
     </div>
   );
 }
@@ -506,6 +518,7 @@ export function SettingsSwitchRow({ group, values, visible, onChange }: GroupRow
       values={values}
       fields={fields}
       onChange={onChange}
+      lead={lead}
       aside={
         <span data-setting={lead} className="shrink-0">
           <Switch
@@ -549,10 +562,13 @@ export function SettingsSwitchRow({ group, values, visible, onChange }: GroupRow
               className="mt-0.5"
             />
             <span className="min-w-0">
-              <span className="block text-sm font-medium">{meta[fieldKey].label}</span>
-              <span id={`${controlId}-description`} className="block text-xs text-muted-foreground">
-                {meta[fieldKey].description}
+              <span className="block text-sm font-medium">
+                <SettingSearchText fieldKey={fieldKey} source="label" />
               </span>
+              <span id={`${controlId}-description`} className="block text-xs text-muted-foreground">
+                <SettingSearchText fieldKey={fieldKey} source="description" />
+              </span>
+              <SettingSearchNote fieldKey={fieldKey} shown={LABEL_AND_DESCRIPTION} />
             </span>
           </label>
         );
@@ -816,8 +832,11 @@ export function SettingsFieldRow({
         id={getSettingControlId(fieldKey)}
         // List editors need the row's full width, so their control goes under the label.
         layout={meta.list ? 'settingWide' : 'setting'}
-        label={meta.label}
-        description={meta.description}
+        label={<SettingSearchText fieldKey={fieldKey} source="label" />}
+        description={
+          meta.description ? <SettingSearchText fieldKey={fieldKey} source="description" /> : null
+        }
+        note={<SettingSearchNote fieldKey={fieldKey} shown={LABEL_AND_DESCRIPTION} />}
         error={error}
         badge={
           <>
