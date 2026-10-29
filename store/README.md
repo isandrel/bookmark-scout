@@ -13,6 +13,7 @@ Prepared on 2026-10-01 against extension version `0.2.0`; the permissions, listi
 | [`listings/en.md`](listings/en.md) | English name, summaries, full descriptions, categories, and search terms for each store |
 | `listings/<locale>.md` | The same listing copy in each other extension language ([`zh_CN`](listings/zh_CN.md), [`es`](listings/es.md), [`fr`](listings/fr.md), [`pt_BR`](listings/pt_BR.md), [`ru`](listings/ru.md), [`id`](listings/id.md), [`de`](listings/de.md), [`ja`](listings/ja.md), [`ko`](listings/ko.md), [`it`](listings/it.md), [`zh_TW`](listings/zh_TW.md)), in the order of `[locales] extension` in `config/project.toml` |
 | [`permissions.md`](permissions.md) | Permission-by-permission justification from the built manifests, the Chrome single-purpose statement, and linter results |
+| [`dashboard-limits.toml`](dashboard-limits.toml) | Character limits of the dashboard fields pasted from this folder; `scripts/store-field-limits.test.ts` checks the justifications, single purpose, and test instructions against them |
 | [`privacy-disclosures.md`](privacy-disclosures.md) | Data inventory and the answers for each store's privacy questions |
 | [`privacy-policy.md`](privacy-policy.md) | Privacy policy text, published at <https://bookmark-scout.com/privacy/> (other languages at `/<locale>/privacy/`) |
 | [`checklists/chrome-web-store.md`](checklists/chrome-web-store.md) | Chrome Web Store submission gates |
