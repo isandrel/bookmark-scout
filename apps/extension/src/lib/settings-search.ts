@@ -1,9 +1,9 @@
 /**
  * The Options page's settings search (`text-match.ts` rules): a setting matches when every word
  * of the query is in its label, its description, or its id (`popupWidth`, which stays the same in
- * every language), each word in any of them. The page marks the words where it shows the text
- * they were found in, and says where the rest were found when they are in text it does not show
- * (a setting's id, or the description of a setting drawn without one).
+ * every language), each word in any of them. The results mark the words in every text they show,
+ * and say where a setting was found when the words are only in text its row does not show (its
+ * id, or the description of a setting drawn without one).
  */
 
 /** The texts a setting is searched by, in the order a note about hidden matches lists them. */
@@ -35,14 +35,16 @@ export function matchSetting(
 }
 
 /**
- * The texts a row does not show that explain its match: those holding a word that none of the
- * shown texts holds. Empty when every word is visible where the row shows it.
+ * The texts a row does not show that explain its match: those holding a word that neither the
+ * shown texts nor other visible text near the row (`alsoVisible`, word indexes) holds. Empty when
+ * every word is visible.
  */
 export function hiddenSettingMatches(
   match: SettingSearchMatch,
   shown: readonly SettingSearchSource[],
+  alsoVisible: ReadonlySet<number> = new Set(),
 ): SettingSearchSource[] {
-  const visible = new Set(shown.flatMap((source) => [...match[source].terms]));
+  const visible = new Set([...alsoVisible, ...shown.flatMap((source) => [...match[source].terms])]);
   return SETTING_SEARCH_SOURCES.filter(
     (source) =>
       !shown.includes(source) && [...match[source].terms].some((term) => !visible.has(term)),

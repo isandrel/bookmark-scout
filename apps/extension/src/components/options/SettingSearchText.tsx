@@ -1,14 +1,22 @@
 /**
- * What the Options settings search matched (`settings-search.ts`): the words marked where a row
- * shows the text they were found in, and a note for words found only in text the row does not
- * show, so every result says why it is there.
+ * What the Options settings search matched (`settings-search.ts`). Inside the results, every
+ * visible text marks the search's words wherever it holds them (labels, descriptions, section
+ * headings, group titles), as Chrome's settings search does, so a user sees each word they typed;
+ * the category's own title and intro stay unmarked. A setting found by a word in text its row does
+ * not show gets a note saying where, so every result says why it is there.
  */
 import { TextSearch } from 'lucide-react';
 
-/**
- * A setting's label or description, with the search's words marked when the setting matched.
- * A setting shown only because its group is (a pair's other number) stays unmarked.
- */
+/** Text shown in the search results, with the search's words marked; plain outside a search. */
+export function SearchMatchText({ text }: { text: string }) {
+  const query = useSettingsSearchQuery();
+  if (!query) return text;
+  return (
+    <HighlightedText text={text} ranges={findTextMatches(text, query).ranges} showTitle={false} />
+  );
+}
+
+/** A setting's label or description, with the search's words marked. */
 export function SettingSearchText({
   fieldKey,
   source,
@@ -16,10 +24,7 @@ export function SettingSearchText({
   fieldKey: keyof Settings;
   source: Exclude<SettingSearchSource, 'id'>;
 }) {
-  const match = useSettingSearchMatch(fieldKey);
-  const text = getSettingsFieldMeta()[fieldKey][source];
-  if (!match) return text;
-  return <HighlightedText text={text} ranges={match[source].ranges} showTitle={false} />;
+  return <SearchMatchText text={getSettingsFieldMeta()[fieldKey][source]} />;
 }
 
 const NOTE_MESSAGES = {
@@ -30,17 +35,28 @@ const NOTE_MESSAGES = {
 
 /**
  * For a matched setting, the texts it was found in that its row does not show (`shown` lists the
- * ones it does), each with the words marked. Nothing when the shown text explains the match.
+ * ones it does), each with the words marked. Nothing when the visible text explains the match:
+ * the shown texts, and `nearby` text such as the heading above a section's switch.
  */
 export function SettingSearchNote({
   fieldKey,
   shown,
+  nearby,
 }: {
   fieldKey: keyof Settings;
   shown: readonly SettingSearchSource[];
+  nearby?: string;
 }) {
+  const query = useSettingsSearchQuery();
   const match = useSettingSearchMatch(fieldKey);
-  const hidden = match ? hiddenSettingMatches(match, shown) : [];
+  const hidden =
+    match && query
+      ? hiddenSettingMatches(
+          match,
+          shown,
+          nearby ? findTextMatches(nearby, query).terms : undefined,
+        )
+      : [];
   if (!match || hidden.length === 0) return null;
   return (
     <div data-testid="setting-search-note" data-setting-note={fieldKey} className="space-y-0.5">
@@ -63,17 +79,5 @@ export function SettingSearchNote({
         </p>
       ))}
     </div>
-  );
-}
-
-/**
- * Text outside the settings, such as an AI services field, with the search's words marked when
- * the search matched it: every word in `within`, the texts it is searched by (itself by default).
- */
-export function SearchMatchText({ text, within }: { text: string; within?: readonly string[] }) {
-  const query = useSettingsSearchQuery();
-  if (!query || !matchesEveryTerm(within ?? [text], query)) return text;
-  return (
-    <HighlightedText text={text} ranges={findTextMatches(text, query).ranges} showTitle={false} />
   );
 }

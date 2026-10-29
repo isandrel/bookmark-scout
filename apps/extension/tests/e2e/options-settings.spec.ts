@@ -571,11 +571,22 @@ test('settings search marks the matched words and says where hidden matches are'
   // Each word is marked where it was found, ignoring case and accents, in any order.
   await search.fill('WIDTH pópup');
   await expect(width.locator('mark')).toHaveText(['Popup', 'Width']);
-  // The pair keeps its other number, which did not match, unmarked.
-  await expect(height).toBeVisible();
-  await expect(height.locator('mark')).toHaveCount(0);
-  // The group's own title is not searched, so it is not marked.
-  await expect(page.locator('[data-setting-group="popupSize"] mark')).toHaveCount(2);
+  // Every visible text in the results marks the words it holds, as Chrome does: the pair's other
+  // number (shown to keep the pair whole), the group's title and description, and the heading.
+  await expect(height.locator('mark')).toHaveText(['Popup']);
+  const group = page.locator('[data-setting-group="popupSize"]');
+  await expect(group.locator('#setting-group-popupSize-label mark')).toHaveText(['Popup']);
+  await expect(group.locator('#setting-group-popupSize-label-description mark')).toHaveText([
+    'Width',
+    'popup',
+  ]);
+  await expect(
+    page.getByRole('heading', { name: 'Popup', exact: true }).locator('mark'),
+  ).toHaveText(['Popup']);
+  // The category's own title and intro ("…popup size…") stay unmarked.
+  const appearance = page.locator('[data-search-category="appearance"]');
+  await expect(appearance.getByRole('heading', { name: 'Appearance' })).toBeVisible();
+  await expect(appearance.locator('> div:first-child mark')).toHaveCount(0);
   await expect(page.getByTestId('setting-search-note')).toHaveCount(0);
 
   // "window" is only in the description, which the pair does not show: a note shows it, marked.

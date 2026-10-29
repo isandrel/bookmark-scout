@@ -173,8 +173,8 @@ export function AIServicesPanel({
       id="ai-services"
       actionsLayout="wrap"
       data-testid="ai-services"
-      title={<AIServicesSearchText field="panel" />}
-      description={<AIServicesSearchText field="panel" part={1} />}
+      title={<SearchMatchText text={t('options_aiServices')} />}
+      description={<SearchMatchText text={t('options_aiServicesDescription')} />}
       actions={
         <Button ref={addButtonRef} variant="outline" onClick={() => setAdding(true)}>
           <Plus className="h-4 w-4" />

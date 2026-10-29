@@ -56,6 +56,18 @@ describe('settings search', () => {
     ]);
   });
 
+  it('counts words visible near the row, such as a section heading, as explained', () => {
+    const match = matchSetting('popupWidth', query('width window'));
+    // "window" (word 1) shows in the heading above, so only "width" would need a note, and the
+    // label shows it.
+    expect(match && hiddenSettingMatches(match, ['label'], new Set([1]))).toEqual([]);
+    expect(match && hiddenSettingMatches(match, [], new Set([1]))).toEqual([
+      'label',
+      'description',
+      'id',
+    ]);
+  });
+
   it('matches the same settings whatever the order of the words', () => {
     const fields = Object.values(getSettingsCategories()).flatMap((category) => category.fields);
     const matching = (search: string) =>

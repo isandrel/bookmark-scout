@@ -462,9 +462,6 @@ const OptionsPage: React.FC = () => {
           const folded =
             !matches && section.toggle !== undefined && shownValues[section.toggle] !== true;
           const headingId = `settings-section-${categoryKey}-${section.id}`;
-          // A heading that reads as its switch's label is where a search marks that label.
-          const headingNamesToggle =
-            section.toggle !== undefined && section.label === meta[section.toggle].label;
           const unmet =
             section.requires !== undefined && shownValues[section.requires] !== true
               ? section.requires
@@ -494,21 +491,14 @@ const OptionsPage: React.FC = () => {
                 {section.label ? (
                   <div className="flex items-center justify-between gap-3">
                     <h3 id={headingId} className="text-base font-semibold text-foreground">
-                      {headingNamesToggle && section.toggle ? (
-                        <SettingSearchText fieldKey={section.toggle} source="label" />
-                      ) : (
-                        section.label
-                      )}
+                      <SearchMatchText text={section.label} />
                     </h3>
                     {section.toggle && renderSectionToggle(section.toggle, headingId)}
                   </div>
                 ) : null}
                 {/* The heading switch shows no description, and often another name. */}
                 {section.toggle && (
-                  <SettingSearchNote
-                    fieldKey={section.toggle}
-                    shown={headingNamesToggle ? ['label'] : []}
-                  />
+                  <SettingSearchNote fieldKey={section.toggle} shown={[]} nearby={section.label} />
                 )}
                 {folded ? (
                   <p className="text-sm text-muted-foreground">{t('settings_sectionOff')}</p>

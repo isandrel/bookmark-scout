@@ -265,12 +265,12 @@ export function SettingsGroupRow({ group, values, onChange }: SettingsGroupRowPr
         <div className="space-y-1">
           <div className="flex flex-wrap items-center gap-2">
             <span id={labelId} className="text-base font-medium">
-              {group.label}
+              <SearchMatchText text={group.label} />
             </span>
             {changed.length > 0 && <ModifiedBadge />}
           </div>
           <p id={`${labelId}-description`} className="text-sm text-muted-foreground">
-            {group.description}
+            <SearchMatchText text={group.description} />
           </p>
         </div>
         <fieldset
@@ -365,16 +365,12 @@ function GroupRowFrame({
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
               <span id={labelId} className="text-base font-medium">
-                {lead ? <SettingSearchText fieldKey={lead} source="label" /> : group.label}
+                <SearchMatchText text={group.label} />
               </span>
               {changed.length > 0 && <ModifiedBadge />}
             </div>
             <p id={`${labelId}-description`} className="text-sm text-muted-foreground">
-              {lead ? (
-                <SettingSearchText fieldKey={lead} source="description" />
-              ) : (
-                group.description
-              )}
+              <SearchMatchText text={group.description} />
             </p>
             {lead && <SettingSearchNote fieldKey={lead} shown={LABEL_AND_DESCRIPTION} />}
           </div>
