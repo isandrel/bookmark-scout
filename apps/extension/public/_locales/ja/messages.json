@@ -891,6 +891,86 @@
         "message": "検索中、名前が一致するフォルダを結果の上に表示し、現在のページをそこに保存できるようにします",
         "description": "Settings > Search: description of the Folder Matches switch"
     },
+    "settings_sectionSearchMatching": {
+        "message": "検索の一致方法",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzy": {
+        "message": "あいまい一致",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyDesc": {
+        "message": "検索ボックスとフォルダの候補で、つづりが少し違う語も一致します。「rect」で React が見つかります。フォルダの候補は関連度（BM25）順で、つづりが近いほど上に並びます。",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchFuzzyKeywords": {
+        "message": "タイプミス, つづり, 誤字, 編集距離, Damerau-Levenshtein, 関連度, BM25",
+        "description": "Other words the Options search finds Fuzzy Matching by, comma-separated; never shown"
+    },
+    "settings_searchFuzzyOneEdit": {
+        "message": "1 か所の違いを許す長さ",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyOneEditDesc": {
+        "message": "1 か所の違い（1 文字の追加・削除・変更、または隣り合う 2 文字の入れ替え）を許す最短の語の長さ（文字数）",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchFuzzyTwoEdits": {
+        "message": "2 か所の違いを許す長さ",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyTwoEditsDesc": {
+        "message": "2 か所の違いを許す最短の語の長さ（文字数）",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchPrefix": {
+        "message": "語の先頭に一致",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchPrefixDesc": {
+        "message": "入力した語で始まる長い語にも一致します。「rea」と入力した時点で React が見つかります。語全体の一致はより上に並びます。",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchBm25K1": {
+        "message": "語の飽和（BM25 k1）",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchBm25K1Desc": {
+        "message": "同じ語が繰り返し出てきたとき、スコアにどれだけ加わり続けるか。低いほど 1 回の出現が複数回とほぼ同じになります。",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchBm25B": {
+        "message": "長さの正規化（BM25 b）",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchBm25BDesc": {
+        "message": "同じ語を含むとき、短い結果をどれだけ優先するか。0 で優先せず、1 で最大限優先します。",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesNameWeight": {
+        "message": "フォルダー名の重み",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesNameWeightDesc": {
+        "message": "フォルダー自身の名前にある語の重み",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesParentWeight": {
+        "message": "上位フォルダーの重み",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesParentWeightDesc": {
+        "message": "入っているフォルダーの名前にある語の重み。「react hooks」で React の中の Hooks が見つかります",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesBookmarkWeight": {
+        "message": "中のブックマークの重み",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesBookmarkWeightDesc": {
+        "message": "フォルダー内のブックマークのタイトルとサイトにある語の重み。0 にするとフォルダー名だけを検索します。",
+        "description": "Under its setting in Options > Saving & Search"
+    },
     "settings_folderMatchesMax": {
         "message": "フォルダ候補の最大数",
         "description": "Settings > Search: how many matching folders to list"
@@ -898,14 +978,6 @@
     "settings_folderMatchesMaxDesc": {
         "message": "表示する一致フォルダの数",
         "description": "Settings > Search: description of the Maximum Folder Matches setting"
-    },
-    "settings_folderMatchesTypos": {
-        "message": "入力ミスを許容",
-        "description": "Settings > Search: switch that lets folder matching forgive one typo"
-    },
-    "settings_folderMatchesTyposDesc": {
-        "message": "4 文字以上の検索語なら、1 文字違いのフォルダ名にも一致させます（「rect」で React が見つかります）",
-        "description": "Settings > Search: description of the Allow Typos switch"
     },
     "settings_sortOrder": {
         "message": "並び順",
@@ -9088,10 +9160,6 @@
     "settings_searchDelayHelp": {
         "message": "最後のキー入力から検索を始めるまでポップアップが待つ時間です。1 文字ごとに検索しないためのものです。ブックマークが少ない場合は短いほうが速く感じます。",
         "description": "Settings: more about the searchDelay setting, in a toggletip"
-    },
-    "settings_folderMatchesTyposHelp": {
-        "message": "入力と 1、2 文字違う名前のフォルダも一致させます。小さな入力ミスがあってもフォルダが見つかります。",
-        "description": "Settings: more about the folderMatchesTypos setting, in a toggletip"
     },
     "settings_jobsApplyInBackgroundAboveHelp": {
         "message": "大きな変更はページを閉じても続き、各部分は履歴から元に戻せます。小さな変更はすぐに適用され、通知から元に戻せます。",

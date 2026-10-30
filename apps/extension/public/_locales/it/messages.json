@@ -915,6 +915,86 @@
         "message": "Durante la ricerca, elenca sopra i risultati le cartelle il cui nome corrisponde, così puoi salvarci la pagina corrente",
         "description": "Settings > Search: description of the Folder Matches switch"
     },
+    "settings_sectionSearchMatching": {
+        "message": "Corrispondenza della ricerca",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzy": {
+        "message": "Corrispondenza approssimativa",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyDesc": {
+        "message": "Corrispondono anche parole scritte in modo un po’ diverso, nella ricerca e nelle cartelle suggerite, così «rect» trova React. Le cartelle sono ordinate per pertinenza (BM25), le grafie più vicine prima.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchFuzzyKeywords": {
+        "message": "refusi, ortografia, errori di battitura, distanza di modifica, Damerau-Levenshtein, pertinenza, BM25",
+        "description": "Other words the Options search finds Fuzzy Matching by, comma-separated; never shown"
+    },
+    "settings_searchFuzzyOneEdit": {
+        "message": "Una modifica da",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyOneEditDesc": {
+        "message": "Parola più corta, in lettere, che può differire di una modifica: una lettera aggiunta, tolta o cambiata, o due scambiate",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchFuzzyTwoEdits": {
+        "message": "Due modifiche da",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyTwoEditsDesc": {
+        "message": "Parola più corta, in lettere, che può differire di due modifiche",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchPrefix": {
+        "message": "Corrispondenza con l’inizio delle parole",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchPrefixDesc": {
+        "message": "Una parola digitata corrisponde anche alle parole più lunghe che inizia, così «rea» trova React mentre scrivi. La parola intera resta prima.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchBm25K1": {
+        "message": "Saturazione dei termini (BM25 k1)",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchBm25K1Desc": {
+        "message": "Quanto una parola che ricompare aggiunge ancora al punteggio. Più basso fa contare una menzione quasi quanto molte.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchBm25B": {
+        "message": "Normalizzazione della lunghezza (BM25 b)",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchBm25BDesc": {
+        "message": "Quanto i risultati più brevi sono preferiti a quelli lunghi con le stesse parole: 0 per niente, 1 del tutto.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesNameWeight": {
+        "message": "Peso del nome della cartella",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesNameWeightDesc": {
+        "message": "Quanto conta una parola nel nome della cartella stessa",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesParentWeight": {
+        "message": "Peso delle cartelle superiori",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesParentWeightDesc": {
+        "message": "Quanto conta una parola nei nomi delle cartelle che la contengono, così «react hooks» trova Hooks dentro React",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesBookmarkWeight": {
+        "message": "Peso dei segnalibri contenuti",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesBookmarkWeightDesc": {
+        "message": "Quanto conta una parola nei titoli e nei siti dei segnalibri nella cartella. 0 cerca solo nei nomi delle cartelle.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
     "settings_folderMatchesMax": {
         "message": "Numero massimo di cartelle corrispondenti",
         "description": "Settings > Search: how many matching folders to list"
@@ -922,14 +1002,6 @@
     "settings_folderMatchesMaxDesc": {
         "message": "Quante cartelle corrispondenti elencare",
         "description": "Settings > Search: description of the Maximum Folder Matches setting"
-    },
-    "settings_folderMatchesTypos": {
-        "message": "Tollera errori di battitura",
-        "description": "Settings > Search: switch that lets folder matching forgive one typo"
-    },
-    "settings_folderMatchesTyposDesc": {
-        "message": "Una parola di 4 o più lettere corrisponde a un nome di cartella anche con un errore di battitura, così \"rect\" trova React",
-        "description": "Settings > Search: description of the Allow Typos switch"
     },
     "settings_sortOrder": {
         "message": "Ordinamento",
@@ -9144,10 +9216,6 @@
     "settings_searchDelayHelp": {
         "message": "Quanto attende il popup dopo l'ultimo tasto premuto prima di cercare, così non cerca a ogni lettera. Un valore più basso sembra più rapido con pochi preferiti.",
         "description": "Settings: more about the searchDelay setting, in a toggletip"
-    },
-    "settings_folderMatchesTyposHelp": {
-        "message": "Trova anche le cartelle il cui nome differisce di una o due lettere da ciò che hai digitato, così un piccolo errore di battitura trova comunque la cartella.",
-        "description": "Settings: more about the folderMatchesTypos setting, in a toggletip"
     },
     "settings_jobsApplyInBackgroundAboveHelp": {
         "message": "Le modifiche più grandi continuano anche se chiudi la pagina e ogni blocco può essere annullato dalla Cronologia. Quelle più piccole vengono applicate subito, con Annulla nella notifica.",

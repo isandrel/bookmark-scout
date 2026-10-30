@@ -931,6 +931,86 @@
         "message": "Во время поиска показывать над результатами папки с подходящими названиями, чтобы в них можно было сохранить текущую страницу",
         "description": "Settings > Search: description of the Folder Matches switch"
     },
+    "settings_sectionSearchMatching": {
+        "message": "Сопоставление при поиске",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzy": {
+        "message": "Нечёткий поиск",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyDesc": {
+        "message": "Слова, написанные немного иначе, тоже находятся — в поиске и среди подходящих папок: «rect» найдёт React. Папки упорядочены по релевантности (BM25), более близкое написание выше.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchFuzzyKeywords": {
+        "message": "опечатки, орфография, ошибки, расстояние редактирования, Дамерау-Левенштейн, релевантность, BM25",
+        "description": "Other words the Options search finds Fuzzy Matching by, comma-separated; never shown"
+    },
+    "settings_searchFuzzyOneEdit": {
+        "message": "Одна правка с",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyOneEditDesc": {
+        "message": "Самое короткое слово (в буквах), которое может отличаться на одну правку: буква добавлена, удалена, заменена или две переставлены",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchFuzzyTwoEdits": {
+        "message": "Две правки с",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyTwoEditsDesc": {
+        "message": "Самое короткое слово (в буквах), которое может отличаться на две правки",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchPrefix": {
+        "message": "Совпадение с началом слов",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchPrefixDesc": {
+        "message": "Введённое слово совпадает и с более длинными словами, которые с него начинаются: «rea» находит React уже при наборе. Целое слово всё равно выше.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchBm25K1": {
+        "message": "Насыщение частоты (BM25 k1)",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchBm25K1Desc": {
+        "message": "Сколько ещё добавляет к оценке слово, встретившееся снова. Ниже — одно упоминание весит почти как несколько.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchBm25B": {
+        "message": "Нормализация длины (BM25 b)",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchBm25BDesc": {
+        "message": "Насколько короткие результаты предпочтительнее длинных с теми же словами: 0 — нисколько, 1 — полностью.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesNameWeight": {
+        "message": "Вес названия папки",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesNameWeightDesc": {
+        "message": "Сколько весит слово в названии самой папки",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesParentWeight": {
+        "message": "Вес родительских папок",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesParentWeightDesc": {
+        "message": "Сколько весит слово в названиях папок, в которых она лежит, — так «react hooks» найдёт Hooks внутри React",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesBookmarkWeight": {
+        "message": "Вес закладок внутри",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesBookmarkWeightDesc": {
+        "message": "Сколько весит слово в названиях и сайтах закладок папки. 0 — искать только по названиям папок.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
     "settings_folderMatchesMax": {
         "message": "Максимум подходящих папок",
         "description": "Settings > Search: how many matching folders to list"
@@ -938,14 +1018,6 @@
     "settings_folderMatchesMaxDesc": {
         "message": "Сколько подходящих папок показывать",
         "description": "Settings > Search: description of the Maximum Folder Matches setting"
-    },
-    "settings_folderMatchesTypos": {
-        "message": "Допускать опечатки",
-        "description": "Settings > Search: switch that lets folder matching forgive one typo"
-    },
-    "settings_folderMatchesTyposDesc": {
-        "message": "Слово запроса из 4 и более букв находит название папки с одной опечаткой, например «rect» находит React",
-        "description": "Settings > Search: description of the Allow Typos switch"
     },
     "settings_sortOrder": {
         "message": "Порядок сортировки",
@@ -9788,10 +9860,6 @@
     "settings_searchDelayHelp": {
         "message": "Сколько всплывающее окно ждёт после последнего нажатия клавиши, прежде чем начать поиск, чтобы не искать после каждой буквы. При небольшой библиотеке меньшее значение ощущается быстрее.",
         "description": "Settings: more about the searchDelay setting, in a toggletip"
-    },
-    "settings_folderMatchesTyposHelp": {
-        "message": "Также находить папки, названия которых отличаются от введённого на одну-две буквы, чтобы небольшая опечатка не мешала найти папку.",
-        "description": "Settings: more about the folderMatchesTypos setting, in a toggletip"
     },
     "settings_jobsApplyInBackgroundAboveHelp": {
         "message": "Крупные изменения продолжаются, даже если закрыть страницу, и каждую их часть можно отменить в истории. Небольшие применяются сразу, а отменить их можно в уведомлении.",

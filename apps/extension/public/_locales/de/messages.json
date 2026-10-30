@@ -915,6 +915,86 @@
         "message": "Zeigt bei der Suche über den Ergebnissen die Ordner mit passendem Namen, damit Sie die aktuelle Seite dort speichern können",
         "description": "Settings > Search: description of the Folder Matches switch"
     },
+    "settings_sectionSearchMatching": {
+        "message": "Suchabgleich",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzy": {
+        "message": "Unscharfe Suche",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyDesc": {
+        "message": "Auch etwas anders geschriebene Wörter passen, im Suchfeld und bei passenden Ordnern, „rect“ findet also React. Passende Ordner werden nach Relevanz (BM25) sortiert, nähere Schreibweisen zuerst.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchFuzzyKeywords": {
+        "message": "Tippfehler, Schreibweise, falsch geschrieben, Editierdistanz, Damerau-Levenshtein, Relevanz, BM25",
+        "description": "Other words the Options search finds Fuzzy Matching by, comma-separated; never shown"
+    },
+    "settings_searchFuzzyOneEdit": {
+        "message": "Eine Änderung ab",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyOneEditDesc": {
+        "message": "Kürzestes Wort in Buchstaben, das um eine Änderung abweichen darf: ein Buchstabe mehr, weniger oder anders, oder zwei vertauscht",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchFuzzyTwoEdits": {
+        "message": "Zwei Änderungen ab",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyTwoEditsDesc": {
+        "message": "Kürzestes Wort in Buchstaben, das um zwei Änderungen abweichen darf",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchPrefix": {
+        "message": "Wortanfänge finden",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchPrefixDesc": {
+        "message": "Ein eingegebenes Wort passt auch auf längere Wörter, die damit beginnen: „rea“ findet React schon beim Tippen. Das ganze Wort steht weiter vorn.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchBm25K1": {
+        "message": "Termsättigung (BM25 k1)",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchBm25K1Desc": {
+        "message": "Wie viel ein erneut vorkommendes Wort noch zur Punktzahl beiträgt. Niedriger lässt eine Erwähnung fast so viel zählen wie viele.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchBm25B": {
+        "message": "Längennormalisierung (BM25 b)",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchBm25BDesc": {
+        "message": "Wie stark kürzere Ergebnisse gegenüber längeren mit denselben Wörtern bevorzugt werden: 0 gar nicht, 1 ganz.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesNameWeight": {
+        "message": "Gewicht des Ordnernamens",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesNameWeightDesc": {
+        "message": "Wie viel ein Wort im Namen des Ordners selbst zählt",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesParentWeight": {
+        "message": "Gewicht der übergeordneten Ordner",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesParentWeightDesc": {
+        "message": "Wie viel ein Wort in den Namen der Ordner zählt, in denen er liegt, damit „react hooks“ Hooks in React findet",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesBookmarkWeight": {
+        "message": "Gewicht der enthaltenen Lesezeichen",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesBookmarkWeightDesc": {
+        "message": "Wie viel ein Wort in Titeln und Websites der Lesezeichen im Ordner zählt. 0 sucht nur in Ordnernamen.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
     "settings_folderMatchesMax": {
         "message": "Maximal passende Ordner",
         "description": "Settings > Search: how many matching folders to list"
@@ -922,14 +1002,6 @@
     "settings_folderMatchesMaxDesc": {
         "message": "Wie viele passende Ordner angezeigt werden",
         "description": "Settings > Search: description of the Maximum Folder Matches setting"
-    },
-    "settings_folderMatchesTypos": {
-        "message": "Tippfehler erlauben",
-        "description": "Settings > Search: switch that lets folder matching forgive one typo"
-    },
-    "settings_folderMatchesTyposDesc": {
-        "message": "Ein Suchwort mit 4 oder mehr Buchstaben passt auch mit einem Tippfehler zu einem Ordnernamen, sodass „rect“ React findet",
-        "description": "Settings > Search: description of the Allow Typos switch"
     },
     "settings_sortOrder": {
         "message": "Sortierung",
@@ -9144,10 +9216,6 @@
     "settings_searchDelayHelp": {
         "message": "Wie lange das Popup nach dem letzten Tastendruck wartet, bevor es sucht, damit es nicht bei jedem Buchstaben sucht. Weniger fühlt sich bei einer kleinen Sammlung schneller an.",
         "description": "Settings: more about the searchDelay setting, in a toggletip"
-    },
-    "settings_folderMatchesTyposHelp": {
-        "message": "Auch Ordner finden, deren Namen sich um ein oder zwei Buchstaben von der Eingabe unterscheiden, damit ein kleiner Tippfehler den Ordner trotzdem findet.",
-        "description": "Settings: more about the folderMatchesTypos setting, in a toggletip"
     },
     "settings_jobsApplyInBackgroundAboveHelp": {
         "message": "Größere Änderungen laufen weiter, wenn Sie die Seite schließen, und jeder Teil lässt sich im Verlauf rückgängig machen. Kleinere werden sofort übernommen, mit Rückgängig in der Benachrichtigung.",

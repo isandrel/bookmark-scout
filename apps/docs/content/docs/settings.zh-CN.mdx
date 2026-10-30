@@ -37,7 +37,20 @@ description: 按标签页逐一介绍 Bookmark Scout 设置页面中的每项设
 | --- | --- | --- |
 | **匹配的文件夹** | 开启 | 搜索时，在结果上方列出名称匹配的文件夹，方便把当前网页保存到那里 |
 | **匹配文件夹数量上限** | <SettingDefault path="search.folder_matches.max" /> | 最多列出多少个匹配的文件夹 |
-| **允许拼写错误** | 开启 | 4 个字母及以上的搜索词，与文件夹名相差一个字母也能匹配 |
+| **文件夹名称权重** | <SettingDefault path="search.folder_matches.name_weight" /> | 文件夹自身名称中的词占多大分量 |
+| **上级文件夹权重** | <SettingDefault path="search.folder_matches.parent_weight" /> | 所在上级文件夹名称中的词占多大分量，这样“react hooks”能找到 React 里的 Hooks |
+| **内部书签权重** | <SettingDefault path="search.folder_matches.bookmark_weight" /> | 文件夹内书签的标题和网站中的词占多大分量。设为 0 只搜索文件夹名称 |
+
+### 搜索匹配 [#search-matching]
+
+| 设置 | 默认值 | 作用 |
+| --- | --- | --- |
+| **模糊匹配** | 开启 | 在搜索框和文件夹匹配中，拼写略有不同的词也能匹配，例如“rect”能找到 React。文件夹匹配按相关性（BM25）排序，拼写越接近越靠前 |
+| **允许 1 处编辑的最短长度** | <SettingDefault path="search.search_matching.one_edit" /> | 可相差 1 处编辑的最短词长（字母数）：增、删、改一个字母，或交换相邻两个字母 |
+| **允许 2 处编辑的最短长度** | <SettingDefault path="search.search_matching.two_edits" /> | 可相差 2 处编辑的最短词长（字母数） |
+| **匹配词的开头** | 开启 | 输入的词也能匹配以它开头的更长的词，输入“rea”就能找到 React。完整的词仍排得更前 |
+| **词频饱和度（BM25 k1）** | <SettingDefault path="search.search_matching.bm25_k1" /> | 同一个词重复出现时还能为结果加多少分。越低，出现一次与出现多次的差别越小 |
+| **长度归一化（BM25 b）** | <SettingDefault path="search.search_matching.bm25_b" /> | 词相同时更偏向较短结果的程度：0 不偏向，1 完全偏向 |
 
 ### 搜索 [#searching]
 

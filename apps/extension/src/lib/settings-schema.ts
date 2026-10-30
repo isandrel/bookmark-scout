@@ -971,7 +971,28 @@ const fields = {
   searchHistory: switchField('search.search.history', 'searchHistory'),
   folderMatchesEnabled: switchField('search.folder_matches.enabled', 'folderMatchesEnabled'),
   folderMatchesMax: numberField('search.folder_matches.max', 'folderMatchesMax'),
-  folderMatchesTypos: switchField('search.folder_matches.typos', 'folderMatchesTypos'),
+  folderMatchesNameWeight: numberField(
+    'search.folder_matches.name_weight',
+    'folderMatchesNameWeight',
+  ),
+  folderMatchesParentWeight: numberField(
+    'search.folder_matches.parent_weight',
+    'folderMatchesParentWeight',
+  ),
+  folderMatchesBookmarkWeight: numberField(
+    'search.folder_matches.bookmark_weight',
+    'folderMatchesBookmarkWeight',
+  ),
+  searchFuzzy: switchField('search.search_matching.fuzzy', 'searchFuzzy'),
+  searchFuzzyOneEdit: numberField('search.search_matching.one_edit', 'searchFuzzyOneEdit'),
+  searchFuzzyTwoEdits: numberField('search.search_matching.two_edits', 'searchFuzzyTwoEdits'),
+  searchPrefix: switchField('search.search_matching.prefix', 'searchPrefix'),
+  searchBm25K1: numberField('search.search_matching.bm25_k1', 'searchBm25K1', {
+    control: 'slider',
+  }),
+  searchBm25B: numberField('search.search_matching.bm25_b', 'searchBm25B', {
+    control: 'slider',
+  }),
   settingsSearchSources: choiceListField(
     'search.settings_search.sources',
     'settingsSearchSources',
@@ -1871,7 +1892,18 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         id: 'folderMatches',
         labelKey: 'settings_folderMatchesEnabled',
         toggle: 'folderMatchesEnabled',
-        fields: ['folderMatchesMax', 'folderMatchesTypos'],
+        fields: ['folderMatchesMax'],
+        advanced: [
+          'folderMatchesNameWeight',
+          'folderMatchesParentWeight',
+          'folderMatchesBookmarkWeight',
+        ],
+      },
+      {
+        id: 'searchMatching',
+        labelKey: 'settings_sectionSearchMatching',
+        fields: ['searchFuzzy', 'searchFuzzyOneEdit', 'searchFuzzyTwoEdits'],
+        advanced: ['searchPrefix', 'searchBm25K1', 'searchBm25B'],
       },
       {
         id: 'search',
@@ -2491,6 +2523,11 @@ export function getSettingsFieldGroups(): SettingsFieldGroup[] {
       id: 'recentFolders',
       kind: 'switch',
       fields: ['recentFoldersEnabled', 'recentFoldersMax'],
+    }),
+    group({
+      id: 'searchFuzzy',
+      kind: 'switch',
+      fields: ['searchFuzzy', 'searchFuzzyOneEdit', 'searchFuzzyTwoEdits'],
     }),
     group({
       id: 'favicons',

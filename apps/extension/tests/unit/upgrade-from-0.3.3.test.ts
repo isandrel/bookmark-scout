@@ -28,6 +28,7 @@ import { getSettings } from '@/lib/settings-storage';
 import { registerStorageCleanup } from '@/lib/storage/cleanup';
 import { isRegisteredKey, STORAGE_ITEMS, type StorageItem } from '@/lib/storage/registry';
 import { ACTIONS } from '@/services/actions';
+import { RETIRED_SETTINGS } from './retired-settings';
 
 /** `STORAGE_ITEMS` as 0.3.3 shipped it (area, name, shape version, collection). */
 const ITEMS_0_3_3 = {
@@ -232,6 +233,10 @@ describe('updating from 0.3.3', () => {
   it('keeps every 0.3.3 setting, in the scope 0.3.3 stored it in', () => {
     const device = new Set<string>(DEVICE_SETTINGS_0_3_3);
     for (const key of SETTINGS_0_3_3) {
+      if (key in RETIRED_SETTINGS) {
+        expect(key in defaultSettings, key).toBe(false);
+        continue;
+      }
       expect(key in defaultSettings, key).toBe(true);
       // A setting moved to another scope would be ignored where 0.3.3 stored it, except lists,
       // which are still read from the settings item until the next save moves them.

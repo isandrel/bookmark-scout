@@ -907,6 +907,86 @@
         "message": "搜尋時，在結果上方列出名稱相符的資料夾，方便將目前網頁儲存到那裡",
         "description": "Settings > Search: description of the Folder Matches switch"
     },
+    "settings_sectionSearchMatching": {
+        "message": "搜尋比對",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzy": {
+        "message": "模糊比對",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyDesc": {
+        "message": "在搜尋框和比對的資料夾中，拼字略有不同的詞也能比對，例如「rect」能找到 React。比對的資料夾依相關性（BM25）排序，拼字越接近越前面。",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchFuzzyKeywords": {
+        "message": "錯字, 拼字, 拼錯, 編輯距離, Damerau-Levenshtein, 相關性, BM25",
+        "description": "Other words the Options search finds Fuzzy Matching by, comma-separated; never shown"
+    },
+    "settings_searchFuzzyOneEdit": {
+        "message": "允許 1 處編輯的最短長度",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyOneEditDesc": {
+        "message": "可相差 1 處編輯的最短詞長（字母數）：增、刪、改一個字母，或交換相鄰兩個字母",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchFuzzyTwoEdits": {
+        "message": "允許 2 處編輯的最短長度",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyTwoEditsDesc": {
+        "message": "可相差 2 處編輯的最短詞長（字母數）",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchPrefix": {
+        "message": "比對詞的開頭",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchPrefixDesc": {
+        "message": "輸入的詞也能比對以它開頭的較長詞，輸入「rea」就能找到 React。完整的詞仍排得更前面。",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchBm25K1": {
+        "message": "詞頻飽和度（BM25 k1）",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchBm25K1Desc": {
+        "message": "同一個詞重複出現時還能為結果加多少分。越低，出現一次與多次的差別越小。",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchBm25B": {
+        "message": "長度正規化（BM25 b）",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchBm25BDesc": {
+        "message": "詞相同時偏向較短結果的程度：0 不偏向，1 完全偏向。",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesNameWeight": {
+        "message": "資料夾名稱權重",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesNameWeightDesc": {
+        "message": "資料夾本身名稱中的詞占多大分量",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesParentWeight": {
+        "message": "上層資料夾權重",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesParentWeightDesc": {
+        "message": "所在上層資料夾名稱中的詞占多大分量，這樣「react hooks」能找到 React 裡的 Hooks",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesBookmarkWeight": {
+        "message": "內部書籤權重",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesBookmarkWeightDesc": {
+        "message": "資料夾內書籤的標題和網站中的詞占多大分量。設為 0 只搜尋資料夾名稱。",
+        "description": "Under its setting in Options > Saving & Search"
+    },
     "settings_folderMatchesMax": {
         "message": "相符資料夾數量上限",
         "description": "Settings > Search: how many matching folders to list"
@@ -914,14 +994,6 @@
     "settings_folderMatchesMaxDesc": {
         "message": "最多列出幾個相符的資料夾",
         "description": "Settings > Search: description of the Maximum Folder Matches setting"
-    },
-    "settings_folderMatchesTypos": {
-        "message": "允許拼字錯誤",
-        "description": "Settings > Search: switch that lets folder matching forgive one typo"
-    },
-    "settings_folderMatchesTyposDesc": {
-        "message": "4 個字母以上的搜尋字詞，與資料夾名稱相差一個字母也能相符，例如輸入「rect」可找到 React",
-        "description": "Settings > Search: description of the Allow Typos switch"
     },
     "settings_sortOrder": {
         "message": "排序方式",
@@ -8850,10 +8922,6 @@
     "settings_searchDelayHelp": {
         "message": "你最後一次按鍵後，彈出式視窗等待多久才開始搜尋，避免每輸入一個字母就搜尋一次。書籤較少時調低會感覺更快。",
         "description": "Settings: more about the searchDelay setting, in a toggletip"
-    },
-    "settings_folderMatchesTyposHelp": {
-        "message": "也比對名稱與輸入相差一兩個字母的資料夾，這樣小的拼字錯誤也能找到資料夾。",
-        "description": "Settings: more about the folderMatchesTypos setting, in a toggletip"
     },
     "settings_jobsApplyInBackgroundAboveHelp": {
         "message": "較大的變更在你關閉頁面後仍會繼續，每一批都可在歷史記錄中復原。較小的變更會立即套用，可在通知中復原。",

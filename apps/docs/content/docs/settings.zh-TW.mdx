@@ -37,7 +37,20 @@ description: 逐一分頁列出 Bookmark Scout 設定頁面上的每項設定，
 | --- | --- | --- |
 | **相符的資料夾** | 開啟 | 搜尋時，在結果上方列出名稱相符的資料夾，方便將目前網頁儲存到那裡 |
 | **相符資料夾數量上限** | <SettingDefault path="search.folder_matches.max" /> | 最多列出幾個相符的資料夾 |
-| **允許拼字錯誤** | 開啟 | 4 個字母以上的搜尋字詞，與資料夾名稱相差一個字母也能相符 |
+| **資料夾名稱權重** | <SettingDefault path="search.folder_matches.name_weight" /> | 資料夾本身名稱中的詞占多大分量 |
+| **上層資料夾權重** | <SettingDefault path="search.folder_matches.parent_weight" /> | 所在上層資料夾名稱中的詞占多大分量，這樣「react hooks」能找到 React 裡的 Hooks |
+| **內部書籤權重** | <SettingDefault path="search.folder_matches.bookmark_weight" /> | 資料夾內書籤的標題和網站中的詞占多大分量。設為 0 只搜尋資料夾名稱 |
+
+### 搜尋比對 [#search-matching]
+
+| 設定 | 預設值 | 作用 |
+| --- | --- | --- |
+| **模糊比對** | 開啟 | 在搜尋框和比對的資料夾中，拼字略有不同的詞也能比對，例如「rect」能找到 React。比對的資料夾依相關性（BM25）排序，拼字越接近越前面 |
+| **允許 1 處編輯的最短長度** | <SettingDefault path="search.search_matching.one_edit" /> | 可相差 1 處編輯的最短詞長（字母數）：增、刪、改一個字母，或交換相鄰兩個字母 |
+| **允許 2 處編輯的最短長度** | <SettingDefault path="search.search_matching.two_edits" /> | 可相差 2 處編輯的最短詞長（字母數） |
+| **比對詞的開頭** | 開啟 | 輸入的詞也能比對以它開頭的較長詞，輸入「rea」就能找到 React。完整的詞仍排得更前面 |
+| **詞頻飽和度（BM25 k1）** | <SettingDefault path="search.search_matching.bm25_k1" /> | 同一個詞重複出現時還能為結果加多少分。越低，出現一次與多次的差別越小 |
+| **長度正規化（BM25 b）** | <SettingDefault path="search.search_matching.bm25_b" /> | 詞相同時偏向較短結果的程度：0 不偏向，1 完全偏向 |
 
 ### 搜尋 [#searching]
 

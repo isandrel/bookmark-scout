@@ -915,6 +915,86 @@
         "message": "While you search, list the folders whose names match above the results, so you can save the current page there",
         "description": "Settings > Search: description of the Folder Matches switch"
     },
+    "settings_sectionSearchMatching": {
+        "message": "Search Matching",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzy": {
+        "message": "Fuzzy Matching",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyDesc": {
+        "message": "Words spelled a little differently match too, in the search box and in folder matches, so \"rect\" finds React. Folder matches are ranked by relevance (BM25), closer spellings first.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchFuzzyKeywords": {
+        "message": "typos, spelling, misspelled, edit distance, Damerau-Levenshtein, relevance, BM25",
+        "description": "Other words the Options search finds Fuzzy Matching by, comma-separated; never shown"
+    },
+    "settings_searchFuzzyOneEdit": {
+        "message": "One Edit From",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyOneEditDesc": {
+        "message": "Shortest word, in letters, that may differ by one edit: a letter added, removed, or changed, or two swapped",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchFuzzyTwoEdits": {
+        "message": "Two Edits From",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyTwoEditsDesc": {
+        "message": "Shortest word, in letters, that may differ by two edits",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchPrefix": {
+        "message": "Match Word Starts",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchPrefixDesc": {
+        "message": "A word you type also matches longer words it starts, so \"rea\" finds React while you type. A whole word still ranks higher.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchBm25K1": {
+        "message": "Term Saturation (BM25 k1)",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchBm25K1Desc": {
+        "message": "How much a word that appears again keeps adding to a result's score. Lower makes one mention count almost as much as many.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchBm25B": {
+        "message": "Length Normalization (BM25 b)",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchBm25BDesc": {
+        "message": "How much shorter results are favored over longer ones with the same words: 0 not at all, 1 fully.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesNameWeight": {
+        "message": "Folder Name Weight",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesNameWeightDesc": {
+        "message": "How much a word in the folder's own name counts",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesParentWeight": {
+        "message": "Parent Folders Weight",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesParentWeightDesc": {
+        "message": "How much a word in the names of the folders it is in counts, so \"react hooks\" finds Hooks inside React",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesBookmarkWeight": {
+        "message": "Bookmarks Inside Weight",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesBookmarkWeightDesc": {
+        "message": "How much a word in the titles and sites of the bookmarks in the folder counts. 0 searches folder names only.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
     "settings_folderMatchesMax": {
         "message": "Maximum Folder Matches",
         "description": "Settings > Search: how many matching folders to list"
@@ -922,14 +1002,6 @@
     "settings_folderMatchesMaxDesc": {
         "message": "How many matching folders to list",
         "description": "Settings > Search: description of the Maximum Folder Matches setting"
-    },
-    "settings_folderMatchesTypos": {
-        "message": "Allow Typos",
-        "description": "Settings > Search: switch that lets folder matching forgive one typo"
-    },
-    "settings_folderMatchesTyposDesc": {
-        "message": "Let a search word of 4 letters or more match a folder name with one typo, so \"rect\" finds React",
-        "description": "Settings > Search: description of the Allow Typos switch"
     },
     "settings_sortOrder": {
         "message": "Sort Order",
@@ -9144,10 +9216,6 @@
     "settings_searchDelayHelp": {
         "message": "How long the popup waits after your last key press before it searches, so it does not search on every letter. Lower feels quicker on a small library.",
         "description": "Settings: more about the searchDelay setting, in a toggletip"
-    },
-    "settings_folderMatchesTyposHelp": {
-        "message": "Also match folders whose names differ from what you typed by a letter or two, so a small typo still finds the folder.",
-        "description": "Settings: more about the folderMatchesTypos setting, in a toggletip"
     },
     "settings_jobsApplyInBackgroundAboveHelp": {
         "message": "Larger changes keep going if you close the page, and each part can be undone from History. Smaller ones apply at once, with Undo in the notification.",
