@@ -76,11 +76,10 @@ function SiteChoiceForm({ sites, onConfirm, onCancel }: Omit<SiteChoiceDialogPro
         <DialogDescription>{t('tools_siteChoiceDesc')}</DialogDescription>
       </DialogHeader>
       {sites.length > siteChoiceConfig.filter_above ? (
-        <Input
-          type="search"
+        <SearchInput
           value={filter}
-          onChange={(event) => {
-            setFilter(event.target.value);
+          onValueChange={(value) => {
+            setFilter(value);
             setShown(siteChoiceConfig.page_size);
           }}
           placeholder={t('tools_siteChoiceFilter')}

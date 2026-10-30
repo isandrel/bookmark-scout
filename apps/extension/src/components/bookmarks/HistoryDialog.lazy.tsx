@@ -25,7 +25,6 @@ import {
   Pencil,
   Plus,
   Redo2,
-  Search,
   Trash2,
   Undo2,
 } from 'lucide-react';
@@ -147,20 +146,14 @@ export function HistoryDialogContent({ folderLabels }: HistoryDialogProps) {
         </DialogHeader>
 
         <div className="space-y-2 border-b px-5 py-3">
-          <div className="relative">
-            <Search
-              className="pointer-events-none absolute top-1/2 left-2.5 h-4 w-4 -translate-y-1/2 text-muted-foreground"
-              aria-hidden="true"
-            />
-            <Input
-              type="search"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder={t('history_search')}
-              aria-label={t('history_search')}
-              className="bg-muted pl-8"
-            />
-          </div>
+          <SearchInput
+            icon
+            value={query}
+            onValueChange={setQuery}
+            placeholder={t('history_search')}
+            aria-label={t('history_search')}
+            className="bg-muted"
+          />
           <div className="flex flex-wrap items-center gap-2">
             <span id={filterLabelId} className="sr-only">
               {t('history_filterLabel')}
