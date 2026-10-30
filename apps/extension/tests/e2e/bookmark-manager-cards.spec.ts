@@ -766,3 +766,47 @@ test('a card keeps its checkbox, site icon, and menu beside the first line of a 
     }
   }
 });
+
+test('Columns, Cover Shape, Cover Fit, and Title Lines lay out the cards', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await page.setViewportSize({ width: 1400, height: 900 });
+  const seeded = await seedFolder(extensionWorker, 'E2E Card Layout', [
+    {
+      title: 'A title long enough to take more than one line on a card of this width',
+      url: 'https://one.e2e.invalid/',
+    },
+    { title: 'Second', url: 'https://two.e2e.invalid/' },
+    { title: 'Third', url: 'https://three.e2e.invalid/' },
+  ]);
+  await seedCover(extensionWorker, seeded.ids['Second'] ?? '', 'https://two.e2e.invalid/');
+  await setSettings(extensionWorker, { managerViewMode: 'cards' });
+  await page.goto(managerUrl(extensionId, seeded.folderId));
+  const grid = page.getByTestId('bookmark-cards');
+  const columns = () =>
+    grid.evaluate((element) => getComputedStyle(element).gridTemplateColumns.split(' ').length);
+  const media = page.getByTestId('bookmark-card-media').first();
+  const ratio = () =>
+    media.evaluate((element) => {
+      const box = element.getBoundingClientRect();
+      return Math.round((box.width / box.height) * 100) / 100;
+    });
+  // The defaults: as many columns as Card Size allows, wide covers that fill, two title lines.
+  expect(await columns()).toBeGreaterThan(2);
+  expect(await ratio()).toBeCloseTo(1.91, 1);
+
+  await setSettings(extensionWorker, {
+    managerCardColumns: 2,
+    managerCardCoverShape: 'square',
+    managerCardCoverFit: 'fit',
+    managerCardTitleLines: 1,
+  });
+  await expect.poll(columns).toBe(2);
+  await expect.poll(ratio).toBeCloseTo(1, 1);
+  await expect(page.getByTestId('bookmark-cover').first()).toHaveCSS('object-fit', 'contain');
+  await expect(
+    page.locator('[data-slot="bookmark-card"]').first().locator('span[title]').first(),
+  ).toHaveCSS('-webkit-line-clamp', '1');
+});

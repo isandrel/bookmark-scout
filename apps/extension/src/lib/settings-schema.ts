@@ -1233,6 +1233,30 @@ const fields = {
         large: t('settings_managerCardSizeLarge'),
       })[value],
   ),
+  managerCardCoverShape: enumField(
+    'behavior.manager_cards.cover_shape',
+    'managerCardCoverShape',
+    z.enum(['wide', 'classic', 'square', 'portrait']),
+    (value) =>
+      ({
+        wide: t('settings_managerCardCoverShapeWide'),
+        classic: t('settings_managerCardCoverShapeClassic'),
+        square: t('settings_managerCardCoverShapeSquare'),
+        portrait: t('settings_managerCardCoverShapePortrait'),
+      })[value],
+  ),
+  managerCardCoverFit: enumField(
+    'behavior.manager_cards.cover_fit',
+    'managerCardCoverFit',
+    z.enum(['fill', 'fit']),
+    (value) =>
+      ({
+        fill: t('settings_managerCardCoverFitFill'),
+        fit: t('settings_managerCardCoverFitFit'),
+      })[value],
+  ),
+  managerCardColumns: numberField('behavior.manager_cards.columns', 'managerCardColumns'),
+  managerCardTitleLines: numberField('behavior.manager_cards.title_lines', 'managerCardTitleLines'),
   cardMaxTags: numberField('behavior.manager_cards.max_tags', 'cardMaxTags'),
   cardSummaryLines: numberField('behavior.manager_cards.summary_lines', 'cardSummaryLines'),
   previewFields: idListField('behavior.manager_preview.fields', 'previewFields', SHOWN_ID_PATTERN),
@@ -1996,7 +2020,15 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       {
         id: 'managerCards',
         labelKey: 'settings_sectionManagerCards',
-        fields: ['managerCardSize', 'cardMaxTags', 'cardSummaryLines'],
+        fields: [
+          'managerCardSize',
+          'managerCardColumns',
+          'managerCardCoverShape',
+          'managerCardCoverFit',
+          'managerCardTitleLines',
+          'cardMaxTags',
+          'cardSummaryLines',
+        ],
         panel: 'managerCardFields',
       },
       { id: 'managerPreview', fields: [], panel: 'previewFields' },
