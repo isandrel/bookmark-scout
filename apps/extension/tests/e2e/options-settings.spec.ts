@@ -1128,3 +1128,38 @@ test('a settings file dropped on the page restores like Restore settings', async
   await expect(toastRegion(page).getByText('1 settings changed: Theme')).toBeVisible();
   await expect.poll(() => readSettings(extensionWorker)).toMatchObject({ theme: 'dark' });
 });
+
+test('a list of sites keeps what names no site in the box and says why', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  // Index Page Text's section folds its settings while the tool is off.
+  await setSettings(extensionWorker, { language: 'en', pageTextEnabled: true });
+  await page.goto(`chrome-extension://${extensionId}/options.html?category=metadataContent`);
+  const sites = page.locator('[data-setting="pageTextExcludedSites"]');
+  const box = sites.getByRole('textbox');
+
+  // A single word is no site: it stays to be fixed, and nothing is saved.
+  await box.fill('aa');
+  await box.press('Enter');
+  await expect(box).toHaveValue('aa');
+  const message = sites.getByRole('alert');
+  await expect(message).toHaveText('Not a site: aa. Type one such as example.com.');
+  await expect(box).toHaveAccessibleDescription(/Not a site: aa/);
+  await expect(sites.locator('[data-slot="list-chip"]')).toHaveCount(0);
+
+  // Of a pasted list, the sites are added and only the word stays.
+  await box.fill('example.com, aa localhost');
+  await box.press('Enter');
+  await expect(sites.locator('[data-slot="list-chip"]')).toHaveText(['example.com', 'localhost']);
+  await expect(box).toHaveValue('aa');
+
+  // Editing the text takes the message away.
+  await box.fill('aa.example');
+  await expect(message).toHaveCount(0);
+  await box.press('Enter');
+  await expect
+    .poll(async () => (await readSettings(extensionWorker)).pageTextExcludedSites)
+    .toEqual(['example.com', 'localhost', 'aa.example']);
+});

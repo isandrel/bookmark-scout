@@ -152,6 +152,15 @@ export function toSiteName(raw: string): string | undefined {
 }
 
 /**
+ * `toSiteName` for what someone types into a list of sites: a single word such as `aa` is no site,
+ * though the stored lists, read with `toSiteName`, keep any entry an earlier release accepted.
+ */
+export function toTypedSiteName(raw: string): string | undefined {
+  const site = toSiteName(raw);
+  return site !== undefined && looksLikeHost(site) ? site : undefined;
+}
+
+/**
  * Whether `url` is on one of `sites` (from `toSiteName`) or a subdomain of one, as in
  * `news.example.com` on `example.com`.
  */
