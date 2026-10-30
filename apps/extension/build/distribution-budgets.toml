@@ -330,6 +330,8 @@
 # feat/settings-search-config from d6f0a00d: ZIP 2,198,100 / 2,198,105 / 2,198,168 B, uncompressed
 # 7,439,607 / 7,439,603 / 7,439,766 B (Chrome / Edge / Firefox), 4,103,169 B of JavaScript, and
 # 2,766,828 B of locales.
+# Raised on 2026-10-29 (css 92,000 to 92,500) for the drop lines of the cards view (a card takes a
+# drop on its leading or trailing edge, or into a folder card). Measured 92,153 B of CSS.
 # Raised on 2026-10-29 (ZIP 2,200,000 to 2,215,000) for Fetch covers on a folder, with its menu
 # label in 12 languages: Firefox measured ZIP 2,200,046 B.
 # Raised on 2026-10-29 (ZIP 2,200,000 to 2,215,000, uncompressed 7,450,000 to 7,475,000, locales
@@ -356,7 +358,7 @@ raw_bytes = 7_475_000
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
 javascript = 4_120_000
-css = 92_000
+css = 92_500
 fonts = 143_000
 locales = 2_800_000
 images = 320_000
