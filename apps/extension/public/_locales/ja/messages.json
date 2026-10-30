@@ -7623,6 +7623,62 @@
         "message": "日付のみ",
         "description": "Date Columns Show choice: the date alone"
     },
+    "settings_managerCardColumns": {
+        "message": "列数",
+        "description": "Options > Behavior > Cards: label"
+    },
+    "settings_managerCardColumnsDesc": {
+        "message": "1 行に並べるカードの数。0 にするとカードのサイズに合わせてできるだけ多く並べます。",
+        "description": "Under its setting in Options > Behavior > Cards"
+    },
+    "settings_managerCardCoverShape": {
+        "message": "カバー画像の形",
+        "description": "Options > Behavior > Cards: label"
+    },
+    "settings_managerCardCoverShapeDesc": {
+        "message": "各カードの上部にあるカバー画像の形",
+        "description": "Under its setting in Options > Behavior > Cards"
+    },
+    "settings_managerCardCoverShapeWide": {
+        "message": "ワイド（1.91:1）",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverShapeClassic": {
+        "message": "クラシック（4:3）",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverShapeSquare": {
+        "message": "正方形（1:1）",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverShapePortrait": {
+        "message": "縦長（3:4）",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverFit": {
+        "message": "カバー画像の収め方",
+        "description": "Options > Behavior > Cards: label"
+    },
+    "settings_managerCardCoverFitDesc": {
+        "message": "画像をカバー画像いっぱいに広げてはみ出た部分を切り取るか、全体を表示するか",
+        "description": "Under its setting in Options > Behavior > Cards"
+    },
+    "settings_managerCardCoverFitFill": {
+        "message": "全体に広げる",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverFitFit": {
+        "message": "全体を表示",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardTitleLines": {
+        "message": "タイトルの行数",
+        "description": "Options > Behavior > Cards: label"
+    },
+    "settings_managerCardTitleLinesDesc": {
+        "message": "カードのタイトルを省略するまでの行数",
+        "description": "Under its setting in Options > Behavior > Cards"
+    },
     "settings_managerCardSize": {
         "message": "カードのサイズ",
         "description": "Setting label: how wide the manager's cards are at least"
@@ -9598,6 +9654,14 @@
     "settings_coversMaxCacheMbDesc": {
         "message": "カバー画像がこの端末で使える容量。古いものから削除されます",
         "description": "Settings: description of the cover storage limit"
+    },
+    "settings_coversReviewSingle": {
+        "message": "1 件のカバー画像を確認",
+        "description": "Options > Page Details > Fetch Covers: switch label"
+    },
+    "settings_coversReviewSingleDesc": {
+        "message": "1 つのブックマークで「カバー画像を取得」すると、保存の前にカバー画像を表示します。オフにすると見つかったカバー画像をすぐに保存します。使えるカバー画像がないページでは、引き続き理由を表示します。",
+        "description": "Under the Review a Single Cover switch"
     },
     "settings_coversSourcePreference": {
         "message": "カバー画像のソース",

@@ -7635,6 +7635,62 @@
         "message": "Solo la data",
         "description": "Date Columns Show choice: the date alone"
     },
+    "settings_managerCardColumns": {
+        "message": "Colonne",
+        "description": "Options > Behavior > Cards: label"
+    },
+    "settings_managerCardColumnsDesc": {
+        "message": "Quante schede stanno in una riga. 0 ne mette quante ne consente la dimensione delle schede.",
+        "description": "Under its setting in Options > Behavior > Cards"
+    },
+    "settings_managerCardCoverShape": {
+        "message": "Forma della copertina",
+        "description": "Options > Behavior > Cards: label"
+    },
+    "settings_managerCardCoverShapeDesc": {
+        "message": "La forma della copertina in cima a ogni scheda",
+        "description": "Under its setting in Options > Behavior > Cards"
+    },
+    "settings_managerCardCoverShapeWide": {
+        "message": "Larga (1,91:1)",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverShapeClassic": {
+        "message": "Classica (4:3)",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverShapeSquare": {
+        "message": "Quadrata (1:1)",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverShapePortrait": {
+        "message": "Verticale (3:4)",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverFit": {
+        "message": "Adattamento copertina",
+        "description": "Options > Behavior > Cards: label"
+    },
+    "settings_managerCardCoverFitDesc": {
+        "message": "Se l’immagine riempie la copertina tagliando ciò che avanza, o si vede intera",
+        "description": "Under its setting in Options > Behavior > Cards"
+    },
+    "settings_managerCardCoverFitFill": {
+        "message": "Riempi",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverFitFit": {
+        "message": "Mostra intera",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardTitleLines": {
+        "message": "Righe del titolo",
+        "description": "Options > Behavior > Cards: label"
+    },
+    "settings_managerCardTitleLinesDesc": {
+        "message": "Quante righe può occupare il titolo di una scheda prima di essere tagliato",
+        "description": "Under its setting in Options > Behavior > Cards"
+    },
     "settings_managerCardSize": {
         "message": "Dimensione dei riquadri",
         "description": "Setting label: how wide the manager's cards are at least"
@@ -9666,6 +9722,14 @@
     "settings_coversMaxCacheMbDesc": {
         "message": "Spazio che le copertine salvate possono occupare su questo dispositivo; le meno recenti vengono rimosse per prime",
         "description": "Settings: description of the cover storage limit"
+    },
+    "settings_coversReviewSingle": {
+        "message": "Controlla una sola copertina",
+        "description": "Options > Page Details > Fetch Covers: switch label"
+    },
+    "settings_coversReviewSingleDesc": {
+        "message": "Recupera copertina su un solo segnalibro mostra la copertina prima di salvarla. Se disattivato, salva subito la copertina trovata; una pagina senza copertina utilizzabile mostra comunque il motivo.",
+        "description": "Under the Review a Single Cover switch"
     },
     "settings_coversSourcePreference": {
         "message": "Origine della copertina",

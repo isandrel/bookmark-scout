@@ -7635,6 +7635,62 @@
         "message": "Date seule",
         "description": "Date Columns Show choice: the date alone"
     },
+    "settings_managerCardColumns": {
+        "message": "Colonnes",
+        "description": "Options > Behavior > Cards: label"
+    },
+    "settings_managerCardColumnsDesc": {
+        "message": "Nombre de cartes par rangée. 0 en met autant que la taille des cartes le permet.",
+        "description": "Under its setting in Options > Behavior > Cards"
+    },
+    "settings_managerCardCoverShape": {
+        "message": "Forme de la couverture",
+        "description": "Options > Behavior > Cards: label"
+    },
+    "settings_managerCardCoverShapeDesc": {
+        "message": "La forme de la couverture en haut de chaque carte",
+        "description": "Under its setting in Options > Behavior > Cards"
+    },
+    "settings_managerCardCoverShapeWide": {
+        "message": "Large (1,91:1)",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverShapeClassic": {
+        "message": "Classique (4:3)",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverShapeSquare": {
+        "message": "Carrée (1:1)",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverShapePortrait": {
+        "message": "Portrait (3:4)",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverFit": {
+        "message": "Ajustement de la couverture",
+        "description": "Options > Behavior > Cards: label"
+    },
+    "settings_managerCardCoverFitDesc": {
+        "message": "L’image remplit la couverture en rognant ce qui dépasse, ou s’affiche en entier",
+        "description": "Under its setting in Options > Behavior > Cards"
+    },
+    "settings_managerCardCoverFitFill": {
+        "message": "Remplir",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverFitFit": {
+        "message": "Afficher en entier",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardTitleLines": {
+        "message": "Lignes du titre",
+        "description": "Options > Behavior > Cards: label"
+    },
+    "settings_managerCardTitleLinesDesc": {
+        "message": "Nombre de lignes que le titre d’une carte peut occuper avant d’être coupé",
+        "description": "Under its setting in Options > Behavior > Cards"
+    },
     "settings_managerCardSize": {
         "message": "Taille des cartes",
         "description": "Setting label: how wide the manager's cards are at least"
@@ -9666,6 +9722,14 @@
     "settings_coversMaxCacheMbDesc": {
         "message": "Place que les couvertures peuvent occuper sur cet appareil ; les plus anciennes sont supprimées en premier",
         "description": "Settings: description of the cover storage limit"
+    },
+    "settings_coversReviewSingle": {
+        "message": "Vérifier une seule couverture",
+        "description": "Options > Page Details > Fetch Covers: switch label"
+    },
+    "settings_coversReviewSingleDesc": {
+        "message": "Récupérer la couverture d’un seul favori la montre avant de l’enregistrer. Désactivé, la couverture trouvée est enregistrée tout de suite ; une page sans couverture utilisable montre toujours pourquoi.",
+        "description": "Under the Review a Single Cover switch"
     },
     "settings_coversSourcePreference": {
         "message": "Source de la couverture",

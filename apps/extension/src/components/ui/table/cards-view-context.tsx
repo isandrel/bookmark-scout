@@ -6,11 +6,14 @@ import { createContext, type ReactNode, useContext } from 'react';
  */
 export const CardsViewContext = createContext(false);
 
-/** A row's title: one truncated line in the list, up to two lines in a card. */
+/** A row's title: one truncated line in the list, up to Title Lines lines in a card. */
 export function RowTitle({ title }: { title: string }) {
   const cards = useContext(CardsViewContext);
   return (
-    <span className={cards ? 'line-clamp-2 min-w-0 break-words' : 'min-w-0 truncate'} title={title}>
+    <span
+      className={cards ? 'line-clamp-(--card-title-lines) min-w-0 break-words' : 'min-w-0 truncate'}
+      title={title}
+    >
       {title}
     </span>
   );

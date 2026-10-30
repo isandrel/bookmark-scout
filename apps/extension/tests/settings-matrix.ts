@@ -627,6 +627,30 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     cards,
   ]),
   managerCardSize: tested(MANAGER, [cards]),
+  managerCardColumns: tested(MANAGER, [
+    e2e(
+      'bookmark-manager-cards.spec.ts',
+      'Columns, Cover Shape, Cover Fit, and Title Lines lay out the cards',
+    ),
+  ]),
+  managerCardCoverShape: tested(MANAGER, [
+    e2e(
+      'bookmark-manager-cards.spec.ts',
+      'Columns, Cover Shape, Cover Fit, and Title Lines lay out the cards',
+    ),
+  ]),
+  managerCardCoverFit: tested(MANAGER, [
+    e2e(
+      'bookmark-manager-cards.spec.ts',
+      'Columns, Cover Shape, Cover Fit, and Title Lines lay out the cards',
+    ),
+  ]),
+  managerCardTitleLines: tested(MANAGER, [
+    e2e(
+      'bookmark-manager-cards.spec.ts',
+      'Columns, Cover Shape, Cover Fit, and Title Lines lay out the cards',
+    ),
+  ]),
   cardMaxTags: tested(MANAGER, [cardLimits, cards]),
   cardSummaryLines: tested(MANAGER, [cardLimits, cards]),
   previewFields: tested('components/bookmarks/BookmarkPreviewDialog.tsx', [
@@ -1279,6 +1303,12 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   ]),
   coversMaxCacheMb: tested(TOOL_OPTIONS, [
     unit(COVERS_UNIT, 'remove the oldest past the storage limit'),
+  ]),
+  coversReviewSingle: tested(TOOL_TABLE, [
+    e2e(
+      'covers.spec.ts',
+      "a right-click Fetch cover on one card saves that bookmark's cover and leaves the others untouched",
+    ),
   ]),
   coversSourcePreference: tested(BROWSE_COVERS, [
     unit(

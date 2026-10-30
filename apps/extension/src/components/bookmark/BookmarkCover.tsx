@@ -7,6 +7,8 @@
 import type { ReactNode } from 'react';
 
 const coverRatio = { aspectRatio: String(COVER_ASPECT_RATIO) };
+/** On a card, the cards view's Cover Shape, set on the grid, wins over the default ratio. */
+const cardCoverFrame = { aspectRatio: `var(--card-cover-aspect, ${COVER_ASPECT_RATIO})` };
 
 /**
  * The room a card keeps for a cover, at the cover's ratio: a cover fills it; otherwise `children`
@@ -15,7 +17,7 @@ const coverRatio = { aspectRatio: String(COVER_ASPECT_RATIO) };
 export function CoverFrame({ cover, children }: { cover?: string; children?: ReactNode }) {
   return (
     <div
-      style={coverRatio}
+      style={cardCoverFrame}
       data-testid="bookmark-card-media"
       data-cover={cover ? 'stored' : 'none'}
       className="relative grid w-full shrink-0 place-items-center overflow-hidden rounded-md border bg-muted text-muted-foreground"
@@ -26,7 +28,8 @@ export function CoverFrame({ cover, children }: { cover?: string; children?: Rea
           alt=""
           decoding="async"
           data-testid="bookmark-cover"
-          className="absolute inset-0 size-full object-cover"
+          // Cover Fit: fill and crop, or show the whole picture (set on the grid).
+          className="absolute inset-0 size-full [object-fit:var(--card-cover-fit,cover)]"
         />
       ) : (
         children

@@ -37,6 +37,9 @@ card_min_width_px = { small = 176, medium = 224, large = 296 }
 # its cover loads; without one, the room shows the site icon (or the folder icon on a folder card)
 # at `card_placeholder_icon_px`
 cover_aspect_ratio = 1.91
+# Cover Shape in Options (`cover_shape` in config/settings/behavior.toml): the width-to-height ratio
+# of each choice for the cards. Wide is the Open Graph ratio the list and the preview keep.
+card_cover_shapes = { wide = 1.91, classic = 1.333, square = 1, portrait = 0.75 }
 card_placeholder_icon_px = 32
 
 # The optional Tags and Summary columns of the list (View menu; hidden at first). Tags stay on one

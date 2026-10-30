@@ -7365,6 +7365,62 @@
         "message": "Tanggal saja",
         "description": "Date Columns Show choice: the date alone"
     },
+    "settings_managerCardColumns": {
+        "message": "Kolom",
+        "description": "Options > Behavior > Cards: label"
+    },
+    "settings_managerCardColumnsDesc": {
+        "message": "Berapa kartu dalam satu baris. 0 memuat sebanyak yang diizinkan Ukuran Kartu.",
+        "description": "Under its setting in Options > Behavior > Cards"
+    },
+    "settings_managerCardCoverShape": {
+        "message": "Bentuk Sampul",
+        "description": "Options > Behavior > Cards: label"
+    },
+    "settings_managerCardCoverShapeDesc": {
+        "message": "Bentuk sampul di bagian atas tiap kartu",
+        "description": "Under its setting in Options > Behavior > Cards"
+    },
+    "settings_managerCardCoverShapeWide": {
+        "message": "Lebar (1,91:1)",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverShapeClassic": {
+        "message": "Klasik (4:3)",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverShapeSquare": {
+        "message": "Persegi (1:1)",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverShapePortrait": {
+        "message": "Potret (3:4)",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverFit": {
+        "message": "Penyesuaian Sampul",
+        "description": "Options > Behavior > Cards: label"
+    },
+    "settings_managerCardCoverFitDesc": {
+        "message": "Apakah gambar mengisi sampul dan memotong sisanya, atau ditampilkan utuh",
+        "description": "Under its setting in Options > Behavior > Cards"
+    },
+    "settings_managerCardCoverFitFill": {
+        "message": "Isi",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverFitFit": {
+        "message": "Tampilkan utuh",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardTitleLines": {
+        "message": "Baris Judul",
+        "description": "Options > Behavior > Cards: label"
+    },
+    "settings_managerCardTitleLinesDesc": {
+        "message": "Berapa baris judul kartu sebelum dipotong",
+        "description": "Under its setting in Options > Behavior > Cards"
+    },
     "settings_managerCardSize": {
         "message": "Ukuran Kartu",
         "description": "Setting label: how wide the manager's cards are at least"
@@ -9280,6 +9336,14 @@
     "settings_coversMaxCacheMbDesc": {
         "message": "Ruang yang boleh digunakan sampul tersimpan di perangkat ini; yang terlama dihapus terlebih dahulu",
         "description": "Settings: description of the cover storage limit"
+    },
+    "settings_coversReviewSingle": {
+        "message": "Tinjau satu sampul",
+        "description": "Options > Page Details > Fetch Covers: switch label"
+    },
+    "settings_coversReviewSingleDesc": {
+        "message": "Ambil sampul untuk satu bookmark menampilkan sampulnya sebelum disimpan. Jika nonaktif, sampul yang ditemukan langsung disimpan; halaman tanpa sampul yang bisa dipakai tetap menunjukkan alasannya.",
+        "description": "Under the Review a Single Cover switch"
     },
     "settings_coversSourcePreference": {
         "message": "Sumber Sampul",

@@ -126,8 +126,11 @@ export type ToolDefinition<Result = unknown, Selection = void> = {
   changesBookmarks?: boolean;
   /** The review opens when the scan starts and shows scan errors (reorganization). */
   reviewWhileScanning?: boolean;
-  /** Apply right after the scan instead of waiting for a review. */
-  autoApply?(settings: Settings): boolean;
+  /**
+   * Apply right after the scan instead of waiting for a review; `only` is the narrow scope's
+   * bookmarks when the run has one.
+   */
+  autoApply?(settings: Settings, run: { result: Result; only?: ReadonlySet<string> }): boolean;
   /**
    * Keep showing the reviewed result after an apply or undo instead of scanning again, for a
    * scan that is costly (an AI request).
@@ -832,8 +835,17 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
     // The manager's selection, and Fetch Cover on chosen bookmarks (`useCoverFetch`).
     narrowScopes: ['selection'],
     scan: ({ nodes, options, only }) => scanCovers(nodes, options.covers, only),
-    async apply(_result, picked, { options }) {
-      return reportDerivedSave(await saveCoverResults(picked, options.covers.maxCacheBytes), {
+    // Fetch Cover on one bookmark saves the cover it found at once when Review a Single Cover is
+    // off; with no cover to save, the review still says why.
+    autoApply: (settings, { result, only }) =>
+      !settings.coversReviewSingle &&
+      only?.size === 1 &&
+      result.items.length === 1 &&
+      result.items[0].status === 'found',
+    async apply(result, picked, { options, reviewed }) {
+      // Saved without a review (`autoApply`), the scan's own items are the ones to save.
+      const items = reviewed ? picked : result.items;
+      return reportDerivedSave(await saveCoverResults(items, options.covers.maxCacheBytes), {
         title: 'toast_coversSaved',
         description: 'toast_coversSavedDesc',
         partialTitle: 'toast_coversPartial',
