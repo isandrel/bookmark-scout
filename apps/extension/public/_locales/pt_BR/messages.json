@@ -10437,6 +10437,10 @@
         "message": "O navegador não deixa o Bookmark Scout funcionar em janelas privadas, então elas são ignoradas. Para permitir, abra a página do Bookmark Scout nas configurações de extensões do navegador e ative a permissão de modo anônimo ou janelas privadas.",
         "description": "Settings: note under Also Capture in Private Windows while the browser does not let the extension run in private windows"
     },
+    "menu_fetchCovers": {
+        "message": "Buscar capas ($1)",
+        "description": "Menu command on a folder or several items: Fetch Covers for the web bookmarks in them, folders included; $1 is how many"
+    },
     "menu_fetchCover": {
         "message": "Buscar capa",
         "description": "Bookmark manager item menu and bookmark preview: runs Fetch Covers on this bookmark (or the selected ones), with its review"

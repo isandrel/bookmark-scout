@@ -43,6 +43,8 @@ export type ActionItemHost = {
   removeCovers: (items: Bookmark[]) => void;
   /** Whether Fetch Covers is on, so its covers can be fetched for chosen bookmarks. */
   canFetchCovers: boolean;
+  /** The bookmarks among `items` and every bookmark inside the folders among them, at any depth. */
+  bookmarksWithin: (items: readonly Bookmark[]) => Bookmark[];
   /** Runs Fetch Covers on exactly `items`, asking for their sites first, with its review. */
   fetchCovers: (items: Bookmark[]) => void;
 };
