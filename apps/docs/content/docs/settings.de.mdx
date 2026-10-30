@@ -37,7 +37,20 @@ Darunter sagt **KI ist optional**, dass Bookmark Scout auch ohne KI funktioniert
 | --- | --- | --- |
 | **Passende Ordner** | An | Zeigt bei der Suche über den Ergebnissen die Ordner mit passendem Namen, um die aktuelle Seite dort zu speichern |
 | **Maximal passende Ordner** | <SettingDefault path="search.folder_matches.max" /> | Wie viele passende Ordner angezeigt werden |
-| **Tippfehler erlauben** | An | Ein Suchwort mit 4 oder mehr Buchstaben passt auch mit einem Tippfehler zu einem Ordnernamen |
+| **Gewicht des Ordnernamens** | <SettingDefault path="search.folder_matches.name_weight" /> | Wie viel ein Wort im Namen des Ordners selbst zählt |
+| **Gewicht der übergeordneten Ordner** | <SettingDefault path="search.folder_matches.parent_weight" /> | Wie viel ein Wort in den Namen der Ordner zählt, in denen er liegt, damit „react hooks“ Hooks in React findet |
+| **Gewicht der enthaltenen Lesezeichen** | <SettingDefault path="search.folder_matches.bookmark_weight" /> | Wie viel ein Wort in Titeln und Websites der Lesezeichen im Ordner zählt. 0 sucht nur in Ordnernamen |
+
+### Suchabgleich [#search-matching]
+
+| Einstellung | Standard | Wirkung |
+| --- | --- | --- |
+| **Unscharfe Suche** | An | Auch etwas anders geschriebene Wörter passen, „rect“ findet also React. Ergebnisse werden nach Relevanz (BM25) sortiert, nähere Schreibweisen zuerst |
+| **Eine Änderung ab** | <SettingDefault path="search.search_matching.one_edit" /> | Kürzestes Wort in Buchstaben, das um eine Änderung abweichen darf: ein Buchstabe mehr, weniger oder anders, oder zwei vertauscht |
+| **Zwei Änderungen ab** | <SettingDefault path="search.search_matching.two_edits" /> | Kürzestes Wort in Buchstaben, das um zwei Änderungen abweichen darf |
+| **Wortanfänge finden** | An | Ein eingegebenes Wort passt auch auf längere Wörter, die damit beginnen: „rea“ findet React schon beim Tippen. Das ganze Wort steht weiter vorn |
+| **Termsättigung (BM25 k1)** | <SettingDefault path="search.search_matching.bm25_k1" /> | Wie viel ein erneut vorkommendes Wort noch zur Punktzahl beiträgt. Niedriger lässt eine Erwähnung fast so viel zählen wie viele |
+| **Längennormalisierung (BM25 b)** | <SettingDefault path="search.search_matching.bm25_b" /> | Wie stark kürzere Ergebnisse gegenüber längeren mit denselben Wörtern bevorzugt werden: 0 gar nicht, 1 ganz |
 
 ### Suche [#searching]
 

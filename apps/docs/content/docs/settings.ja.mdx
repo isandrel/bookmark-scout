@@ -37,7 +37,20 @@ description: Bookmark Scout の設定ページにあるすべての設定を、�
 | --- | --- | --- |
 | **フォルダの候補** | オン | 検索中、名前が一致するフォルダを結果の上に表示し、現在のページをそこに保存できるようにします |
 | **フォルダ候補の最大数** | <SettingDefault path="search.folder_matches.max" /> | 表示する一致フォルダの数 |
-| **入力ミスを許容** | オン | 4 文字以上の検索語は、1 文字違いのフォルダ名にも一致します |
+| **フォルダー名の重み** | <SettingDefault path="search.folder_matches.name_weight" /> | フォルダー自身の名前にある語の重み |
+| **上位フォルダーの重み** | <SettingDefault path="search.folder_matches.parent_weight" /> | 入っているフォルダーの名前にある語の重み。「react hooks」で React の中の Hooks が見つかります |
+| **中のブックマークの重み** | <SettingDefault path="search.folder_matches.bookmark_weight" /> | フォルダー内のブックマークのタイトルとサイトにある語の重み。0 にするとフォルダー名だけを検索します |
+
+### 検索の一致方法 [#search-matching]
+
+| 設定 | 初期値 | 内容 |
+| --- | --- | --- |
+| **あいまい一致** | オン | つづりが少し違う語も一致します。「rect」で React が見つかります。結果は関連度（BM25）順で、つづりが近いほど上に並びます |
+| **1 か所の違いを許す長さ** | <SettingDefault path="search.search_matching.one_edit" /> | 1 か所の違い（1 文字の追加・削除・変更、または隣り合う 2 文字の入れ替え）を許す最短の語の長さ（文字数） |
+| **2 か所の違いを許す長さ** | <SettingDefault path="search.search_matching.two_edits" /> | 2 か所の違いを許す最短の語の長さ（文字数） |
+| **語の先頭に一致** | オン | 入力した語で始まる長い語にも一致します。「rea」と入力した時点で React が見つかります。語全体の一致はより上に並びます |
+| **語の飽和（BM25 k1）** | <SettingDefault path="search.search_matching.bm25_k1" /> | 同じ語が繰り返し出てきたとき、スコアにどれだけ加わり続けるか。低いほど 1 回の出現が複数回とほぼ同じになります |
+| **長さの正規化（BM25 b）** | <SettingDefault path="search.search_matching.bm25_b" /> | 同じ語を含むとき、短い結果をどれだけ優先するか。0 で優先せず、1 で最大限優先します |
 
 ### 検索 [#searching]
 

@@ -37,7 +37,20 @@ Sotto di esse, **L'IA è facoltativa** spiega che Bookmark Scout funziona senza 
 | --- | --- | --- |
 | **Cartelle corrispondenti** | Attivo | Durante la ricerca, elenca sopra i risultati le cartelle il cui nome corrisponde, per salvarvi la pagina corrente |
 | **Numero massimo di cartelle corrispondenti** | <SettingDefault path="search.folder_matches.max" /> | Quante cartelle corrispondenti elencare |
-| **Tollera errori di battitura** | Attivo | Una parola cercata di 4 o più lettere può corrispondere al nome di una cartella con un errore di battitura |
+| **Peso del nome della cartella** | <SettingDefault path="search.folder_matches.name_weight" /> | Quanto conta una parola nel nome della cartella stessa |
+| **Peso delle cartelle superiori** | <SettingDefault path="search.folder_matches.parent_weight" /> | Quanto conta una parola nei nomi delle cartelle che la contengono, così «react hooks» trova Hooks dentro React |
+| **Peso dei segnalibri contenuti** | <SettingDefault path="search.folder_matches.bookmark_weight" /> | Quanto conta una parola nei titoli e nei siti dei segnalibri nella cartella. 0 cerca solo nei nomi delle cartelle |
+
+### Corrispondenza della ricerca [#search-matching]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Corrispondenza approssimativa** | Attivo | Corrispondono anche parole scritte in modo un po’ diverso, così «rect» trova React. I risultati sono ordinati per pertinenza (BM25), con le grafie più vicine prima |
+| **Una modifica da** | <SettingDefault path="search.search_matching.one_edit" /> | Parola più corta, in lettere, che può differire di una modifica: una lettera aggiunta, tolta o cambiata, o due scambiate |
+| **Due modifiche da** | <SettingDefault path="search.search_matching.two_edits" /> | Parola più corta, in lettere, che può differire di due modifiche |
+| **Corrispondenza con l’inizio delle parole** | Attivo | Una parola digitata corrisponde anche alle parole più lunghe che inizia, così «rea» trova React mentre scrivi. La parola intera resta prima |
+| **Saturazione dei termini (BM25 k1)** | <SettingDefault path="search.search_matching.bm25_k1" /> | Quanto una parola che ricompare aggiunge ancora al punteggio. Più basso fa contare una menzione quasi quanto molte |
+| **Normalizzazione della lunghezza (BM25 b)** | <SettingDefault path="search.search_matching.bm25_b" /> | Quanto i risultati più brevi sono preferiti a quelli lunghi con le stesse parole: 0 per niente, 1 del tutto |
 
 ### Ricerca [#searching]
 

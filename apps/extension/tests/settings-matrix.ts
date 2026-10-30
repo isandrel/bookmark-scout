@@ -291,21 +291,67 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   folderMatchesEnabled: tested(POPUP, [
     e2e(
       'folder-match-save.spec.ts',
-      'folder match settings hide the list, limit its length, and turn off typo matching',
+      'folder match settings hide the list, limit its length, and turn off fuzzy matching',
     ),
   ]),
   folderMatchesMax: tested(POPUP, [
     e2e(
       'folder-match-save.spec.ts',
-      'folder match settings hide the list, limit its length, and turn off typo matching',
+      'folder match settings hide the list, limit its length, and turn off fuzzy matching',
     ),
   ]),
-  folderMatchesTypos: tested(POPUP, [
+  searchFuzzy: tested('hooks/use-search-matching.ts', [
     e2e(
       'folder-match-save.spec.ts',
-      'folder match settings hide the list, limit its length, and turn off typo matching',
+      'folder match settings hide the list, limit its length, and turn off fuzzy matching',
     ),
-    unit('folder-match.test.ts', 'accepts one typo in longer words only'),
+    unit(
+      'folder-match.test.ts',
+      'matches words with small spelling differences, in longer words only',
+    ),
+    unit(
+      'folder-match.test.ts',
+      'finds words with small spelling differences only with fuzzy matching on',
+    ),
+  ]),
+  searchFuzzyOneEdit: tested('hooks/use-search-matching.ts', [
+    unit(
+      'folder-match.test.ts',
+      'matches words with small spelling differences, in longer words only',
+    ),
+  ]),
+  searchFuzzyTwoEdits: tested('hooks/use-search-matching.ts', [
+    unit(
+      'folder-match.test.ts',
+      'matches words with small spelling differences, in longer words only',
+    ),
+  ]),
+  searchPrefix: tested('hooks/use-search-matching.ts', [
+    unit(
+      'folder-match.test.ts',
+      'matches word starts only with Match Word Starts on, and leaves out a part weighted 0',
+    ),
+  ]),
+  searchBm25K1: tested('hooks/use-search-matching.ts', [
+    unit('folder-match.test.ts', 'follows the folder weights and BM25 k1 and b'),
+  ]),
+  searchBm25B: tested('hooks/use-search-matching.ts', [
+    unit('folder-match.test.ts', 'follows the folder weights and BM25 k1 and b'),
+  ]),
+  folderMatchesNameWeight: tested('hooks/use-search-matching.ts', [
+    unit('folder-match.test.ts', 'follows the folder weights and BM25 k1 and b'),
+  ]),
+  folderMatchesParentWeight: tested('hooks/use-search-matching.ts', [
+    unit(
+      'folder-match.test.ts',
+      'ranks folders named for the words first, then folders inside them, then shallower paths',
+    ),
+  ]),
+  folderMatchesBookmarkWeight: tested('hooks/use-search-matching.ts', [
+    unit(
+      'folder-match.test.ts',
+      'matches word starts only with Match Word Starts on, and leaves out a part weighted 0',
+    ),
   ]),
   settingsSearchSources: tested(OPTIONS_PAGE, [
     e2e(OPTIONS_SPEC, SETTINGS_SEARCH_IN_TEST),

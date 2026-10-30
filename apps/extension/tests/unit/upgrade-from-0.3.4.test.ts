@@ -51,6 +51,7 @@ import { isRegisteredKey, STORAGE_ITEMS, type StorageItem } from '@/lib/storage/
 import { ACTION_MENUS, customizeMenu } from '@/services/action-menus';
 import { ACTIONS } from '@/services/actions';
 import { providerRequiresApiKey } from '@/services/ai-models';
+import { RETIRED_SETTINGS } from './retired-settings';
 
 /** `STORAGE_ITEMS` as 0.3.4 shipped it (area, name, shape version, collection). */
 const ITEMS_0_3_4 = {
@@ -455,6 +456,10 @@ describe('updating from 0.3.4', () => {
     expect(SETTINGS_0_3_4).toHaveLength(129);
     const device = new Set<string>(DEVICE_SETTINGS_0_3_4);
     for (const key of SETTINGS_0_3_4) {
+      if (key in RETIRED_SETTINGS) {
+        expect(key in defaultSettings, key).toBe(false);
+        continue;
+      }
       expect(key in defaultSettings, key).toBe(true);
       const scope = getSettingScope(key as keyof Settings);
       if (device.has(key)) {
@@ -490,6 +495,7 @@ describe('updating from 0.3.4', () => {
       expect(accepts(key, 'x'.repeat(maxLength)), key).toBe(true);
     }
     for (const key of SWITCHES_0_3_4) {
+      if (key in RETIRED_SETTINGS) continue;
       expect(accepts(key, true) && accepts(key, false), key).toBe(true);
     }
     expect(accepts('quickSaveFixedFolder', '42')).toBe(true);

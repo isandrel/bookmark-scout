@@ -907,6 +907,86 @@
         "message": "搜索时，在结果上方列出名称匹配的文件夹，方便把当前网页保存到那里",
         "description": "Settings > Search: description of the Folder Matches switch"
     },
+    "settings_sectionSearchMatching": {
+        "message": "搜索匹配",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzy": {
+        "message": "模糊匹配",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyDesc": {
+        "message": "拼写略有不同的词也能匹配，例如“rect”能找到 React。结果按相关性（BM25）排序，拼写越接近排得越前。",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchFuzzyKeywords": {
+        "message": "错字, 拼写, 拼错, 编辑距离, Damerau-Levenshtein, 相关性, BM25",
+        "description": "Other words the Options search finds Fuzzy Matching by, comma-separated; never shown"
+    },
+    "settings_searchFuzzyOneEdit": {
+        "message": "允许 1 处编辑的最短长度",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyOneEditDesc": {
+        "message": "可相差 1 处编辑的最短词长（字母数）：增、删、改一个字母，或交换相邻两个字母",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchFuzzyTwoEdits": {
+        "message": "允许 2 处编辑的最短长度",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyTwoEditsDesc": {
+        "message": "可相差 2 处编辑的最短词长（字母数）",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchPrefix": {
+        "message": "匹配词的开头",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchPrefixDesc": {
+        "message": "输入的词也能匹配以它开头的更长的词，输入“rea”就能找到 React。完整的词仍排得更前。",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchBm25K1": {
+        "message": "词频饱和度（BM25 k1）",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchBm25K1Desc": {
+        "message": "同一个词重复出现时还能为结果加多少分。越低，出现一次与出现多次的差别越小。",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchBm25B": {
+        "message": "长度归一化（BM25 b）",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchBm25BDesc": {
+        "message": "词相同时更偏向较短结果的程度：0 不偏向，1 完全偏向。",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesNameWeight": {
+        "message": "文件夹名称权重",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesNameWeightDesc": {
+        "message": "文件夹自身名称中的词占多大分量",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesParentWeight": {
+        "message": "上级文件夹权重",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesParentWeightDesc": {
+        "message": "所在上级文件夹名称中的词占多大分量，这样“react hooks”能找到 React 里的 Hooks",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesBookmarkWeight": {
+        "message": "内部书签权重",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesBookmarkWeightDesc": {
+        "message": "文件夹内书签的标题和网站中的词占多大分量。设为 0 只搜索文件夹名称。",
+        "description": "Under its setting in Options > Saving & Search"
+    },
     "settings_folderMatchesMax": {
         "message": "匹配文件夹数量上限",
         "description": "Settings > Search: how many matching folders to list"
@@ -914,14 +994,6 @@
     "settings_folderMatchesMaxDesc": {
         "message": "最多列出多少个匹配的文件夹",
         "description": "Settings > Search: description of the Maximum Folder Matches setting"
-    },
-    "settings_folderMatchesTypos": {
-        "message": "允许拼写错误",
-        "description": "Settings > Search: switch that lets folder matching forgive one typo"
-    },
-    "settings_folderMatchesTyposDesc": {
-        "message": "4 个字母及以上的搜索词，与文件夹名相差一个字母也能匹配，例如输入“rect”能找到 React",
-        "description": "Settings > Search: description of the Allow Typos switch"
     },
     "settings_sortOrder": {
         "message": "排序方式",
@@ -8850,10 +8922,6 @@
     "settings_searchDelayHelp": {
         "message": "你最后一次按键后，弹出窗口等待多久才开始搜索，避免每输入一个字母就搜索一次。书签较少时调低会感觉更快。",
         "description": "Settings: more about the searchDelay setting, in a toggletip"
-    },
-    "settings_folderMatchesTyposHelp": {
-        "message": "也匹配名称与输入相差一两个字母的文件夹，这样小的拼写错误也能找到文件夹。",
-        "description": "Settings: more about the folderMatchesTypos setting, in a toggletip"
     },
     "settings_jobsApplyInBackgroundAboveHelp": {
         "message": "较大的更改在你关闭页面后仍会继续，每一批都可在历史记录中撤消。较小的更改会立即应用，可在通知中撤消。",

@@ -1,0 +1,14 @@
+# The parts of typed-search ranking nobody needs to tune. Read by src/lib/bm25-search.ts, the
+# engine behind folder matches; how words match and BM25's k1 and b are user settings
+# (config/settings/search.toml, [search_matching]), and each search's field weights are its own.
+
+# BM25's smoothing of word rarity: added to how many documents have a word and to how many do not.
+idf_smoothing = 0.5
+# How much a typed word counts where it only starts a longer word ("rea" in React), relative to the
+# whole word.
+prefix_weight = { value = 0.6, min = 0, max = 1 }
+# How much a word one edit away counts, relative to the whole word; a second edit halves it again.
+fuzzy_weight = { value = 0.45, min = 0, max = 1 }
+# Most library words one typed word may stand for (whole, start, or fuzzy), best first, so a short
+# prefix in a large library does not score thousands of words.
+max_expansions = { value = 50, min = 1, max = 500 }

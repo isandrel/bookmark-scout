@@ -915,6 +915,86 @@
         "message": "Pendant la recherche, affiche au-dessus des résultats les dossiers dont le nom correspond, pour y enregistrer la page actuelle",
         "description": "Settings > Search: description of the Folder Matches switch"
     },
+    "settings_sectionSearchMatching": {
+        "message": "Correspondance de recherche",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzy": {
+        "message": "Correspondance approximative",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyDesc": {
+        "message": "Les mots écrits un peu différemment correspondent aussi : « rect » trouve React. Les résultats sont classés par pertinence (BM25), les orthographes les plus proches en premier.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchFuzzyKeywords": {
+        "message": "fautes de frappe, orthographe, mal écrit, distance d’édition, Damerau-Levenshtein, pertinence, BM25",
+        "description": "Other words the Options search finds Fuzzy Matching by, comma-separated; never shown"
+    },
+    "settings_searchFuzzyOneEdit": {
+        "message": "Une modification dès",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyOneEditDesc": {
+        "message": "Mot le plus court, en lettres, qui peut différer d’une modification : une lettre ajoutée, retirée ou changée, ou deux inversées",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchFuzzyTwoEdits": {
+        "message": "Deux modifications dès",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyTwoEditsDesc": {
+        "message": "Mot le plus court, en lettres, qui peut différer de deux modifications",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchPrefix": {
+        "message": "Correspondre aux débuts de mots",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchPrefixDesc": {
+        "message": "Un mot saisi correspond aussi aux mots plus longs qu’il commence : « rea » trouve React pendant la saisie. Le mot entier reste mieux classé.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchBm25K1": {
+        "message": "Saturation des termes (BM25 k1)",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchBm25K1Desc": {
+        "message": "Ce qu’un mot qui revient ajoute encore au score d’un résultat. Plus bas, une mention compte presque autant que plusieurs.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchBm25B": {
+        "message": "Normalisation de longueur (BM25 b)",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchBm25BDesc": {
+        "message": "À quel point les résultats courts sont préférés aux longs avec les mêmes mots : 0 pas du tout, 1 entièrement.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesNameWeight": {
+        "message": "Poids du nom du dossier",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesNameWeightDesc": {
+        "message": "Ce que compte un mot du nom du dossier lui-même",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesParentWeight": {
+        "message": "Poids des dossiers parents",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesParentWeightDesc": {
+        "message": "Ce que compte un mot des noms des dossiers qui le contiennent : « react hooks » trouve Hooks dans React",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesBookmarkWeight": {
+        "message": "Poids des favoris contenus",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesBookmarkWeightDesc": {
+        "message": "Ce que compte un mot des titres et sites des favoris du dossier. 0 ne cherche que dans les noms de dossiers.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
     "settings_folderMatchesMax": {
         "message": "Nombre maximal de dossiers correspondants",
         "description": "Settings > Search: how many matching folders to list"
@@ -922,14 +1002,6 @@
     "settings_folderMatchesMaxDesc": {
         "message": "Combien de dossiers correspondants afficher",
         "description": "Settings > Search: description of the Maximum Folder Matches setting"
-    },
-    "settings_folderMatchesTypos": {
-        "message": "Tolérer les fautes de frappe",
-        "description": "Settings > Search: switch that lets folder matching forgive one typo"
-    },
-    "settings_folderMatchesTyposDesc": {
-        "message": "Un mot de 4 lettres ou plus correspond à un nom de dossier malgré une faute de frappe : « rect » trouve React",
-        "description": "Settings > Search: description of the Allow Typos switch"
     },
     "settings_sortOrder": {
         "message": "Ordre de tri",
@@ -9144,10 +9216,6 @@
     "settings_searchDelayHelp": {
         "message": "Combien de temps la fenêtre contextuelle attend après votre dernière touche avant de chercher, pour ne pas chercher à chaque lettre. Moins semble plus rapide sur une petite bibliothèque.",
         "description": "Settings: more about the searchDelay setting, in a toggletip"
-    },
-    "settings_folderMatchesTyposHelp": {
-        "message": "Trouver aussi les dossiers dont le nom diffère d'une ou deux lettres de ce que vous avez tapé, pour qu'une petite faute de frappe trouve quand même le dossier.",
-        "description": "Settings: more about the folderMatchesTypos setting, in a toggletip"
     },
     "settings_jobsApplyInBackgroundAboveHelp": {
         "message": "Les grosses modifications continuent si vous fermez la page, et chaque partie s'annule depuis l'Historique. Les petites s'appliquent tout de suite, avec Annuler dans la notification.",

@@ -907,6 +907,86 @@
         "message": "Saat Anda menelusuri, tampilkan folder yang namanya cocok di atas hasil, agar Anda dapat menyimpan halaman ini di sana",
         "description": "Settings > Search: description of the Folder Matches switch"
     },
+    "settings_sectionSearchMatching": {
+        "message": "Pencocokan Penelusuran",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzy": {
+        "message": "Pencocokan Fuzzy",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyDesc": {
+        "message": "Kata yang ejaannya sedikit berbeda juga cocok, jadi \"rect\" menemukan React. Hasil diurutkan menurut relevansi (BM25), ejaan yang lebih dekat di atas.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchFuzzyKeywords": {
+        "message": "salah ketik, ejaan, salah eja, jarak edit, Damerau-Levenshtein, relevansi, BM25",
+        "description": "Other words the Options search finds Fuzzy Matching by, comma-separated; never shown"
+    },
+    "settings_searchFuzzyOneEdit": {
+        "message": "Satu Edit Mulai",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyOneEditDesc": {
+        "message": "Kata terpendek, dalam huruf, yang boleh berbeda satu edit: satu huruf ditambah, dihapus, atau diganti, atau dua ditukar",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchFuzzyTwoEdits": {
+        "message": "Dua Edit Mulai",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyTwoEditsDesc": {
+        "message": "Kata terpendek, dalam huruf, yang boleh berbeda dua edit",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchPrefix": {
+        "message": "Cocokkan Awal Kata",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchPrefixDesc": {
+        "message": "Kata yang Anda ketik juga cocok dengan kata lebih panjang yang diawalinya, jadi \"rea\" menemukan React saat mengetik. Kata utuh tetap di atas.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchBm25K1": {
+        "message": "Saturasi Istilah (BM25 k1)",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchBm25K1Desc": {
+        "message": "Seberapa banyak kata yang muncul lagi masih menambah skor hasil. Lebih rendah membuat satu sebutan hampir sama dengan banyak.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchBm25B": {
+        "message": "Normalisasi Panjang (BM25 b)",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchBm25BDesc": {
+        "message": "Seberapa hasil yang lebih pendek diutamakan dibanding yang panjang dengan kata yang sama: 0 tidak sama sekali, 1 sepenuhnya.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesNameWeight": {
+        "message": "Bobot Nama Folder",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesNameWeightDesc": {
+        "message": "Seberapa besar kata dalam nama folder itu sendiri dihitung",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesParentWeight": {
+        "message": "Bobot Folder Induk",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesParentWeightDesc": {
+        "message": "Seberapa besar kata dalam nama folder tempatnya berada dihitung, jadi \"react hooks\" menemukan Hooks di dalam React",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesBookmarkWeight": {
+        "message": "Bobot Bookmark di Dalam",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesBookmarkWeightDesc": {
+        "message": "Seberapa besar kata dalam judul dan situs bookmark di folder dihitung. 0 hanya mencari nama folder.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
     "settings_folderMatchesMax": {
         "message": "Maksimum Folder yang Cocok",
         "description": "Settings > Search: how many matching folders to list"
@@ -914,14 +994,6 @@
     "settings_folderMatchesMaxDesc": {
         "message": "Jumlah folder yang cocok yang ditampilkan",
         "description": "Settings > Search: description of the Maximum Folder Matches setting"
-    },
-    "settings_folderMatchesTypos": {
-        "message": "Izinkan Salah Ketik",
-        "description": "Settings > Search: switch that lets folder matching forgive one typo"
-    },
-    "settings_folderMatchesTyposDesc": {
-        "message": "Biarkan kata penelusuran 4 huruf atau lebih cocok dengan nama folder yang berbeda satu salah ketik, jadi \"rect\" menemukan React",
-        "description": "Settings > Search: description of the Allow Typos switch"
     },
     "settings_sortOrder": {
         "message": "Urutan",
@@ -8822,10 +8894,6 @@
     "settings_searchDelayHelp": {
         "message": "Berapa lama popup menunggu setelah tombol terakhir Anda tekan sebelum menelusuri, agar tidak menelusuri setiap huruf. Nilai lebih rendah terasa lebih cepat untuk koleksi bookmark yang kecil.",
         "description": "Settings: more about the searchDelay setting, in a toggletip"
-    },
-    "settings_folderMatchesTyposHelp": {
-        "message": "Cocokkan juga folder yang namanya berbeda satu atau dua huruf dari yang Anda ketik, agar salah ketik kecil tetap menemukan foldernya.",
-        "description": "Settings: more about the folderMatchesTypos setting, in a toggletip"
     },
     "settings_jobsApplyInBackgroundAboveHelp": {
         "message": "Perubahan yang lebih besar tetap berjalan jika Anda menutup halaman, dan setiap bagian dapat diurungkan dari Histori. Perubahan yang lebih kecil langsung diterapkan, dengan Urungkan di notifikasi.",

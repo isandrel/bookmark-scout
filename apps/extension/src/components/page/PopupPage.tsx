@@ -115,7 +115,8 @@ function PopupPage() {
   // Most recent first, so folder matches can rank folders the user saves to often.
   const { value: folderMatchesEnabled } = useSetting('folderMatchesEnabled');
   const { value: folderMatchesMax } = useSetting('folderMatchesMax');
-  const { value: folderMatchesTypos } = useSetting('folderMatchesTypos');
+  const searchMatching = useSearchMatching();
+  const folderMatchWeights = useFolderMatchWeights();
   const { value: recentFolders } = useStoredValue(recentFoldersValue);
   const recentFolderIds = useMemo(() => recentFolders.map((folder) => folder.id), [recentFolders]);
   const setExpandFoldersOnSearch = useBookmarkStore((state) => state.setExpandFoldersOnSearch);
@@ -611,7 +612,8 @@ function PopupPage() {
       folderMatchesEnabled && findsFolders
         ? findFolderMatches(folders, activeQuery, {
             limit: folderMatchesMax,
-            allowTypos: folderMatchesTypos,
+            matching: searchMatching,
+            weights: folderMatchWeights,
             recentFolderIds,
           })
         : [],
@@ -620,7 +622,8 @@ function PopupPage() {
       findsFolders,
       folderMatchesEnabled,
       folderMatchesMax,
-      folderMatchesTypos,
+      searchMatching,
+      folderMatchWeights,
       folders,
       recentFolderIds,
     ],

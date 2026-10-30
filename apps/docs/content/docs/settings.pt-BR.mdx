@@ -37,7 +37,20 @@ Abaixo delas, **A IA é opcional** explica que o Bookmark Scout funciona sem IA;
 | --- | --- | --- |
 | **Pastas correspondentes** | Ativado | Durante a pesquisa, mostra acima dos resultados as pastas cujo nome corresponde, para salvar a página atual nelas |
 | **Máximo de pastas correspondentes** | <SettingDefault path="search.folder_matches.max" /> | Quantas pastas correspondentes mostrar |
-| **Permitir erros de digitação** | Ativado | Uma palavra com 4 letras ou mais corresponde a um nome de pasta mesmo com um erro de digitação |
+| **Peso do nome da pasta** | <SettingDefault path="search.folder_matches.name_weight" /> | Quanto conta uma palavra no nome da própria pasta |
+| **Peso das pastas acima** | <SettingDefault path="search.folder_matches.parent_weight" /> | Quanto conta uma palavra nos nomes das pastas em que ela está, para "react hooks" encontrar Hooks dentro de React |
+| **Peso dos favoritos dentro** | <SettingDefault path="search.folder_matches.bookmark_weight" /> | Quanto conta uma palavra nos títulos e sites dos favoritos da pasta. 0 busca só nos nomes das pastas |
+
+### Correspondência da busca [#search-matching]
+
+| Configuração | Padrão | O que faz |
+| --- | --- | --- |
+| **Correspondência aproximada** | Ativado | Palavras escritas de forma um pouco diferente também correspondem, então "rect" encontra React. Os resultados são ordenados por relevância (BM25), com as grafias mais próximas antes |
+| **Uma edição a partir de** | <SettingDefault path="search.search_matching.one_edit" /> | Menor palavra, em letras, que pode diferir em uma edição: uma letra adicionada, removida ou trocada, ou duas invertidas |
+| **Duas edições a partir de** | <SettingDefault path="search.search_matching.two_edits" /> | Menor palavra, em letras, que pode diferir em duas edições |
+| **Corresponder ao início das palavras** | Ativado | Uma palavra digitada também corresponde a palavras mais longas que começam com ela, então "rea" encontra React enquanto você digita. A palavra inteira continua na frente |
+| **Saturação de termos (BM25 k1)** | <SettingDefault path="search.search_matching.bm25_k1" /> | Quanto uma palavra que aparece de novo ainda soma à pontuação. Mais baixo faz uma menção valer quase tanto quanto muitas |
+| **Normalização por tamanho (BM25 b)** | <SettingDefault path="search.search_matching.bm25_b" /> | Quanto resultados mais curtos são preferidos aos longos com as mesmas palavras: 0 nada, 1 totalmente |
 
 ### Pesquisa [#searching]
 

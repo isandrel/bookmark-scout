@@ -37,7 +37,20 @@ Debajo, **La IA es opcional** explica que Bookmark Scout funciona sin IA; **Conf
 | --- | --- | --- |
 | **Carpetas coincidentes** | Activado | Mientras buscas, muestra sobre los resultados las carpetas cuyo nombre coincide, para guardar ahí la página actual |
 | **Máximo de carpetas coincidentes** | <SettingDefault path="search.folder_matches.max" /> | Cuántas carpetas coincidentes mostrar |
-| **Permitir errores de escritura** | Activado | Una palabra de 4 letras o más coincide con un nombre de carpeta aunque tenga un error |
+| **Peso del nombre de la carpeta** | <SettingDefault path="search.folder_matches.name_weight" /> | Cuánto cuenta una palabra del nombre de la propia carpeta |
+| **Peso de las carpetas superiores** | <SettingDefault path="search.folder_matches.parent_weight" /> | Cuánto cuenta una palabra en los nombres de las carpetas que la contienen, así «react hooks» encuentra Hooks dentro de React |
+| **Peso de los marcadores dentro** | <SettingDefault path="search.folder_matches.bookmark_weight" /> | Cuánto cuenta una palabra en los títulos y sitios de los marcadores de la carpeta. 0 busca solo en nombres de carpeta |
+
+### Coincidencia de búsqueda [#search-matching]
+
+| Ajuste | Predeterminado | Qué hace |
+| --- | --- | --- |
+| **Coincidencia aproximada** | Activado | También coinciden palabras escritas de forma algo distinta, así que «rect» encuentra React. Los resultados se ordenan por relevancia (BM25) y las escrituras más parecidas van antes |
+| **Una edición desde** | <SettingDefault path="search.search_matching.one_edit" /> | Palabra más corta, en letras, que puede diferir en una edición: una letra añadida, quitada o cambiada, o dos intercambiadas |
+| **Dos ediciones desde** | <SettingDefault path="search.search_matching.two_edits" /> | Palabra más corta, en letras, que puede diferir en dos ediciones |
+| **Coincidir con el inicio de palabras** | Activado | Una palabra que escribes también coincide con palabras más largas que empiezan por ella, así que «rea» encuentra React mientras escribes. La palabra completa sigue yendo antes |
+| **Saturación de términos (BM25 k1)** | <SettingDefault path="search.search_matching.bm25_k1" /> | Cuánto sigue sumando una palabra que vuelve a aparecer. Más bajo hace que una mención cuente casi como muchas |
+| **Normalización por longitud (BM25 b)** | <SettingDefault path="search.search_matching.bm25_b" /> | Cuánto se prefieren los resultados más cortos frente a los largos con las mismas palabras: 0 nada, 1 del todo |
 
 ### Búsqueda [#searching]
 

@@ -7,8 +7,29 @@
 enabled = true
 # How many matching folders to list
 max = { default = 5, min = 1, max = 10, step = 1 }
-# Let a longer search word match a folder name with one typo ("rect" finds React)
-typos = true
+# Folder matches are ranked by relevance (BM25, src/lib/bm25-search.ts), as Search Matching below
+# says words match. How much each part of a folder counts: its own name says the most; 0 leaves a
+# part out. The bookmarks in it start left out, so typing a bookmark's title does not list the
+# folders that hold it; raising it finds folders by what they hold.
+name_weight = { default = 4, min = 0, max = 20, step = 0.5 }
+parent_weight = { default = 1, min = 0, max = 20, step = 0.5 }
+bookmark_weight = { default = 0, min = 0, max = 20, step = 0.5 }
+
+[search_matching]
+# How typed words match in searches ranked by relevance (folder matches).
+# Fuzzy Matching: words spelled a little differently match too ("rect" finds React). An edit is a
+# letter added, removed, or changed, or two letters swapped (Damerau-Levenshtein distance); a word
+# may differ by one edit from one_edit letters on and by two from two_edits, as search engines
+# such as Typesense and Meilisearch scale it. Shorter words would match too many names.
+fuzzy = true
+one_edit = { default = 4, min = 2, max = 20, step = 1 }
+two_edits = { default = 8, min = 3, max = 30, step = 1 }
+# Match Word Starts: a typed word also matches the longer words it starts ("rea" finds React)
+prefix = true
+# BM25 k1, term-frequency saturation: higher lets a word that appears more often keep adding to a
+# score. BM25 b, length normalization, 0 to 1: higher favors shorter documents.
+bm25_k1 = { default = 1.2, min = 0, max = 3, step = 0.1 }
+bm25_b = { default = 0.75, min = 0, max = 1, step = 0.05 }
 
 [search]
 # Maximum number of search results to display, one of the options; the label message takes the

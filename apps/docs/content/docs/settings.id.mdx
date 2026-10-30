@@ -37,7 +37,20 @@ Di bawahnya, **AI bersifat opsional** menyatakan bahwa Bookmark Scout berfungsi 
 | --- | --- | --- |
 | **Folder yang Cocok** | Aktif | Saat Anda menelusuri, cantumkan folder yang namanya cocok di atas hasil, untuk menyimpan halaman saat ini di sana |
 | **Maksimum Folder yang Cocok** | <SettingDefault path="search.folder_matches.max" /> | Berapa banyak folder cocok yang dicantumkan |
-| **Izinkan Salah Ketik** | Aktif | Kata penelusuran dengan 4 huruf atau lebih boleh cocok dengan nama folder yang berbeda satu huruf |
+| **Bobot Nama Folder** | <SettingDefault path="search.folder_matches.name_weight" /> | Seberapa besar kata dalam nama folder itu sendiri dihitung |
+| **Bobot Folder Induk** | <SettingDefault path="search.folder_matches.parent_weight" /> | Seberapa besar kata dalam nama folder tempatnya berada dihitung, jadi "react hooks" menemukan Hooks di dalam React |
+| **Bobot Bookmark di Dalam** | <SettingDefault path="search.folder_matches.bookmark_weight" /> | Seberapa besar kata dalam judul dan situs bookmark di folder dihitung. 0 hanya mencari nama folder |
+
+### Pencocokan Penelusuran [#search-matching]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Pencocokan Fuzzy** | Aktif | Kata yang ejaannya sedikit berbeda juga cocok, jadi "rect" menemukan React. Hasil diurutkan menurut relevansi (BM25), ejaan yang lebih dekat di atas |
+| **Satu Edit Mulai** | <SettingDefault path="search.search_matching.one_edit" /> | Kata terpendek, dalam huruf, yang boleh berbeda satu edit: satu huruf ditambah, dihapus, atau diganti, atau dua ditukar |
+| **Dua Edit Mulai** | <SettingDefault path="search.search_matching.two_edits" /> | Kata terpendek, dalam huruf, yang boleh berbeda dua edit |
+| **Cocokkan Awal Kata** | Aktif | Kata yang Anda ketik juga cocok dengan kata lebih panjang yang diawalinya, jadi "rea" menemukan React saat mengetik. Kata utuh tetap di atas |
+| **Saturasi Istilah (BM25 k1)** | <SettingDefault path="search.search_matching.bm25_k1" /> | Seberapa banyak kata yang muncul lagi masih menambah skor hasil. Lebih rendah membuat satu sebutan hampir sama dengan banyak |
+| **Normalisasi Panjang (BM25 b)** | <SettingDefault path="search.search_matching.bm25_b" /> | Seberapa hasil yang lebih pendek diutamakan dibanding yang panjang dengan kata yang sama: 0 tidak sama sekali, 1 sepenuhnya |
 
 ### Penelusuran [#searching]
 

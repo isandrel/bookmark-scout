@@ -915,6 +915,86 @@
         "message": "Durante a pesquisa, mostra acima dos resultados as pastas cujo nome corresponde, para salvar a página atual nelas",
         "description": "Settings > Search: description of the Folder Matches switch"
     },
+    "settings_sectionSearchMatching": {
+        "message": "Correspondência da busca",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzy": {
+        "message": "Correspondência aproximada",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyDesc": {
+        "message": "Palavras escritas de forma um pouco diferente também correspondem, então \"rect\" encontra React. Os resultados são ordenados por relevância (BM25), com as grafias mais próximas antes.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchFuzzyKeywords": {
+        "message": "erros de digitação, ortografia, grafia errada, distância de edição, Damerau-Levenshtein, relevância, BM25",
+        "description": "Other words the Options search finds Fuzzy Matching by, comma-separated; never shown"
+    },
+    "settings_searchFuzzyOneEdit": {
+        "message": "Uma edição a partir de",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyOneEditDesc": {
+        "message": "Menor palavra, em letras, que pode diferir em uma edição: uma letra adicionada, removida ou trocada, ou duas invertidas",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchFuzzyTwoEdits": {
+        "message": "Duas edições a partir de",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyTwoEditsDesc": {
+        "message": "Menor palavra, em letras, que pode diferir em duas edições",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchPrefix": {
+        "message": "Corresponder ao início das palavras",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchPrefixDesc": {
+        "message": "Uma palavra digitada também corresponde a palavras mais longas que começam com ela, então \"rea\" encontra React enquanto você digita. A palavra inteira continua na frente.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchBm25K1": {
+        "message": "Saturação de termos (BM25 k1)",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchBm25K1Desc": {
+        "message": "Quanto uma palavra que aparece de novo ainda soma à pontuação. Mais baixo faz uma menção valer quase tanto quanto muitas.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchBm25B": {
+        "message": "Normalização por tamanho (BM25 b)",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchBm25BDesc": {
+        "message": "Quanto resultados mais curtos são preferidos aos longos com as mesmas palavras: 0 nada, 1 totalmente.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesNameWeight": {
+        "message": "Peso do nome da pasta",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesNameWeightDesc": {
+        "message": "Quanto conta uma palavra no nome da própria pasta",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesParentWeight": {
+        "message": "Peso das pastas acima",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesParentWeightDesc": {
+        "message": "Quanto conta uma palavra nos nomes das pastas em que ela está, para \"react hooks\" encontrar Hooks dentro de React",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesBookmarkWeight": {
+        "message": "Peso dos favoritos dentro",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesBookmarkWeightDesc": {
+        "message": "Quanto conta uma palavra nos títulos e sites dos favoritos da pasta. 0 busca só nos nomes das pastas.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
     "settings_folderMatchesMax": {
         "message": "Máximo de pastas correspondentes",
         "description": "Settings > Search: how many matching folders to list"
@@ -922,14 +1002,6 @@
     "settings_folderMatchesMaxDesc": {
         "message": "Quantas pastas correspondentes mostrar",
         "description": "Settings > Search: description of the Maximum Folder Matches setting"
-    },
-    "settings_folderMatchesTypos": {
-        "message": "Permitir erros de digitação",
-        "description": "Settings > Search: switch that lets folder matching forgive one typo"
-    },
-    "settings_folderMatchesTyposDesc": {
-        "message": "Uma palavra com 4 letras ou mais corresponde a um nome de pasta mesmo com um erro, então \"rect\" encontra React",
-        "description": "Settings > Search: description of the Allow Typos switch"
     },
     "settings_sortOrder": {
         "message": "Ordem de classificação",
@@ -9144,10 +9216,6 @@
     "settings_searchDelayHelp": {
         "message": "Quanto tempo o pop-up espera depois da última tecla antes de pesquisar, para não pesquisar a cada letra. Menos parece mais rápido em uma coleção pequena.",
         "description": "Settings: more about the searchDelay setting, in a toggletip"
-    },
-    "settings_folderMatchesTyposHelp": {
-        "message": "Também encontrar pastas cujo nome difere em uma ou duas letras do que você digitou, para que um pequeno erro de digitação ainda encontre a pasta.",
-        "description": "Settings: more about the folderMatchesTypos setting, in a toggletip"
     },
     "settings_jobsApplyInBackgroundAboveHelp": {
         "message": "Alterações maiores continuam se você fechar a página, e cada parte pode ser desfeita no Histórico. As menores são aplicadas na hora, com Desfazer na notificação.",
