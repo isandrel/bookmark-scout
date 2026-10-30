@@ -3363,6 +3363,14 @@
         "message": "輸入名稱後按 Enter",
         "description": "Placeholder of the box that adds a name to a list setting"
     },
+    "settings_listInvalidSite": {
+        "message": "不是網站：$1。請輸入像 example.com 這樣的網站。",
+        "description": "Under a site list in Options when what was typed names no site; $1 is what was typed, kept in the box"
+    },
+    "settings_listInvalidParam": {
+        "message": "不是參數名稱：$1。請輸入像 utm_source 這樣的參數名稱。",
+        "description": "Under a query parameter list in Options when what was typed is not a parameter name; $1 is what was typed, kept in the box"
+    },
     "settings_listAddItem": {
         "message": "新增 $1",
         "description": "Accessible name of a suggestion button; $1 is the name it adds"

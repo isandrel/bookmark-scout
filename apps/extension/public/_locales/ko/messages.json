@@ -3363,6 +3363,14 @@
         "message": "이름을 입력하고 Enter",
         "description": "Placeholder of the box that adds a name to a list setting"
     },
+    "settings_listInvalidSite": {
+        "message": "사이트가 아닙니다: $1. example.com 같은 사이트를 입력하세요.",
+        "description": "Under a site list in Options when what was typed names no site; $1 is what was typed, kept in the box"
+    },
+    "settings_listInvalidParam": {
+        "message": "매개변수 이름이 아닙니다: $1. utm_source 같은 이름을 입력하세요.",
+        "description": "Under a query parameter list in Options when what was typed is not a parameter name; $1 is what was typed, kept in the box"
+    },
     "settings_listAddItem": {
         "message": "$1 추가",
         "description": "Accessible name of a suggestion button; $1 is the name it adds"

@@ -35,15 +35,22 @@ export function isTokenListSetting(fieldKey: string): fieldKey is TokenListSetti
 const queryParamToken = (raw: string) => (isQueryParamName(raw) ? raw : undefined);
 
 /**
- * How each list reads what was typed: the entry it keeps, or undefined to drop it. A site list
- * takes a host name or a whole address and keeps the site (`toSiteName`).
+ * How each list reads what was typed: the entry it keeps, or undefined when it is not one, which
+ * stays in the box with the message saying why. A site list takes a host name or a whole address
+ * and keeps the site (`toTypedSiteName`).
  */
-const TOKEN_PARSERS: Record<TokenListSetting, (raw: string) => string | undefined> = {
-  urlCleanerPreserveParams: queryParamToken,
-  urlCleanerRemoveParams: queryParamToken,
-  privacyScannerSensitiveParams: queryParamToken,
-  pageTextExcludedSites: toSiteName,
-  coversNeverCaptureSites: toSiteName,
+const TOKEN_PARSERS: Record<
+  TokenListSetting,
+  { parse: (raw: string) => string | undefined; invalidKey: string }
+> = {
+  urlCleanerPreserveParams: { parse: queryParamToken, invalidKey: 'settings_listInvalidParam' },
+  urlCleanerRemoveParams: { parse: queryParamToken, invalidKey: 'settings_listInvalidParam' },
+  privacyScannerSensitiveParams: {
+    parse: queryParamToken,
+    invalidKey: 'settings_listInvalidParam',
+  },
+  pageTextExcludedSites: { parse: toTypedSiteName, invalidKey: 'settings_listInvalidSite' },
+  coversNeverCaptureSites: { parse: toTypedSiteName, invalidKey: 'settings_listInvalidSite' },
 };
 
 /** The checklist's codes by class (2xx, 3xx, 4xx), in configured order. */
@@ -84,7 +91,11 @@ export function TokenListEditor({
   fieldKey,
 }: EditorProps<string> & { fieldKey: TokenListSetting }) {
   const [draft, setDraft] = useState('');
+  // What was typed but is no entry: kept in the box to fix, and named in the message under it.
+  const [rejected, setRejected] = useState<string[]>([]);
   const suggestionsId = useId();
+  const errorId = useId();
+  const parser = TOKEN_PARSERS[fieldKey];
   // Settings sync, so lists are capped (config/settings/*.toml); a full list takes no more names.
   const { maxItems = Number.POSITIVE_INFINITY, maxLength } = getSettingsFieldMeta()[fieldKey];
   const room = Math.max(0, maxItems - value.length);
@@ -99,19 +110,34 @@ export function TokenListEditor({
         id={id}
         value={value}
         onChange={onChange}
-        parse={(raw) =>
-          parseListTokens(raw).flatMap((token) => TOKEN_PARSERS[fieldKey](token) ?? [])
-        }
+        parse={(raw) => {
+          const tokens = parseListTokens(raw);
+          const invalid = tokens.filter((token) => parser.parse(token) === undefined);
+          setRejected(invalid);
+          // The input clears its draft before parsing; this puts the rejected text back.
+          if (invalid.length > 0) setDraft(invalid.join(' '));
+          return tokens.flatMap((token) => parser.parse(token) ?? []);
+        }}
         separator={/[\s,]/}
         maxItems={maxItems}
         maxLength={maxLength}
         placeholder={t('settings_listAddPlaceholder')}
         labelledBy={labelledBy}
-        describedBy={describedBy}
+        describedBy={
+          rejected.length > 0 ? [describedBy, errorId].filter(Boolean).join(' ') : describedBy
+        }
         draft={draft}
-        onDraftChange={setDraft}
+        onDraftChange={(next) => {
+          setDraft(next);
+          if (next !== draft) setRejected([]);
+        }}
         mono
       />
+      {rejected.length > 0 && (
+        <p id={errorId} role="alert" className="text-xs text-destructive-text">
+          {t(parser.invalidKey, rejected.join(', '))}
+        </p>
+      )}
       {suggestions.length > 0 && (
         <fieldset
           aria-labelledby={suggestionsId}

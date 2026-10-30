@@ -138,6 +138,14 @@ const OPAQUE_SCHEMES = new Set([
 ]);
 
 /**
+ * Whether a host someone typed names a site rather than a word: a dotted name, `localhost`, or a
+ * bracketed IPv6 address.
+ */
+export function looksLikeHost(hostname: string): boolean {
+  return hostname.includes('.') || hostname === 'localhost' || hostname.startsWith('[');
+}
+
+/**
  * A typed address with `https://` added when it names a host without a scheme, as the browser's
  * own add dialog does: `example.com/path` becomes `https://example.com/path`. Anything else
  * (an address with a scheme, a bookmarklet, or text that is no address) comes back unchanged.
@@ -148,8 +156,7 @@ export function withDefaultScheme(text: string): string {
   }
   try {
     const { hostname } = new URL(`https://${text}`);
-    const isHost = hostname.includes('.') || hostname === 'localhost' || hostname.startsWith('[');
-    return isHost && !/\s/.test(text) ? `https://${text}` : text;
+    return looksLikeHost(hostname) && !/\s/.test(text) ? `https://${text}` : text;
   } catch {
     return text;
   }
