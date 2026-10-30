@@ -613,6 +613,12 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   managerDefaultColumns: tested(TABLE_DEFAULTS, tableDefaults),
   managerDefaultPageSize: tested(TABLE_DEFAULTS, tableDefaults),
   managerDefaultSort: tested(TABLE_DEFAULTS, tableDefaults),
+  managerTableDates: tested('components/ui/table/columns.tsx', [
+    e2e(
+      'manager-defaults.spec.ts',
+      'the Dates and Times settings change how the manager shows dates',
+    ),
+  ]),
   managerCardFields: tested(MANAGER, [
     unit(
       CUSTOMIZE_UNIT,

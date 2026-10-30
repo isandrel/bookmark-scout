@@ -655,6 +655,37 @@ test('settings search says where AI service fields are when no service shows the
   );
 });
 
+test('settings search keeps its words when a tab with matches is clicked, and clears from its button', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await setSettings(extensionWorker, { language: 'en' });
+  await openOptions(page, extensionId);
+  const search = page.getByRole('searchbox', { name: 'Search settings...' });
+
+  // A tab with matches jumps to them; the search and its results stay.
+  await search.fill('width window');
+  await page.getByRole('tab', { name: /^Appearance/ }).click();
+  await expect(search).toHaveValue('width window');
+  await expect(page.locator('[data-search-category="appearance"]')).toBeInViewport();
+  await expect(page.getByText('1 matching setting in all tabs')).toBeVisible();
+
+  // A tab without matches leaves the search and opens the tab.
+  await page.getByRole('tab', { name: /^Behavior/ }).click();
+  await expect(search).toHaveValue('');
+  await expect(page.locator('[data-search-category]')).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Behavior', exact: true })).toBeVisible();
+
+  // Every browser shows the box's own Clear search button (Firefox draws none for a search box).
+  await expect(page.getByRole('button', { name: 'Clear search' })).toHaveCount(0);
+  await search.fill('width');
+  await page.getByRole('button', { name: 'Clear search' }).click();
+  await expect(search).toHaveValue('');
+  await expect(search).toBeFocused();
+  await expect(page.getByRole('button', { name: 'Clear search' })).toHaveCount(0);
+});
+
 test('settings search finds a setting by its keywords and says so', async ({
   extensionId,
   extensionWorker,
@@ -1096,4 +1127,39 @@ test('a settings file dropped on the page restores like Restore settings', async
   });
   await expect(toastRegion(page).getByText('1 settings changed: Theme')).toBeVisible();
   await expect.poll(() => readSettings(extensionWorker)).toMatchObject({ theme: 'dark' });
+});
+
+test('a list of sites keeps what names no site in the box and says why', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  // Index Page Text's section folds its settings while the tool is off.
+  await setSettings(extensionWorker, { language: 'en', pageTextEnabled: true });
+  await page.goto(`chrome-extension://${extensionId}/options.html?category=metadataContent`);
+  const sites = page.locator('[data-setting="pageTextExcludedSites"]');
+  const box = sites.getByRole('textbox');
+
+  // A single word is no site: it stays to be fixed, and nothing is saved.
+  await box.fill('aa');
+  await box.press('Enter');
+  await expect(box).toHaveValue('aa');
+  const message = sites.getByRole('alert');
+  await expect(message).toHaveText('Not a site: aa. Type one such as example.com.');
+  await expect(box).toHaveAccessibleDescription(/Not a site: aa/);
+  await expect(sites.locator('[data-slot="list-chip"]')).toHaveCount(0);
+
+  // Of a pasted list, the sites are added and only the word stays.
+  await box.fill('example.com, aa localhost');
+  await box.press('Enter');
+  await expect(sites.locator('[data-slot="list-chip"]')).toHaveText(['example.com', 'localhost']);
+  await expect(box).toHaveValue('aa');
+
+  // Editing the text takes the message away.
+  await box.fill('aa.example');
+  await expect(message).toHaveCount(0);
+  await box.press('Enter');
+  await expect
+    .poll(async () => (await readSettings(extensionWorker)).pageTextExcludedSites)
+    .toEqual(['example.com', 'localhost', 'aa.example']);
 });

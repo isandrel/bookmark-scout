@@ -18,6 +18,7 @@ import {
   isUrlOnSites,
   SITE_ACCESS_MAX_SITES,
   toSiteName,
+  toTypedSiteName,
   urlSiteSchema,
 } from '@/lib/site-access';
 import type { SupportedBrowser } from '@/lib/supported-browsers';
@@ -215,6 +216,16 @@ describe('lists of sites the user types (Never Read These Sites)', () => {
     for (const raw of ['', '  ', 'not a site', 'file:///etc/passwd', 'https://', '[::1]']) {
       expect(toSiteName(raw), raw).toBeUndefined();
     }
+  });
+
+  it('turns down a single word typed into a list, keeping localhost and dotted names', () => {
+    expect(toTypedSiteName('aa')).toBeUndefined();
+    expect(toTypedSiteName('com')).toBeUndefined();
+    expect(toTypedSiteName('localhost')).toBe('localhost');
+    expect(toTypedSiteName('https://www.Example.com/a')).toBe('example.com');
+    expect(toTypedSiteName('192.168.1.10')).toBe('192.168.1.10');
+    // A stored entry an earlier release accepted still reads back.
+    expect(toSiteName('aa')).toBe('aa');
   });
 
   it('matches a site and its subdomains, and nothing else', () => {

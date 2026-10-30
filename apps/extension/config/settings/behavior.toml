@@ -82,6 +82,9 @@ columns = { default = ["title", "url", "dateAdded"], max_items = 12, max_length 
 # budget 400)
 page_size = 50
 sort = "none"
+# What the Date Added and Date Modified columns show: "date_and_time", or "date" for the day alone.
+# Both follow the formats of Appearance > Dates and Times.
+dates = "date_and_time"
 
 [manager_cards]
 # What a card of the cards view shows, in order, below its title (a leading "cover" stays above
