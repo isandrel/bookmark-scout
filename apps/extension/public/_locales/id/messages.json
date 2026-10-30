@@ -5917,6 +5917,38 @@
         "message": "Kembali ke bookmark",
         "description": "Ask AI: button that closes the chat"
     },
+    "askAI_pastChats": {
+        "message": "Obrolan sebelumnya",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "askAI_noPastChats": {
+        "message": "Belum ada obrolan sebelumnya",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "askAI_deleteChat": {
+        "message": "Hapus obrolan ini",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "askAI_deleteAllChats": {
+        "message": "Hapus semua obrolan",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "settings_askAiKeepChats": {
+        "message": "Simpan Obrolan",
+        "description": "Options > AI > Ask AI: label"
+    },
+    "settings_askAiKeepChatsDesc": {
+        "message": "Simpan obrolan Tanya AI di perangkat ini: Tanya AI terbuka di obrolan terakhir, dan Obrolan sebelumnya membuka yang lain. Jika nonaktif, tidak ada yang disimpan dan obrolan yang tersimpan dihapus.",
+        "description": "Under its setting in Options > AI > Ask AI"
+    },
+    "settings_askAiChatsMax": {
+        "message": "Obrolan yang Disimpan",
+        "description": "Options > AI > Ask AI: label"
+    },
+    "settings_askAiChatsMaxDesc": {
+        "message": "Berapa banyak obrolan yang disimpan; yang terlama dihapus lebih dulu",
+        "description": "Under its setting in Options > AI > Ask AI"
+    },
     "askAI_newChat": {
         "message": "Chat baru",
         "description": "Ask AI: button that clears the conversation"

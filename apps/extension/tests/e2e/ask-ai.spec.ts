@@ -510,3 +510,68 @@ test('[mocked provider contract] Ask AI is not offered the actions turned off in
   expect(offered).not.toContain('"applyChanges"');
   expect(offered).toContain('"proposeChanges"');
 });
+
+test('[mocked provider contract] Ask AI keeps its chats: reopens the last one, lists the others, and deletes them', async ({
+  context,
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await replaceSettings(extensionWorker, {
+    language: 'en',
+    aiEnabled: true,
+    aiAutoTriggerOnOpen: false,
+  });
+  await seedAskService(extensionWorker);
+  await stubAgentProvider(context);
+  const openAskAI = async () => {
+    await page.goto(`chrome-extension://${extensionId}/popup.html`);
+    await page.getByRole('button', { name: 'Ask AI about your bookmarks or this page' }).click();
+    return page.getByTestId('ask-ai');
+  };
+
+  let chat = await openAskAI();
+  const box = chat.getByRole('textbox', { name: /Ask about your bookmarks/ });
+  await box.fill('Which Rust pages did I save?');
+  await box.press('Enter');
+  await expect(chat.getByTestId('ask-ai-tool')).toBeVisible();
+  await expect(chat.getByTestId('ask-ai-message').last()).toHaveAttribute('data-role', 'assistant');
+
+  // Closing the popup ends nothing: Ask AI opens on the same chat.
+  chat = await openAskAI();
+  await expect(chat.getByTestId('ask-ai-message').first()).toHaveText(
+    'Which Rust pages did I save?',
+  );
+
+  // A new chat starts empty; Past chats reopens the kept one.
+  await chat.getByRole('button', { name: 'New chat' }).click();
+  await expect(chat.getByTestId('ask-ai-message')).toHaveCount(0);
+  await chat.getByRole('button', { name: 'Past chats' }).click();
+  await page.getByRole('menuitem', { name: /Which Rust pages did I save\?/ }).click();
+  await expect(chat.getByTestId('ask-ai-message').first()).toHaveText(
+    'Which Rust pages did I save?',
+  );
+
+  // Delete all chats empties the list and the chat.
+  await chat.getByRole('button', { name: 'Past chats' }).click();
+  await page.getByRole('menuitem', { name: 'Delete all chats' }).click();
+  await expect(chat.getByTestId('ask-ai-message')).toHaveCount(0);
+  await chat.getByRole('button', { name: 'Past chats' }).click();
+  await expect(page.getByRole('menuitem', { name: 'No past chats yet' })).toBeVisible();
+  await page.keyboard.press('Escape');
+
+  // With Keep Chats off, nothing is kept and the button goes away.
+  await replaceSettings(extensionWorker, {
+    language: 'en',
+    aiEnabled: true,
+    aiAutoTriggerOnOpen: false,
+    askAiKeepChats: false,
+  });
+  chat = await openAskAI();
+  await box.fill('Which Rust pages did I save?');
+  await box.press('Enter');
+  await expect(chat.getByTestId('ask-ai-tool')).toBeVisible();
+  await expect(chat.getByRole('button', { name: 'Past chats' })).toHaveCount(0);
+  chat = await openAskAI();
+  await expect(chat.getByTestId('ask-ai-message')).toHaveCount(0);
+});

@@ -6183,6 +6183,38 @@
         "message": "Volver a los marcadores",
         "description": "Ask AI: button that closes the chat"
     },
+    "askAI_pastChats": {
+        "message": "Chats anteriores",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "askAI_noPastChats": {
+        "message": "Aún no hay chats anteriores",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "askAI_deleteChat": {
+        "message": "Eliminar este chat",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "askAI_deleteAllChats": {
+        "message": "Eliminar todos los chats",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "settings_askAiKeepChats": {
+        "message": "Conservar chats",
+        "description": "Options > AI > Ask AI: label"
+    },
+    "settings_askAiKeepChatsDesc": {
+        "message": "Conserva los chats de Preguntar a la IA en este dispositivo: Preguntar a la IA se abre en el último y Chats anteriores reabre los demás. Desactivado no conserva nada y elimina los chats guardados.",
+        "description": "Under its setting in Options > AI > Ask AI"
+    },
+    "settings_askAiChatsMax": {
+        "message": "Chats conservados",
+        "description": "Options > AI > Ask AI: label"
+    },
+    "settings_askAiChatsMaxDesc": {
+        "message": "Cuántos chats conservar; los más antiguos se van primero",
+        "description": "Under its setting in Options > AI > Ask AI"
+    },
     "askAI_newChat": {
         "message": "Nuevo chat",
         "description": "Ask AI: button that clears the conversation"
