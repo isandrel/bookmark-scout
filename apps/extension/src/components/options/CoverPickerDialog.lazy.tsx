@@ -23,8 +23,9 @@ type StoredCover = CoverInfo & { title: string };
 
 async function readStoredCovers(): Promise<StoredCover[]> {
   const infos = [...(await getCoverInfos()).values()].sort((a, b) => b.savedAt - a.savedAt);
-  if (infos.length === 0) return [];
-  const bookmarks = await browser.bookmarks.get(infos.map((info) => info.bookmarkId)).catch(
+  const [first, ...rest] = infos.map((info) => info.bookmarkId);
+  if (first === undefined) return [];
+  const bookmarks = await browser.bookmarks.get([first, ...rest]).catch(
     // One id gone since the covers were read fails the whole call; read them one by one then.
     () =>
       Promise.all(
