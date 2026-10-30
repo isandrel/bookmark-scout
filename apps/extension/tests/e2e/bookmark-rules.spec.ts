@@ -403,9 +403,11 @@ test('a run on the search results changes only them, as one History record, with
   await expect(card.getByRole('combobox')).toContainText('Search results');
   await card.getByRole('button', { name: 'Run', exact: true }).click();
   const review = page.getByRole('dialog', { name: 'Smart Rules' });
-  await expect(review.getByRole('radio', { name: 'Changes (1)' })).toBeVisible();
-  // A bookmark outside the results is never planned (R16).
-  await expect(review.getByTestId('rule-item').filter({ hasText: 'Gist' })).toHaveCount(0);
+  // A bookmark outside the results is never planned (R16): the one change is the whole review, so
+  // it has no category tabs.
+  await expect(review.getByTestId('rule-item')).toHaveCount(1);
+  await expect(review.getByTestId('rule-item').filter({ hasText: 'Repo' })).toBeVisible();
+  await expect(review.getByRole('radio')).toHaveCount(0);
   await review.getByRole('button', { name: 'Apply 1 change' }).click();
   await expect(review).toHaveCount(0);
   await expect.poll(() => parentOf(extensionWorker, ids.Repo as string)).toBe(ids.Dest);

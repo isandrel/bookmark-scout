@@ -330,6 +330,12 @@
 # feat/settings-search-config from d6f0a00d: ZIP 2,198,100 / 2,198,105 / 2,198,168 B, uncompressed
 # 7,439,607 / 7,439,603 / 7,439,766 B (Chrome / Edge / Firefox), 4,103,169 B of JavaScript, and
 # 2,766,828 B of locales.
+# Raised on 2026-10-29 (ZIP 2,200,000 to 2,215,000) for Review a Single Cover and the one-item
+# review, with their copy in 12 languages. Measured on fix/fetch-covers-review from 0db9a7e4: ZIP
+# 2,199,770 / 2,199,953 / 2,200,033 B, uncompressed 7,446,321 / 7,446,317 / 7,446,504 B (Chrome /
+# Edge / Firefox), 4,104,433 B of JavaScript, and 2,772,017 B of locales.
+# Raised on 2026-10-29 (css 92,000 to 92,500) for the drop lines of the cards view (a card takes a
+# drop on its leading or trailing edge, or into a folder card). Measured 92,153 B of CSS.
 # Raised on 2026-10-29 (ZIP 2,200,000 to 2,215,000) for Fetch covers on a folder, with its menu
 # label in 12 languages: Firefox measured ZIP 2,200,046 B.
 # Raised on 2026-10-29 (ZIP 2,200,000 to 2,215,000, uncompressed 7,450,000 to 7,475,000, locales

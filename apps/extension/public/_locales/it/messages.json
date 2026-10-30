@@ -9691,6 +9691,14 @@
         "message": "Spazio che le copertine salvate possono occupare su questo dispositivo; le meno recenti vengono rimosse per prime",
         "description": "Settings: description of the cover storage limit"
     },
+    "settings_coversReviewSingle": {
+        "message": "Controlla una sola copertina",
+        "description": "Options > Page Details > Fetch Covers: switch label"
+    },
+    "settings_coversReviewSingleDesc": {
+        "message": "Recupera copertina su un solo segnalibro mostra la copertina prima di salvarla. Se disattivato, salva subito la copertina trovata; una pagina senza copertina utilizzabile mostra comunque il motivo.",
+        "description": "Under the Review a Single Cover switch"
+    },
     "settings_coversSourcePreference": {
         "message": "Origine della copertina",
         "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"

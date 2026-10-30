@@ -9691,6 +9691,14 @@
         "message": "Place que les couvertures peuvent occuper sur cet appareil ; les plus anciennes sont supprimées en premier",
         "description": "Settings: description of the cover storage limit"
     },
+    "settings_coversReviewSingle": {
+        "message": "Vérifier une seule couverture",
+        "description": "Options > Page Details > Fetch Covers: switch label"
+    },
+    "settings_coversReviewSingleDesc": {
+        "message": "Récupérer la couverture d’un seul favori la montre avant de l’enregistrer. Désactivé, la couverture trouvée est enregistrée tout de suite ; une page sans couverture utilisable montre toujours pourquoi.",
+        "description": "Under the Review a Single Cover switch"
+    },
     "settings_coversSourcePreference": {
         "message": "Source de la couverture",
         "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"

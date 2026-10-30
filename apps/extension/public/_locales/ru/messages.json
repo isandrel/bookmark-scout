@@ -10463,6 +10463,14 @@
         "message": "Сколько места сохранённые обложки могут занимать на этом устройстве; сначала удаляются самые старые",
         "description": "Settings: description of the cover storage limit"
     },
+    "settings_coversReviewSingle": {
+        "message": "Просматривать одну обложку",
+        "description": "Options > Page Details > Fetch Covers: switch label"
+    },
+    "settings_coversReviewSingleDesc": {
+        "message": "«Загрузить обложку» для одной закладки сначала показывает обложку, а потом сохраняет. Если выключено, найденная обложка сохраняется сразу; если подходящей обложки нет, по-прежнему показывается причина.",
+        "description": "Under the Review a Single Cover switch"
+    },
     "settings_coversSourcePreference": {
         "message": "Источник обложки",
         "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"

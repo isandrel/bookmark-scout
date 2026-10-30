@@ -9691,6 +9691,14 @@
         "message": "Espaço que as capas podem ocupar neste dispositivo; as mais antigas são removidas primeiro",
         "description": "Settings: description of the cover storage limit"
     },
+    "settings_coversReviewSingle": {
+        "message": "Revisar uma única capa",
+        "description": "Options > Page Details > Fetch Covers: switch label"
+    },
+    "settings_coversReviewSingleDesc": {
+        "message": "Buscar capa em um só favorito mostra a capa antes de salvá-la. Desativado, salva na hora a capa encontrada; uma página sem capa utilizável continua mostrando o motivo.",
+        "description": "Under the Review a Single Cover switch"
+    },
     "settings_coversSourcePreference": {
         "message": "Origem da capa",
         "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"

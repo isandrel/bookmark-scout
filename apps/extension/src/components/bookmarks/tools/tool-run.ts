@@ -292,7 +292,7 @@ export function createToolRun<Result, Selection>(
         }
         return;
       }
-      if (tool.apply && tool.autoApply?.(deps.settings())) {
+      if (tool.apply && tool.autoApply?.(deps.settings(), { result, ...(only ? { only } : {}) })) {
         update({ result });
         try {
           await applyResult(result, undefined as Selection, false);
