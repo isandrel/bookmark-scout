@@ -7317,6 +7317,22 @@
         "message": "Yang ditampilkan setiap kartu di bawah judulnya, sesuai urutan. Sampul di urutan pertama tetap di atas judul. Disimpan di perangkat ini.",
         "description": "Options > Behavior > Cards: description of the card details panel"
     },
+    "settings_managerTableDates": {
+        "message": "Kolom Tanggal Menampilkan",
+        "description": "Options > Behavior > Manager table: label of the choice of what date columns show"
+    },
+    "settings_managerTableDatesDesc": {
+        "message": "Yang ditampilkan kolom tanggal di tabel: tanggal dan waktu, atau tanggal saja. Keduanya mengikuti Tanggal dan Waktu.",
+        "description": "Under Date Columns Show"
+    },
+    "settings_managerTableDatesDateAndTime": {
+        "message": "Tanggal dan waktu",
+        "description": "Date Columns Show choice: the date and the time"
+    },
+    "settings_managerTableDatesDate": {
+        "message": "Tanggal saja",
+        "description": "Date Columns Show choice: the date alone"
+    },
     "settings_managerCardSize": {
         "message": "Ukuran Kartu",
         "description": "Setting label: how wide the manager's cards are at least"
@@ -8434,6 +8450,10 @@
     "settings_dateFormatLong": {
         "message": "Panjang",
         "description": "Date format option: long date with the month name."
+    },
+    "settings_dateFormatNumeric": {
+        "message": "Angka, dua digit",
+        "description": "Date format choice: numbers with two-digit months and days, in the language's order"
     },
     "settings_dateFormatIso": {
         "message": "Tahun-bulan-hari",

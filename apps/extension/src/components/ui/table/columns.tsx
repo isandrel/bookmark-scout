@@ -67,6 +67,8 @@ export function getBookmarkDomain(bookmark: Bookmark): string {
 export type BookmarkColumnContext = {
   actionHost: ActionItemHost;
   coverPreview?: HoverCardController;
+  /** What the date columns show (Date Columns Show). */
+  dates: Settings['managerTableDates'];
 };
 
 export type BookmarkCellContext = CellContext<BookmarkTableFeatures, Bookmark, unknown>;
@@ -109,8 +111,14 @@ export type BookmarkColumn = {
 /** Hidden column that groups links by registrable domain for the URL domain chips. */
 export const DOMAIN_COLUMN_ID = 'domain';
 
-function formatTimestamp(value: unknown): string {
-  return typeof value === 'number' ? formatDateTime(value) : '';
+/** A date cell: the day alone or with its time, in equal-width digits so a column lines up. */
+function renderTimestamp(value: unknown, { dates }: BookmarkColumnContext): ReactNode {
+  if (typeof value !== 'number') return null;
+  return (
+    <span className="tabular-nums">
+      {dates === 'date' ? formatDay(value) : formatDateTime(value)}
+    </span>
+  );
 }
 
 /** Whether any of `texts` contains the filter `value`, ignoring case; an empty filter matches. */
@@ -345,7 +353,7 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
     labelKey: 'table_columnDateAdded',
     accessor: (row) => row.dateAdded,
     header: 'sortable',
-    cell: ({ getValue }) => formatTimestamp(getValue()),
+    cell: ({ getValue }, context) => renderTimestamp(getValue(), context),
     filterFn: (row, id, value: DateRange | undefined) => isWithinDateRange(row.getValue(id), value),
     ...getManagerColumnLayout('dateAdded'),
   },
@@ -354,7 +362,7 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
     labelKey: 'table_columnDateGroupModified',
     accessor: (row) => row.dateGroupModified,
     header: 'label',
-    cell: ({ getValue }) => formatTimestamp(getValue()),
+    cell: ({ getValue }, context) => renderTimestamp(getValue(), context),
     ...getManagerColumnLayout('dateGroupModified'),
   },
   {

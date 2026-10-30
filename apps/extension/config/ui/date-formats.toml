@@ -30,6 +30,14 @@ date_style = "short"
 label = "settings_dateFormatLong"
 date_style = "long"
 
+# Numbers with two-digit months and days, in the order of the extension's language
+# (03/14/2026 in English, 2026/03/14 in Japanese), so a column of dates lines up
+[date_formats.numeric]
+label = "settings_dateFormatNumeric"
+year = "numeric"
+month = "2-digit"
+day = "2-digit"
+
 [date_formats.iso]
 label = "settings_dateFormatIso"
 locale = "sv-SE"

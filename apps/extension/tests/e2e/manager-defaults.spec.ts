@@ -277,7 +277,13 @@ test('the Dates and Times settings change how the manager shows dates', async ({
   // The open page follows at once, like after a language change.
   await expect(cell).toHaveText(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/);
 
+  // Numbers with two digits line up in English order; Date Columns Show can drop the time. The
+  // digits are of equal width, so the column lines up.
+  await setSettings(extensionWorker, { dateFormat: 'numeric', managerTableDates: 'date' });
+  await expect(cell).toHaveText(/^\d{2}\/\d{2}\/\d{4}$/);
+  await expect(cell.locator('span')).toHaveCSS('font-variant-numeric', 'tabular-nums');
+
   // Options names each format with a sample.
   await page.goto(`chrome-extension://${extensionId}/options.html?category=appearance`);
-  await expect(page.getByText('Year-month-day (2026-03-14)')).toHaveCount(1);
+  await expect(page.getByText('Numbers, two digits (03/14/2026)')).toHaveCount(1);
 });

@@ -655,6 +655,37 @@ test('settings search says where AI service fields are when no service shows the
   );
 });
 
+test('settings search keeps its words when a tab with matches is clicked, and clears from its button', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await setSettings(extensionWorker, { language: 'en' });
+  await openOptions(page, extensionId);
+  const search = page.getByRole('searchbox', { name: 'Search settings...' });
+
+  // A tab with matches jumps to them; the search and its results stay.
+  await search.fill('width window');
+  await page.getByRole('tab', { name: /^Appearance/ }).click();
+  await expect(search).toHaveValue('width window');
+  await expect(page.locator('[data-search-category="appearance"]')).toBeInViewport();
+  await expect(page.getByText('1 matching setting in all tabs')).toBeVisible();
+
+  // A tab without matches leaves the search and opens the tab.
+  await page.getByRole('tab', { name: /^Behavior/ }).click();
+  await expect(search).toHaveValue('');
+  await expect(page.locator('[data-search-category]')).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Behavior', exact: true })).toBeVisible();
+
+  // Every browser shows the box's own Clear search button (Firefox draws none for a search box).
+  await expect(page.getByRole('button', { name: 'Clear search' })).toHaveCount(0);
+  await search.fill('width');
+  await page.getByRole('button', { name: 'Clear search' }).click();
+  await expect(search).toHaveValue('');
+  await expect(search).toBeFocused();
+  await expect(page.getByRole('button', { name: 'Clear search' })).toHaveCount(0);
+});
+
 test('settings search finds a setting by its keywords and says so', async ({
   extensionId,
   extensionWorker,
