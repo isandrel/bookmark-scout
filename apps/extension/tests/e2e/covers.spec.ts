@@ -339,6 +339,56 @@ test('the popup turns what the tab shows into a cover only after its preview is 
 test.describe('Fetch cover from a card', () => {
   test.use({ grantWebHostAccess: true });
 
+  test('Fetch covers on a folder card fetches every web bookmark inside it, nested folders too', async ({
+    context,
+    extensionId,
+    extensionWorker,
+    page,
+  }) => {
+    const seeded = await seedFolder(extensionWorker, 'E2E Fetch Folder', [
+      {
+        title: 'Reading',
+        children: [
+          { title: 'Inside story', url: 'https://inside.e2e.invalid/story' },
+          {
+            title: 'Notes',
+            children: [{ title: 'Nested story', url: 'https://nested.e2e.invalid/story' }],
+          },
+          { title: 'Local file', url: 'file:///notes.html' },
+        ],
+      },
+      { title: 'Outside story', url: 'https://outside.e2e.invalid/story' },
+    ]);
+    const requested: string[] = [];
+    await context.route('https://*.e2e.invalid/**', async (route) => {
+      const url = new URL(route.request().url());
+      requested.push(url.hostname);
+      if (url.pathname === '/images/cover.png') {
+        return route.fulfill({ status: 200, contentType: 'image/png', body: solidPng(1200, 630) });
+      }
+      return route.fulfill({ status: 200, contentType: 'text/html', body: STORY });
+    });
+    await setSettings(extensionWorker, {
+      managerViewMode: 'cards',
+      coversEnabled: true,
+      coversWidthPx: 320,
+    });
+    await page.goto(`${managerUrl(extensionId)}?id=${seeded.folderId}`);
+    await page
+      .locator('[data-slot="bookmark-card"]')
+      .filter({ hasText: 'Reading' })
+      .click({ button: 'right' });
+    await page.getByRole('menuitem', { name: 'Fetch covers (2)' }).click();
+    const review = page.getByRole('dialog', { name: 'Fetch Covers' });
+    await expect(review.getByTestId('cover-item')).toHaveCount(2);
+    await review.getByRole('button', { name: 'Save 2 covers' }).click();
+    await expect(review).toHaveCount(0);
+    expect((await readCoverInfos(extensionWorker)).map((info) => info.bookmarkId).sort()).toEqual(
+      [seeded.ids['Inside story'], seeded.ids['Nested story']].sort(),
+    );
+    expect(new Set(requested)).toEqual(new Set(['inside.e2e.invalid', 'nested.e2e.invalid']));
+  });
+
   test("a right-click Fetch cover on one card saves that bookmark's cover and leaves the others untouched", async ({
     context,
     extensionId,
