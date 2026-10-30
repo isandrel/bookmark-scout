@@ -259,3 +259,69 @@ test('Ctrl/Cmd+C, X, and V copy URLs, move items, and paste links', async ({
     .poll(() => childTitles(extensionWorker, seeded.ids['Keys Box']))
     .toEqual(['Keys One', 'https://e2e.invalid/from-app']);
 });
+
+test('cards reorder by their left and right halves, and drop into folder cards', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await page.setViewportSize({ width: 1400, height: 900 });
+  await setSettings(extensionWorker, { managerViewMode: 'cards' });
+  const seeded = await seedFolder(extensionWorker, 'E2E Drag Cards', [
+    { title: 'Card Box', children: [] },
+    { title: 'Card One', url: 'https://e2e.invalid/c1' },
+    { title: 'Card Two', url: 'https://e2e.invalid/c2' },
+    { title: 'Card Three', url: 'https://e2e.invalid/c3' },
+  ]);
+  await page.goto(managerUrl(extensionId, seeded.folderId));
+  // Cards reorder only while the view shows the browser's order.
+  await page.getByRole('button', { name: 'Browser order' }).click();
+  const card = (title: string) =>
+    page.locator('[data-slot="bookmark-card"]').filter({ hasText: title });
+  // Drags and drops on the card's own padding: pointing at a cover opens its larger preview over
+  // the cards, and a drag that starts on its address is the link's own drag.
+  const boxOf = async (title: string) => {
+    const box = await card(title).boundingBox();
+    if (!box) throw new Error('Card is not visible');
+    return box;
+  };
+  const dropOnCard = async (source: string, target: string, fraction: number) => {
+    // A scripted drag right after another starts nothing until the pointer has left the last drop.
+    await page.mouse.move(0, 0, { steps: 2 });
+    const from = await boxOf(source);
+    const to = await boxOf(target);
+    await card(source).dragTo(card(target), {
+      sourcePosition: { x: 6, y: from.height / 2 },
+      targetPosition: { x: to.width * fraction, y: 6 },
+    });
+  };
+
+  // The left half of a card drops before it.
+  await dropOnCard('Card Three', 'Card One', 0.2);
+  await expect
+    .poll(() => childTitles(extensionWorker, seeded.folderId))
+    .toEqual(['Card Box', 'Card Three', 'Card One', 'Card Two']);
+  await expect(page.locator('[data-drop-zone]')).toHaveCount(0);
+
+  // The right half drops after it.
+  await dropOnCard('Card Three', 'Card Two', 0.8);
+  await expect
+    .poll(() => childTitles(extensionWorker, seeded.folderId))
+    .toEqual(['Card Box', 'Card One', 'Card Two', 'Card Three']);
+
+  // The middle of a folder card drops into the folder.
+  await dropOnCard('Card Two', 'Card Box', 0.5);
+  await expect
+    .poll(() => childTitles(extensionWorker, seeded.ids['Card Box']))
+    .toEqual(['Card Two']);
+
+  // A card dropped on a folder in the tree moves out of this folder into that one.
+  await page.mouse.move(0, 0, { steps: 2 });
+  const one = await boxOf('Card One');
+  await card('Card One').dragTo(treeFolder(page, 'Card Box'), {
+    sourcePosition: { x: 6, y: one.height / 2 },
+  });
+  await expect
+    .poll(() => childTitles(extensionWorker, seeded.ids['Card Box']))
+    .toEqual(['Card Two', 'Card One']);
+});
