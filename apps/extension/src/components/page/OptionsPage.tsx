@@ -643,23 +643,25 @@ const OptionsPage: React.FC = () => {
           value={activeTab}
           onValueChange={(tab) => {
             setActiveTab(tab);
-            setSearchQuery('');
+            // During a search, a tab with matches jumps to them and keeps the search; a tab
+            // without any leaves the search and opens the tab.
+            const results = searchResults
+              ? document.querySelector(`[data-search-category="${tab}"]`)
+              : null;
+            if (results) results.scrollIntoView({ block: 'start' });
+            else setSearchQuery('');
           }}
           className="flex flex-col gap-6 sm:flex-row sm:items-start"
         >
           {/* Category list on the left; it wraps into rows above the settings on narrow windows. */}
           <div className="shrink-0 space-y-3 sm:sticky sm:top-6 sm:w-56">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder={t('settings_searchPlaceholder')}
-                aria-label={t('settings_searchPlaceholder')}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
-              />
-            </div>
+            <SearchInput
+              icon
+              placeholder={t('settings_searchPlaceholder')}
+              aria-label={t('settings_searchPlaceholder')}
+              value={searchQuery}
+              onValueChange={setSearchQuery}
+            />
             <TabsList className="flex h-auto w-full flex-wrap justify-start gap-1 bg-transparent p-0 sm:flex-col sm:items-stretch">
               {Object.entries(tabs).map(([key, category]) => {
                 const matches = searchResults?.[key]?.length;
