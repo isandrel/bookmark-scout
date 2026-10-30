@@ -1,3 +1,6 @@
+# Bun sends anonymous usage data (bundle timings, feature use) unless this is off.
+telemetry = false
+
 [install]
 # Each workspace resolves only the packages it declares, so a missing entry in an app's
 # package.json fails locally instead of working by accident through the root (like pnpm).

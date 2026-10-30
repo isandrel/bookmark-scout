@@ -22,6 +22,10 @@ on:
       CLOUDFLARE_PROJECT_NAME:
         required: true
 
+# Next.js sends anonymous usage data from every build unless this is set, CI included.
+env:
+  NEXT_TELEMETRY_DISABLED: "1"
+
 jobs:
   deploy:
     name: Deploy ${{ inputs.app }}
