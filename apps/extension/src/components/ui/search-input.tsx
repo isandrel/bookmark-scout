@@ -11,8 +11,9 @@ export type SearchInputProps = Omit<ComponentProps<'input'>, 'type' | 'value' | 
 };
 
 /**
- * A search box with its own Clear search button. Only Chromium draws a clear button inside
- * `type="search"`, so Firefox had none; the browser's own is hidden so Chromium does not show two.
+ * A search box with its own Clear search button, in every browser: only Chromium draws one inside
+ * `type="search"`, so Firefox had none. A text input with the searchbox role keeps Chromium from
+ * drawing a second one, without the CSS that would hide it.
  */
 export function SearchInput({
   value,
@@ -34,15 +35,12 @@ export function SearchInput({
       <Input
         {...props}
         ref={inputRef}
-        type="search"
+        type="text"
+        role="searchbox"
+        enterKeyHint="search"
         value={value}
         onChange={(event) => onValueChange(event.target.value)}
-        className={cn(
-          '[&::-webkit-search-cancel-button]:appearance-none',
-          icon && 'pl-9',
-          value && 'pr-9',
-          className,
-        )}
+        className={cn(icon && 'pl-9', value && 'pr-9', className)}
       />
       {value && (
         <button
