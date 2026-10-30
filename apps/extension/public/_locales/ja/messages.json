@@ -9635,6 +9635,14 @@
         "message": "カバー画像がこの端末で使える容量。古いものから削除されます",
         "description": "Settings: description of the cover storage limit"
     },
+    "settings_coversReviewSingle": {
+        "message": "1 件のカバー画像を確認",
+        "description": "Options > Page Details > Fetch Covers: switch label"
+    },
+    "settings_coversReviewSingleDesc": {
+        "message": "1 つのブックマークで「カバー画像を取得」すると、保存の前にカバー画像を表示します。オフにすると見つかったカバー画像をすぐに保存します。使えるカバー画像がないページでは、引き続き理由を表示します。",
+        "description": "Under the Review a Single Cover switch"
+    },
     "settings_coversSourcePreference": {
         "message": "カバー画像のソース",
         "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"
