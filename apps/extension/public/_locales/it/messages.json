@@ -9965,6 +9965,30 @@
         "message": "Conteggio delle copertine…",
         "description": "Settings: shown while the stored covers are counted"
     },
+    "covers_choose": {
+        "message": "Scegli copertine…",
+        "description": "Options > Page Details > Bookmark covers: button that opens the list of stored covers to choose from"
+    },
+    "covers_chooseDesc": {
+        "message": "Indica le copertine da eliminare, una alla volta o più insieme. I segnalibri e i loro tag restano come sono, e Annulla rimette le copertine.",
+        "description": "Under the title of the Choose covers dialog"
+    },
+    "covers_kindPage": {
+        "message": "Immagine della pagina",
+        "description": "Choose covers tab: covers that are the page's own preview image"
+    },
+    "covers_kindScreenshot": {
+        "message": "Immagine della scheda",
+        "description": "Choose covers tab: covers that are a picture of the tab"
+    },
+    "covers_deleteCount": {
+        "message": "Elimina $1 copertine",
+        "description": "Choose covers dialog button; $1 is how many covers are set to Delete"
+    },
+    "covers_deleteCount_one": {
+        "message": "Elimina $1 copertina",
+        "description": "Choose covers dialog button; $1 is how many covers are set to Delete"
+    },
     "covers_clear": {
         "message": "Elimina le copertine",
         "description": "Settings: button that deletes every stored cover"

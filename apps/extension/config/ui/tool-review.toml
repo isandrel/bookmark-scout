@@ -23,3 +23,5 @@ bookmark_rules = "apply"
 page_text = "save"
 # Fetch Covers "save" or "skip" for each page whose cover it found.
 covers = "save"
+# Choose covers (Options > Page Details > Bookmark covers) "keep" or "delete" for each stored cover.
+stored_covers = "keep"

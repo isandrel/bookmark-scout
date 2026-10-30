@@ -7,6 +7,7 @@ import { solidPng } from '../solid-png';
 import { libraryState, settledLibraryState, waitForAuditBaseline } from './audit-helpers';
 import { expect, test, toastRegion } from './fixtures';
 import { managerUrl, readCoverInfos, seedCover } from './manager-helpers';
+import { childTitles } from './popup-helpers';
 import { STORAGE_ITEMS, writeStored } from './storage';
 import { openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
 
@@ -220,6 +221,55 @@ test('deleting a bookmark deletes its cover and leaves the others (media review 
     .poll(async () => (await readCoverInfos(extensionWorker)).map((info) => info.bookmarkId))
     .toEqual([keptId]);
   await expect(page.getByTestId('covers-store')).toContainText('1 cover');
+});
+
+test('Choose covers lists the stored covers by kind, deletes the ones set to Delete, and Undo puts them back', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const seeded = await seedFolder(extensionWorker, 'E2E Choose Covers', [
+    { title: 'Page cover', url: 'https://page.e2e.invalid/' },
+    { title: 'Tab cover', url: 'https://tab.e2e.invalid/' },
+    { title: 'Kept cover', url: 'https://kept.e2e.invalid/' },
+  ]);
+  const id = (title: string) => seeded.ids[title] ?? '';
+  await seedCover(extensionWorker, id('Page cover'), 'https://page.e2e.invalid/');
+  await seedCover(extensionWorker, id('Tab cover'), 'https://tab.e2e.invalid/', undefined, {
+    source: 'tab',
+  });
+  await seedCover(extensionWorker, id('Kept cover'), 'https://kept.e2e.invalid/');
+  await setSettings(extensionWorker, { coversEnabled: true, language: 'en' });
+  await page.goto(`chrome-extension://${extensionId}/options.html?category=metadataContent`);
+  await page.getByTestId('covers-store').getByRole('button', { name: 'Choose covers…' }).click();
+
+  const picker = page.getByTestId('cover-picker');
+  await expect(picker.getByTestId('stored-cover')).toHaveCount(3);
+  await expect(picker.getByRole('radio', { name: 'Page image (2)' })).toBeVisible();
+  await expect(picker.getByRole('radio', { name: 'Picture of the tab (1)' })).toBeVisible();
+  // Everything starts on Keep: nothing to delete yet.
+  await expect(picker.getByRole('button', { name: /^Delete \d+ covers?$/ })).toBeDisabled();
+
+  for (const title of ['Page cover', 'Tab cover']) {
+    await picker.getByRole('combobox', { name: `Action for ${title}` }).click();
+    await page.getByRole('option', { name: 'Delete', exact: true }).click();
+  }
+  await picker.getByRole('button', { name: 'Delete 2 covers' }).click();
+  await expect(picker).toHaveCount(0);
+  await expect
+    .poll(async () => (await readCoverInfos(extensionWorker)).map((info) => info.bookmarkId))
+    .toEqual([id('Kept cover')]);
+  // The bookmarks stay.
+  expect(await childTitles(extensionWorker, seeded.folderId)).toEqual([
+    'Page cover',
+    'Tab cover',
+    'Kept cover',
+  ]);
+
+  await toastRegion(page).getByRole('button', { name: 'Undo', exact: true }).click();
+  await expect
+    .poll(async () => (await readCoverInfos(extensionWorker)).map((info) => info.bookmarkId).sort())
+    .toEqual([id('Page cover'), id('Tab cover'), id('Kept cover')].sort());
 });
 
 test('the popup turns what the tab shows into a cover only after its preview is saved', async ({

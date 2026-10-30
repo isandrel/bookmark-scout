@@ -9965,6 +9965,30 @@
         "message": "Contando capas…",
         "description": "Settings: shown while the stored covers are counted"
     },
+    "covers_choose": {
+        "message": "Escolher capas…",
+        "description": "Options > Page Details > Bookmark covers: button that opens the list of stored covers to choose from"
+    },
+    "covers_chooseDesc": {
+        "message": "Marque as capas a excluir, uma a uma ou várias de uma vez. Os favoritos e as tags não mudam, e Desfazer devolve as capas.",
+        "description": "Under the title of the Choose covers dialog"
+    },
+    "covers_kindPage": {
+        "message": "Imagem da página",
+        "description": "Choose covers tab: covers that are the page's own preview image"
+    },
+    "covers_kindScreenshot": {
+        "message": "Captura da aba",
+        "description": "Choose covers tab: covers that are a picture of the tab"
+    },
+    "covers_deleteCount": {
+        "message": "Excluir $1 capas",
+        "description": "Choose covers dialog button; $1 is how many covers are set to Delete"
+    },
+    "covers_deleteCount_one": {
+        "message": "Excluir $1 capa",
+        "description": "Choose covers dialog button; $1 is how many covers are set to Delete"
+    },
     "covers_clear": {
         "message": "Excluir capas",
         "description": "Settings: button that deletes every stored cover"

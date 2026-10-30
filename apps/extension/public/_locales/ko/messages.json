@@ -9897,6 +9897,26 @@
         "message": "표지를 세는 중…",
         "description": "Settings: shown while the stored covers are counted"
     },
+    "covers_choose": {
+        "message": "표지 고르기…",
+        "description": "Options > Page Details > Bookmark covers: button that opens the list of stored covers to choose from"
+    },
+    "covers_chooseDesc": {
+        "message": "삭제할 표지를 하나씩 또는 여러 개 한꺼번에 고릅니다. 북마크와 태그는 그대로이며, 실행 취소하면 표지가 돌아옵니다.",
+        "description": "Under the title of the Choose covers dialog"
+    },
+    "covers_kindPage": {
+        "message": "페이지 이미지",
+        "description": "Choose covers tab: covers that are the page's own preview image"
+    },
+    "covers_kindScreenshot": {
+        "message": "탭 화면",
+        "description": "Choose covers tab: covers that are a picture of the tab"
+    },
+    "covers_deleteCount": {
+        "message": "표지 $1개 삭제",
+        "description": "Choose covers dialog button; $1 is how many covers are set to Delete"
+    },
     "covers_clear": {
         "message": "표지 삭제",
         "description": "Settings: button that deletes every stored cover"
