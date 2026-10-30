@@ -45,7 +45,7 @@ Below them, **AI is optional** says that Bookmark Scout works without AI; **Set 
 
 | Setting | Default | What it does |
 | --- | --- | --- |
-| **Fuzzy Matching** | On | Words spelled a little differently match too, so "rect" finds React. Results are ranked by relevance (BM25), and closer spellings rank higher |
+| **Fuzzy Matching** | On | Words spelled a little differently match too, in the search box and in folder matches, so "rect" finds React. Folder matches are ranked by relevance (BM25), closer spellings first |
 | **One Edit From** | <SettingDefault path="search.search_matching.one_edit" /> | Shortest word, in letters, that may differ by one edit: a letter added, removed, or changed, or two swapped |
 | **Two Edits From** | <SettingDefault path="search.search_matching.two_edits" /> | Shortest word, in letters, that may differ by two edits |
 | **Match Word Starts** | On | A word you type also matches longer words it starts, so "rea" finds React while you type. A whole word still ranks higher |

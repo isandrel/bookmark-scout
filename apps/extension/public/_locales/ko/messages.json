@@ -916,7 +916,7 @@
         "description": "Options > Saving & Search: label"
     },
     "settings_searchFuzzyDesc": {
-        "message": "철자가 조금 다른 단어도 일치합니다. \"rect\"로 React를 찾습니다. 결과는 관련도(BM25) 순이며 철자가 가까울수록 위에 표시됩니다.",
+        "message": "검색창과 일치하는 폴더에서 철자가 조금 다른 단어도 일치합니다. \"rect\"로 React를 찾습니다. 일치하는 폴더는 관련도(BM25) 순이며 철자가 가까울수록 위에 표시됩니다.",
         "description": "Under its setting in Options > Saving & Search"
     },
     "settings_searchFuzzyKeywords": {

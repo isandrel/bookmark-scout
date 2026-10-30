@@ -924,7 +924,7 @@
         "description": "Options > Saving & Search: label"
     },
     "settings_searchFuzzyDesc": {
-        "message": "Palavras escritas de forma um pouco diferente também correspondem, então \"rect\" encontra React. Os resultados são ordenados por relevância (BM25), com as grafias mais próximas antes.",
+        "message": "Palavras escritas de forma um pouco diferente também correspondem, na busca e nas pastas sugeridas, então \"rect\" encontra React. As pastas são ordenadas por relevância (BM25), grafias mais próximas primeiro.",
         "description": "Under its setting in Options > Saving & Search"
     },
     "settings_searchFuzzyKeywords": {

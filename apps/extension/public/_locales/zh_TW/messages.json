@@ -916,7 +916,7 @@
         "description": "Options > Saving & Search: label"
     },
     "settings_searchFuzzyDesc": {
-        "message": "拼字略有不同的詞也能比對，例如「rect」能找到 React。結果依相關性（BM25）排序，拼字越接近排得越前面。",
+        "message": "在搜尋框和比對的資料夾中，拼字略有不同的詞也能比對，例如「rect」能找到 React。比對的資料夾依相關性（BM25）排序，拼字越接近越前面。",
         "description": "Under its setting in Options > Saving & Search"
     },
     "settings_searchFuzzyKeywords": {

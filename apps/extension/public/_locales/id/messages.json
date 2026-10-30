@@ -916,7 +916,7 @@
         "description": "Options > Saving & Search: label"
     },
     "settings_searchFuzzyDesc": {
-        "message": "Kata yang ejaannya sedikit berbeda juga cocok, jadi \"rect\" menemukan React. Hasil diurutkan menurut relevansi (BM25), ejaan yang lebih dekat di atas.",
+        "message": "Kata yang ejaannya sedikit berbeda juga cocok, di kotak penelusuran dan di folder yang cocok, jadi \"rect\" menemukan React. Folder diurutkan menurut relevansi (BM25), ejaan terdekat lebih dulu.",
         "description": "Under its setting in Options > Saving & Search"
     },
     "settings_searchFuzzyKeywords": {

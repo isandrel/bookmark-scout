@@ -2,15 +2,13 @@ import { useMemo } from 'react';
 
 /** Search Matching (Settings > Saving & Search) as the search engine takes it (`bm25-search.ts`). */
 export function useSearchMatching(): SearchMatching {
-  const { value: fuzzy } = useSetting('searchFuzzy');
-  const { value: fuzzyOneEdit } = useSetting('searchFuzzyOneEdit');
-  const { value: fuzzyTwoEdits } = useSetting('searchFuzzyTwoEdits');
-  const { value: prefix } = useSetting('searchPrefix');
-  const { value: k1 } = useSetting('searchBm25K1');
-  const { value: b } = useSetting('searchBm25B');
+  const { settings } = useSettings();
+  const { searchFuzzy, searchFuzzyOneEdit, searchFuzzyTwoEdits, searchPrefix } = settings;
+  const { searchBm25K1, searchBm25B } = settings;
+  // biome-ignore lint/correctness/useExhaustiveDependencies: rebuilt only when one of these changes.
   return useMemo(
-    () => ({ fuzzy, fuzzyOneEdit, fuzzyTwoEdits, prefix, k1, b }),
-    [fuzzy, fuzzyOneEdit, fuzzyTwoEdits, prefix, k1, b],
+    () => searchMatchingOf(settings),
+    [searchFuzzy, searchFuzzyOneEdit, searchFuzzyTwoEdits, searchPrefix, searchBm25K1, searchBm25B],
   );
 }
 

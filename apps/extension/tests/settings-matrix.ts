@@ -313,6 +313,10 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
       'folder-match.test.ts',
       'finds words with small spelling differences only with fuzzy matching on',
     ),
+    unit(
+      'bookmark-search.test.ts',
+      'matches a plain word spelled a little differently, marking the word, but never an excluded one',
+    ),
   ]),
   searchFuzzyOneEdit: tested('hooks/use-search-matching.ts', [
     unit(

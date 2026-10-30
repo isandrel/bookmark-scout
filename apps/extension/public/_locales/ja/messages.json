@@ -900,7 +900,7 @@
         "description": "Options > Saving & Search: label"
     },
     "settings_searchFuzzyDesc": {
-        "message": "つづりが少し違う語も一致します。「rect」で React が見つかります。結果は関連度（BM25）順で、つづりが近いほど上に並びます。",
+        "message": "検索ボックスとフォルダの候補で、つづりが少し違う語も一致します。「rect」で React が見つかります。フォルダの候補は関連度（BM25）順で、つづりが近いほど上に並びます。",
         "description": "Under its setting in Options > Saving & Search"
     },
     "settings_searchFuzzyKeywords": {

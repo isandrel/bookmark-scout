@@ -111,8 +111,23 @@ export function editDistanceWithin(a: string, b: string, limit: number): number 
   return rows[a.length][b.length];
 }
 
+/** Search Matching as the settings hold it. */
+export function searchMatchingOf(settings: Settings): SearchMatching {
+  return {
+    fuzzy: settings.searchFuzzy,
+    fuzzyOneEdit: settings.searchFuzzyOneEdit,
+    fuzzyTwoEdits: settings.searchFuzzyTwoEdits,
+    prefix: settings.searchPrefix,
+    k1: settings.searchBm25K1,
+    b: settings.searchBm25B,
+  };
+}
+
+/** How much a word one edit away counts, relative to the whole word (a second edit halves it). */
+export const FUZZY_MATCH_WEIGHT = searchConfig.fuzzy_weight;
+
 /** How many edits a typed word of this length may differ by. */
-function fuzzyBudget(length: number, matching: SearchMatching): number {
+export function fuzzyBudget(length: number, matching: SearchMatching): number {
   if (!matching.fuzzy) return 0;
   if (length >= matching.fuzzyTwoEdits) return 2;
   return length >= matching.fuzzyOneEdit ? 1 : 0;

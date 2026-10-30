@@ -924,7 +924,7 @@
         "description": "Options > Saving & Search: label"
     },
     "settings_searchFuzzyDesc": {
-        "message": "Auch etwas anders geschriebene Wörter passen, „rect“ findet also React. Ergebnisse werden nach Relevanz (BM25) sortiert, nähere Schreibweisen zuerst.",
+        "message": "Auch etwas anders geschriebene Wörter passen, im Suchfeld und bei passenden Ordnern, „rect“ findet also React. Passende Ordner werden nach Relevanz (BM25) sortiert, nähere Schreibweisen zuerst.",
         "description": "Under its setting in Options > Saving & Search"
     },
     "settings_searchFuzzyKeywords": {

@@ -924,7 +924,7 @@
         "description": "Options > Saving & Search: label"
     },
     "settings_searchFuzzyDesc": {
-        "message": "Words spelled a little differently match too, so \"rect\" finds React. Results are ranked by relevance (BM25), and closer spellings rank higher.",
+        "message": "Words spelled a little differently match too, in the search box and in folder matches, so \"rect\" finds React. Folder matches are ranked by relevance (BM25), closer spellings first.",
         "description": "Under its setting in Options > Saving & Search"
     },
     "settings_searchFuzzyKeywords": {

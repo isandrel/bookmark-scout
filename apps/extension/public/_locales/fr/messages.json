@@ -924,7 +924,7 @@
         "description": "Options > Saving & Search: label"
     },
     "settings_searchFuzzyDesc": {
-        "message": "Les mots écrits un peu différemment correspondent aussi : « rect » trouve React. Les résultats sont classés par pertinence (BM25), les orthographes les plus proches en premier.",
+        "message": "Les mots écrits un peu différemment correspondent aussi, dans la recherche et les dossiers proposés : « rect » trouve React. Les dossiers sont classés par pertinence (BM25), les orthographes les plus proches en premier.",
         "description": "Under its setting in Options > Saving & Search"
     },
     "settings_searchFuzzyKeywords": {

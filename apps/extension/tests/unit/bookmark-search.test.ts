@@ -166,7 +166,8 @@ describe('filterBookmarkTreeByQuery', () => {
 
   it('flags a folder, not everything in it, unless the query asks for folders', () => {
     const plain = filterBookmarkTreeByQuery(tree, 'recipes', noMetadata);
-    expect(countSearchMatches(plain)).toBe(1);
+    // The folder, and Recipe DB, one letter off (Fuzzy Matching), not everything in the folder.
+    expect(countSearchMatches(plain)).toBe(2);
 
     const scoped = filterBookmarkTreeByQuery(tree, 'folder:recipes', noMetadata);
     expect(countSearchMatches(scoped)).toBe(3);
@@ -189,7 +190,10 @@ describe('filterBookmarkTreeByQuery', () => {
     const sorted = (matches: ReadonlyMap<string, unknown> | undefined) =>
       [...(matches?.keys() ?? [])].sort();
     // A plain word naming a folder lists the folder, not everything in it.
-    expect(sorted(matchBookmarkTreeQuery(tree, 'recipes', metadata))).toEqual(['recipes']);
+    expect(sorted(matchBookmarkTreeQuery(tree, 'recipes', metadata))).toEqual([
+      'recipe-db',
+      'recipes',
+    ]);
     expect(sorted(matchBookmarkTreeQuery(tree, 'folder:recipes', metadata))).toEqual([
       'baking',
       'recipe-cake',
@@ -248,6 +252,17 @@ describe('filterBookmarkTreeByQuery', () => {
     expect(matchOf(filtered, 'soup')?.isSearchMatch).toBe(true);
   });
 
+  it('matches a plain word spelled a little differently, marking the word, but never an excluded one', () => {
+    const matches = matchBookmarkTreeQuery(tree, 'jria', noMetadata);
+    expect([...(matches?.keys() ?? [])]).toEqual(['jira']);
+    const result = filterBookmarkTreeByQuery(tree, 'jria', noMetadata);
+    expect(matchOf(result, 'jira')?.searchMatchRanges).toEqual([[0, 4]]);
+    // Words shorter than One Edit From, fields, and exclusions match only as typed.
+    expect(matchBookmarkTreeQuery(tree, 'jir', noMetadata)?.size).toBe(1);
+    expect(matchBookmarkTreeQuery(tree, 'title:jria', noMetadata)?.size).toBe(0);
+    expect(matchBookmarkTreeQuery(tree, 'jira -jria', noMetadata)?.size).toBe(1);
+  });
+
   it('lists the same matches in the manager as the popup flags, folder-only ones included', () => {
     const flagged = (nodes: readonly BookmarkTreeNode[]): string[] =>
       nodes.flatMap((node) => [
@@ -259,7 +274,8 @@ describe('filterBookmarkTreeByQuery', () => {
       ['work is:bookmark', ['jira', 'recipe-db']],
       ['recipe -cake is:bookmark', ['recipe-db', 'soup']],
       // The folder is a result, so it is the match and what is in it is not.
-      ['recipes', ['recipes']],
+      // Recipe DB is one letter off (Fuzzy Matching).
+      ['recipes', ['recipe-db', 'recipes']],
       ['work jira', ['jira']],
       ['folder:recipes', ['baking', 'recipe-cake', 'soup']],
     ] as const) {

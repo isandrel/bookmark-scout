@@ -940,7 +940,7 @@
         "description": "Options > Saving & Search: label"
     },
     "settings_searchFuzzyDesc": {
-        "message": "Находятся и слова, написанные немного иначе: «rect» найдёт React. Результаты упорядочены по релевантности (BM25), более близкое написание выше.",
+        "message": "Слова, написанные немного иначе, тоже находятся — в поиске и среди подходящих папок: «rect» найдёт React. Папки упорядочены по релевантности (BM25), более близкое написание выше.",
         "description": "Under its setting in Options > Saving & Search"
     },
     "settings_searchFuzzyKeywords": {
