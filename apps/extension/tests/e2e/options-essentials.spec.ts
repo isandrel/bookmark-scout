@@ -93,3 +93,17 @@ test('the page keeps room for the scrollbar, so switching tabs does not shift it
     await page.evaluate(() => getComputedStyle(document.documentElement).scrollbarGutter),
   ).toBe('stable');
 });
+
+test('a tab opens at its start, whether the tab left behind was scrolled or not', async ({
+  extensionId,
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 600 });
+  await page.goto(`chrome-extension://${extensionId}/options.html?category=behavior`);
+  await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight }));
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+
+  // Another long tab used to open midway, where the last one was scrolled to.
+  await page.getByRole('tab', { name: 'Appearance', exact: true }).click();
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+});
