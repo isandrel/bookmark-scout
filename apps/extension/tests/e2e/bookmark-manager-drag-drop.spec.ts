@@ -58,6 +58,20 @@ test('rows reorder in browser order, and drop into folder rows and tree folders'
     { title: 'Drag Two', url: 'https://e2e.invalid/2' },
     { title: 'Drag Three', url: 'https://e2e.invalid/3' },
   ]);
+  // The drag picture is a small label, not the browser's snapshot of the row and what is over it.
+  await page.addInitScript(() => {
+    const previews: { text: string; width: number }[] = [];
+    (window as unknown as { dragPreviews: typeof previews }).dragPreviews = previews;
+    const original = DataTransfer.prototype.setDragImage;
+    DataTransfer.prototype.setDragImage = function (image, x, y) {
+      previews.push({ text: image.textContent ?? '', width: image.getBoundingClientRect().width });
+      original.call(this, image, x, y);
+    };
+  });
+  const previews = () =>
+    page.evaluate(
+      () => (window as unknown as { dragPreviews: { text: string; width: number }[] }).dragPreviews,
+    );
   await page.goto(managerUrl(extensionId, seeded.folderId));
   await page.getByRole('button', { name: 'Browser order' }).click();
 
@@ -78,6 +92,10 @@ test('rows reorder in browser order, and drop into folder rows and tree folders'
     .poll(() => childTitles(extensionWorker, seeded.ids['Drag Box']))
     .toEqual(['Drag Three', 'Drag One']);
   await expect(liveRegion(page)).toHaveText('Moved 2 items');
+  const pictures = await previews();
+  expect(pictures.map(({ text }) => text)).toEqual(['Drag Three', '2 items']);
+  for (const { width } of pictures) expect(width).toBeLessThanOrEqual(320);
+  await expect(page.locator('body > div[style*="-1000px"]')).toHaveCount(0);
 
   // One undo step puts both back.
   await page.locator('tbody tr').first().focus();

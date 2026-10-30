@@ -16,11 +16,17 @@ const dragConfig = readConfig(
     bookmark_split_fraction: z.number().gt(0).lt(1),
     unmeasured_fraction: z.number().min(0).max(1),
     manager_auto_expand_ms: z.number().int().nonnegative(),
+    preview_max_width_px: z.number().int().positive(),
+    preview_offset_px: z.number().int().nonnegative(),
   }),
 );
 
 /** How long a drag hovers over a closed folder in the manager's tree before it opens. */
 export const MANAGER_DRAG_AUTO_EXPAND_MS = dragConfig.manager_auto_expand_ms;
+
+/** The drag preview's widest and its distance from the pointer, in pixels. */
+export const DRAG_PREVIEW_MAX_WIDTH_PX = dragConfig.preview_max_width_px;
+export const DRAG_PREVIEW_OFFSET_PX = dragConfig.preview_offset_px;
 
 /** The data type that marks a drag of the manager's own bookmarks (their ids, as JSON). */
 export const MANAGER_DRAG_TYPE = MIME.bookmarkIds;

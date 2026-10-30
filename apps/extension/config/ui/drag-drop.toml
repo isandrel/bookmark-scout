@@ -15,3 +15,9 @@ unmeasured_fraction = 0.5
 
 # Milliseconds a drag must hover over a closed folder in the manager's folder tree before it opens
 manager_auto_expand_ms = 700
+
+# The small picture that follows the pointer while manager rows or cards are dragged
+# (src/lib/drag-preview.ts): its widest, in pixels, before the title is cut with an ellipsis, and
+# how far it sits from the pointer
+preview_max_width_px = 320
+preview_offset_px = 12
