@@ -22,6 +22,10 @@ const canOpen = (items: readonly Bookmark[], host: ActionItemHost) =>
 const isWebBookmark = (item: Bookmark) =>
   item.type === ItemTypeEnum.Link && item.url !== undefined && isWebUrl(item.url);
 
+/** The web bookmarks among `items` and inside the folders among them, which Fetch Covers reads. */
+const webBookmarksWithin = (items: readonly Bookmark[], host: ActionItemHost) =>
+  host.bookmarksWithin(items).filter(isWebBookmark);
+
 /** "Open in new tab" for one bookmark, "Open all (3)" for several or a folder, as in Chrome. */
 function openLabel(one: MessageKey, many: MessageKey) {
   return (items: readonly Bookmark[], host: ActionItemHost) => {
@@ -209,13 +213,19 @@ export const ITEM_ACTIONS = {
   }),
   fetchCover: defineMenuAction({
     risk: 'write',
-    targets: ['bookmark'],
+    targets: ['bookmark', 'folder'],
     labelKey: 'menu_fetchCover',
     icon: 'imageDown',
     itemMenu: {
-      // While Fetch Covers is on; for a selection, the web bookmarks in it.
-      available: (items, host) => host.canFetchCovers && items.some(isWebBookmark),
-      run: (items, host) => host.fetchCovers(items.filter(isWebBookmark)),
+      // "Fetch cover" for one bookmark, "Fetch covers (12)" for a folder or several.
+      label: (items, host) => {
+        const bookmark = single(items);
+        if (bookmark && !isFolderItem(bookmark)) return t('menu_fetchCover');
+        return t('menu_fetchCovers', String(webBookmarksWithin(items, host).length));
+      },
+      // While Fetch Covers is on: the web bookmarks chosen, and those inside chosen folders.
+      available: (items, host) => host.canFetchCovers && webBookmarksWithin(items, host).length > 0,
+      run: (items, host) => host.fetchCovers(webBookmarksWithin(items, host)),
     },
   }),
   removeCover: defineMenuAction({

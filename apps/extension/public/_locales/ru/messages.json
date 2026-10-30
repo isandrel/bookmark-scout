@@ -11425,6 +11425,10 @@
         "message": "Браузер не разрешает Bookmark Scout работать в приватных окнах, поэтому они пропускаются. Чтобы разрешить, откройте страницу Bookmark Scout в настройках расширений браузера и включите работу в режиме инкогнито (в приватных окнах).",
         "description": "Settings: note under Also Capture in Private Windows while the browser does not let the extension run in private windows"
     },
+    "menu_fetchCovers": {
+        "message": "Загрузить обложки ($1)",
+        "description": "Menu command on a folder or several items: Fetch Covers for the web bookmarks in them, folders included; $1 is how many"
+    },
     "menu_fetchCover": {
         "message": "Загрузить обложку",
         "description": "Bookmark manager item menu and bookmark preview: runs Fetch Covers on this bookmark (or the selected ones), with its review"

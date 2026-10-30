@@ -9955,6 +9955,10 @@
         "message": "Browser Anda tidak mengizinkan Bookmark Scout berjalan di jendela pribadi, jadi jendela itu dilewati. Untuk mengizinkannya, buka halaman Bookmark Scout di setelan ekstensi browser Anda dan aktifkan izin mode penyamaran atau jendela pribadi.",
         "description": "Settings: note under Also Capture in Private Windows while the browser does not let the extension run in private windows"
     },
+    "menu_fetchCovers": {
+        "message": "Ambil sampul ($1)",
+        "description": "Menu command on a folder or several items: Fetch Covers for the web bookmarks in them, folders included; $1 is how many"
+    },
     "menu_fetchCover": {
         "message": "Ambil sampul",
         "description": "Bookmark manager item menu and bookmark preview: runs Fetch Covers on this bookmark (or the selected ones), with its review"

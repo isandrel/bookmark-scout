@@ -10445,6 +10445,10 @@
         "message": "Ihr Browser lässt Bookmark Scout nicht in privaten Fenstern laufen, daher werden sie übersprungen. Um es zu erlauben, öffnen Sie die Seite von Bookmark Scout in den Erweiterungseinstellungen Ihres Browsers und schalten Sie die Ausführung im Inkognito- bzw. privaten Modus ein.",
         "description": "Settings: note under Also Capture in Private Windows while the browser does not let the extension run in private windows"
     },
+    "menu_fetchCovers": {
+        "message": "Titelbilder laden ($1)",
+        "description": "Menu command on a folder or several items: Fetch Covers for the web bookmarks in them, folders included; $1 is how many"
+    },
     "menu_fetchCover": {
         "message": "Titelbild laden",
         "description": "Bookmark manager item menu and bookmark preview: runs Fetch Covers on this bookmark (or the selected ones), with its review"
