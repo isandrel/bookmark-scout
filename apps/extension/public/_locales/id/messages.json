@@ -3355,6 +3355,14 @@
         "message": "Ketik nama, lalu tekan Enter",
         "description": "Placeholder of the box that adds a name to a list setting"
     },
+    "settings_listInvalidSite": {
+        "message": "Bukan situs: $1. Ketik situs seperti example.com.",
+        "description": "Under a site list in Options when what was typed names no site; $1 is what was typed, kept in the box"
+    },
+    "settings_listInvalidParam": {
+        "message": "Bukan nama parameter: $1. Ketik nama seperti utm_source.",
+        "description": "Under a query parameter list in Options when what was typed is not a parameter name; $1 is what was typed, kept in the box"
+    },
     "settings_listAddItem": {
         "message": "Tambahkan $1",
         "description": "Accessible name of a suggestion button; $1 is the name it adds"

@@ -3379,6 +3379,14 @@
         "message": "Type a name, then press Enter",
         "description": "Placeholder of the box that adds a name to a list setting"
     },
+    "settings_listInvalidSite": {
+        "message": "Not a site: $1. Type one such as example.com.",
+        "description": "Under a site list in Options when what was typed names no site; $1 is what was typed, kept in the box"
+    },
+    "settings_listInvalidParam": {
+        "message": "Not a parameter name: $1. Type one such as utm_source.",
+        "description": "Under a query parameter list in Options when what was typed is not a parameter name; $1 is what was typed, kept in the box"
+    },
     "settings_listAddItem": {
         "message": "Add $1",
         "description": "Accessible name of a suggestion button; $1 is the name it adds"
