@@ -289,7 +289,6 @@ Cada ferramenta tem uma chave **Ativar** (ativada por padrão). Ao desativar uma
 
 | Ferramenta | Configurações e padrões |
 | --- | --- |
-| **Empacotador de contexto para IA** | **Formato de saída** Markdown; **Incluir caminhos das pastas**, **Incluir datas**, **Incluir tags salvas** e **Incluir resumos salvos** ativados; **Máximo de itens** <SettingDefault path="ai_tools.context_packer.max_items" />; **Profundidade máxima** <SettingDefault path="ai_tools.context_packer.max_depth" />; **Tamanho do trecho** <SettingDefault path="ai_tools.context_packer.excerpt_length" /> |
 | **Tags automáticas** | **Mínimo de tags** <SettingDefault path="ai_tools.auto_tagging.min_tags" />; **Máximo de tags** <SettingDefault path="ai_tools.auto_tagging.max_tags" />; **Estilo das tags** kebab-case; **Modo de mesclagem** Acrescentar; **Remover tags duplicadas** ativado; **Enviar tags existentes** ativado |
 | **Gerador de resumos** | **Tamanho do resumo** <SettingDefault path="ai_tools.summarizer.summary_length" />; **Incluir domínio como dica** ativado; **Modo de mesclagem** Substituir |
 | **Reorganização de pastas com IA** | **Confiança mínima** 55% (as movimentações abaixo desse valor são descartadas); **Tamanho do lote** <SettingDefault path="ai_tools.reorganization.batch_size" /> favoritos por solicitação |
@@ -401,6 +400,10 @@ Abaixo, **Capas dos favoritos** mostra quantas capas estão guardadas e o tamanh
 | **Partes dos novos backups** | Tudo, menos as configurações deste computador e as chaves dos serviços de IA | As partes que **Fazer backup das configurações** já traz selecionadas; cada backup que você salva neste computador passa a ser a nova escolha. As chaves dos serviços de IA nunca vêm selecionadas no início |
 | **Proteger novos backups com senha** | Desativado | Se **Proteger este backup com senha** já vem marcado |
 | **Proteger chaves de API com senha** | Ativado | Se um backup com as chaves dos serviços de IA já começa com elas protegidas por senha; desativar isso na caixa de diálogo pede confirmação |
+
+| Ferramenta | Configurações e padrões |
+| --- | --- |
+| **Empacotador de contexto para IA** | **Formato de saída** Markdown; **Incluir caminhos das pastas**, **Incluir datas**, **Incluir tags salvas** e **Incluir resumos salvos** ativados; **Máximo de itens** <SettingDefault path="data.context_packer.max_items" />; **Profundidade máxima** <SettingDefault path="data.context_packer.max_depth" />; **Tamanho do trecho** <SettingDefault path="data.context_packer.excerpt_length" /> |
 
 Consulte [Importar e exportar](/guides/import-export).
 

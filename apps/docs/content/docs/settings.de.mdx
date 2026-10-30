@@ -289,7 +289,6 @@ Jedes Tool hat einen Schalter zum Aktivieren (standardmäßig an), etwa **Automa
 
 | Tool | Einstellungen und Standardwerte |
 | --- | --- |
-| **KI-Kontextpaket** | **Ausgabeformat** Markdown; **Ordnerpfade einschließen**, **Datum einschließen**, **Gespeicherte Tags einschließen** und **Gespeicherte Zusammenfassungen einschließen** an; **Max. Elemente** <SettingDefault path="ai_tools.context_packer.max_items" />; **Max. Tiefe** <SettingDefault path="ai_tools.context_packer.max_depth" />; **Auszugslänge** <SettingDefault path="ai_tools.context_packer.excerpt_length" /> |
 | **Automatische Tags** | **Min. Tags** <SettingDefault path="ai_tools.auto_tagging.min_tags" />; **Max. Tags** <SettingDefault path="ai_tools.auto_tagging.max_tags" />; **Tag-Stil** kebab-case; **Zusammenführung** Anhängen; **Doppelte Tags entfernen** an; **Vorhandene Tags senden** an |
 | **Inhaltszusammenfassung** | **Länge der Zusammenfassung** <SettingDefault path="ai_tools.summarizer.summary_length" />; **Domain als Hinweis einschließen** an; **Zusammenführung** Ersetzen |
 | **KI-Ordnerneuordnung** | **Mindestkonfidenz** 55 % (Verschiebungen darunter werden verworfen); **Batchgröße** <SettingDefault path="ai_tools.reorganization.batch_size" /> Lesezeichen pro Anfrage |
@@ -401,6 +400,10 @@ Darunter zeigt **Titelbilder der Lesezeichen**, wie viele Titelbilder gespeicher
 | **Teile neuer Sicherungen** | Alles außer den Einstellungen dieses Computers und den Schlüsseln der KI-Dienste | Die Teile, die in **Einstellungen sichern** anfangs ausgewählt sind; jede Sicherung, die Sie auf diesem Computer speichern, wird zur neuen Auswahl. Die Schlüssel der KI-Dienste sind anfangs nie ausgewählt |
 | **Neue Sicherungen mit Passwort schützen** | Aus | Ob **Diese Sicherung mit einem Passwort schützen** anfangs aktiviert ist |
 | **API-Schlüssel mit Passwort schützen** | An | Ob eine Sicherung mit den Schlüsseln der KI-Dienste diese anfangs mit einem Passwort schützt; wenn Sie das im Dialog ausschalten, werden Sie um Bestätigung gebeten |
+
+| Tool | Einstellungen und Standardwerte |
+| --- | --- |
+| **KI-Kontextpaket** | **Ausgabeformat** Markdown; **Ordnerpfade einschließen**, **Datum einschließen**, **Gespeicherte Tags einschließen** und **Gespeicherte Zusammenfassungen einschließen** an; **Max. Elemente** <SettingDefault path="data.context_packer.max_items" />; **Max. Tiefe** <SettingDefault path="data.context_packer.max_depth" />; **Auszugslänge** <SettingDefault path="data.context_packer.excerpt_length" /> |
 
 Siehe [Import und Export](/guides/import-export).
 

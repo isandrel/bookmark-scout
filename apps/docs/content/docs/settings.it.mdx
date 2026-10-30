@@ -289,7 +289,6 @@ Ogni strumento ha un interruttore **Attiva** (attivo per impostazione predefinit
 
 | Strumento | Impostazioni e valori predefiniti |
 | --- | --- |
-| **Pacchetto contesto IA** | **Formato di output** Markdown; **Includi percorsi delle cartelle**, **Includi date**, **Includi tag salvati** e **Includi riassunti salvati** attivi; **Elementi massimi** <SettingDefault path="ai_tools.context_packer.max_items" />; **Profondità massima** <SettingDefault path="ai_tools.context_packer.max_depth" />; **Lunghezza dell'estratto** <SettingDefault path="ai_tools.context_packer.excerpt_length" /> |
 | **Tag automatici** | **Tag minimi** <SettingDefault path="ai_tools.auto_tagging.min_tags" />; **Tag massimi** <SettingDefault path="ai_tools.auto_tagging.max_tags" />; **Stile dei tag** kebab-case; **Modalità di unione** Aggiungi; **Rimuovi tag duplicati** attivo; **Invia i tag esistenti** attivo |
 | **Riassunti dei contenuti** | **Lunghezza del riassunto** <SettingDefault path="ai_tools.summarizer.summary_length" />; **Includi il dominio** attivo; **Modalità di unione** Sostituisci |
 | **Riorganizzazione cartelle con IA** | **Affidabilità minima** 55% (gli spostamenti al di sotto vengono scartati); **Dimensione del blocco** <SettingDefault path="ai_tools.reorganization.batch_size" /> preferiti per richiesta |
@@ -401,6 +400,10 @@ Sotto, **Copertine dei preferiti** indica quante copertine sono archiviate e qua
 | **Parti dei nuovi backup** | Tutto tranne le impostazioni di questo computer e le chiavi dei servizi IA | Le parti selezionate all'inizio in **Esegui il backup delle impostazioni**; ogni backup che salvi su questo computer diventa la nuova scelta. Le chiavi dei servizi IA non sono mai selezionate all'inizio |
 | **Proteggi i nuovi backup con una password** | Disattivato | Se **Proteggi questo backup con una password** è selezionata all'inizio |
 | **Proteggi le chiavi API con una password** | Attivo | Se un backup con le chiavi dei servizi IA le protegge all'inizio con una password; disattivarla nella finestra di dialogo chiede una conferma |
+
+| Strumento | Impostazioni e valori predefiniti |
+| --- | --- |
+| **Pacchetto contesto IA** | **Formato di output** Markdown; **Includi percorsi delle cartelle**, **Includi date**, **Includi tag salvati** e **Includi riassunti salvati** attivi; **Elementi massimi** <SettingDefault path="data.context_packer.max_items" />; **Profondità massima** <SettingDefault path="data.context_packer.max_depth" />; **Lunghezza dell'estratto** <SettingDefault path="data.context_packer.excerpt_length" /> |
 
 Vedi [Importazione ed esportazione](/guides/import-export).
 

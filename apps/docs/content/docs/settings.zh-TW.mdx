@@ -289,7 +289,6 @@ AI 預設為關閉。只有在開啟「**AI 功能**」後，這些設定才會�
 
 | 工具 | 設定和預設值 |
 | --- | --- |
-| **AI 脈絡打包工具** | 「**輸出格式**」Markdown；「**包含資料夾路徑**」、「**包含日期**」、「**包含已儲存的標籤**」和「**包含已儲存的摘要**」開啟；「**項目數量上限**」<SettingDefault path="ai_tools.context_packer.max_items" />；「**深度上限**」<SettingDefault path="ai_tools.context_packer.max_depth" />；「**摘錄長度**」<SettingDefault path="ai_tools.context_packer.excerpt_length" /> |
 | **自動加上標籤** | 「**標籤數量下限**」<SettingDefault path="ai_tools.auto_tagging.min_tags" />；「**標籤數量上限**」<SettingDefault path="ai_tools.auto_tagging.max_tags" />；「**標籤樣式**」kebab-case；「**合併模式**」附加；「**移除重複的標籤**」開啟；「**傳送現有標籤**」開啟 |
 | **內容摘要工具** | 「**摘要長度**」<SettingDefault path="ai_tools.summarizer.summary_length" />；「**包含網域提示**」開啟；「**合併模式**」取代 |
 | **AI 資料夾重組** | 「**最低信賴度**」55% (低於此值的移動會被捨棄)；「**批次大小**」每次要求 <SettingDefault path="ai_tools.reorganization.batch_size" /> 個書籤 |
@@ -401,6 +400,10 @@ AI 預設為關閉。只有在開啟「**AI 功能**」後，這些設定才會�
 | **新備份包含的內容** | 除了這台電腦的設定和 AI 服務金鑰以外的全部內容 | 「**備份設定**」預設選取的內容；你在這台電腦上儲存的每份備份都會成為新的選擇。AI 服務金鑰絕不會預設選取 |
 | **用密碼保護新備份** | 關閉 | 是否預先勾選「**用密碼保護這份備份**」 |
 | **用密碼保護 API 金鑰** | 開啟 | 包含 AI 服務金鑰的備份是否預設以密碼保護這些金鑰；在對話方塊中關閉時會要求你確認 |
+
+| 工具 | 設定和預設值 |
+| --- | --- |
+| **AI 脈絡打包工具** | 「**輸出格式**」Markdown；「**包含資料夾路徑**」、「**包含日期**」、「**包含已儲存的標籤**」和「**包含已儲存的摘要**」開啟；「**項目數量上限**」<SettingDefault path="data.context_packer.max_items" />；「**深度上限**」<SettingDefault path="data.context_packer.max_depth" />；「**摘錄長度**」<SettingDefault path="data.context_packer.excerpt_length" /> |
 
 請參閱「[匯入和匯出](/guides/import-export)」。
 

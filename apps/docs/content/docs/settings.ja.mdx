@@ -289,7 +289,6 @@ AI に質問が調べたり変更したりできる操作がここに一覧表�
 
 | ツール | 設定と初期値 |
 | --- | --- |
-| **AIコンテキストパッカー** | **出力形式** Markdown、**フォルダパスを含める**、**日付を含める**、**保存済みタグを含める**、**保存済み要約を含める** はオン、**最大件数** <SettingDefault path="ai_tools.context_packer.max_items" />、**最大階層** <SettingDefault path="ai_tools.context_packer.max_depth" />、**抜粋の長さ** <SettingDefault path="ai_tools.context_packer.excerpt_length" /> |
 | **自動タグ付け** | **最小タグ数** <SettingDefault path="ai_tools.auto_tagging.min_tags" />、**最大タグ数** <SettingDefault path="ai_tools.auto_tagging.max_tags" />、**タグのスタイル** kebab-case、**統合モード** 追加、**重複タグを削除** オン、**既存のタグを送信** オン |
 | **コンテンツ要約** | **要約の長さ** <SettingDefault path="ai_tools.summarizer.summary_length" />、**ドメインのヒントを含める** オン、**統合モード** 置換 |
 | **AIフォルダ整理** | **最小信頼度** 55%（これを下回る移動は除外されます）、**バッチサイズ** 1 リクエストあたり <SettingDefault path="ai_tools.reorganization.batch_size" /> 件のブックマーク |
@@ -401,6 +400,10 @@ AI に質問が調べたり変更したりできる操作がここに一覧表�
 | **新しいバックアップに含める項目** | このパソコンの設定と AI サービスのキー以外のすべて | **設定をバックアップ** で最初に選択される項目。このパソコンでバックアップを保存するたびに、その選択が新しい既定になります。AI サービスのキーが最初から選択されることはありません |
 | **新しいバックアップをパスワードで保護** | オフ | **このバックアップをパスワードで保護** を最初からチェックするかどうか |
 | **API キーをパスワードで保護** | オン | AI サービスのキーを含むバックアップで、キーを最初からパスワードで保護するかどうか。ダイアログでオフにすると確認を求められます |
+
+| ツール | 設定と初期値 |
+| --- | --- |
+| **AIコンテキストパッカー** | **出力形式** Markdown、**フォルダパスを含める**、**日付を含める**、**保存済みタグを含める**、**保存済み要約を含める** はオン、**最大件数** <SettingDefault path="data.context_packer.max_items" />、**最大階層** <SettingDefault path="data.context_packer.max_depth" />、**抜粋の長さ** <SettingDefault path="data.context_packer.excerpt_length" /> |
 
 [インポートとエクスポート](/guides/import-export)をご覧ください。
 

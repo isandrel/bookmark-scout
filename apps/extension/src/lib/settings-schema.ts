@@ -1320,44 +1320,38 @@ const fields = {
       })[value],
   ),
 
-  aiContextPackerEnabled: switchField('ai_tools.context_packer.enabled', 'aiContextPackerEnabled'),
+  aiContextPackerEnabled: switchField('data.context_packer.enabled', 'aiContextPackerEnabled'),
   aiContextPackerDefaultScope: scopeField(
-    'ai_tools.context_packer',
+    'data.context_packer',
     'aiContextPackerDefaultScope',
     TOOL_SCOPE_CAPABILITIES.aiContextPacker,
   ),
   aiContextPackerOutputFormat: enumField(
-    'ai_tools.context_packer.output_format',
+    'data.context_packer.output_format',
     'aiContextPackerOutputFormat',
     aiContextFormatSchema,
     (value) => ({ markdown: 'Markdown', xml: 'XML' })[value],
   ),
   aiContextPackerIncludeFolderPath: switchField(
-    'ai_tools.context_packer.include_folder_path',
+    'data.context_packer.include_folder_path',
     'aiContextPackerIncludeFolderPath',
   ),
   aiContextPackerIncludeDates: switchField(
-    'ai_tools.context_packer.include_dates',
+    'data.context_packer.include_dates',
     'aiContextPackerIncludeDates',
   ),
   aiContextPackerIncludeTags: switchField(
-    'ai_tools.context_packer.include_tags',
+    'data.context_packer.include_tags',
     'aiContextPackerIncludeTags',
   ),
   aiContextPackerIncludeSummaries: switchField(
-    'ai_tools.context_packer.include_summaries',
+    'data.context_packer.include_summaries',
     'aiContextPackerIncludeSummaries',
   ),
-  aiContextPackerMaxItems: numberField(
-    'ai_tools.context_packer.max_items',
-    'aiContextPackerMaxItems',
-  ),
-  aiContextPackerMaxDepth: numberField(
-    'ai_tools.context_packer.max_depth',
-    'aiContextPackerMaxDepth',
-  ),
+  aiContextPackerMaxItems: numberField('data.context_packer.max_items', 'aiContextPackerMaxItems'),
+  aiContextPackerMaxDepth: numberField('data.context_packer.max_depth', 'aiContextPackerMaxDepth'),
   aiContextPackerExcerptLength: numberField(
-    'ai_tools.context_packer.excerpt_length',
+    'data.context_packer.excerpt_length',
     'aiContextPackerExcerptLength',
     { unit: 'chars' },
   ),
@@ -2018,24 +2012,6 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
     aiTools: category('settings_aiTools', 'settings_aiToolsDesc', [
       { id: 'prompts', fields: [], panel: 'promptLibrary', requires: 'aiEnabled' },
       {
-        id: 'contextPacker',
-        labelKey: 'tools_exportAI',
-        toggle: 'aiContextPackerEnabled',
-        fields: [
-          'aiContextPackerDefaultScope',
-          'aiContextPackerOutputFormat',
-          'aiContextPackerIncludeFolderPath',
-          'aiContextPackerIncludeDates',
-          'aiContextPackerIncludeTags',
-          'aiContextPackerIncludeSummaries',
-        ],
-        advanced: [
-          'aiContextPackerMaxItems',
-          'aiContextPackerMaxDepth',
-          'aiContextPackerExcerptLength',
-        ],
-      },
-      {
         id: 'autoTagging',
         labelKey: 'tools_autoTagging',
         toggle: 'autoTaggingEnabled',
@@ -2231,6 +2207,24 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
           'exportJsonIndentSize',
           'exportHtmlIndentSpaces',
           'exportMarkdownIndentSpaces',
+        ],
+      },
+      {
+        id: 'contextPacker',
+        labelKey: 'tools_exportAI',
+        toggle: 'aiContextPackerEnabled',
+        fields: [
+          'aiContextPackerDefaultScope',
+          'aiContextPackerOutputFormat',
+          'aiContextPackerIncludeFolderPath',
+          'aiContextPackerIncludeDates',
+          'aiContextPackerIncludeTags',
+          'aiContextPackerIncludeSummaries',
+        ],
+        advanced: [
+          'aiContextPackerMaxItems',
+          'aiContextPackerMaxDepth',
+          'aiContextPackerExcerptLength',
         ],
       },
       {

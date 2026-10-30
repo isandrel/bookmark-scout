@@ -289,7 +289,6 @@ Chaque outil dispose d'un interrupteur **Activer** (activé par défaut). Le dé
 
 | Outil | Paramètres et valeurs par défaut |
 | --- | --- |
-| **Préparateur de contexte IA** | **Format de sortie** Markdown ; **Inclure les chemins de dossier**, **Inclure les dates**, **Inclure les étiquettes enregistrées** et **Inclure les résumés enregistrés** activés ; **Nombre maximal d'éléments** <SettingDefault path="ai_tools.context_packer.max_items" /> ; **Profondeur maximale** <SettingDefault path="ai_tools.context_packer.max_depth" /> ; **Longueur des extraits** <SettingDefault path="ai_tools.context_packer.excerpt_length" /> |
 | **Étiquetage automatique** | **Nombre minimal d'étiquettes** <SettingDefault path="ai_tools.auto_tagging.min_tags" /> ; **Nombre maximal d'étiquettes** <SettingDefault path="ai_tools.auto_tagging.max_tags" /> ; **Style des étiquettes** kebab-case ; **Mode de fusion** Ajouter ; **Supprimer les étiquettes en double** activé ; **Envoyer les étiquettes existantes** activé |
 | **Générateur de résumés** | **Longueur du résumé** <SettingDefault path="ai_tools.summarizer.summary_length" /> ; **Inclure le domaine** activé ; **Mode de fusion** Remplacer |
 | **Réorganisation des dossiers par IA** | **Confiance minimale** 55 % (les déplacements en dessous de ce seuil sont écartés) ; **Taille des lots** <SettingDefault path="ai_tools.reorganization.batch_size" /> favoris par requête |
@@ -401,6 +400,10 @@ En dessous, **Couvertures des favoris** indique combien de couvertures sont cons
 | **Parties des nouvelles sauvegardes** | Tout sauf les paramètres de cet ordinateur et les clés des services d'IA | Les parties que **Sauvegarder les paramètres** sélectionne au départ ; chaque sauvegarde enregistrée sur cet ordinateur devient le nouveau choix. Les clés des services d'IA ne sont jamais sélectionnées au départ |
 | **Protéger les nouvelles sauvegardes par un mot de passe** | Désactivé | Indique si **Protéger cette sauvegarde par un mot de passe** est coché au départ |
 | **Protéger les clés API par un mot de passe** | Activé | Indique si une sauvegarde avec les clés des services d'IA les protège d'emblée par un mot de passe ; le désactiver dans la boîte de dialogue demande une confirmation |
+
+| Outil | Paramètres et valeurs par défaut |
+| --- | --- |
+| **Préparateur de contexte IA** | **Format de sortie** Markdown ; **Inclure les chemins de dossier**, **Inclure les dates**, **Inclure les étiquettes enregistrées** et **Inclure les résumés enregistrés** activés ; **Nombre maximal d'éléments** <SettingDefault path="data.context_packer.max_items" /> ; **Profondeur maximale** <SettingDefault path="data.context_packer.max_depth" /> ; **Longueur des extraits** <SettingDefault path="data.context_packer.excerpt_length" /> |
 
 Consultez [Importation et exportation](/guides/import-export).
 

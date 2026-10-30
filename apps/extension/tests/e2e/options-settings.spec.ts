@@ -866,7 +866,7 @@ test('related switches are one checklist that saves each option and resets toget
 }) => {
   await setSettings(extensionWorker, { language: 'en' });
   await openOptions(page, extensionId);
-  await page.getByRole('tab', { name: 'AI Tools', exact: true }).click();
+  await page.getByRole('tab', { name: 'Import & Export', exact: true }).click();
   const group = page.getByRole('group', { name: 'Include in AI Context' });
   await expect(group.getByRole('checkbox')).toHaveCount(4);
   await group.getByRole('checkbox', { name: /Include Dates/ }).click();
