@@ -55,7 +55,14 @@ args = ["serve"]
 **Cursor**: [añádelo a Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=bookmark-scout&config=eyJjb21tYW5kIjoiYm9va21hcmstc2NvdXQtbWNwIiwiYXJncyI6WyJzZXJ2ZSJdfQ==), o pon esto en `~/.cursor/mcp.json`:
 
 ```json
-{ "mcpServers": { "bookmark-scout": { "command": "bookmark-scout-mcp", "args": ["serve"] } } }
+{
+  "mcpServers": {
+    "bookmark-scout": {
+      "command": "bookmark-scout-mcp",
+      "args": ["serve"]
+    }
+  }
+}
 ```
 
 `bookmark-scout-mcp install` muestra estos fragmentos con la ruta completa del programa. Si hay más de un navegador o perfil conectado, el agente usa el último que se conectó; añade `--browser edge` o `--profile <id>` después de `serve` para elegir.

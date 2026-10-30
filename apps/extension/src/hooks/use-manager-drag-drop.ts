@@ -91,6 +91,13 @@ export function useManagerDragDrop({ allData, currentFolderId, table }: DragDrop
     }
     const ids = pruneNestedSelection(movable, latest.current.allData).map((item) => item.id);
     draggedRef.current = ids;
+    const [first] = movable;
+    setDragPreview(
+      event.dataTransfer,
+      ids.length === 1
+        ? first.title || first.url || ''
+        : tPlural('bookmarks_dragItems', ids.length, [String(ids.length)]),
+    );
     const { text, html } = bookmarkClipboardData(movable);
     const urls = movable.flatMap((item) => (item.url ? [item.url] : []));
     event.dataTransfer.effectAllowed = 'copyMove';
