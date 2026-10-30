@@ -34,7 +34,9 @@
 # migrations the background runs at every start, which it cannot load later (501).
 # Raised from 510 on 2026-10-22 for for the backup parts and their review on top of the 0.3.5
 # review fixes (feat/backup-categories rebased on 430c4163) (514).
-"background.js" = 520
+# Raised from 520 on 2026-10-29 for Address Bar Search: its listeners and the matching built on the
+# search box's documents (521).
+"background.js" = 530
 # Raised from 950 when the numeric and string constants moved into config the popup and side panel
 # validate at startup (952 on 2026-10-21), then from 965 for the line that shows running background
 # tasks, which reads the job store (970 on 2026-10-21), then from 985 for the search query parser,
@@ -169,7 +171,9 @@
 # settings schema, and History's backup restore records with their parts and Undo import (1565).
 # Raised from 1575 on 2026-10-22 for for the backup parts and their review on top of the 0.3.5
 # review fixes (feat/backup-categories rebased on 430c4163) (1,576).
-"bookmarks.html" = 1585
+# Raised from 1585 on 2026-10-29 for the page title helper moved to its own module so the
+# background can name the manager without React (1,586).
+"bookmarks.html" = 1595
 # The quick save notification, injected into web pages (10 on 2026-10-10); no framework, keep it small.
 "quick-save-toast.js" = 14
 # The window where the user approves changes local AI agents ask for (615 on 2026-10-11).

@@ -1,4 +1,8 @@
-import { readProviderAddress, site } from "@bookmark-scout/config";
+import {
+  readOmniboxKeyword,
+  readProviderAddress,
+  site,
+} from "@bookmark-scout/config";
 import { settingDefaultText } from "@/components/mdx/setting-default";
 import { getCopy } from "@/lib/copy";
 import { DEFAULT_LOCALE } from "@/lib/i18n";
@@ -82,6 +86,7 @@ const replacementsFor = (
     },
   ],
   [/<Shortcut\s+id="([^"]+)"\s*\/>/g, (id) => shortcutMarkdown(id, locale)],
+  [/<AddressBarKeyword\s*\/>/g, () => `\`${readOmniboxKeyword()}\``],
   [
     /<SettingDefault\s+path="([^"]+)"(\s+seconds)?(\s+percent)?\s*\/>/g,
     (path, seconds, percent) =>

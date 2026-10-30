@@ -539,3 +539,13 @@ export function tPlural(key: MessageKey, count: number, extra: string[] = []): s
     category === 'other' ? undefined : lookupMessage(`${key}_${category}`, substitutions);
   return form ?? t(key, substitutions);
 }
+
+/**
+ * "Options - Bookmark Scout", or the extension name alone, in the current language. Every tab
+ * title reads most specific first; the manager adds the folder or search in front. Here rather
+ * than beside the page mount, so code that only names a page (the manager's address helpers,
+ * which the background reads) never loads React.
+ */
+export function getExtensionPageTitle(titleKey?: MessageKey): string {
+  return titleKey ? t('page_title', [t(titleKey), t('extName')]) : t('extName');
+}

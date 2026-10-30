@@ -45,6 +45,8 @@ const TABLE_DEFAULTS = 'hooks/use-bookmark-table-view-defaults.ts';
 const MENUS_NOTE =
   'Edited in Options > Behavior > Bookmark manager menus (ManagerMenusPanel); each menu syncs.';
 const POPUP_CUSTOMIZE = 'popup-customize.spec.ts';
+const ADDRESS_BAR = 'services/address-bar-search.ts';
+const ADDRESS_BAR_UNIT = 'address-bar-search.test.ts';
 
 // Shared test references.
 const CUSTOMIZE_UNIT = 'manager-customize.test.ts';
@@ -866,6 +868,22 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
       'shows recent folders limited by Recent Folders in Menu, not the popup max',
     ),
     e2e(CONTEXT_MENU_E2E, 'renaming, deleting, or hiding recent folders rebuilds the menu'),
+  ]),
+  addressBarEnabled: tested(ADDRESS_BAR, [
+    unit(
+      ADDRESS_BAR_UNIT,
+      'says it is off until turned on, lists nothing, and Enter opens that setting',
+    ),
+    unit(
+      ADDRESS_BAR_UNIT,
+      'opens a chosen bookmark where Enter asked, and typed text as a manager search',
+    ),
+  ]),
+  addressBarMaxResults: tested(ADDRESS_BAR, [
+    unit(
+      ADDRESS_BAR_UNIT,
+      'lists the bookmarks the text finds, at most Address Bar Results, folders left out',
+    ),
   ]),
   contextMenuBookmarkNaming: tested('services/context-menu.ts', [
     unit(SETTINGS_UNIT, 'names bookmarks from the page title or the link URL when selected'),

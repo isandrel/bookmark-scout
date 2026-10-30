@@ -2235,6 +2235,42 @@
         "message": "Сколько недавних папок показывает контекстное меню. У всплывающего окна свой «Максимум недавних папок».",
         "description": "Setting description for Recent Folders in Menu"
     },
+    "settings_sectionAddressBar": {
+        "message": "Адресная строка",
+        "description": "Options section heading: Address Bar Search and its result count"
+    },
+    "settings_addressBarEnabled": {
+        "message": "Поиск в адресной строке",
+        "description": "Setting label: Address Bar Search, which lists matching bookmarks in the browser address bar after its keyword"
+    },
+    "settings_addressBarEnabledDesc": {
+        "message": "Введите $1 и пробел в адресной строке, чтобы искать закладки прямо там. Выключено, пока вы его не включите.",
+        "description": "Setting description for Address Bar Search; $1 is the keyword typed in the address bar"
+    },
+    "settings_addressBarEnabledKeywords": {
+        "message": "омнибокс, ключевое слово, строка URL, адресная строка",
+        "description": "Other words the settings search finds Address Bar Search by, comma-separated, never shown"
+    },
+    "settings_addressBarMaxResults": {
+        "message": "Результаты в адресной строке",
+        "description": "Setting label: how many bookmarks Address Bar Search lists"
+    },
+    "settings_addressBarMaxResultsDesc": {
+        "message": "Сколько закладок адресная строка показывает при поиске.",
+        "description": "Setting description for Address Bar Results"
+    },
+    "addressBar_suggestion": {
+        "message": "$1 — $2",
+        "description": "One address bar suggestion: $1 is the bookmark title, $2 its address"
+    },
+    "addressBar_defaultSuggestion": {
+        "message": "Искать в закладках. Enter показывает все результаты в диспетчере закладок",
+        "description": "First line of the address bar after the keyword, while Address Bar Search is on; Enter on it searches the manager"
+    },
+    "addressBar_off": {
+        "message": "Поиск в адресной строке выключен. Нажмите Enter, чтобы включить его в настройках",
+        "description": "First line of the address bar after the keyword, while Address Bar Search is off; Enter opens Settings"
+    },
     "settings_namingLinkText": {
         "message": "Текст ссылки",
         "description": "Use link text for bookmark name"

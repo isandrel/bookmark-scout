@@ -2151,6 +2151,42 @@
         "message": "右クリックメニューに表示する最近のフォルダの数です。ポップアップには別の「最近のフォルダ最大数」があります。",
         "description": "Setting description for Recent Folders in Menu"
     },
+    "settings_sectionAddressBar": {
+        "message": "アドレスバー",
+        "description": "Options section heading: Address Bar Search and its result count"
+    },
+    "settings_addressBarEnabled": {
+        "message": "アドレスバー検索",
+        "description": "Setting label: Address Bar Search, which lists matching bookmarks in the browser address bar after its keyword"
+    },
+    "settings_addressBarEnabledDesc": {
+        "message": "アドレスバーに $1 とスペースを入力すると、そこでブックマークを検索できます。オンにするまではオフです。",
+        "description": "Setting description for Address Bar Search; $1 is the keyword typed in the address bar"
+    },
+    "settings_addressBarEnabledKeywords": {
+        "message": "オムニボックス, キーワード, URL バー, ロケーションバー",
+        "description": "Other words the settings search finds Address Bar Search by, comma-separated, never shown"
+    },
+    "settings_addressBarMaxResults": {
+        "message": "アドレスバーの表示件数",
+        "description": "Setting label: how many bookmarks Address Bar Search lists"
+    },
+    "settings_addressBarMaxResultsDesc": {
+        "message": "1 回の検索でアドレスバーに表示するブックマークの数。",
+        "description": "Setting description for Address Bar Results"
+    },
+    "addressBar_suggestion": {
+        "message": "$1 — $2",
+        "description": "One address bar suggestion: $1 is the bookmark title, $2 its address"
+    },
+    "addressBar_defaultSuggestion": {
+        "message": "ブックマークを検索。Enter でブックマークマネージャーにすべての結果を表示",
+        "description": "First line of the address bar after the keyword, while Address Bar Search is on; Enter on it searches the manager"
+    },
+    "addressBar_off": {
+        "message": "アドレスバー検索はオフです。Enter を押すと設定でオンにできます",
+        "description": "First line of the address bar after the keyword, while Address Bar Search is off; Enter opens Settings"
+    },
     "settings_namingLinkText": {
         "message": "リンクテキスト",
         "description": "Use link text for bookmark name"
