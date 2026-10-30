@@ -6591,6 +6591,10 @@
         "message": "Guardado rápido de la página actual con IA",
         "description": "Keyboard shortcut name in the browser's shortcut settings"
     },
+    "command_openManager": {
+        "message": "Abrir el administrador de marcadores",
+        "description": "Keyboard shortcut name in the browser's shortcut settings"
+    },
     "quickSave_aiSaving": {
         "message": "La IA está eligiendo una carpeta...",
         "description": "Quick save notification while the AI chooses a folder"

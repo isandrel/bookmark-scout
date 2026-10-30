@@ -14,6 +14,7 @@ import {
   Moon,
   Regex,
   Search,
+  Settings,
   SlidersHorizontal,
   Sparkles,
   Sun,
@@ -368,6 +369,19 @@ export function BookmarkSearch({
         <LibraryBig className="h-4 w-4" />
       </Button>
     ) : null,
+    openSettings: (
+      <Button
+        variant="ghost"
+        size="icon"
+        className="shrink-0"
+        {...sample}
+        onClick={() => void browser.runtime.openOptionsPage()}
+        title={t('settings_title')}
+        aria-label={t('settings_title')}
+      >
+        <Settings className="h-4 w-4" />
+      </Button>
+    ),
     theme: (
       <Button
         variant="ghost"

@@ -74,6 +74,7 @@ const shortcutsConfig = readConfig(
     commands: z.strictObject({
       'quick-save': commandKeysSchema,
       'ai-quick-save': commandKeysSchema,
+      'open-manager': commandKeysSchema,
     }),
     // Browser keys the extension acts on; the others in the file are for the docs.
     browser: z

@@ -7123,6 +7123,10 @@
         "message": "Быстро сохранить текущую страницу с помощью ИИ",
         "description": "Keyboard shortcut name in the browser's shortcut settings"
     },
+    "command_openManager": {
+        "message": "Открыть диспетчер закладок",
+        "description": "Keyboard shortcut name in the browser's shortcut settings"
+    },
     "quickSave_aiSaving": {
         "message": "ИИ выбирает папку...",
         "description": "Quick save notification while the AI chooses a folder"

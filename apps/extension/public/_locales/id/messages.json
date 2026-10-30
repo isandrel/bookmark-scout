@@ -6325,6 +6325,10 @@
         "message": "Simpan cepat halaman ini dengan AI",
         "description": "Keyboard shortcut name in the browser's shortcut settings"
     },
+    "command_openManager": {
+        "message": "Buka pengelola bookmark",
+        "description": "Keyboard shortcut name in the browser's shortcut settings"
+    },
     "quickSave_aiSaving": {
         "message": "Memilih folder dengan AI...",
         "description": "Quick save notification while the AI chooses a folder"

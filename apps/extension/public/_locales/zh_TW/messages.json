@@ -6345,6 +6345,10 @@
         "message": "用 AI 快速儲存目前頁面",
         "description": "Keyboard shortcut name in the browser's shortcut settings"
     },
+    "command_openManager": {
+        "message": "開啟書籤管理員",
+        "description": "Keyboard shortcut name in the browser's shortcut settings"
+    },
     "quickSave_aiSaving": {
         "message": "AI 正在選擇資料夾...",
         "description": "Quick save notification while the AI chooses a folder"

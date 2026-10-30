@@ -6583,6 +6583,10 @@
         "message": "現在のページを AI でクイック保存",
         "description": "Keyboard shortcut name in the browser's shortcut settings"
     },
+    "command_openManager": {
+        "message": "ブックマークマネージャーを開く",
+        "description": "Keyboard shortcut name in the browser's shortcut settings"
+    },
     "quickSave_aiSaving": {
         "message": "AI がフォルダを選んでいます...",
         "description": "Quick save notification while the AI chooses a folder"

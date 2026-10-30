@@ -37,6 +37,7 @@ primary = "mac"
 [commands]
 quick-save = "Alt+Shift+S"
 ai-quick-save = "Alt+Shift+D"
+open-manager = "Alt+Shift+M"
 
 # The browser's own keys that the extension acts on or the docs name, in the same format. A value
 # can differ per platform: { other = "...", mac = "..." }.

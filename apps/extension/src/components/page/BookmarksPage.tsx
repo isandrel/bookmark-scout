@@ -13,6 +13,7 @@ import {
   PanelLeftClose,
   PanelRight,
   PanelRightClose,
+  Settings,
   X,
 } from 'lucide-react';
 import {
@@ -505,6 +506,16 @@ export default function BookmarksPage() {
                 onClick={() => openHistory()}
               >
                 <History className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="shrink-0"
+                title={t('settings_title')}
+                aria-label={t('settings_title')}
+                onClick={() => void browser.runtime.openOptionsPage()}
+              >
+                <Settings className="h-4 w-4" />
               </Button>
               <ManagerShortcutsHelp
                 open={shortcuts.helpOpen}
