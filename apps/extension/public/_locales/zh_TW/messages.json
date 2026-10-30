@@ -7337,6 +7337,22 @@
         "message": "每張卡片在標題下方顯示的內容及其順序。排在第一位的封面會顯示在標題上方。儲存在這部裝置上。",
         "description": "Options > Behavior > Cards: description of the card details panel"
     },
+    "settings_managerTableDates": {
+        "message": "日期欄顯示",
+        "description": "Options > Behavior > Manager table: label of the choice of what date columns show"
+    },
+    "settings_managerTableDatesDesc": {
+        "message": "表格中日期欄顯示的內容：日期和時間，或只顯示日期。兩者都依照「日期和時間」的格式。",
+        "description": "Under Date Columns Show"
+    },
+    "settings_managerTableDatesDateAndTime": {
+        "message": "日期和時間",
+        "description": "Date Columns Show choice: the date and the time"
+    },
+    "settings_managerTableDatesDate": {
+        "message": "僅日期",
+        "description": "Date Columns Show choice: the date alone"
+    },
     "settings_managerCardSize": {
         "message": "卡片大小",
         "description": "Setting label: how wide the manager's cards are at least"
@@ -8462,6 +8478,10 @@
     "settings_dateFormatLong": {
         "message": "完整",
         "description": "Date format option: long date with the month name."
+    },
+    "settings_dateFormatNumeric": {
+        "message": "數字，兩位",
+        "description": "Date format choice: numbers with two-digit months and days, in the language's order"
     },
     "settings_dateFormatIso": {
         "message": "年-月-日",

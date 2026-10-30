@@ -1195,6 +1195,16 @@ const fields = {
     z.enum(MANAGER_SORT_CHOICE_IDS),
     (value) => t((MANAGER_SORT_CHOICES[value]?.labelKey ?? 'error_unknown') as MessageKey),
   ),
+  managerTableDates: enumField(
+    'behavior.manager_table.dates',
+    'managerTableDates',
+    z.enum(['date_and_time', 'date']),
+    (value) =>
+      ({
+        date_and_time: t('settings_managerTableDatesDateAndTime'),
+        date: t('settings_managerTableDatesDate'),
+      })[value],
+  ),
   managerCardFields: idListField(
     'behavior.manager_cards.fields',
     'managerCardFields',
@@ -1956,7 +1966,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       {
         id: 'managerTable',
         labelKey: 'settings_sectionManagerTable',
-        fields: ['managerDefaultPageSize', 'managerDefaultSort'],
+        fields: ['managerDefaultPageSize', 'managerDefaultSort', 'managerTableDates'],
         panel: 'managerColumns',
       },
       {
