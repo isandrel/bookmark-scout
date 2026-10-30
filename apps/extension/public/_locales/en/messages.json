@@ -6591,6 +6591,10 @@
         "message": "Quick save the current page with AI",
         "description": "Keyboard shortcut name in the browser's shortcut settings"
     },
+    "command_openManager": {
+        "message": "Open bookmark manager",
+        "description": "Keyboard shortcut name in the browser's shortcut settings"
+    },
     "quickSave_aiSaving": {
         "message": "Choosing a folder with AI...",
         "description": "Quick save notification while the AI chooses a folder"

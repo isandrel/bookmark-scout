@@ -669,7 +669,7 @@ async function saveWithAI(
  * Resolves to the quick save as stored.
  */
 export async function runQuickSave(
-  command: ExtensionCommand,
+  command: QuickSaveCommand,
   tab?: Browser.tabs.Tab,
 ): Promise<QuickSaveRecord> {
   const settings = await readSettingsInAppLanguage();
@@ -1051,7 +1051,14 @@ export async function handleQuickSaveAction(
 /** Adds the command, message, and bookmark listeners. Call once, synchronously, at startup. */
 export function registerQuickSave(): void {
   browser.commands?.onCommand.addListener((command, tab) => {
-    if (!isExtensionCommand(command)) return;
+    // The one command that is no quick save opens the manager (`EXTENSION_COMMANDS`).
+    if (isExtensionCommand(command) && EXTENSION_COMMANDS[command].run === 'openManager') {
+      void openBookmarkManager().catch((error) => {
+        bookmarkLogger.error({ error }, 'Opening the bookmark manager failed');
+      });
+      return;
+    }
+    if (!isQuickSaveCommand(command)) return;
     void runQuickSave(command, tab).catch((error) => {
       bookmarkLogger.error({ error }, 'Quick save failed');
     });

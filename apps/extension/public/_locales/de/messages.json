@@ -6591,6 +6591,10 @@
         "message": "Aktuelle Seite mit KI schnell speichern",
         "description": "Keyboard shortcut name in the browser's shortcut settings"
     },
+    "command_openManager": {
+        "message": "Lesezeichen-Manager öffnen",
+        "description": "Keyboard shortcut name in the browser's shortcut settings"
+    },
     "quickSave_aiSaving": {
         "message": "KI wählt einen Ordner...",
         "description": "Quick save notification while the AI chooses a folder"

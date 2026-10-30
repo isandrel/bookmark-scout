@@ -6591,6 +6591,10 @@
         "message": "Enregistrement rapide de la page actuelle avec l'IA",
         "description": "Keyboard shortcut name in the browser's shortcut settings"
     },
+    "command_openManager": {
+        "message": "Ouvrir le gestionnaire de favoris",
+        "description": "Keyboard shortcut name in the browser's shortcut settings"
+    },
     "quickSave_aiSaving": {
         "message": "L'IA choisit un dossier...",
         "description": "Quick save notification while the AI chooses a folder"

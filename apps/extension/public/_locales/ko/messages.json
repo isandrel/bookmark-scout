@@ -6583,6 +6583,10 @@
         "message": "AI로 현재 페이지 빠른 저장",
         "description": "Keyboard shortcut name in the browser's shortcut settings"
     },
+    "command_openManager": {
+        "message": "북마크 관리자 열기",
+        "description": "Keyboard shortcut name in the browser's shortcut settings"
+    },
     "quickSave_aiSaving": {
         "message": "AI가 폴더를 고르는 중...",
         "description": "Quick save notification while the AI chooses a folder"
