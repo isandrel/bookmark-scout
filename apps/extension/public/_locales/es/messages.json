@@ -9635,6 +9635,14 @@
         "message": "Espacio que pueden ocupar las portadas en este dispositivo; las más antiguas se quitan primero",
         "description": "Settings: description of the cover storage limit"
     },
+    "settings_coversReviewSingle": {
+        "message": "Revisar una sola portada",
+        "description": "Options > Page Details > Fetch Covers: switch label"
+    },
+    "settings_coversReviewSingleDesc": {
+        "message": "Obtener portada en un solo marcador muestra la portada antes de guardarla. Desactivado, guarda al momento la portada que encuentre; si la página no tiene una portada útil, sigue mostrando por qué.",
+        "description": "Under the Review a Single Cover switch"
+    },
     "settings_coversSourcePreference": {
         "message": "Origen de la portada",
         "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"

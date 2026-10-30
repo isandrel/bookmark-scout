@@ -1268,6 +1268,12 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   coversMaxCacheMb: tested(TOOL_OPTIONS, [
     unit(COVERS_UNIT, 'remove the oldest past the storage limit'),
   ]),
+  coversReviewSingle: tested(TOOL_TABLE, [
+    e2e(
+      'covers.spec.ts',
+      "a right-click Fetch cover on one card saves that bookmark's cover and leaves the others untouched",
+    ),
+  ]),
   coversSourcePreference: tested(BROWSE_COVERS, [
     unit(
       BROWSE_COVERS_UNIT,

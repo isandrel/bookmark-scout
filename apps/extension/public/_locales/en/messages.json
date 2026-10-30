@@ -9635,6 +9635,14 @@
         "message": "Room stored covers may take on this device; the oldest are removed first",
         "description": "Settings: description of the cover storage limit"
     },
+    "settings_coversReviewSingle": {
+        "message": "Review a Single Cover",
+        "description": "Options > Page Details > Fetch Covers: switch label"
+    },
+    "settings_coversReviewSingleDesc": {
+        "message": "Fetch Cover on one bookmark shows the cover before saving it. Off saves the cover it finds at once; a page without a usable cover still shows why.",
+        "description": "Under the Review a Single Cover switch"
+    },
     "settings_coversSourcePreference": {
         "message": "Cover Source",
         "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"
