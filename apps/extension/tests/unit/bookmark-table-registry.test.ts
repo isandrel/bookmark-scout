@@ -141,7 +141,9 @@ describe('bookmark table column registry', () => {
     expect(cover?.size).toEqual(getManagerColumnLayout('cover').size);
     expect(getBookmarkColumnLabel('cover')).toBe('Cover');
     // The header is an icon, with the column's name for screen readers and as its tooltip.
-    const [coverDef] = createColumns({ actionHost: createItemHost() }, [cover as BookmarkColumn]);
+    const [coverDef] = createColumns({ actionHost: createItemHost(), dates: 'date_and_time' }, [
+      cover as BookmarkColumn,
+    ]);
     const header = renderToStaticMarkup(
       createElement(coverDef.header as () => ReturnType<typeof createElement>),
     );
@@ -153,7 +155,7 @@ describe('bookmark table column registry', () => {
     // Server rendering runs no effects, so no cover is read: rows show nothing until one loads.
     const markup = renderToStaticMarkup(
       createElement(DataTable<Bookmark>, {
-        columns: createColumns({ actionHost: createItemHost() }),
+        columns: createColumns({ actionHost: createItemHost(), dates: 'date_and_time' }),
         data: [link, folder],
         browserOrderData: [link, folder],
         allData: [link, folder],
@@ -174,7 +176,7 @@ describe('bookmark table column registry', () => {
   });
 
   it('renders a newly registered column in the table without changing the table', () => {
-    const columns = createColumns({ actionHost: createItemHost() }, [
+    const columns = createColumns({ actionHost: createItemHost(), dates: 'date_and_time' }, [
       ...BOOKMARK_COLUMNS,
       visitsColumn,
     ]);

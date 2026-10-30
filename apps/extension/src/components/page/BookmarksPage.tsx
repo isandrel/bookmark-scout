@@ -139,6 +139,7 @@ export default function BookmarksPage() {
   // What a card shows, how wide it is at least, and its tag and summary limits (Options > Cards).
   const { value: storedCardFields } = useSetting('managerCardFields');
   const { value: cardSize } = useSetting('managerCardSize');
+  const { value: tableDates } = useSetting('managerTableDates');
   const { value: cardMaxTags } = useSetting('cardMaxTags');
   const { value: cardSummaryLines } = useSetting('cardSummaryLines');
   const cardFields = useMemo(() => getManagerCardFields(storedCardFields), [storedCardFields]);
@@ -243,8 +244,9 @@ export default function BookmarksPage() {
       createColumns({
         actionHost: managerCommands.tableItemHost,
         coverPreview: coverPreviewController,
+        dates: tableDates,
       }),
-    [managerCommands, coverPreviewController],
+    [managerCommands, coverPreviewController, tableDates],
   );
   // A right click on a row or card acts on the selection when it is in it, else on that one.
   const resolveRowMenuItems = useCallback((target: EventTarget | null) => {
