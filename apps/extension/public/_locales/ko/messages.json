@@ -7575,6 +7575,22 @@
         "message": "각 카드의 제목 아래에 표시할 내용과 그 순서입니다. 맨 앞의 표지는 제목 위에 표시됩니다. 이 기기에 저장됩니다.",
         "description": "Options > Behavior > Cards: description of the card details panel"
     },
+    "settings_managerTableDates": {
+        "message": "날짜 열 표시",
+        "description": "Options > Behavior > Manager table: label of the choice of what date columns show"
+    },
+    "settings_managerTableDatesDesc": {
+        "message": "표의 날짜 열에 보여 줄 내용입니다. 날짜와 시간 또는 날짜만. 둘 다 날짜와 시간 형식을 따릅니다.",
+        "description": "Under Date Columns Show"
+    },
+    "settings_managerTableDatesDateAndTime": {
+        "message": "날짜와 시간",
+        "description": "Date Columns Show choice: the date and the time"
+    },
+    "settings_managerTableDatesDate": {
+        "message": "날짜만",
+        "description": "Date Columns Show choice: the date alone"
+    },
     "settings_managerCardSize": {
         "message": "카드 크기",
         "description": "Setting label: how wide the manager's cards are at least"
@@ -8700,6 +8716,10 @@
     "settings_dateFormatLong": {
         "message": "길게",
         "description": "Date format option: long date with the month name."
+    },
+    "settings_dateFormatNumeric": {
+        "message": "숫자, 두 자리",
+        "description": "Date format choice: numbers with two-digit months and days, in the language's order"
     },
     "settings_dateFormatIso": {
         "message": "연-월-일",

@@ -332,19 +332,24 @@
 # 2,766,828 B of locales.
 # Raised on 2026-10-29 (ZIP 2,200,000 to 2,215,000) for Fetch covers on a folder, with its menu
 # label in 12 languages: Firefox measured ZIP 2,200,046 B.
+# Raised on 2026-10-29 (ZIP 2,200,000 to 2,215,000, uncompressed 7,450,000 to 7,475,000, locales
+# 2,775,000 to 2,800,000) for Date Columns Show and the two-digit date format, with their copy in 12
+# languages. Measured on feat/date-column-options from 0db9a7e4: ZIP 2,200,932 / 2,201,010 /
+# 2,201,109 B, uncompressed 7,451,218 / 7,451,214 / 7,451,401 B (Chrome / Edge / Firefox),
+# 4,105,468 B of JavaScript, and 2,775,879 B of locales.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
 zip_bytes = 2_215_000
-raw_bytes = 7_450_000
+raw_bytes = 7_475_000
 
 [targets.edge]
 zip_bytes = 2_215_000
-raw_bytes = 7_450_000
+raw_bytes = 7_475_000
 
 [targets.firefox]
 zip_bytes = 2_215_000
-raw_bytes = 7_450_000
+raw_bytes = 7_475_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
@@ -353,6 +358,6 @@ raw_bytes = 7_450_000
 javascript = 4_120_000
 css = 92_000
 fonts = 143_000
-locales = 2_775_000
+locales = 2_800_000
 images = 320_000
 other = 30_000

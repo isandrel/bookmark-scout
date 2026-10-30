@@ -7587,6 +7587,22 @@
         "message": "Was jede Karte unter ihrem Titel zeigt, in dieser Reihenfolge. Ein Titelbild an erster Stelle bleibt über dem Titel. Wird auf diesem Gerät gespeichert.",
         "description": "Options > Behavior > Cards: description of the card details panel"
     },
+    "settings_managerTableDates": {
+        "message": "Datumsspalten zeigen",
+        "description": "Options > Behavior > Manager table: label of the choice of what date columns show"
+    },
+    "settings_managerTableDatesDesc": {
+        "message": "Was die Datumsspalten der Tabelle zeigen: Datum und Uhrzeit oder nur das Datum. Beides folgt Datum und Uhrzeit.",
+        "description": "Under Date Columns Show"
+    },
+    "settings_managerTableDatesDateAndTime": {
+        "message": "Datum und Uhrzeit",
+        "description": "Date Columns Show choice: the date and the time"
+    },
+    "settings_managerTableDatesDate": {
+        "message": "Nur Datum",
+        "description": "Date Columns Show choice: the date alone"
+    },
     "settings_managerCardSize": {
         "message": "Kartengröße",
         "description": "Setting label: how wide the manager's cards are at least"
@@ -8748,6 +8764,10 @@
     "settings_dateFormatLong": {
         "message": "Lang",
         "description": "Date format option: long date with the month name."
+    },
+    "settings_dateFormatNumeric": {
+        "message": "Ziffern, zweistellig",
+        "description": "Date format choice: numbers with two-digit months and days, in the language's order"
     },
     "settings_dateFormatIso": {
         "message": "Jahr-Monat-Tag",
