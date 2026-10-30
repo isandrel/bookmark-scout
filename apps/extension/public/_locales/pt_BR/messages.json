@@ -7587,6 +7587,22 @@
         "message": "O que cada cartão mostra abaixo do título, em ordem. Uma capa em primeiro lugar fica acima do título. Fica salvo neste dispositivo.",
         "description": "Options > Behavior > Cards: description of the card details panel"
     },
+    "settings_managerTableDates": {
+        "message": "As colunas de data mostram",
+        "description": "Options > Behavior > Manager table: label of the choice of what date columns show"
+    },
+    "settings_managerTableDatesDesc": {
+        "message": "O que as colunas de data da tabela mostram: a data e a hora, ou só a data. As duas seguem Datas e horas.",
+        "description": "Under Date Columns Show"
+    },
+    "settings_managerTableDatesDateAndTime": {
+        "message": "Data e hora",
+        "description": "Date Columns Show choice: the date and the time"
+    },
+    "settings_managerTableDatesDate": {
+        "message": "Só a data",
+        "description": "Date Columns Show choice: the date alone"
+    },
     "settings_managerCardSize": {
         "message": "Tamanho do cartão",
         "description": "Setting label: how wide the manager's cards are at least"
@@ -8748,6 +8764,10 @@
     "settings_dateFormatLong": {
         "message": "Longo",
         "description": "Date format option: long date with the month name."
+    },
+    "settings_dateFormatNumeric": {
+        "message": "Números, dois dígitos",
+        "description": "Date format choice: numbers with two-digit months and days, in the language's order"
     },
     "settings_dateFormatIso": {
         "message": "Ano-mês-dia",

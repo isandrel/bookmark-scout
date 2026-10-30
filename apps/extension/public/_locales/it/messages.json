@@ -7587,6 +7587,22 @@
         "message": "Cosa mostra ogni riquadro sotto il titolo, in ordine. Una copertina messa per prima resta sopra il titolo. Conservata su questo dispositivo.",
         "description": "Options > Behavior > Cards: description of the card details panel"
     },
+    "settings_managerTableDates": {
+        "message": "Le colonne delle date mostrano",
+        "description": "Options > Behavior > Manager table: label of the choice of what date columns show"
+    },
+    "settings_managerTableDatesDesc": {
+        "message": "Cosa mostrano le colonne delle date nella tabella: data e ora, o solo la data. Entrambe seguono Date e ore.",
+        "description": "Under Date Columns Show"
+    },
+    "settings_managerTableDatesDateAndTime": {
+        "message": "Data e ora",
+        "description": "Date Columns Show choice: the date and the time"
+    },
+    "settings_managerTableDatesDate": {
+        "message": "Solo la data",
+        "description": "Date Columns Show choice: the date alone"
+    },
     "settings_managerCardSize": {
         "message": "Dimensione dei riquadri",
         "description": "Setting label: how wide the manager's cards are at least"
@@ -8748,6 +8764,10 @@
     "settings_dateFormatLong": {
         "message": "Esteso",
         "description": "Date format option: long date with the month name."
+    },
+    "settings_dateFormatNumeric": {
+        "message": "Numeri, due cifre",
+        "description": "Date format choice: numbers with two-digit months and days, in the language's order"
     },
     "settings_dateFormatIso": {
         "message": "Anno-mese-giorno",
