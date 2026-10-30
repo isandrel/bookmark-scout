@@ -1625,6 +1625,14 @@
         "message": "下一个书签",
         "description": "Bookmark preview: button (and the right arrow key) that shows the next bookmark of the page, skipping folders"
     },
+    "bookmarks_dragItems": {
+        "message": "$1 项",
+        "description": "The picture that follows the pointer while several manager rows or cards are dragged; $1 is how many"
+    },
+    "bookmarks_dragItems_one": {
+        "message": "$1 项",
+        "description": "The picture that follows the pointer while several manager rows or cards are dragged; $1 is how many"
+    },
     "bookmarks_cardFolderItems": {
         "message": "$1 项",
         "description": "Bookmark manager card of a folder (Manager View: Cards): how many items the folder holds directly; $1 is the count"

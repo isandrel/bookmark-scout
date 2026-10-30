@@ -55,7 +55,14 @@ args = ["serve"]
 **Cursor** は [Cursor に追加](cursor://anysphere.cursor-deeplink/mcp/install?name=bookmark-scout&config=eyJjb21tYW5kIjoiYm9va21hcmstc2NvdXQtbWNwIiwiYXJncyI6WyJzZXJ2ZSJdfQ==)するか、次の内容を `~/.cursor/mcp.json` に記述します。
 
 ```json
-{ "mcpServers": { "bookmark-scout": { "command": "bookmark-scout-mcp", "args": ["serve"] } } }
+{
+  "mcpServers": {
+    "bookmark-scout": {
+      "command": "bookmark-scout-mcp",
+      "args": ["serve"]
+    }
+  }
+}
 ```
 
 `bookmark-scout-mcp install` を実行すると、これらがプログラムのフルパス付きで表示されます。複数のブラウザやプロファイルが接続されている場合、エージェントは最後に接続されたものを使います。選ぶには、`serve` の後に `--browser edge` または `--profile <id>` を付けます。
