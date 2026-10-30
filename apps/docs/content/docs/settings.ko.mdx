@@ -290,7 +290,6 @@ AI에게 묻기가 조회하고 변경할 수 있는 모든 작업이 여기에 
 
 | 도구 | 설정과 기본값 |
 | --- | --- |
-| **AI 컨텍스트 패커** | **출력 형식** Markdown, **폴더 경로 포함**, **날짜 포함**, **저장된 태그 포함**, **저장된 요약 포함** 켜짐, **최대 항목 수** <SettingDefault path="ai_tools.context_packer.max_items" />, **최대 깊이** <SettingDefault path="ai_tools.context_packer.max_depth" />, **발췌 길이** <SettingDefault path="ai_tools.context_packer.excerpt_length" /> |
 | **자동 태그 지정** | **최소 태그 수** <SettingDefault path="ai_tools.auto_tagging.min_tags" />, **최대 태그 수** <SettingDefault path="ai_tools.auto_tagging.max_tags" />, **태그 스타일** kebab-case, **병합 모드** 추가, **중복 태그 제거** 켜짐, **기존 태그 보내기** 켜짐 |
 | **콘텐츠 요약** | **요약 길이** <SettingDefault path="ai_tools.summarizer.summary_length" />, **도메인 힌트 포함** 켜짐, **병합 모드** 교체 |
 | **AI 폴더 재구성** | **최소 신뢰도** 55%(이보다 낮은 이동은 제외), **배치 크기** 요청당 북마크 <SettingDefault path="ai_tools.reorganization.batch_size" />개 |
@@ -402,6 +401,10 @@ AI에게 묻기가 조회하고 변경할 수 있는 모든 작업이 여기에 
 | **새 백업에 포함할 항목** | 이 컴퓨터의 설정과 AI 서비스 키를 뺀 모든 항목 | **설정 백업**에서 처음부터 선택되어 있는 항목. 이 컴퓨터에서 백업을 저장할 때마다 그 선택이 새 기본값이 됩니다. AI 서비스 키는 처음부터 선택되지 않습니다 |
 | **새 백업을 비밀번호로 보호** | 꺼짐 | **이 백업을 비밀번호로 보호**가 처음부터 선택되어 있는지 여부 |
 | **API 키를 비밀번호로 보호** | 켜짐 | AI 서비스 키가 든 백업에서 키가 처음부터 비밀번호로 보호되는지 여부. 대화 상자에서 끄면 확인을 요청합니다 |
+
+| 도구 | 설정과 기본값 |
+| --- | --- |
+| **AI 컨텍스트 패커** | **출력 형식** Markdown, **폴더 경로 포함**, **날짜 포함**, **저장된 태그 포함**, **저장된 요약 포함** 켜짐, **최대 항목 수** <SettingDefault path="data.context_packer.max_items" />, **최대 깊이** <SettingDefault path="data.context_packer.max_depth" />, **발췌 길이** <SettingDefault path="data.context_packer.excerpt_length" /> |
 
 [가져오기와 내보내기](/guides/import-export)를 참고하세요.
 

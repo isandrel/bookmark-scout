@@ -290,7 +290,6 @@ Each tool has an **Enable** switch (on by default). Turning one off hides it fro
 
 | Tool | Settings and defaults |
 | --- | --- |
-| **AI Context Packer** | **Output Format** Markdown; **Include Folder Paths**, **Include Dates**, **Include Saved Tags**, and **Include Saved Summaries** on; **Max Items** <SettingDefault path="ai_tools.context_packer.max_items" />; **Max Depth** <SettingDefault path="ai_tools.context_packer.max_depth" />; **Excerpt Length** <SettingDefault path="ai_tools.context_packer.excerpt_length" /> |
 | **Auto-Tagging** | **Minimum Tags** <SettingDefault path="ai_tools.auto_tagging.min_tags" />; **Maximum Tags** <SettingDefault path="ai_tools.auto_tagging.max_tags" />; **Tag Style** kebab-case; **Merge Mode** Append; **Remove Duplicate Tags** on; **Send Existing Tags** on |
 | **Content Summarizer** | **Summary Length** <SettingDefault path="ai_tools.summarizer.summary_length" />; **Include Domain Hint** on; **Merge Mode** Replace |
 | **AI Folder Reorganization** | **Minimum Confidence** 55% (moves below it are dropped); **Batch Size** <SettingDefault path="ai_tools.reorganization.batch_size" /> bookmarks per request |
@@ -402,6 +401,10 @@ Under it, **Bookmark covers** says how many covers are stored and their size, an
 | **Parts in New Backups** | Everything but this computer's settings and the AI service keys | The parts **Back up settings** starts with selected; each backup you save on this computer becomes the new choice. The AI service keys are never selected at first |
 | **Protect New Backups With a Password** | Off | Whether **Protect this backup with a password** starts checked |
 | **Protect API Keys With a Password** | On | Whether a backup with the AI service keys starts with them protected by a password; turning it off in the dialog asks you to confirm |
+
+| Tool | Settings and defaults |
+| --- | --- |
+| **AI Context Packer** | **Output Format** Markdown; **Include Folder Paths**, **Include Dates**, **Include Saved Tags**, and **Include Saved Summaries** on; **Max Items** <SettingDefault path="data.context_packer.max_items" />; **Max Depth** <SettingDefault path="data.context_packer.max_depth" />; **Excerpt Length** <SettingDefault path="data.context_packer.excerpt_length" /> |
 
 See [Import and export](/guides/import-export).
 
