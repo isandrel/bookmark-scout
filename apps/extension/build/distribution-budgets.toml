@@ -332,6 +332,8 @@
 # 2,766,828 B of locales.
 # Raised on 2026-10-29 (css 92,000 to 92,500) for the drop lines of the cards view (a card takes a
 # drop on its leading or trailing edge, or into a folder card). Measured 92,153 B of CSS.
+# Raised on 2026-10-29 (ZIP 2,200,000 to 2,215,000) for Fetch covers on a folder, with its menu
+# label in 12 languages: Firefox measured ZIP 2,200,046 B.
 # Raised on 2026-10-29 (ZIP 2,200,000 to 2,215,000, uncompressed 7,450,000 to 7,475,000, locales
 # 2,775,000 to 2,800,000) for Date Columns Show and the two-digit date format, with their copy in 12
 # languages. Measured on feat/date-column-options from 0db9a7e4: ZIP 2,200,932 / 2,201,010 /
