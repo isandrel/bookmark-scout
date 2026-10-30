@@ -5,8 +5,9 @@
 # Open the welcome page in a new tab when the extension is first installed.
 open_on_install = true
 
-# Also open it for a Firefox temporary add-on (about:debugging), which Firefox installs again on
-# every start, so the page would come back each time.
+# Also open it for a Firefox temporary add-on (about:debugging, `wxt dev`, web-ext). Developers
+# load one afresh on every run, and Firefox drops it when it closes, so the page would come back
+# each time. An add-on installed from addons.mozilla.org opens it like Chrome and Edge do.
 open_on_temporary_install = false
 
 # Docs page the welcome page's "Read the guide" link opens, relative to the docs site in

@@ -5,6 +5,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Side Panel - Bookmark Scout</title>
+    <!-- Firefox opens an extension sidebar by itself at install unless told not to; the welcome tab
+         already greets new users, and Chrome and Edge never open the side panel on their own. -->
+    <meta name="manifest.open_at_install" content="false" />
     <link rel="icon" type="image/png" sizes="32x32" href="/icon-32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/icon-16.png" />
     <style>
