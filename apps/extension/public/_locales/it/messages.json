@@ -6183,6 +6183,38 @@
         "message": "Torna ai preferiti",
         "description": "Ask AI: button that closes the chat"
     },
+    "askAI_pastChats": {
+        "message": "Chat precedenti",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "askAI_noPastChats": {
+        "message": "Ancora nessuna chat precedente",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "askAI_deleteChat": {
+        "message": "Elimina questa chat",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "askAI_deleteAllChats": {
+        "message": "Elimina tutte le chat",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "settings_askAiKeepChats": {
+        "message": "Conserva le chat",
+        "description": "Options > AI > Ask AI: label"
+    },
+    "settings_askAiKeepChatsDesc": {
+        "message": "Conserva le chat di Chiedi all'IA su questo dispositivo: Chiedi all'IA si apre sull’ultima e Chat precedenti riapre le altre. Se disattivato non conserva nulla ed elimina le chat conservate.",
+        "description": "Under its setting in Options > AI > Ask AI"
+    },
+    "settings_askAiChatsMax": {
+        "message": "Chat conservate",
+        "description": "Options > AI > Ask AI: label"
+    },
+    "settings_askAiChatsMaxDesc": {
+        "message": "Quante chat conservare; le più vecchie vanno via per prime",
+        "description": "Under its setting in Options > AI > Ask AI"
+    },
     "askAI_newChat": {
         "message": "Nuova chat",
         "description": "Ask AI: button that clears the conversation"

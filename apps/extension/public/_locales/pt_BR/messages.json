@@ -6183,6 +6183,38 @@
         "message": "Voltar aos favoritos",
         "description": "Ask AI: button that closes the chat"
     },
+    "askAI_pastChats": {
+        "message": "Conversas anteriores",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "askAI_noPastChats": {
+        "message": "Nenhuma conversa anterior ainda",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "askAI_deleteChat": {
+        "message": "Excluir esta conversa",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "askAI_deleteAllChats": {
+        "message": "Excluir todas as conversas",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "settings_askAiKeepChats": {
+        "message": "Manter conversas",
+        "description": "Options > AI > Ask AI: label"
+    },
+    "settings_askAiKeepChatsDesc": {
+        "message": "Mantém as conversas do Perguntar à IA neste dispositivo: o Perguntar à IA abre na última, e Conversas anteriores reabre as outras. Desativado, nada é mantido e as conversas guardadas são excluídas.",
+        "description": "Under its setting in Options > AI > Ask AI"
+    },
+    "settings_askAiChatsMax": {
+        "message": "Conversas mantidas",
+        "description": "Options > AI > Ask AI: label"
+    },
+    "settings_askAiChatsMaxDesc": {
+        "message": "Quantas conversas manter; as mais antigas saem primeiro",
+        "description": "Under its setting in Options > AI > Ask AI"
+    },
     "askAI_newChat": {
         "message": "Nova conversa",
         "description": "Ask AI: button that clears the conversation"

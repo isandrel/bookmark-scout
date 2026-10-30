@@ -1,6 +1,8 @@
 /**
- * Ask AI: a chat with the default AI service inside the popup and side panel. Messages stay in
- * memory only; closing the panel ends the conversation. Answers render as Markdown without raw
+ * Ask AI: a chat with the default AI service inside the popup and side panel. With Keep Chats on
+ * (the default), each finished answer keeps the chat on this device (`ask-ai-chats.ts`), the panel
+ * opens on the last chat, and Past chats reopens or deletes the others; with it off, messages stay
+ * in memory only and closing the panel ends the conversation. Answers render as Markdown without raw
  * HTML, and links open in a new tab. The chat needs the AI SDK, so `AskAIPanel` loads this file
  * when Ask AI opens; like every `*.lazy.tsx` file it is left out of auto-imports.
  */
@@ -18,6 +20,7 @@ import {
   ArrowUp,
   CircleAlert,
   Globe,
+  History,
   Loader2,
   MessageSquarePlus,
   Sparkles,
@@ -185,6 +188,11 @@ export function AskAIChat({ onClose }: AskAIPanelProps) {
   const canSearchWeb = provider ? supportsWebSearch(provider) : false;
   const { value: webSearch, setValue: setWebSearch } = useSetting('askAiWebSearch');
   const [transport] = useState(() => new AskAITransport());
+  const { value: keepChats, isLoading: keepChatsLoading } = useSetting('askAiKeepChats');
+  const { value: chatsMax } = useSetting('askAiChatsMax');
+  const { value: chats, isLoading: chatsLoading } = useStoredValue(askAiChatsValue);
+  const [chatId, setChatId] = useState<string>(() => crypto.randomUUID());
+  const resumed = useRef(false);
   const {
     messages,
     sendMessage,
@@ -210,6 +218,37 @@ export function AskAIChat({ onClose }: AskAIPanelProps) {
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
+
+  // Opens on the last chat once the kept chats are read; turning Keep Chats off deletes them.
+  useEffect(() => {
+    if (resumed.current || chatsLoading || keepChatsLoading) return;
+    resumed.current = true;
+    const [last] = chats;
+    if (keepChats && last) {
+      setChatId(last.id);
+      setMessages(last.messages);
+    }
+  }, [chats, chatsLoading, keepChats, keepChatsLoading, setMessages]);
+  useEffect(() => {
+    if (!keepChatsLoading && !keepChats) void clearChats();
+  }, [keepChats, keepChatsLoading]);
+  // Keeps the chat once an answer is finished (or failed), never while it is still being written.
+  useEffect(() => {
+    if (!keepChats || !resumed.current || (status !== 'ready' && status !== 'error')) return;
+    if (messages.length === 0) return;
+    void keepChat(chatId, messages, chatsMax).catch((error) => {
+      aiLogger.error({ error }, 'Failed to keep the Ask AI chat');
+    });
+  }, [chatId, chatsMax, keepChats, messages, status]);
+
+  const openChat = (id: string, kept: readonly UIMessage[]) => {
+    stop();
+    clearError();
+    setChatId(id);
+    setMessages([...kept]);
+    inputRef.current?.focus();
+  };
+  const startChat = () => openChat(crypto.randomUUID(), []);
 
   // Scrolls only the message list; scrollIntoView would also scroll the popup itself.
   // biome-ignore lint/correctness/useExhaustiveDependencies: scrolls as the answer grows
@@ -268,15 +307,70 @@ export function AskAIChat({ onClose }: AskAIPanelProps) {
           )}
         </h2>
         <AIServiceSwitcher />
+        {keepChats && (
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              render={
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  aria-label={t('askAI_pastChats')}
+                  title={t('askAI_pastChats')}
+                  data-testid="ask-ai-past-chats"
+                />
+              }
+            >
+              <History className="h-4 w-4" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="max-w-72">
+              {chats.length === 0 ? (
+                <DropdownMenuItem disabled>{t('askAI_noPastChats')}</DropdownMenuItem>
+              ) : (
+                chats.map((chat) => (
+                  <DropdownMenuItem
+                    key={chat.id}
+                    onClick={() => openChat(chat.id, chat.messages)}
+                    data-current={chat.id === chatId || undefined}
+                  >
+                    <span className="min-w-0">
+                      <span className="block truncate">{chat.title || t('askAI_newChat')}</span>
+                      <span className="block truncate text-xs text-muted-foreground">
+                        {formatDateTime(chat.updatedAt)}
+                      </span>
+                    </span>
+                  </DropdownMenuItem>
+                ))
+              )}
+              {chats.length > 0 && (
+                <>
+                  <DropdownMenuSeparator />
+                  {chats.some((chat) => chat.id === chatId) && (
+                    <DropdownMenuItem
+                      onClick={() => {
+                        void deleteChat(chatId);
+                        startChat();
+                      }}
+                    >
+                      {t('askAI_deleteChat')}
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuItem
+                    onClick={() => {
+                      void clearChats();
+                      startChat();
+                    }}
+                  >
+                    {t('askAI_deleteAllChats')}
+                  </DropdownMenuItem>
+                </>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
         <Button
           variant="ghost"
           size="icon-sm"
-          onClick={() => {
-            stop();
-            setMessages([]);
-            clearError();
-            inputRef.current?.focus();
-          }}
+          onClick={startChat}
           disabled={messages.length === 0}
           aria-label={t('askAI_newChat')}
           title={t('askAI_newChat')}

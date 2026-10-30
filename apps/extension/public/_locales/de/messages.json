@@ -6183,6 +6183,38 @@
         "message": "Zurück zu den Lesezeichen",
         "description": "Ask AI: button that closes the chat"
     },
+    "askAI_pastChats": {
+        "message": "Frühere Chats",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "askAI_noPastChats": {
+        "message": "Noch keine früheren Chats",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "askAI_deleteChat": {
+        "message": "Diesen Chat löschen",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "askAI_deleteAllChats": {
+        "message": "Alle Chats löschen",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "settings_askAiKeepChats": {
+        "message": "Chats behalten",
+        "description": "Options > AI > Ask AI: label"
+    },
+    "settings_askAiKeepChatsDesc": {
+        "message": "Behält Chats von „KI fragen“ auf diesem Gerät: KI fragen öffnet den letzten, und Frühere Chats öffnet die anderen wieder. Aus behält nichts und löscht die behaltenen Chats.",
+        "description": "Under its setting in Options > AI > Ask AI"
+    },
+    "settings_askAiChatsMax": {
+        "message": "Behaltene Chats",
+        "description": "Options > AI > Ask AI: label"
+    },
+    "settings_askAiChatsMaxDesc": {
+        "message": "Wie viele Chats behalten werden; die ältesten gehen zuerst",
+        "description": "Under its setting in Options > AI > Ask AI"
+    },
     "askAI_newChat": {
         "message": "Neuer Chat",
         "description": "Ask AI: button that clears the conversation"

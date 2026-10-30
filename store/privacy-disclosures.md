@@ -67,6 +67,7 @@ What the extension does with data in the source after version `0.3.4` (the next 
 | Dismissed notices (`ui.dismissed-notices`): ids of the notices the user closed, such as the popup's missing quick save shortcut line; no bookmark data | `storage.local` | No | No |
 | Storage migrations run (`storage.migrations`): the ids of the one-time moves of settings to where this release keeps them that have run on this device; no user data | `storage.local` | No | No |
 | Open folders (`ui.popup-expanded-folders`): ids of the folders open in the popup and side panel tree when it last closed, kept only while Expand on Open is set to As last left; no titles or addresses | `storage.local` | No | No |
+| Ask AI chats (`ai.chats`), while Keep Chats is on (the default): what the user asked and Ask AI answered, with the bookmark titles, addresses, and page text the chat held, newest first, at most the Chats Kept setting (default 20); turning Keep Chats off deletes them | `storage.local`, can be turned off in Settings | No | No |
 | Recent searches (`search.history`) | `storage.local`, can be turned off in Settings | No | No |
 | Site icons (`site-icons.cache`): one `data:` image URL and download time per origin, saved only after the user reviews a refresh; total capped by the `siteIconsMaxCacheKb` setting (default 4096 KB) | `storage.local` | No | No |
 | Scan results (duplicates, dead links, metadata, site icons before saving, privacy scan, statistics) | Memory only, while the dialog is open | No | No |

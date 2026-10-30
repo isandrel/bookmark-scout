@@ -6183,6 +6183,38 @@
         "message": "Back to bookmarks",
         "description": "Ask AI: button that closes the chat"
     },
+    "askAI_pastChats": {
+        "message": "Past chats",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "askAI_noPastChats": {
+        "message": "No past chats yet",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "askAI_deleteChat": {
+        "message": "Delete this chat",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "askAI_deleteAllChats": {
+        "message": "Delete all chats",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "settings_askAiKeepChats": {
+        "message": "Keep Chats",
+        "description": "Options > AI > Ask AI: label"
+    },
+    "settings_askAiKeepChatsDesc": {
+        "message": "Keep Ask AI chats on this device: Ask AI opens on the last one, and Past chats reopens the others. Off keeps nothing and deletes the kept chats.",
+        "description": "Under its setting in Options > AI > Ask AI"
+    },
+    "settings_askAiChatsMax": {
+        "message": "Chats Kept",
+        "description": "Options > AI > Ask AI: label"
+    },
+    "settings_askAiChatsMaxDesc": {
+        "message": "How many chats to keep; the oldest go first",
+        "description": "Under its setting in Options > AI > Ask AI"
+    },
     "askAI_newChat": {
         "message": "New chat",
         "description": "Ask AI: button that clears the conversation"

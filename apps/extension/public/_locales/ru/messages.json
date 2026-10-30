@@ -6715,6 +6715,38 @@
         "message": "Назад к закладкам",
         "description": "Ask AI: button that closes the chat"
     },
+    "askAI_pastChats": {
+        "message": "Прошлые чаты",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "askAI_noPastChats": {
+        "message": "Прошлых чатов пока нет",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "askAI_deleteChat": {
+        "message": "Удалить этот чат",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "askAI_deleteAllChats": {
+        "message": "Удалить все чаты",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "settings_askAiKeepChats": {
+        "message": "Сохранять чаты",
+        "description": "Options > AI > Ask AI: label"
+    },
+    "settings_askAiKeepChatsDesc": {
+        "message": "Хранить чаты Спросить ИИ на этом устройстве: Спросить ИИ открывается на последнем, а «Прошлые чаты» открывают остальные. Если выключено, ничего не сохраняется, а сохранённые чаты удаляются.",
+        "description": "Under its setting in Options > AI > Ask AI"
+    },
+    "settings_askAiChatsMax": {
+        "message": "Сколько чатов хранить",
+        "description": "Options > AI > Ask AI: label"
+    },
+    "settings_askAiChatsMaxDesc": {
+        "message": "Сколько чатов хранить; самые старые удаляются первыми",
+        "description": "Under its setting in Options > AI > Ask AI"
+    },
     "askAI_newChat": {
         "message": "Новый чат",
         "description": "Ask AI: button that clears the conversation"

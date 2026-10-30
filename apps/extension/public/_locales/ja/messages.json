@@ -6139,6 +6139,38 @@
         "message": "ブックマークに戻る",
         "description": "Ask AI: button that closes the chat"
     },
+    "askAI_pastChats": {
+        "message": "過去のチャット",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "askAI_noPastChats": {
+        "message": "過去のチャットはまだありません",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "askAI_deleteChat": {
+        "message": "このチャットを削除",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "askAI_deleteAllChats": {
+        "message": "すべてのチャットを削除",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "settings_askAiKeepChats": {
+        "message": "チャットを残す",
+        "description": "Options > AI > Ask AI: label"
+    },
+    "settings_askAiKeepChatsDesc": {
+        "message": "AI に質問 のチャットをこのデバイスに残します。AI に質問 は最後のチャットを開き、「過去のチャット」から他のチャットを開き直せます。オフにすると何も残さず、残したチャットも削除します。",
+        "description": "Under its setting in Options > AI > Ask AI"
+    },
+    "settings_askAiChatsMax": {
+        "message": "残すチャット数",
+        "description": "Options > AI > Ask AI: label"
+    },
+    "settings_askAiChatsMaxDesc": {
+        "message": "残すチャットの数。古いものから削除されます",
+        "description": "Under its setting in Options > AI > Ask AI"
+    },
     "askAI_newChat": {
         "message": "新しいチャット",
         "description": "Ask AI: button that clears the conversation"

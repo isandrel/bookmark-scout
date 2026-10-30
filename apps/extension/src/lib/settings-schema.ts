@@ -1105,6 +1105,8 @@ const fields = {
   ),
   aiActivityRecording: switchField('ai.activity.recording', 'aiActivityRecording'),
   askAiWebSearch: switchField('ai.ask_ai.web_search', 'askAiWebSearch'),
+  askAiKeepChats: switchField('ai.ask_ai.keep_chats', 'askAiKeepChats'),
+  askAiChatsMax: numberField('ai.ask_ai.chats_max', 'askAiChatsMax'),
   askAiDisabledActions: idListField('ai.ask_ai.disabled_actions', 'askAiDisabledActions'),
   agentBridgeEnabled: switchField('developers.agent_bridge.enabled', 'agentBridgeEnabled'),
   agentBridgeWrites: switchField('developers.agent_bridge.writes', 'agentBridgeWrites'),
@@ -2019,7 +2021,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       {
         id: 'askAi',
         labelKey: 'askAI_title',
-        fields: ['askAiMaxSteps'],
+        fields: ['askAiMaxSteps', 'askAiKeepChats', 'askAiChatsMax'],
         requires: 'aiEnabled',
       },
       { id: 'askAiActions', fields: [], panel: 'askAiActions', requires: 'aiEnabled' },
@@ -2489,6 +2491,11 @@ export function getSettingsFieldGroups(): SettingsFieldGroup[] {
       id: 'recentFolders',
       kind: 'switch',
       fields: ['recentFoldersEnabled', 'recentFoldersMax'],
+    }),
+    group({
+      id: 'askAiChats',
+      kind: 'switch',
+      fields: ['askAiKeepChats', 'askAiChatsMax'],
     }),
     group({
       id: 'favicons',

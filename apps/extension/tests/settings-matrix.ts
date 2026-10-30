@@ -697,6 +697,18 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     [unit('ai-agent.test.ts', "adds the provider's web search only while the setting is on")],
     'A device setting, switched with the globe button in Ask AI.',
   ),
+  askAiKeepChats: tested('components/ai/AskAIPanel.lazy.tsx', [
+    e2e(
+      'ask-ai.spec.ts',
+      '[mocked provider contract] Ask AI keeps its chats: reopens the last one, lists the others, and deletes them',
+    ),
+  ]),
+  askAiChatsMax: tested('components/ai/AskAIPanel.lazy.tsx', [
+    unit(
+      'ask-ai-chats.test.ts',
+      'keeps chats newest first, named by the first question, at most the setting',
+    ),
+  ]),
   aiMaxRecommendations: tested(POPUP, [
     popupAi,
     unit(
