@@ -9249,6 +9249,14 @@
         "message": "封面在此设备上可占用的空间；最早保存的会先被删除",
         "description": "Settings: description of the cover storage limit"
     },
+    "settings_coversReviewSingle": {
+        "message": "单个封面先预览",
+        "description": "Options > Page Details > Fetch Covers: switch label"
+    },
+    "settings_coversReviewSingleDesc": {
+        "message": "对单个书签“获取封面”时，先显示封面再保存。关闭后找到封面就直接保存；找不到可用封面时仍会显示原因。",
+        "description": "Under the Review a Single Cover switch"
+    },
     "settings_coversSourcePreference": {
         "message": "封面来源",
         "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"

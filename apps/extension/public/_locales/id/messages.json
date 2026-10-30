@@ -9221,6 +9221,14 @@
         "message": "Ruang yang boleh digunakan sampul tersimpan di perangkat ini; yang terlama dihapus terlebih dahulu",
         "description": "Settings: description of the cover storage limit"
     },
+    "settings_coversReviewSingle": {
+        "message": "Tinjau satu sampul",
+        "description": "Options > Page Details > Fetch Covers: switch label"
+    },
+    "settings_coversReviewSingleDesc": {
+        "message": "Ambil sampul untuk satu bookmark menampilkan sampulnya sebelum disimpan. Jika nonaktif, sampul yang ditemukan langsung disimpan; halaman tanpa sampul yang bisa dipakai tetap menunjukkan alasannya.",
+        "description": "Under the Review a Single Cover switch"
+    },
     "settings_coversSourcePreference": {
         "message": "Sumber Sampul",
         "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"

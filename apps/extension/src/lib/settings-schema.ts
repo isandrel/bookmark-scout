@@ -1632,6 +1632,7 @@ const fields = {
     'coversDefaultScope',
     TOOL_SCOPE_CAPABILITIES.covers,
   ),
+  coversReviewSingle: switchField('metadata_content.covers.review_single', 'coversReviewSingle'),
   coversWidthPx: numberField('metadata_content.covers.width_px', 'coversWidthPx', { unit: 'px' }),
   coversMaxImageKb: numberField('metadata_content.covers.max_image_kb', 'coversMaxImageKb', {
     unit: 'kb',
@@ -2175,6 +2176,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         fields: [
           'coversDefaultScope',
           'coversSourcePreference',
+          'coversReviewSingle',
           'coversBrowseCapture',
           'coversBrowseCapturePrivate',
           'coversBrowseSettleMs',

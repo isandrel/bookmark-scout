@@ -9607,6 +9607,14 @@
         "message": "Platz, den gespeicherte Titelbilder auf diesem Gerät belegen dürfen; die ältesten werden zuerst entfernt",
         "description": "Settings: description of the cover storage limit"
     },
+    "settings_coversReviewSingle": {
+        "message": "Einzelnes Titelbild prüfen",
+        "description": "Options > Page Details > Fetch Covers: switch label"
+    },
+    "settings_coversReviewSingleDesc": {
+        "message": "Titelbild laden für ein einzelnes Lesezeichen zeigt das Bild vor dem Speichern. Aus speichert das gefundene Bild sofort; eine Seite ohne brauchbares Titelbild zeigt weiterhin, warum.",
+        "description": "Under the Review a Single Cover switch"
+    },
     "settings_coversSourcePreference": {
         "message": "Titelbildquelle",
         "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"

@@ -9539,6 +9539,14 @@
         "message": "보관한 표지가 이 기기에서 차지할 수 있는 공간이며, 오래된 것부터 지웁니다",
         "description": "Settings: description of the cover storage limit"
     },
+    "settings_coversReviewSingle": {
+        "message": "표지 하나도 미리 확인",
+        "description": "Options > Page Details > Fetch Covers: switch label"
+    },
+    "settings_coversReviewSingleDesc": {
+        "message": "북마크 하나에서 표지 가져오기를 하면 저장하기 전에 표지를 보여 줍니다. 끄면 찾은 표지를 바로 저장하고, 쓸 수 있는 표지가 없는 페이지는 계속 이유를 보여 줍니다.",
+        "description": "Under the Review a Single Cover switch"
+    },
     "settings_coversSourcePreference": {
         "message": "표지 출처",
         "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"
