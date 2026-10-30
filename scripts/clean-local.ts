@@ -4,8 +4,8 @@
  * remove and how large each is; `--apply` removes them.
  *
  * Removed with `--apply`: outputs the repository regenerates on the next run (test results,
- * coverage reports and builds), in this checkout and in every agent worktree, and worktree entries
- * whose folder is gone. Never removed: `apps/extension/dist` (a developer's browser loads it),
+ * coverage reports, builds, and the Nx daemon log), in this checkout and in every agent worktree,
+ * and worktree entries whose folder is gone. Never removed: `apps/extension/dist` (a developer's browser loads it),
  * sources, and anything outside the repository. The shared caches outside it are listed with
  * their size only, with the command that trims each.
  *
@@ -19,15 +19,24 @@ import { $ } from "bun";
 const root = path.resolve(import.meta.dir, "..");
 const apply = process.argv.includes("--apply");
 
-/** Regenerated outputs, by path from a checkout's root, with what makes them again. */
-const OUTPUTS = [
+/**
+ * Regenerated outputs, by path from a checkout's root, with what makes them again. `stopFirst`
+ * stops the process that holds the file open, since removing an open file frees no space.
+ */
+const OUTPUTS: readonly { path: string; remade: string; stopFirst?: readonly string[] }[] = [
   { path: "apps/extension/test-results", remade: "any Playwright run" },
   { path: "apps/extension/playwright-report", remade: "a run with the HTML reporter" },
   { path: "apps/extension/coverage", remade: "test:coverage and test:e2e:coverage" },
   { path: "apps/extension/dist-coverage", remade: "test:e2e:coverage" },
   { path: "apps/docs/out", remade: "docs:build" },
   { path: "apps/website/out", remade: "website:build" },
-] as const;
+  // Nx never trims this log; it reached 6.5 GB in October 2026.
+  {
+    path: ".nx/workspace-data/d/daemon.log",
+    remade: "the Nx daemon",
+    stopFirst: ["bunx", "nx", "daemon", "--stop"],
+  },
+];
 
 /** Caches outside the repository: listed only, with the command that trims each. */
 const SHARED = [
@@ -38,7 +47,9 @@ const SHARED = [
   { path: path.join(homedir(), ".bun/install/cache"), trim: "`bun pm cache rm`" },
   {
     path: path.join(homedir(), "Library/Caches/ms-playwright"),
-    trim: "`bunx playwright uninstall` removes browsers no installed Playwright uses",
+    // Playwright counts a version as installed only once it has run `playwright install`, so after
+    // node_modules is reinstalled, `uninstall` removes the browsers the tests use as well.
+    trim: "`bunx playwright uninstall`, then `bunx playwright install chromium firefox` in apps/extension",
   },
   {
     path: path.join(homedir(), ".cache"),
@@ -74,7 +85,9 @@ for (const checkout of checkouts) {
     console.log(
       `${megabytes(bytes)}  ${path.relative(root, target) || "."}  (remade by ${output.remade})`,
     );
-    if (apply) rmSync(target, { recursive: true, force: true });
+    if (!apply) continue;
+    if (output.stopFirst) await $`${output.stopFirst}`.cwd(checkout).nothrow().quiet();
+    rmSync(target, { recursive: true, force: true });
   }
 }
 console.log(`${megabytes(total)}  in all`);
