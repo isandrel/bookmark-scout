@@ -9901,6 +9901,30 @@
         "message": "Comptage des couvertures…",
         "description": "Settings: shown while the stored covers are counted"
     },
+    "covers_choose": {
+        "message": "Choisir les couvertures…",
+        "description": "Options > Page Details > Bookmark covers: button that opens the list of stored covers to choose from"
+    },
+    "covers_chooseDesc": {
+        "message": "Indiquez les couvertures à supprimer, une par une ou plusieurs à la fois. Les favoris et leurs étiquettes ne changent pas, et Annuler remet les couvertures.",
+        "description": "Under the title of the Choose covers dialog"
+    },
+    "covers_kindPage": {
+        "message": "Image de la page",
+        "description": "Choose covers tab: covers that are the page's own preview image"
+    },
+    "covers_kindScreenshot": {
+        "message": "Capture de l’onglet",
+        "description": "Choose covers tab: covers that are a picture of the tab"
+    },
+    "covers_deleteCount": {
+        "message": "Supprimer $1 couvertures",
+        "description": "Choose covers dialog button; $1 is how many covers are set to Delete"
+    },
+    "covers_deleteCount_one": {
+        "message": "Supprimer $1 couverture",
+        "description": "Choose covers dialog button; $1 is how many covers are set to Delete"
+    },
     "covers_clear": {
         "message": "Supprimer les couvertures",
         "description": "Settings: button that deletes every stored cover"

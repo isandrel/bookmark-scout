@@ -9499,6 +9499,26 @@
         "message": "正在計算封面…",
         "description": "Settings: shown while the stored covers are counted"
     },
+    "covers_choose": {
+        "message": "選擇封面…",
+        "description": "Options > Page Details > Bookmark covers: button that opens the list of stored covers to choose from"
+    },
+    "covers_chooseDesc": {
+        "message": "逐一或批次選擇要刪除的封面。書籤和標籤保持不變，復原可放回封面。",
+        "description": "Under the title of the Choose covers dialog"
+    },
+    "covers_kindPage": {
+        "message": "網頁圖片",
+        "description": "Choose covers tab: covers that are the page's own preview image"
+    },
+    "covers_kindScreenshot": {
+        "message": "分頁截圖",
+        "description": "Choose covers tab: covers that are a picture of the tab"
+    },
+    "covers_deleteCount": {
+        "message": "刪除 $1 個封面",
+        "description": "Choose covers dialog button; $1 is how many covers are set to Delete"
+    },
     "covers_clear": {
         "message": "刪除封面",
         "description": "Settings: button that deletes every stored cover"

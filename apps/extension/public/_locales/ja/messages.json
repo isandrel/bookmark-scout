@@ -9833,6 +9833,26 @@
         "message": "カバー画像を数えています…",
         "description": "Settings: shown while the stored covers are counted"
     },
+    "covers_choose": {
+        "message": "カバー画像を選ぶ…",
+        "description": "Options > Page Details > Bookmark covers: button that opens the list of stored covers to choose from"
+    },
+    "covers_chooseDesc": {
+        "message": "削除するカバー画像を 1 つずつ、またはまとめて選びます。ブックマークとタグはそのままで、元に戻すとカバー画像も戻ります。",
+        "description": "Under the title of the Choose covers dialog"
+    },
+    "covers_kindPage": {
+        "message": "ページの画像",
+        "description": "Choose covers tab: covers that are the page's own preview image"
+    },
+    "covers_kindScreenshot": {
+        "message": "タブの画像",
+        "description": "Choose covers tab: covers that are a picture of the tab"
+    },
+    "covers_deleteCount": {
+        "message": "カバー画像を $1 件削除",
+        "description": "Choose covers dialog button; $1 is how many covers are set to Delete"
+    },
     "covers_clear": {
         "message": "カバー画像を削除",
         "description": "Settings: button that deletes every stored cover"

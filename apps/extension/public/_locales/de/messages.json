@@ -9901,6 +9901,30 @@
         "message": "Titelbilder werden gezählt …",
         "description": "Settings: shown while the stored covers are counted"
     },
+    "covers_choose": {
+        "message": "Titelbilder auswählen…",
+        "description": "Options > Page Details > Bookmark covers: button that opens the list of stored covers to choose from"
+    },
+    "covers_chooseDesc": {
+        "message": "Lege fest, welche Titelbilder gelöscht werden, einzeln oder mehrere auf einmal. Lesezeichen und Tags bleiben, wie sie sind, und Rückgängig holt die Titelbilder zurück.",
+        "description": "Under the title of the Choose covers dialog"
+    },
+    "covers_kindPage": {
+        "message": "Bild der Seite",
+        "description": "Choose covers tab: covers that are the page's own preview image"
+    },
+    "covers_kindScreenshot": {
+        "message": "Bild des Tabs",
+        "description": "Choose covers tab: covers that are a picture of the tab"
+    },
+    "covers_deleteCount": {
+        "message": "$1 Titelbilder löschen",
+        "description": "Choose covers dialog button; $1 is how many covers are set to Delete"
+    },
+    "covers_deleteCount_one": {
+        "message": "$1 Titelbild löschen",
+        "description": "Choose covers dialog button; $1 is how many covers are set to Delete"
+    },
     "covers_clear": {
         "message": "Titelbilder löschen",
         "description": "Settings: button that deletes every stored cover"
