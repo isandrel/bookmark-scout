@@ -55,7 +55,14 @@ args = ["serve"]
 **Cursor**: [Cursor에 추가](cursor://anysphere.cursor-deeplink/mcp/install?name=bookmark-scout&config=eyJjb21tYW5kIjoiYm9va21hcmstc2NvdXQtbWNwIiwiYXJncyI6WyJzZXJ2ZSJdfQ==)하거나, `~/.cursor/mcp.json`에 다음을 넣습니다.
 
 ```json
-{ "mcpServers": { "bookmark-scout": { "command": "bookmark-scout-mcp", "args": ["serve"] } } }
+{
+  "mcpServers": {
+    "bookmark-scout": {
+      "command": "bookmark-scout-mcp",
+      "args": ["serve"]
+    }
+  }
+}
 ```
 
 `bookmark-scout-mcp install`은 프로그램의 전체 경로를 넣은 이 설정을 출력합니다. 브라우저나 프로필이 둘 이상 연결되어 있으면 에이전트는 마지막으로 연결된 것을 사용합니다. 직접 고르려면 `serve` 뒤에 `--browser edge`나 `--profile <id>`를 붙이세요.
