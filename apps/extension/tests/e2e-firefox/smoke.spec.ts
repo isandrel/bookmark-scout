@@ -192,6 +192,13 @@ test('side panel page renders the bookmark tree and searches', async ({ extensio
   const search = await extension.find('input.search-input');
   await search.sendKeys('Sidebar Match');
   await extension.findByText('.bookmark-item', 'Sidebar Match');
+
+  // Firefox opens a sidebar by itself at install unless the manifest says not to.
+  expect(
+    await extension.driver.executeScript<unknown>(
+      'return browser.runtime.getManifest().sidebar_action.open_at_install',
+    ),
+  ).toBe(false);
 });
 
 test('popup and side panel open the bookmark manager in a new tab', async ({ extension }) => {
