@@ -16,6 +16,7 @@ import {
   X,
 } from 'lucide-react';
 import {
+  type CSSProperties,
   type KeyboardEvent,
   type RefObject,
   useCallback,
@@ -139,6 +140,24 @@ export default function BookmarksPage() {
   // What a card shows, how wide it is at least, and its tag and summary limits (Options > Cards).
   const { value: storedCardFields } = useSetting('managerCardFields');
   const { value: cardSize } = useSetting('managerCardSize');
+  const { value: cardColumns } = useSetting('managerCardColumns');
+  const { value: cardCoverShape } = useSetting('managerCardCoverShape');
+  const { value: cardCoverFit } = useSetting('managerCardCoverFit');
+  const { value: cardTitleLines } = useSetting('managerCardTitleLines');
+  // The cards view's layout: a fixed number of columns, or as many as Card Size allows.
+  const cardStyle = useMemo(
+    () =>
+      ({
+        '--card-min-width': `${CARD_MIN_WIDTH_PX[cardSize]}px`,
+        '--card-cover-aspect': CARD_COVER_SHAPES[cardCoverShape],
+        '--card-cover-fit': cardCoverFit === 'fit' ? 'contain' : 'cover',
+        '--card-title-lines': cardTitleLines,
+        ...(cardColumns > 0
+          ? { gridTemplateColumns: `repeat(${cardColumns}, minmax(0, 1fr))` }
+          : {}),
+      }) as CSSProperties,
+    [cardSize, cardColumns, cardCoverShape, cardCoverFit, cardTitleLines],
+  );
   const { value: tableDates } = useSetting('managerTableDates');
   const { value: cardMaxTags } = useSetting('cardMaxTags');
   const { value: cardSummaryLines } = useSetting('cardSummaryLines');
@@ -614,7 +633,7 @@ export default function BookmarksPage() {
                 }
                 cardFields={cardFields}
                 renderCardField={renderCardField}
-                cardMinWidth={CARD_MIN_WIDTH_PX[cardSize]}
+                cardStyle={cardStyle}
                 cardDetails={(row: Bookmark) => (
                   <BookmarkCardDetails
                     item={row}
