@@ -10417,6 +10417,10 @@
         "message": "Votre navigateur ne laisse pas Bookmark Scout fonctionner dans les fenêtres privées : elles sont donc ignorées. Pour l'autoriser, ouvrez la page de Bookmark Scout dans les paramètres des extensions de votre navigateur et activez l'autorisation en navigation privée.",
         "description": "Settings: note under Also Capture in Private Windows while the browser does not let the extension run in private windows"
     },
+    "menu_fetchCovers": {
+        "message": "Récupérer les couvertures ($1)",
+        "description": "Menu command on a folder or several items: Fetch Covers for the web bookmarks in them, folders included; $1 is how many"
+    },
     "menu_fetchCover": {
         "message": "Récupérer la couverture",
         "description": "Bookmark manager item menu and bookmark preview: runs Fetch Covers on this bookmark (or the selected ones), with its review"

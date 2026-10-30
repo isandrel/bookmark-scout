@@ -9955,6 +9955,10 @@
         "message": "浏览器不允许 Bookmark Scout 在无痕窗口中运行，因此会跳过它们。如需允许，请在浏览器的扩展程序设置中打开 Bookmark Scout 页面，开启无痕模式（隐私窗口）下运行。",
         "description": "Settings: note under Also Capture in Private Windows while the browser does not let the extension run in private windows"
     },
+    "menu_fetchCovers": {
+        "message": "获取封面 ($1)",
+        "description": "Menu command on a folder or several items: Fetch Covers for the web bookmarks in them, folders included; $1 is how many"
+    },
     "menu_fetchCover": {
         "message": "获取封面",
         "description": "Bookmark manager item menu and bookmark preview: runs Fetch Covers on this bookmark (or the selected ones), with its review"

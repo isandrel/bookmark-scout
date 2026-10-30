@@ -43,6 +43,7 @@ export function createItemHost(overrides: Partial<ActionItemHost> = {}): ActionI
     hasCover: () => false,
     removeCovers: vi.fn(),
     canFetchCovers: false,
+    bookmarksWithin: (items) => items.filter((item) => item.type !== ItemTypeEnum.Folder),
     fetchCovers: vi.fn(),
     ...overrides,
   };

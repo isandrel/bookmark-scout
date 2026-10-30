@@ -10417,6 +10417,10 @@
         "message": "Il browser non consente a Bookmark Scout di funzionare nelle finestre private, quindi vengono saltate. Per consentirlo, apri la pagina di Bookmark Scout nelle impostazioni delle estensioni del browser e attiva il permesso per la navigazione in incognito o privata.",
         "description": "Settings: note under Also Capture in Private Windows while the browser does not let the extension run in private windows"
     },
+    "menu_fetchCovers": {
+        "message": "Recupera copertine ($1)",
+        "description": "Menu command on a folder or several items: Fetch Covers for the web bookmarks in them, folders included; $1 is how many"
+    },
     "menu_fetchCover": {
         "message": "Recupera copertina",
         "description": "Bookmark manager item menu and bookmark preview: runs Fetch Covers on this bookmark (or the selected ones), with its review"

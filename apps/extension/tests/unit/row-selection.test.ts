@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getOpenableUrls } from '@/lib/bookmark-manager-data';
+import { getBookmarksWithin, getOpenableUrls } from '@/lib/bookmark-manager-data';
 import { ItemTypeEnum } from '@/lib/manager-bookmark';
 import { rowAfterRemoval, rowSelectionChangeFor, selectRows } from '@/lib/row-selection';
 
@@ -86,6 +86,36 @@ describe('getOpenableUrls', () => {
 
   it('never opens a script or data: address, picked alone or in its folder (V16)', () => {
     expect(getOpenableUrls([items[5], items[7], items[8]], items)).toEqual([]);
+  });
+});
+
+describe('getBookmarksWithin', () => {
+  const item = (id: string, parentId: string, index: number, url?: string) => ({
+    id,
+    parentId,
+    index,
+    title: id,
+    folderPath: '',
+    type: url ? ItemTypeEnum.Link : ItemTypeEnum.Folder,
+    ...(url ? { url } : {}),
+  });
+  const items = [
+    item('f', 'root', 0),
+    item('f2', 'f', 0),
+    item('deep', 'f2', 0, 'https://deep.example/'),
+    item('second', 'f', 2, 'https://second.example/'),
+    item('first', 'f', 1, 'https://first.example/'),
+    item('b', 'root', 1, 'https://bookmark.example/'),
+  ];
+  const ids = (rows: typeof items) => getBookmarksWithin(rows, items).map(({ id }) => id);
+
+  it('lists the bookmarks chosen and every bookmark inside chosen folders, nested ones too, in order', () => {
+    expect(ids([items[5], items[0]])).toEqual(['b', 'deep', 'first', 'second']);
+  });
+
+  it('lists a bookmark once when it is chosen and inside a chosen folder', () => {
+    expect(ids([items[0], items[4]])).toEqual(['deep', 'first', 'second']);
+    expect(ids([items[1]])).toEqual(['deep']);
   });
 });
 

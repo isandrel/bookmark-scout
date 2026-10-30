@@ -330,18 +330,20 @@
 # feat/settings-search-config from d6f0a00d: ZIP 2,198,100 / 2,198,105 / 2,198,168 B, uncompressed
 # 7,439,607 / 7,439,603 / 7,439,766 B (Chrome / Edge / Firefox), 4,103,169 B of JavaScript, and
 # 2,766,828 B of locales.
+# Raised on 2026-10-29 (ZIP 2,200,000 to 2,215,000) for Fetch covers on a folder, with its menu
+# label in 12 languages: Firefox measured ZIP 2,200,046 B.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
-zip_bytes = 2_200_000
+zip_bytes = 2_215_000
 raw_bytes = 7_450_000
 
 [targets.edge]
-zip_bytes = 2_200_000
+zip_bytes = 2_215_000
 raw_bytes = 7_450_000
 
 [targets.firefox]
-zip_bytes = 2_200_000
+zip_bytes = 2_215_000
 raw_bytes = 7_450_000
 
 [categories]
