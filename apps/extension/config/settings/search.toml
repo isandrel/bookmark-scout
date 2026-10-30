@@ -55,6 +55,14 @@ entries = { default = [], max_items = 2, max_length = 14 }
 # at most the number of recent folders kept (src/lib/recent-folders-storage.ts)
 recent_max = { default = 5, min = 1, max = 10, step = 1, integer = true }
 
+[address_bar]
+# Address Bar Search: typing the keyword (config/ui/omnibox.toml) and a space in the address bar
+# lists matching bookmarks there. Off until the user turns it on; the keyword answers with a
+# pointer to this setting meanwhile
+enabled = false
+# How many bookmarks the address bar lists for a search
+max_results = { default = 6, min = 1, max = 9, step = 1, integer = true }
+
 [quick_save]
 # Where the quick save shortcut (Alt+Shift+S unless the user rebinds it) saves the current page:
 # "best_match" (the folder whose name and bookmarks best match the page, ranked on this device),

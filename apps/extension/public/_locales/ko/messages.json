@@ -2187,6 +2187,42 @@
         "message": "마우스 오른쪽 버튼 메뉴에 표시할 최근 폴더 수입니다. 팝업에는 별도의 최근 폴더 최대 수가 있습니다.",
         "description": "Setting description for Recent Folders in Menu"
     },
+    "settings_sectionAddressBar": {
+        "message": "주소 표시줄",
+        "description": "Options section heading: Address Bar Search and its result count"
+    },
+    "settings_addressBarEnabled": {
+        "message": "주소 표시줄 검색",
+        "description": "Setting label: Address Bar Search, which lists matching bookmarks in the browser address bar after its keyword"
+    },
+    "settings_addressBarEnabledDesc": {
+        "message": "주소 표시줄에 $1와 공백을 입력하면 그 자리에서 북마크를 검색합니다. 켜기 전까지는 꺼져 있습니다.",
+        "description": "Setting description for Address Bar Search; $1 is the keyword typed in the address bar"
+    },
+    "settings_addressBarEnabledKeywords": {
+        "message": "옴니박스, 키워드, URL 표시줄, 위치 표시줄",
+        "description": "Other words the settings search finds Address Bar Search by, comma-separated, never shown"
+    },
+    "settings_addressBarMaxResults": {
+        "message": "주소 표시줄 결과 수",
+        "description": "Setting label: how many bookmarks Address Bar Search lists"
+    },
+    "settings_addressBarMaxResultsDesc": {
+        "message": "한 번 검색할 때 주소 표시줄에 표시할 북마크 수입니다.",
+        "description": "Setting description for Address Bar Results"
+    },
+    "addressBar_suggestion": {
+        "message": "$1 — $2",
+        "description": "One address bar suggestion: $1 is the bookmark title, $2 its address"
+    },
+    "addressBar_defaultSuggestion": {
+        "message": "북마크 검색. Enter를 누르면 북마크 관리자에서 모든 결과를 표시합니다",
+        "description": "First line of the address bar after the keyword, while Address Bar Search is on; Enter on it searches the manager"
+    },
+    "addressBar_off": {
+        "message": "주소 표시줄 검색이 꺼져 있습니다. Enter를 눌러 설정에서 켜세요",
+        "description": "First line of the address bar after the keyword, while Address Bar Search is off; Enter opens Settings"
+    },
     "settings_namingLinkText": {
         "message": "링크 텍스트",
         "description": "Use link text for bookmark name"

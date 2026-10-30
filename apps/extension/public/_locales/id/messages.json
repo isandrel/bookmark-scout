@@ -2175,6 +2175,42 @@
         "message": "Jumlah folder terbaru yang ditampilkan menu klik kanan. Popup memiliki Maks Folder Terbaru sendiri.",
         "description": "Setting description for Recent Folders in Menu"
     },
+    "settings_sectionAddressBar": {
+        "message": "Bilah Alamat",
+        "description": "Options section heading: Address Bar Search and its result count"
+    },
+    "settings_addressBarEnabled": {
+        "message": "Pencarian di Bilah Alamat",
+        "description": "Setting label: Address Bar Search, which lists matching bookmarks in the browser address bar after its keyword"
+    },
+    "settings_addressBarEnabledDesc": {
+        "message": "Ketik $1 dan spasi di bilah alamat untuk mencari bookmark Anda di sana. Nonaktif sampai Anda mengaktifkannya.",
+        "description": "Setting description for Address Bar Search; $1 is the keyword typed in the address bar"
+    },
+    "settings_addressBarEnabledKeywords": {
+        "message": "omnibox, kata kunci, bilah URL, bilah lokasi",
+        "description": "Other words the settings search finds Address Bar Search by, comma-separated, never shown"
+    },
+    "settings_addressBarMaxResults": {
+        "message": "Hasil di Bilah Alamat",
+        "description": "Setting label: how many bookmarks Address Bar Search lists"
+    },
+    "settings_addressBarMaxResultsDesc": {
+        "message": "Berapa banyak bookmark yang ditampilkan bilah alamat untuk satu pencarian.",
+        "description": "Setting description for Address Bar Results"
+    },
+    "addressBar_suggestion": {
+        "message": "$1 — $2",
+        "description": "One address bar suggestion: $1 is the bookmark title, $2 its address"
+    },
+    "addressBar_defaultSuggestion": {
+        "message": "Cari bookmark Anda. Enter menampilkan semua hasil di pengelola bookmark",
+        "description": "First line of the address bar after the keyword, while Address Bar Search is on; Enter on it searches the manager"
+    },
+    "addressBar_off": {
+        "message": "Pencarian di bilah alamat nonaktif. Tekan Enter untuk mengaktifkannya di Setelan",
+        "description": "First line of the address bar after the keyword, while Address Bar Search is off; Enter opens Settings"
+    },
     "settings_namingLinkText": {
         "message": "Teks link",
         "description": "Use link text for bookmark name"

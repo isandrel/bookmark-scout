@@ -2195,6 +2195,42 @@
         "message": "Wie viele zuletzt verwendete Ordner das Rechtsklickmenü zeigt. Das Pop-up hat seine eigene Einstellung „Max. letzte Ordner“.",
         "description": "Setting description for Recent Folders in Menu"
     },
+    "settings_sectionAddressBar": {
+        "message": "Adressleiste",
+        "description": "Options section heading: Address Bar Search and its result count"
+    },
+    "settings_addressBarEnabled": {
+        "message": "Suche in der Adressleiste",
+        "description": "Setting label: Address Bar Search, which lists matching bookmarks in the browser address bar after its keyword"
+    },
+    "settings_addressBarEnabledDesc": {
+        "message": "Geben Sie $1 und ein Leerzeichen in die Adressleiste ein, um dort Ihre Lesezeichen zu durchsuchen. Standardmäßig deaktiviert.",
+        "description": "Setting description for Address Bar Search; $1 is the keyword typed in the address bar"
+    },
+    "settings_addressBarEnabledKeywords": {
+        "message": "Omnibox, Schlüsselwort, URL-Leiste, Adresszeile",
+        "description": "Other words the settings search finds Address Bar Search by, comma-separated, never shown"
+    },
+    "settings_addressBarMaxResults": {
+        "message": "Treffer in der Adressleiste",
+        "description": "Setting label: how many bookmarks Address Bar Search lists"
+    },
+    "settings_addressBarMaxResultsDesc": {
+        "message": "Wie viele Lesezeichen die Adressleiste für eine Suche anzeigt.",
+        "description": "Setting description for Address Bar Results"
+    },
+    "addressBar_suggestion": {
+        "message": "$1 — $2",
+        "description": "One address bar suggestion: $1 is the bookmark title, $2 its address"
+    },
+    "addressBar_defaultSuggestion": {
+        "message": "Lesezeichen durchsuchen. Die Eingabetaste zeigt alle Treffer im Lesezeichen-Manager",
+        "description": "First line of the address bar after the keyword, while Address Bar Search is on; Enter on it searches the manager"
+    },
+    "addressBar_off": {
+        "message": "Die Suche in der Adressleiste ist aus. Drücken Sie die Eingabetaste, um sie in den Einstellungen einzuschalten",
+        "description": "First line of the address bar after the keyword, while Address Bar Search is off; Enter opens Settings"
+    },
     "settings_namingLinkText": {
         "message": "Linktext",
         "description": "Use link text for bookmark name"

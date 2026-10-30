@@ -19,6 +19,8 @@
 #                                   which copies the extension page's own address instead.
 # shortcut_settings_url             The page where the user sets extension shortcuts. Empty where
 #                                   the extension opens the browser's own editor through its API.
+# omnibox_markup                    Address bar suggestions read Chrome's XML markup (<match>, <url>,
+#                                   <dim>). Firefox shows it as text, so it gets plain text.
 
 [profiles.chrome]
 separators = false
@@ -27,6 +29,7 @@ private_windows_need_permission = false
 data_collection_consent = false
 bookmark_manager_url = "chrome://bookmarks/"
 shortcut_settings_url = "chrome://extensions/shortcuts"
+omnibox_markup = true
 
 [profiles.firefox]
 separators = true
@@ -35,6 +38,7 @@ private_windows_need_permission = true
 data_collection_consent = true
 bookmark_manager_url = ""
 shortcut_settings_url = ""
+omnibox_markup = false
 
 [profiles.edge]
 separators = false
@@ -43,3 +47,4 @@ private_windows_need_permission = false
 data_collection_consent = false
 bookmark_manager_url = "edge://favorites/"
 shortcut_settings_url = "edge://extensions/shortcuts"
+omnibox_markup = true

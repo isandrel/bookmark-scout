@@ -2,7 +2,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { setLanguage } from '@/hooks/use-i18n';
-import { EXTENSION_ROOT_ID, getExtensionPageTitle } from '@/lib/mount-extension-page';
+import { EXTENSION_ROOT_ID } from '@/lib/mount-extension-page';
 import { appRoot } from '../config-files';
 
 const entrypoints = path.join(appRoot, 'src/entrypoints');

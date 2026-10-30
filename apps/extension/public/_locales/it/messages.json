@@ -2195,6 +2195,42 @@
         "message": "Quante cartelle recenti elenca il menu contestuale. Il popup ha il suo Numero massimo di cartelle recenti.",
         "description": "Setting description for Recent Folders in Menu"
     },
+    "settings_sectionAddressBar": {
+        "message": "Barra degli indirizzi",
+        "description": "Options section heading: Address Bar Search and its result count"
+    },
+    "settings_addressBarEnabled": {
+        "message": "Ricerca nella barra degli indirizzi",
+        "description": "Setting label: Address Bar Search, which lists matching bookmarks in the browser address bar after its keyword"
+    },
+    "settings_addressBarEnabledDesc": {
+        "message": "Digita $1 e uno spazio nella barra degli indirizzi per cercare lì i tuoi preferiti. Disattivata finché non la attivi.",
+        "description": "Setting description for Address Bar Search; $1 is the keyword typed in the address bar"
+    },
+    "settings_addressBarEnabledKeywords": {
+        "message": "omnibox, parola chiave, barra URL, barra degli indirizzi",
+        "description": "Other words the settings search finds Address Bar Search by, comma-separated, never shown"
+    },
+    "settings_addressBarMaxResults": {
+        "message": "Risultati nella barra degli indirizzi",
+        "description": "Setting label: how many bookmarks Address Bar Search lists"
+    },
+    "settings_addressBarMaxResultsDesc": {
+        "message": "Quanti preferiti mostra la barra degli indirizzi per una ricerca.",
+        "description": "Setting description for Address Bar Results"
+    },
+    "addressBar_suggestion": {
+        "message": "$1 — $2",
+        "description": "One address bar suggestion: $1 is the bookmark title, $2 its address"
+    },
+    "addressBar_defaultSuggestion": {
+        "message": "Cerca nei tuoi preferiti. Invio mostra tutti i risultati nella gestione preferiti",
+        "description": "First line of the address bar after the keyword, while Address Bar Search is on; Enter on it searches the manager"
+    },
+    "addressBar_off": {
+        "message": "La ricerca nella barra degli indirizzi è disattivata. Premi Invio per attivarla nelle impostazioni",
+        "description": "First line of the address bar after the keyword, while Address Bar Search is off; Enter opens Settings"
+    },
     "settings_namingLinkText": {
         "message": "Testo del link",
         "description": "Use link text for bookmark name"

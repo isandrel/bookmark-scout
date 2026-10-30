@@ -1,0 +1,7 @@
+# The address bar keyword: typing it and a space in the address bar hands the rest of the line to
+# Bookmark Scout, which lists matching bookmarks (src/services/omnibox.ts, while Address Bar
+# Search is on in Options). The manifest build (`manifest.omnibox`) and the docs read it through
+# `readOmniboxKeyword` in @bookmark-scout/config; Options reads it here. Lowercase letters and
+# digits only, so it types the same on every keyboard layout. The browser takes it at install,
+# so a change reaches users only with a new version.
+keyword = "bm"

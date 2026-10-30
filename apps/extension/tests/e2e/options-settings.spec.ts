@@ -1163,3 +1163,27 @@ test('a list of sites keeps what names no site in the box and says why', async (
     .poll(async () => (await readSettings(extensionWorker)).pageTextExcludedSites)
     .toEqual(['example.com', 'localhost', 'aa.example']);
 });
+
+test('Address Bar Search names the keyword the browser was given, and turns on', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await setSettings(extensionWorker, { language: 'en' });
+  const keyword = await extensionWorker.evaluate(
+    () => chrome.runtime.getManifest().omnibox?.keyword,
+  );
+  expect(keyword).toMatch(/^[a-z0-9]+$/);
+  await page.goto(`chrome-extension://${extensionId}/options.html?category=search`);
+
+  // Off by default; turning it on is stored, and the section then says how to use it.
+  const toggle = page.getByRole('switch', { name: 'Address Bar Search' });
+  await expect(toggle).not.toBeChecked();
+  await expect(settingRow(page, 'addressBarMaxResults')).toHaveCount(0);
+  await toggle.click();
+  await expect.poll(async () => (await readSettings(extensionWorker)).addressBarEnabled).toBe(true);
+  await expect(settingRow(page, 'addressBarEnabled')).toContainText(
+    `Type ${keyword} and a space in the address bar`,
+  );
+  await expect(settingRow(page, 'addressBarMaxResults')).toBeVisible();
+});

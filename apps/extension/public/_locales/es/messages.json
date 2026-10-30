@@ -2195,6 +2195,42 @@
         "message": "Cuántas carpetas recientes muestra el menú del clic derecho. La ventana emergente tiene su propio Máximo de carpetas recientes.",
         "description": "Setting description for Recent Folders in Menu"
     },
+    "settings_sectionAddressBar": {
+        "message": "Barra de direcciones",
+        "description": "Options section heading: Address Bar Search and its result count"
+    },
+    "settings_addressBarEnabled": {
+        "message": "Búsqueda en la barra de direcciones",
+        "description": "Setting label: Address Bar Search, which lists matching bookmarks in the browser address bar after its keyword"
+    },
+    "settings_addressBarEnabledDesc": {
+        "message": "Escribe $1 y un espacio en la barra de direcciones para buscar tus marcadores allí. Está desactivada hasta que la actives.",
+        "description": "Setting description for Address Bar Search; $1 is the keyword typed in the address bar"
+    },
+    "settings_addressBarEnabledKeywords": {
+        "message": "omnibox, palabra clave, barra de URL, barra de ubicación",
+        "description": "Other words the settings search finds Address Bar Search by, comma-separated, never shown"
+    },
+    "settings_addressBarMaxResults": {
+        "message": "Resultados en la barra de direcciones",
+        "description": "Setting label: how many bookmarks Address Bar Search lists"
+    },
+    "settings_addressBarMaxResultsDesc": {
+        "message": "Cuántos marcadores muestra la barra de direcciones en una búsqueda.",
+        "description": "Setting description for Address Bar Results"
+    },
+    "addressBar_suggestion": {
+        "message": "$1 — $2",
+        "description": "One address bar suggestion: $1 is the bookmark title, $2 its address"
+    },
+    "addressBar_defaultSuggestion": {
+        "message": "Buscar en tus marcadores. Intro muestra todos los resultados en el administrador de marcadores",
+        "description": "First line of the address bar after the keyword, while Address Bar Search is on; Enter on it searches the manager"
+    },
+    "addressBar_off": {
+        "message": "La búsqueda en la barra de direcciones está desactivada. Pulsa Intro para activarla en la configuración",
+        "description": "First line of the address bar after the keyword, while Address Bar Search is off; Enter opens Settings"
+    },
     "settings_namingLinkText": {
         "message": "Texto del enlace",
         "description": "Use link text for bookmark name"
