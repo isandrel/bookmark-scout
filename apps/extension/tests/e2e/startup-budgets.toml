@@ -34,7 +34,9 @@
 # migrations the background runs at every start, which it cannot load later (501).
 # Raised from 510 on 2026-10-22 for for the backup parts and their review on top of the 0.3.5
 # review fixes (feat/backup-categories rebased on 430c4163) (514).
-"background.js" = 520
+# Raised from 520 on 2026-10-29 for the Search Matching settings and the field weights of Folder
+# Matches in the settings schema every page loads (521).
+"background.js" = 530
 # Raised from 950 when the numeric and string constants moved into config the popup and side panel
 # validate at startup (952 on 2026-10-21), then from 965 for the line that shows running background
 # tasks, which reads the job store (970 on 2026-10-21), then from 985 for the search query parser,
@@ -66,7 +68,9 @@
 # settings schema, and History's backup restore records (1118).
 # Raised from 1125 on 2026-10-22 for for the backup parts and their review on top of the 0.3.5
 # review fixes (feat/backup-categories rebased on 430c4163) (1,125).
-"popup.html" = 1135
+# Raised from 1135 on 2026-10-29 for the Search Matching settings and the field weights of Folder
+# Matches in the settings schema every page loads (1,136).
+"popup.html" = 1145
 # Raised from 995 on 2026-10-22 with the popup, for the same settings schema growth (996).
 # Raised from 1005 on 2026-10-22 with the popup, for the same button (1,010).
 # Raised from 1020 on 2026-10-22 for Index this page's text on the current page line (1,024).
@@ -89,7 +93,9 @@
 # Raised from 1115 on 2026-10-23 with the popup, for the same (1118).
 # Raised from 1125 on 2026-10-22 for for the backup parts and their review on top of the 0.3.5
 # review fixes (feat/backup-categories rebased on 430c4163) (1,125).
-"sidepanel.html" = 1135
+# Raised from 1135 on 2026-10-29 for the Search Matching settings and the field weights of Folder
+# Matches in the settings schema every page loads (1,136).
+"sidepanel.html" = 1145
 # Raised from 1030 for the Ask AI prompt that explains saving, plans, and undo, which the prompt
 # library in Options shows (1,032 on 2026-10-11), then from 1045 for the Local AI agents section
 # (1,046 on 2026-10-11), then from 1060, which main had reached exactly (Ctrl+D quick save setup),
@@ -130,7 +136,9 @@
 # shards (1,326).
 # Raised from 1335 on 2026-10-29 for the settings search highlights (matched words marked, notes
 # for matches in hidden text, accent-insensitive word matching): 1,333 before, 1,337 after.
-"options.html" = 1345
+# Raised from 1345 on 2026-10-29 for the Search Matching settings and the field weights of Folder
+# Matches in the settings schema every page loads (1,347).
+"options.html" = 1355
 # Raised from 1370 for the Bookmark Audit History (1,380 on 2026-10-20: `idb` and the record
 # written around every bookmark change), which the manager needs from its first change.
 # Raised from 1400 on 2026-10-21 for the config modules the manager now reads at start (1,403),
@@ -169,7 +177,9 @@
 # settings schema, and History's backup restore records with their parts and Undo import (1565).
 # Raised from 1575 on 2026-10-22 for for the backup parts and their review on top of the 0.3.5
 # review fixes (feat/backup-categories rebased on 430c4163) (1,576).
-"bookmarks.html" = 1585
+# Raised from 1585 on 2026-10-29 for the Search Matching settings and the field weights of Folder
+# Matches in the settings schema every page loads (1,589).
+"bookmarks.html" = 1595
 # The quick save notification, injected into web pages (10 on 2026-10-10); no framework, keep it small.
 "quick-save-toast.js" = 14
 # The window where the user approves changes local AI agents ask for (615 on 2026-10-11).
@@ -192,7 +202,9 @@
 # drag-and-drop config (781).
 # The typed-site check the site lists share with the manager's typed addresses fits beside it
 # (781 with both, 2026-10-29).
-"agent-approval.html" = 785
+# Raised from 785 on 2026-10-29 for the Search Matching settings and the field weights of Folder
+# Matches in the settings schema every page loads (786).
+"agent-approval.html" = 795
 # Hidden page that runs AI quick save's request (329 on 2026-10-10); loads only on that shortcut.
 # Raised from 370 on 2026-10-21 for the limits and HTTP status config it now reads (371).
 # Raised from 380 on 2026-10-21 for config/ai/agent-text.toml, which holds the answer schema text
