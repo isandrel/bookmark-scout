@@ -337,6 +337,8 @@
 # languages. Measured on feat/date-column-options from 0db9a7e4: ZIP 2,200,932 / 2,201,010 /
 # 2,201,109 B, uncompressed 7,451,218 / 7,451,214 / 7,451,401 B (Chrome / Edge / Firefox),
 # 4,105,468 B of JavaScript, and 2,775,879 B of locales.
+# Raised on 2026-10-29 (css 92,000 to 92,750) for the cards view's Title Lines and Cover Fit (a clamp
+# and an object-fit read from CSS variables). Measured 92,205 B of CSS.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
@@ -356,7 +358,7 @@ raw_bytes = 7_475_000
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
 javascript = 4_120_000
-css = 92_000
+css = 92_750
 fonts = 143_000
 locales = 2_800_000
 images = 320_000
