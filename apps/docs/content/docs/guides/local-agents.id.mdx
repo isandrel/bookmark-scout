@@ -55,7 +55,14 @@ args = ["serve"]
 **Cursor**: [tambahkan ke Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=bookmark-scout&config=eyJjb21tYW5kIjoiYm9va21hcmstc2NvdXQtbWNwIiwiYXJncyI6WyJzZXJ2ZSJdfQ==), atau taruh ini di `~/.cursor/mcp.json`:
 
 ```json
-{ "mcpServers": { "bookmark-scout": { "command": "bookmark-scout-mcp", "args": ["serve"] } } }
+{
+  "mcpServers": {
+    "bookmark-scout": {
+      "command": "bookmark-scout-mcp",
+      "args": ["serve"]
+    }
+  }
+}
 ```
 
 `bookmark-scout-mcp install` menampilkan konfigurasi ini dengan jalur lengkap program. Jika lebih dari satu browser atau profil terhubung, agen memakai yang terakhir terhubung; tambahkan `--browser edge` atau `--profile <id>` setelah `serve` untuk memilih.

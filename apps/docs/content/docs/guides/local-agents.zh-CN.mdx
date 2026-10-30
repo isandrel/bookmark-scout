@@ -55,7 +55,14 @@ args = ["serve"]
 **Cursor**：[将它添加到 Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=bookmark-scout&config=eyJjb21tYW5kIjoiYm9va21hcmstc2NvdXQtbWNwIiwiYXJncyI6WyJzZXJ2ZSJdfQ==)，或将以下内容写入 `~/.cursor/mcp.json`：
 
 ```json
-{ "mcpServers": { "bookmark-scout": { "command": "bookmark-scout-mcp", "args": ["serve"] } } }
+{
+  "mcpServers": {
+    "bookmark-scout": {
+      "command": "bookmark-scout-mcp",
+      "args": ["serve"]
+    }
+  }
+}
 ```
 
 `bookmark-scout-mcp install` 会显示这些配置，并带上该程序的完整路径。如果连接了多个浏览器或配置文件，智能体会使用最后连接的那个；在 `serve` 后加上 `--browser edge` 或 `--profile <id>` 即可指定。
