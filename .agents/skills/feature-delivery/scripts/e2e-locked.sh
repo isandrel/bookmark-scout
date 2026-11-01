@@ -3,12 +3,12 @@
 # agents never run browser suites at the same time (runs side by side time out under load and
 # report false failures). Every agent must use the same lock for it to help.
 #
-# usage: zsh .agents/skills/parallel-agent-delivery/scripts/e2e-locked.sh <abs-worktree> full
-#        zsh .agents/skills/parallel-agent-delivery/scripts/e2e-locked.sh <abs-worktree> specs tests/e2e/a.spec.ts [more...]
-#        zsh .agents/skills/parallel-agent-delivery/scripts/e2e-locked.sh <abs-worktree> firefox [Playwright args...]
-#        zsh .agents/skills/parallel-agent-delivery/scripts/e2e-locked.sh <abs-worktree> built chromium|bridge [Playwright args...]
-#        zsh .agents/skills/parallel-agent-delivery/scripts/e2e-locked.sh <abs-worktree> perf [Playwright args...]
-#        zsh .agents/skills/parallel-agent-delivery/scripts/e2e-locked.sh <abs-worktree> perf-compare [--base <ref>] [--grep <pattern>]
+# usage: zsh .agents/skills/feature-delivery/scripts/e2e-locked.sh <abs-worktree> full
+#        zsh .agents/skills/feature-delivery/scripts/e2e-locked.sh <abs-worktree> specs tests/e2e/a.spec.ts [more...]
+#        zsh .agents/skills/feature-delivery/scripts/e2e-locked.sh <abs-worktree> firefox [Playwright args...]
+#        zsh .agents/skills/feature-delivery/scripts/e2e-locked.sh <abs-worktree> built chromium|bridge [Playwright args...]
+#        zsh .agents/skills/feature-delivery/scripts/e2e-locked.sh <abs-worktree> perf [Playwright args...]
+#        zsh .agents/skills/feature-delivery/scripts/e2e-locked.sh <abs-worktree> perf-compare [--base <ref>] [--grep <pattern>]
 # Logs use XDG_CACHE_HOME (or ~/.cache); the lock is shared per user under /tmp regardless of
 # each run's cache directory. Every browser suite on the machine must use this wrapper.
 # The exit code is the test run's. A lock left by a dead process is taken over. Nx runs with

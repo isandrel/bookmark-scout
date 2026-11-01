@@ -68,16 +68,16 @@ step checks bunx nx run-many -t lint typecheck test:unit -p extension --output-s
 step scripts bun test scripts
 step sizes sizes
 if [[ -n $full ]]; then
-  step chromium zsh .agents/skills/parallel-agent-delivery/scripts/e2e-locked.sh "$wt" full
+  step chromium zsh .agents/skills/feature-delivery/scripts/e2e-locked.sh "$wt" full
 else
   # Spec paths relative to apps/extension, as e2e-locked.sh takes them; changed ones first.
   changed=(${(f)$(git diff --name-only --diff-filter=AM "origin/$base...HEAD" -- 'apps/extension/tests/e2e/*.spec.ts' | sed 's|^apps/extension/||')})
   run=(tests/e2e/startup-code.spec.ts $changed $specs)
   run=(${(u)run})
   echo "      chromium specs: ${run[*]}"
-  step chromium zsh .agents/skills/parallel-agent-delivery/scripts/e2e-locked.sh "$wt" specs "${run[@]}"
+  step chromium zsh .agents/skills/feature-delivery/scripts/e2e-locked.sh "$wt" specs "${run[@]}"
 fi
-[[ -n $firefox ]] && step firefox zsh .agents/skills/parallel-agent-delivery/scripts/e2e-locked.sh "$wt" firefox
+[[ -n $firefox ]] && step firefox zsh .agents/skills/feature-delivery/scripts/e2e-locked.sh "$wt" firefox
 
 if (( ${#failed} )); then
   echo "failed: ${failed[*]}"
