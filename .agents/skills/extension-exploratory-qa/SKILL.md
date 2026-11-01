@@ -72,7 +72,7 @@ Only when the user asks, and read-only by default:
 
 ## Scaling out
 
-For a full pass, run one tester per surface in parallel: popup, side panel, and quick save; manager; Tools; options, storage, and the MCP bridge. Give each its own build worktree and its own subfolder, `$QA_DIR/<area>/`, for step files, helper scripts, and runs; never write to the `QA_DIR` root. A separate `RUN` keeps only profiles and screenshots apart, and one tester overwrote another's shared `run.sh` mid-run. Subagents may be unable to write report files; have each return findings as text and save them to `$QA_DIR/<area>/FINDINGS.md` from the orchestrating session. One such pass found 3 Medium and 11 Low bugs the suites missed, including a prompt-injection save path; see the `parallel-agent-delivery` skill for turning findings into fixes.
+For a full pass, run one tester per surface in parallel: popup, side panel, and quick save; manager; Tools; options, storage, and the MCP bridge. Give each its own build worktree and its own subfolder, `$QA_DIR/<area>/`, for step files, helper scripts, and runs; never write to the `QA_DIR` root. A separate `RUN` keeps only profiles and screenshots apart, and one tester overwrote another's shared `run.sh` mid-run. Subagents may be unable to write report files; have each return findings as text and save them to `$QA_DIR/<area>/FINDINGS.md` from the orchestrating session. One such pass found 3 Medium and 11 Low bugs the suites missed, including a prompt-injection save path; see `feature-delivery` (`references/subagents.md`, "Find bugs, then fix them") for turning findings into fixes.
 
 ## Report format
 
