@@ -10,6 +10,7 @@ import {
   createSkillRegistry,
   type SkillContentEntry,
   type SkillRegistry,
+  type SkillSource,
   skillSourceFromEntries,
 } from 'agent-skills-ts-sdk';
 
@@ -33,18 +34,35 @@ function builtInSkillEntries(): Map<string, SkillContentEntry[]> {
   return skills;
 }
 
+/** `source` without the skills named in `off`, by the names their SKILL.md gives. */
+function withoutTurnedOff(source: SkillSource, off: ReadonlySet<string>): SkillSource {
+  const { readResource } = source;
+  return {
+    id: source.id,
+    fingerprint: source.fingerprint,
+    list: async () => (await source.list()).filter((skill) => !off.has(skill.name)),
+    load: async (name) => (off.has(name) ? null : source.load(name)),
+    ...(readResource
+      ? { readResource: async (name, path) => (off.has(name) ? null : readResource(name, path)) }
+      : {}),
+  };
+}
+
 /** Where a skill comes from, as the catalog and Options name it. */
-export const SKILL_LOCATIONS = { builtIn: 'built-in', user: 'yours' } as const;
+export const SKILL_LOCATIONS = { builtIn: 'built-in', user: 'yours', local: 'computer' } as const;
 
 /**
- * Every skill Ask AI can read: the built-in ones, then the user's own (`user`), leaving out
- * those named in `disabled`. A skill whose files do not parse is left out on its own.
+ * Every skill Ask AI can read: the built-in ones, then the user's own (`user`), then those read
+ * from folders on this computer (`local`), leaving out those named in `disabled`. A skill whose
+ * files do not parse is left out on its own, and of two skills with one name the first is kept.
  */
 export function createAskAISkills({
   user = [],
+  local = [],
   disabled = [],
 }: {
-  user?: readonly UserSkill[];
+  user?: readonly Pick<UserSkill, 'name' | 'files'>[];
+  local?: readonly Pick<UserSkill, 'name' | 'files'>[];
   disabled?: readonly string[];
 } = {}): Promise<SkillRegistry> {
   const off = new Set(disabled);
@@ -58,20 +76,30 @@ export function createAskAISkills({
           }),
         ],
   );
-  const own = user.flatMap((skill) => {
-    if (off.has(skill.name)) return [];
-    try {
-      return [
-        skillSourceFromEntries(
+  const sources = (
+    skills: readonly Pick<UserSkill, 'name' | 'files'>[],
+    prefix: string,
+    location: (typeof SKILL_LOCATIONS)[keyof typeof SKILL_LOCATIONS],
+  ) =>
+    skills.flatMap((skill) => {
+      if (off.has(skill.name)) return [];
+      try {
+        const source = skillSourceFromEntries(
           skill.files.map((file) => ({ name: file.path, content: file.content })),
-          { id: `user:${skill.name}`, location: SKILL_LOCATIONS.user },
-        ),
-      ];
-    } catch {
-      return [];
-    }
-  });
-  return createSkillRegistry([...builtIn, ...own]);
+          { id: `${prefix}:${skill.name}`, location },
+        );
+        // A skill from this computer is named by its folder until its SKILL.md is read, and the
+        // user turns it off by the name in its SKILL.md.
+        return [withoutTurnedOff(source, off)];
+      } catch {
+        return [];
+      }
+    });
+  return createSkillRegistry([
+    ...builtIn,
+    ...sources(user, 'user', SKILL_LOCATIONS.user),
+    ...sources(local, 'local', SKILL_LOCATIONS.local),
+  ]);
 }
 
 /** The built-in skills as files, for Options to show and export. */

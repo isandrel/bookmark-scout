@@ -4505,6 +4505,22 @@
         "message": "ローカル AI エージェントのアクセスはオフのままです。オンにすると、拡張機能が bookmark-scout-mcp プログラムと通信することを許可するよう、ブラウザーから求められます。",
         "description": "Toast text when the native messaging permission for local AI agents is declined"
     },
+    "permission_localSkillsTitle": {
+        "message": "このコンピューターのスキルを読み込む",
+        "description": "Title of the dialog shown before turning on Skills From This Computer"
+    },
+    "permission_localSkillsDesc": {
+        "message": "AI に質問が、指定したフォルダの Agent Skills を使えるようになります。読み込むのはインストール済みの bookmark-scout-mcp プログラムです。拡張機能がそのプログラムと通信することを許可するよう、ブラウザーから求められます。",
+        "description": "What turning on Skills From This Computer does, in the dialog shown before the browser asks to allow native messaging"
+    },
+    "permission_localSkillsDetail": {
+        "message": "プログラムはスキルのテキストファイルを読むだけで、スクリプトは実行しません。スキルが AI プロバイダーに送られるのは、ほかのスキルと同じく AI に質問がそれを読むときだけです。",
+        "description": "Privacy note in the dialog shown before turning on Skills From This Computer"
+    },
+    "permission_localSkillsDenied": {
+        "message": "「このコンピューターのスキル」はオフのままです。オンにすると、拡張機能が bookmark-scout-mcp プログラムと通信することを許可するよう、ブラウザーから求められます。",
+        "description": "Toast text when the native messaging permission for Skills From This Computer is declined"
+    },
     "permission_browseCoversTitle": {
         "message": "ブックマーク済みページの撮影を許可",
         "description": "Title of the dialog shown before turning on Capture Covers While Browsing, which asks for access to all pages"
@@ -7879,6 +7895,22 @@
         "message": "依頼に合うときだけ AI に質問が読む手順の指示です。オフにすると AI に質問はそのスキルを読みません。Agent Skills 形式（SKILL.md ファイル）で自分のスキルを追加することもできます。スキルは AI が読むテキストにすぎず、コードを実行することはありません。",
         "description": "Options > AI > Skills: description"
     },
+    "settings_askAiLocalSkills": {
+        "message": "このコンピューターのスキル",
+        "description": "Options > AI > Skills From This Computer: switch label"
+    },
+    "settings_askAiLocalSkillsDesc": {
+        "message": "AI に質問は、このコンピューターのフォルダにある Agent Skills も、bookmark-scout-mcp プログラム経由で読み込みます。プログラムは読み込むだけで、スキルのスクリプトは実行されません。",
+        "description": "Options > AI > Skills From This Computer: description"
+    },
+    "settings_askAiLocalSkillFolders": {
+        "message": "スキルのフォルダ",
+        "description": "Options > AI > Skills From This Computer: the folders to read"
+    },
+    "settings_askAiLocalSkillFoldersDesc": {
+        "message": "SKILL.md を含むフォルダ、またはそれらをまとめたフォルダをカンマ区切りで指定します。~ はホームフォルダです。",
+        "description": "Options > AI > Skills From This Computer: how to type the folders"
+    },
     "askAI_skillNew": {
         "message": "新しいスキル",
         "description": "Options > AI > Skills: button that opens the editor for a new skill"
@@ -7898,6 +7930,34 @@
     "askAI_skillYours": {
         "message": "自分のスキル",
         "description": "Options > AI > Skills: badge of a skill the user added"
+    },
+    "askAI_skillThisComputer": {
+        "message": "このコンピューター",
+        "description": "Options > AI > Skills: badge of a skill read from a folder on this computer"
+    },
+    "askAI_localSkillsFound": {
+        "message": "このコンピューターから $1 件のスキルを読み込みました。",
+        "description": "Options > AI > Skills: $1 is how many skills were read from this computer"
+    },
+    "askAI_localSkillsLeftOut": {
+        "message": "$1 件は上限を超えたか読み込めなかったため除外しました。",
+        "description": "Options > AI > Skills: $1 is how many skills or folders were not read"
+    },
+    "askAI_localSkillsNotInstalled": {
+        "message": "このコンピューターのスキルを読み込むには、bookmark-scout-mcp プログラムをインストールし、「$1」を一度実行してください。",
+        "description": "Options > AI > Skills: the bridge program is not installed; $1 is the install command"
+    },
+    "askAI_localSkillsOutdated": {
+        "message": "bookmark-scout-mcp プログラムが応答しませんでした。最新版に更新してから、再読み込みを選んでください。",
+        "description": "Options > AI > Skills: the bridge program did not answer or is too old"
+    },
+    "askAI_localSkillsFailed": {
+        "message": "このコンピューターのスキルを読み込めませんでした。",
+        "description": "Options > AI > Skills: reading the skills from this computer failed"
+    },
+    "askAI_localSkillsRefresh": {
+        "message": "再読み込み",
+        "description": "Options > AI > Skills: button that reads the skills from this computer again"
     },
     "askAI_skillEditorTitle": {
         "message": "スキル",

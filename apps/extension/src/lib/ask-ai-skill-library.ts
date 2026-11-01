@@ -14,6 +14,8 @@ export const skillLibraryConfig = readConfig(
     max_skills: boundedNumber({ integer: true }),
     max_files: boundedNumber({ integer: true }),
     max_skill_chars: boundedNumber({ integer: true }),
+    local_timeout_ms: boundedNumber({ integer: true }),
+    local_cache_seconds: boundedNumber({ integer: true }),
   }),
 );
 

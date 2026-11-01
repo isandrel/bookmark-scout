@@ -15,7 +15,7 @@ Read `packages/mcp-bridge/README.md`, the "MCP bridge changes" checks in the roo
 
 ## Give agents a new tool
 
-Usually no bridge change at all: add a bookmark action with an `agent` exposure (`extension-bookmark-actions` skill). The extension sends its tool list in `hello` (`toBridgeTool` in `agent-bridge.ts` converts the zod schemas to JSON Schema), and `serve` registers whatever arrives and notifies the client. Edit `packages/mcp-bridge` only when a message shape in `src/protocol.ts` changes; then change the extension side in the same PR and raise `PROTOCOL_VERSION` when old and new ends could no longer talk.
+Usually no bridge change at all: add a bookmark action with an `agent` exposure (`extension-bookmark-actions` skill). The extension sends its tool list in `hello` (`toBridgeTool` in `agent-bridge.ts` converts the zod schemas to JSON Schema), and `serve` registers whatever arrives and notifies the client. Edit `packages/mcp-bridge` only when a message shape in `src/protocol.ts` changes; then change the extension side in the same PR and raise `PROTOCOL_VERSION` when old and new ends could no longer talk. An added one-shot request (like `skills`, answered before any `hello`) needs no raise: an old host ignores it, so the extension times out and says to update the program.
 
 Timeouts that must agree: the extension's approval `timeout_seconds` (`apps/extension/config/ai/agent-approvals.toml`) must stay below `call_timeout_seconds` in `config/bridge.toml`, or the agent gives up while the user is still deciding. Only comments link them today; a change to either needs the other checked.
 

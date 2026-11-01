@@ -3,7 +3,15 @@
  * extension on its stdin and stdout, and `serve` driven over stdio as an MCP client would.
  */
 import { afterEach, beforeEach, describe, expect, test } from "bun:test";
-import { existsSync, mkdtempSync, readdirSync, rmSync, statSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readdirSync,
+  rmSync,
+  statSync,
+  writeFileSync,
+} from "node:fs";
 import { connect, type Socket } from "node:net";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -199,6 +207,23 @@ describe("native-host", () => {
     host.proc.stdin.end();
     expect(await host.proc.exited).toBe(0);
     expect(readdirSync(runtime)).toEqual([]);
+  });
+
+  test("answers a skills request at once, with no hello and no socket", async () => {
+    const folder = join(runtime, "..", "skills");
+    mkdirSync(join(folder, "tidy"), { recursive: true });
+    writeFileSync(join(folder, "tidy", "SKILL.md"), "---\nname: tidy\ndescription: d\n---\n");
+    const host = startHost();
+    host.send({ type: "skills", protocol: PROTOCOL_VERSION, folders: [folder] });
+    const reply = await host.calls.next((message) => message.type === "skills");
+    expect(reply).toMatchObject({
+      protocol: PROTOCOL_VERSION,
+      skills: [{ name: "tidy", folder, files: [{ path: "SKILL.md" }] }],
+      leftOut: [],
+    });
+    expect(existsSync(runtime)).toBe(false);
+    host.proc.stdin.end();
+    expect(await host.proc.exited).toBe(0);
   });
 
   test("ignores malformed messages from an agent connection", async () => {

@@ -4781,6 +4781,22 @@
         "message": "Доступ для локальных ИИ-агентов остаётся выключенным. При включении браузер попросит разрешить расширению обмениваться данными с программой bookmark-scout-mcp.",
         "description": "Toast text when the native messaging permission for local AI agents is declined"
     },
+    "permission_localSkillsTitle": {
+        "message": "Читать навыки с этого компьютера",
+        "description": "Title of the dialog shown before turning on Skills From This Computer"
+    },
+    "permission_localSkillsDesc": {
+        "message": "«Спросить ИИ» сможет использовать Agent Skills из указанных вами папок, которые читает установленная программа bookmark-scout-mcp. Браузер попросит разрешить расширению обмениваться данными с этой программой.",
+        "description": "What turning on Skills From This Computer does, in the dialog shown before the browser asks to allow native messaging"
+    },
+    "permission_localSkillsDetail": {
+        "message": "Программа только читает текстовые файлы навыков; их скрипты никогда не запускаются. Навык отправляется вашему ИИ-провайдеру, только когда «Спросить ИИ» его читает, как и любой другой навык.",
+        "description": "Privacy note in the dialog shown before turning on Skills From This Computer"
+    },
+    "permission_localSkillsDenied": {
+        "message": "«Навыки с этого компьютера» остаются выключенными. При включении браузер попросит разрешить расширению обмениваться данными с программой bookmark-scout-mcp.",
+        "description": "Toast text when the native messaging permission for Skills From This Computer is declined"
+    },
     "permission_browseCoversTitle": {
         "message": "Разрешить снимки страниц из закладок",
         "description": "Title of the dialog shown before turning on Capture Covers While Browsing, which asks for access to all pages"
@@ -8431,6 +8447,22 @@
         "message": "Пошаговые инструкции, которые Спросить ИИ читает, только когда запрос им соответствует. Выключите навык, чтобы Спросить ИИ его не читал, или добавьте свои в формате Agent Skills (файл SKILL.md). Навык — это только текст для ИИ; он никогда не запускает код.",
         "description": "Options > AI > Skills: description"
     },
+    "settings_askAiLocalSkills": {
+        "message": "Навыки с этого компьютера",
+        "description": "Options > AI > Skills From This Computer: switch label"
+    },
+    "settings_askAiLocalSkillsDesc": {
+        "message": "«Спросить ИИ» также читает Agent Skills из папок на этом компьютере через программу bookmark-scout-mcp, которая их только читает. Скрипты навыка никогда не запускаются.",
+        "description": "Options > AI > Skills From This Computer: description"
+    },
+    "settings_askAiLocalSkillFolders": {
+        "message": "Папки навыков",
+        "description": "Options > AI > Skills From This Computer: the folders to read"
+    },
+    "settings_askAiLocalSkillFoldersDesc": {
+        "message": "Папки с файлом SKILL.md или папки с такими папками, через запятую. ~ — ваша домашняя папка.",
+        "description": "Options > AI > Skills From This Computer: how to type the folders"
+    },
     "askAI_skillNew": {
         "message": "Новый навык",
         "description": "Options > AI > Skills: button that opens the editor for a new skill"
@@ -8450,6 +8482,34 @@
     "askAI_skillYours": {
         "message": "Ваш",
         "description": "Options > AI > Skills: badge of a skill the user added"
+    },
+    "askAI_skillThisComputer": {
+        "message": "Этот компьютер",
+        "description": "Options > AI > Skills: badge of a skill read from a folder on this computer"
+    },
+    "askAI_localSkillsFound": {
+        "message": "Прочитано навыков с этого компьютера: $1.",
+        "description": "Options > AI > Skills: $1 is how many skills were read from this computer"
+    },
+    "askAI_localSkillsLeftOut": {
+        "message": "Пропущено: $1 (превышен лимит или не удалось прочитать).",
+        "description": "Options > AI > Skills: $1 is how many skills or folders were not read"
+    },
+    "askAI_localSkillsNotInstalled": {
+        "message": "Чтобы читать навыки с этого компьютера, установите программу bookmark-scout-mcp и один раз выполните «$1».",
+        "description": "Options > AI > Skills: the bridge program is not installed; $1 is the install command"
+    },
+    "askAI_localSkillsOutdated": {
+        "message": "Программа bookmark-scout-mcp не ответила. Обновите её до последней версии и нажмите «Обновить».",
+        "description": "Options > AI > Skills: the bridge program did not answer or is too old"
+    },
+    "askAI_localSkillsFailed": {
+        "message": "Не удалось прочитать навыки с этого компьютера.",
+        "description": "Options > AI > Skills: reading the skills from this computer failed"
+    },
+    "askAI_localSkillsRefresh": {
+        "message": "Обновить",
+        "description": "Options > AI > Skills: button that reads the skills from this computer again"
     },
     "askAI_skillEditorTitle": {
         "message": "Навык",

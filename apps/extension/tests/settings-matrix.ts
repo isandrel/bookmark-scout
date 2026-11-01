@@ -553,6 +553,26 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     [unit('ask-ai-skills.test.ts', "leaves out the skills turned off, built-in or the user's own")],
     'Edited in Options > AI > Skills (AskAISkillsPanel).',
   ),
+  askAiLocalSkills: tested(
+    'services/ask-ai-local-skills.ts',
+    [
+      unit(
+        'ask-ai-local-skills.test.ts',
+        'reads nothing while the setting or the permission is off, and reuses a reading for a while',
+      ),
+    ],
+    'A device setting; turning it on asks for the native messaging permission.',
+  ),
+  askAiLocalSkillFolders: tested(
+    'services/ask-ai-local-skills.ts',
+    [
+      unit(
+        'ask-ai-local-skills.test.ts',
+        'reads the skills from this computer through the bridge program',
+      ),
+    ],
+    'A device setting: the folders are on this computer.',
+  ),
   askAiDisabledActions: tested(
     'services/actions.ts',
     [

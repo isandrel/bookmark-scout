@@ -5,11 +5,15 @@
  * (`serve`), giving each connection's call ids a prefix so results go back to the right one.
  *
  * It decides nothing: the extension checks every call (which actions are on, approval, limits).
+ * It also answers Ask AI's one-shot request for the skills in folders on this computer
+ * (`local-skills.ts`), which needs no agent access.
  */
 import { chmodSync, rmSync } from "node:fs";
 import { createServer, type Server, type Socket } from "node:net";
+import { homedir } from "node:os";
 import { config } from "./config";
 import { encodeFrame, FrameDecoder } from "./framing";
+import { readLocalSkills } from "./local-skills";
 import {
   type AgentMessage,
   agentMessageSchema,
@@ -18,6 +22,7 @@ import {
   extensionMessageSchema,
   type HelloMessage,
   type HostMessage,
+  skillsRequestSchema,
 } from "./protocol";
 import {
   endpointPath,
@@ -33,6 +38,8 @@ export type NativeHostOptions = {
   output: NodeJS.WritableStream;
   environment: RuntimeEnvironment;
   log: (message: string) => void;
+  /** The home folder `~` stands for in a skills request. */
+  home?: string;
 };
 
 export type NativeHost = { done: Promise<void>; stop: () => void };
@@ -199,6 +206,12 @@ export function runNativeHost(options: NativeHostOptions): NativeHost {
       return;
     }
     for (const raw of messages) {
+      // Ask AI's skills from this computer: answered at once, with no hello needed.
+      const skills = skillsRequestSchema.safeParse(raw);
+      if (skills.success) {
+        output.write(encodeFrame(readLocalSkills(skills.data.folders, options.home ?? homedir())));
+        continue;
+      }
       const parsed = extensionMessageSchema.safeParse(raw);
       if (parsed.success) onExtensionMessage(parsed.data);
       else log("Ignored a malformed message from the extension.");
