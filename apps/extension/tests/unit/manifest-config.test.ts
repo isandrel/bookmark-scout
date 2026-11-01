@@ -21,9 +21,9 @@ describe('manifest config', () => {
         optional: ['authenticationInfo', 'bookmarksInfo', 'browsingActivity', 'websiteContent'],
       },
     });
-    expect(manifest.browser_specific_settings?.gecko_android).toEqual({
-      strict_min_version: '142.0',
-    });
+    // Desktop only: `gecko_android` would make AMO list the add-on for Android, which has no
+    // bookmarks API, and lock that setting.
+    expect(manifest.browser_specific_settings).not.toHaveProperty('gecko_android');
   });
 
   it.each(['chrome', 'edge'])('leaves browser_specific_settings out of the %s build', (browser) => {
