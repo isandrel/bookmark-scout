@@ -273,14 +273,12 @@ const PROMPT_PLACEHOLDERS = {
     settings: ['summarizerIncludeDomainHint'],
     resolve: (settings) => (settings.summarizerIncludeDomainHint ? 'true' : 'false'),
   }),
-  skills: placeholder({
+  // Built only in a page, from the AI SDK side (ask-ai-skills.lazy.ts): Ask AI passes it, and so
+  // do prompt previews (use-prompt-data.ts). No `load`, since the background bundles this module.
+  skills: placeholder<readonly ['ask_ai'], never, string>({
     tasks: ['ask_ai'],
     descriptionKey: 'prompt_varSkills',
     settings: [],
-    load: async () => {
-      const { askAISkillCatalog, createAskAISkills } = await import('./ask-ai-skills.lazy');
-      return askAISkillCatalog(await createAskAISkills());
-    },
     resolve: (_settings, catalog) => catalog ?? '',
   }),
   today: placeholder({
@@ -338,7 +336,9 @@ type AnyPlaceholder = {
 
 /** Data loaded from storage for the placeholders that read it, by placeholder name. */
 export type PromptData = {
-  [N in PlaceholderName]?: Awaited<ReturnType<NonNullable<Placeholders[N]['load']>>>;
+  [N in PlaceholderName]?: Placeholders[N] extends PromptPlaceholder<infer _T, infer _K, infer D>
+    ? D
+    : never;
 };
 
 const PLACEHOLDER_ENTRIES: [string, AnyPlaceholder][] = Object.entries(PROMPT_PLACEHOLDERS);
