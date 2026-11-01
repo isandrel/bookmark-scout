@@ -66,6 +66,15 @@ secret = false
 large = false
 
 [[categories]]
+id = "skills"
+label = "backup_categorySkills"
+description = "backup_categorySkillsDesc"
+slug = "skills"
+device_specific = false
+secret = false
+large = false
+
+[[categories]]
 id = "aiServices"
 label = "backup_categoryAiServices"
 description = "backup_categoryAiServicesDesc"

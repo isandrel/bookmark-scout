@@ -492,6 +492,18 @@ function itemParts(): Partial<Record<StorageItemId, ItemPart>> {
       { get: (value) => value, set: (_, entries) => entries, id: (entry) => entry.id },
       { named: named((entry: BookmarkRule) => entry.name), max: MAX_BOOKMARK_RULES },
     ),
+    askAiSkills: listItem(
+      'askAiSkills',
+      askAiSkillsValue,
+      { get: (value) => value, set: (_, entries) => entries, id: (entry) => entry.name },
+      {
+        named: named(
+          (entry: UserSkill) => entry.name,
+          (entry: UserSkill) => entry.updatedAt,
+        ),
+        max: skillLibraryConfig.max_skills,
+      },
+    ),
     aiServices: listItem(
       'aiServices',
       aiServicesValue,
@@ -1263,6 +1275,7 @@ export const CATEGORY_HANDLERS: Readonly<Record<string, CategoryHandler<never>>>
   views: itemsHandler('views'),
   prompts: promptsHandler(),
   rules: itemsHandler('rules'),
+  skills: itemsHandler('skills'),
   aiServices: aiServicesHandler(),
   aiServiceKeys: aiServiceKeysHandler(),
   covers: coversHandler(),

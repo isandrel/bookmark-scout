@@ -6745,6 +6745,14 @@
         "message": "Aturan Pintar Anda (penelusuran, tag, dan foldernya), bukan apa yang telah dilakukannya.",
         "description": "Backup part: what the Smart Rules part holds"
     },
+    "backup_categorySkills": {
+        "message": "Skill Tanya AI",
+        "description": "Backup part: the user’s own Ask AI skills"
+    },
+    "backup_categorySkillsDesc": {
+        "message": "Skill yang Anda tambahkan ke Tanya AI, masing-masing dengan filenya. Skill mana yang aktif termasuk dalam Setelan.",
+        "description": "Backup part: what the Ask AI skills part holds"
+    },
     "backup_categoryAiServices": {
         "message": "Layanan AI",
         "description": "Backup part: the AI services without their keys"

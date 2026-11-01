@@ -7011,6 +7011,14 @@
         "message": "Suas Regras inteligentes (pesquisas, tags e pastas), não o que elas fizeram.",
         "description": "Backup part: what the Smart Rules part holds"
     },
+    "backup_categorySkills": {
+        "message": "Habilidades do Perguntar à IA",
+        "description": "Backup part: the user’s own Ask AI skills"
+    },
+    "backup_categorySkillsDesc": {
+        "message": "As habilidades que você adicionou ao Perguntar à IA, cada uma com seus arquivos. Quais habilidades estão ativadas faz parte das Configurações.",
+        "description": "Backup part: what the Ask AI skills part holds"
+    },
     "backup_categoryAiServices": {
         "message": "Serviços de IA",
         "description": "Backup part: the AI services without their keys"

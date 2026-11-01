@@ -7011,6 +7011,14 @@
         "message": "Your Smart Rules (their searches, tags, and folders), not what they did.",
         "description": "Backup part: what the Smart Rules part holds"
     },
+    "backup_categorySkills": {
+        "message": "Ask AI skills",
+        "description": "Backup part: the user’s own Ask AI skills"
+    },
+    "backup_categorySkillsDesc": {
+        "message": "The skills you added to Ask AI, each with its files. Which skills are on is part of Settings.",
+        "description": "Backup part: what the Ask AI skills part holds"
+    },
     "backup_categoryAiServices": {
         "message": "AI services",
         "description": "Backup part: the AI services without their keys"

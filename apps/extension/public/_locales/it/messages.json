@@ -7011,6 +7011,14 @@
         "message": "Le tue Regole intelligenti (le loro ricerche, tag e cartelle), non ciò che hanno fatto.",
         "description": "Backup part: what the Smart Rules part holds"
     },
+    "backup_categorySkills": {
+        "message": "Skill di Chiedi all'IA",
+        "description": "Backup part: the user’s own Ask AI skills"
+    },
+    "backup_categorySkillsDesc": {
+        "message": "Le skill che hai aggiunto a Chiedi all'IA, ciascuna con i suoi file. Quali skill sono attive fa parte delle Impostazioni.",
+        "description": "Backup part: what the Ask AI skills part holds"
+    },
     "backup_categoryAiServices": {
         "message": "Servizi IA",
         "description": "Backup part: the AI services without their keys"

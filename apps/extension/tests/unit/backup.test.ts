@@ -9,6 +9,7 @@ import { setLanguage } from '@/hooks/use-i18n';
 import { aboutMeValue } from '@/lib/about-me-storage';
 import { getStoredAIProviderConfig, saveStoredAIProviderConfig } from '@/lib/ai-provider-storage';
 import { addAIService, getAIServicesState, updateAIService } from '@/lib/ai-services-storage';
+import { askAiSkillsValue, SKILL_FILE } from '@/lib/ask-ai-skill-library';
 import { bookmarkRulesValue } from '@/lib/bookmark-rules-storage';
 import { getBookmarkTableView, updateBookmarkTableView } from '@/lib/bookmark-table-view-storage';
 import {
@@ -204,6 +205,31 @@ describe('backup file', () => {
     await restoreParts(json, { settings: 'replace', rules: 'replace' });
     expect((await bookmarkRulesValue.get()).map((entry) => entry.id)).toEqual(['r1']);
     expect((await getSettings()).showFavicons).toBe(defaultSettings.showFavicons);
+  });
+
+  it('backs up the user’s own Ask AI skills with their files, merged by name', async () => {
+    const skill = (name: string, body: string, updatedAt: number) => ({
+      name,
+      files: [
+        { path: SKILL_FILE, content: `---\nname: ${name}\ndescription: ${body}\n---\n${body}` },
+        { path: 'references/notes.md', content: body },
+      ],
+      updatedAt,
+    });
+    await askAiSkillsValue.set([skill('tidy-up', 'from the file', 2), skill('shared', 'old', 1)]);
+    const json = await save(['skills']);
+    await askAiSkillsValue.set([skill('shared', 'newer here', 3), skill('only-here', 'here', 1)]);
+
+    const opened = await openBackup(json);
+    if (!opened) throw new Error('not a backup');
+    expect((await reviewBackupImport(opened)).skills).toMatchObject({ added: 1, conflictCount: 1 });
+
+    await restoreParts(json, { skills: { strategy: 'merge', conflicts: 'newer' } });
+    const merged = await askAiSkillsValue.get();
+    expect(merged.map((entry) => entry.name).sort()).toEqual(['only-here', 'shared', 'tidy-up']);
+    // With Keep the newer, this device's newer skill stays, and each skill keeps its files.
+    expect(merged.find((entry) => entry.name === 'shared')?.files[1]?.content).toBe('newer here');
+    expect(merged.find((entry) => entry.name === 'tidy-up')?.files).toHaveLength(2);
   });
 
   it('lists conflicts and resolves each as chosen: newer by date, the file, or this device', async () => {
