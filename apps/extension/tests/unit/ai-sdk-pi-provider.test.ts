@@ -12,58 +12,16 @@ import {
   Harness,
   MemoryStorage,
 } from '@earendil-works/pi-durable';
-import { simulateReadableStream, tool } from 'ai';
-import { MockLanguageModelV4 } from 'ai/test';
+import { tool } from 'ai';
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import { createAISdkPiProvider, toAISdkRequest } from '@/services/ai-sdk-pi-provider.lazy';
-
-type StreamPart = Parameters<typeof simulateReadableStream>[0]['chunks'][number];
-type CallOptions = Parameters<MockLanguageModelV4['doStream']>[0];
-
-const usage = {
-  inputTokens: { total: 12, noCache: 10, cacheRead: 2, cacheWrite: 0 },
-  outputTokens: { total: 5, text: 3, reasoning: 2 },
-};
-
-const finish = (unified: 'stop' | 'tool-calls' | 'length') => ({
-  type: 'finish',
-  finishReason: { unified, raw: undefined },
-  usage,
-});
-
-const textParts = (text: string) => [
-  { type: 'text-start', id: 't' },
-  ...text.split(' ').map((word, index) => ({
-    type: 'text-delta',
-    id: 't',
-    delta: index === 0 ? word : ` ${word}`,
-  })),
-  { type: 'text-end', id: 't' },
-];
-
-/** A model that streams one scripted answer per call. */
-function scripted(answers: unknown[][]) {
-  const calls: CallOptions[] = [];
-  const model = new MockLanguageModelV4({
-    doStream: async (options) => {
-      calls.push(options);
-      const chunks = answers[calls.length - 1];
-      if (!chunks) throw new Error(`no answer ${calls.length}`);
-      return {
-        stream: simulateReadableStream({
-          chunks: [{ type: 'stream-start', warnings: [] }, ...chunks] as StreamPart[],
-        }),
-      };
-    },
-  });
-  return { model, calls };
-}
+import { finishPart, scriptedStreamModel, textParts } from './scripted-stream-model';
 
 const piModel = { id: 'm', contextWindow: 32_000, maxTokens: 1_000 };
 
 async function collect(answers: unknown[][], context = 'Hello') {
-  const { model, calls } = scripted(answers);
+  const { model, calls } = scriptedStreamModel(answers);
   const provider = createAISdkPiProvider({
     id: 'service',
     models: [piModel],
@@ -81,7 +39,7 @@ async function collect(answers: unknown[][], context = 'Hello') {
 
 describe('AI SDK models as a pi-ai provider', () => {
   it('streams text as pi-ai events, with the usage', async () => {
-    const { events, result } = await collect([[...textParts('Hi there'), finish('stop')]]);
+    const { events, result } = await collect([[...textParts('Hi there'), finishPart('stop')]]);
     expect(events.map((event) => event.type)).toEqual([
       'start',
       'text_start',
@@ -101,19 +59,19 @@ describe('AI SDK models as a pi-ai provider', () => {
     const { result } = await collect([
       [
         { type: 'tool-call', toolCallId: 'c1', toolName: 'listFolders', input: '{"depth":2}' },
-        finish('tool-calls'),
+        finishPart('tool-calls'),
       ],
     ]);
     expect(result.stopReason).toBe('toolUse');
     expect(result.content).toEqual([
       { type: 'toolCall', id: 'c1', name: 'listFolders', arguments: { depth: 2 } },
     ]);
-    const cut = await collect([[...textParts('Half'), finish('length')]]);
+    const cut = await collect([[...textParts('Half'), finishPart('length')]]);
     expect(cut.result.stopReason).toBe('length');
   });
 
   it('reports a failed request as an error answer', async () => {
-    const { model } = scripted([]);
+    const { model } = scriptedStreamModel([]);
     const provider = createAISdkPiProvider({
       id: 'service',
       models: [piModel],
@@ -129,7 +87,7 @@ describe('AI SDK models as a pi-ai provider', () => {
   });
 
   it('offers provider-run tools on every call and keeps their calls out of the transcript', async () => {
-    const { model, calls } = scripted([
+    const { model, calls } = scriptedStreamModel([
       [
         {
           type: 'tool-call',
@@ -139,7 +97,7 @@ describe('AI SDK models as a pi-ai provider', () => {
           providerExecuted: true,
         },
         ...textParts('Found it'),
-        finish('stop'),
+        finishPart('stop'),
       ],
     ]);
     const provider = createAISdkPiProvider({
@@ -230,12 +188,12 @@ describe('AI SDK models as a pi-ai provider', () => {
   });
 
   it('runs a Pi Durable tool loop end to end', async () => {
-    const { model, calls } = scripted([
+    const { model, calls } = scriptedStreamModel([
       [
         { type: 'tool-call', toolCallId: 'c1', toolName: 'count', input: '{"n":3}' },
-        finish('tool-calls'),
+        finishPart('tool-calls'),
       ],
-      [...textParts('Counted to 3'), finish('stop')],
+      [...textParts('Counted to 3'), finishPart('stop')],
     ]);
     const models = createModels();
     models.setProvider(

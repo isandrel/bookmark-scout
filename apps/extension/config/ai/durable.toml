@@ -1,0 +1,19 @@
+# Ask AI's conversations on Pi Durable (src/services/ask-ai-durable.lazy.ts): kept in the AI host
+# page, so an answer goes on after the popup closes and picks up after a restart.
+
+# IndexedDB database that holds the conversations
+database = "ask-ai-conversations"
+# Web Lock the AI host page holds while it owns that database, so only one page writes to it
+lock = "bookmark-scout-ask-ai"
+# Context window and output limit Pi Durable plans with for the default AI service's model
+context_window = { value = 32000, min = 1000, max = 2000000 }
+max_output_tokens = { value = 4096, min = 256, max = 200000 }
+# Tool rounds past Ask AI's Max steps setting before the answer is ended, when the model keeps
+# calling tools after it was told to answer
+step_overrun = { value = 2, min = 0, max = 10 }
+# Failed model requests one answer retries, and the wait before the first retry, in milliseconds
+retry_attempts = { value = 2, min = 0, max = 10 }
+retry_base_delay_ms = { value = 1000, min = 100, max = 60000 }
+# Least time between writes of an answer, or of a tool's output, while it streams, in milliseconds:
+# a restart loses at most about this much of it
+progress_interval_ms = { value = 250, min = 50, max = 10000 }
