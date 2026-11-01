@@ -185,7 +185,9 @@
 # the background can name the manager without React (1,586).
 # Raised from 1585 on 2026-10-29 for the Search Matching settings and the field weights of Folder
 # Matches in the settings schema every page loads (1,589).
-"bookmarks.html" = 1595
+# Raised from 1595 on 2026-11-01 for the latest dependencies on top of the settings gear and
+# browser UI shortcuts, with a few KiB of headroom (1,596).
+"bookmarks.html" = 1610
 # The quick save notification, injected into web pages (10 on 2026-10-10); no framework, keep it small.
 "quick-save-toast.js" = 14
 # The window where the user approves changes local AI agents ask for (615 on 2026-10-11).
