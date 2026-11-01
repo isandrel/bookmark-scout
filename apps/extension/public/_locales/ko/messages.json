@@ -6304,7 +6304,7 @@
         "description": "Options > AI > Ask AI: label"
     },
     "settings_askAiKeepChatsDesc": {
-        "message": "AI에게 묻기 채팅을 이 기기에 보관합니다. AI에게 묻기는 마지막 채팅으로 열리고, 이전 채팅에서 다른 채팅을 다시 엽니다. 끄면 아무것도 보관하지 않고 보관된 채팅을 삭제합니다.",
+        "message": "Ask AI 채팅을 이 기기에 보관합니다. Ask AI는 마지막 채팅을 열고, 이전 채팅에서 다른 채팅을 다시 열 수 있습니다. 끄면 새 채팅을 시작할 때까지 지금 채팅만 보관하고 나머지는 삭제합니다.",
         "description": "Under its setting in Options > AI > Ask AI"
     },
     "settings_askAiChatsMax": {
@@ -6336,7 +6336,7 @@
         "description": "Ask AI: toggle for the provider web search"
     },
     "askAI_empty": {
-        "message": "북마크, 보고 있는 페이지, 그 밖의 무엇이든 물어보세요. 채팅은 저장되지 않으며 닫으면 끝납니다.",
+        "message": "북마크, 지금 보고 있는 페이지, 그 밖의 무엇이든 물어보세요. 이 창을 닫아도 답변은 계속됩니다.",
         "description": "Ask AI: empty state"
     },
     "askAI_suggestionPage": {

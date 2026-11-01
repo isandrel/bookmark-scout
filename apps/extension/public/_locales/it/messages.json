@@ -6312,7 +6312,7 @@
         "description": "Options > AI > Ask AI: label"
     },
     "settings_askAiKeepChatsDesc": {
-        "message": "Conserva le chat di Chiedi all'IA su questo dispositivo: Chiedi all'IA si apre sull’ultima e Chat precedenti riapre le altre. Se disattivato non conserva nulla ed elimina le chat conservate.",
+        "message": "Conserva le chat di Ask AI su questo dispositivo: Ask AI si apre sull’ultima e Chat precedenti riapre le altre. Disattivato conserva solo la chat in corso, finché non ne inizi una nuova, ed elimina le altre.",
         "description": "Under its setting in Options > AI > Ask AI"
     },
     "settings_askAiChatsMax": {
@@ -6344,7 +6344,7 @@
         "description": "Ask AI: toggle for the provider web search"
     },
     "askAI_empty": {
-        "message": "Chiedi dei tuoi preferiti, della pagina in cui ti trovi o di qualsiasi altra cosa. La chat non viene salvata; termina quando la chiudi.",
+        "message": "Chiedi dei tuoi segnalibri, della pagina aperta o di qualsiasi altra cosa. Una risposta continua anche se chiudi qui.",
         "description": "Ask AI: empty state"
     },
     "askAI_suggestionPage": {

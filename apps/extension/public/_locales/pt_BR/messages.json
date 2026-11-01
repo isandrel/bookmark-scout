@@ -6312,7 +6312,7 @@
         "description": "Options > AI > Ask AI: label"
     },
     "settings_askAiKeepChatsDesc": {
-        "message": "Mantém as conversas do Perguntar à IA neste dispositivo: o Perguntar à IA abre na última, e Conversas anteriores reabre as outras. Desativado, nada é mantido e as conversas guardadas são excluídas.",
+        "message": "Guarde as conversas do Ask AI neste dispositivo: o Ask AI abre na última, e Conversas anteriores reabre as outras. Desativado guarda só a conversa atual, até você começar uma nova, e apaga as outras.",
         "description": "Under its setting in Options > AI > Ask AI"
     },
     "settings_askAiChatsMax": {
@@ -6344,7 +6344,7 @@
         "description": "Ask AI: toggle for the provider web search"
     },
     "askAI_empty": {
-        "message": "Pergunte sobre seus favoritos, a página em que você está ou qualquer outra coisa. A conversa não é salva; ela termina quando você a fecha.",
+        "message": "Pergunte sobre seus favoritos, a página aberta ou qualquer outra coisa. Uma resposta continua mesmo se você fechar isto.",
         "description": "Ask AI: empty state"
     },
     "askAI_suggestionPage": {

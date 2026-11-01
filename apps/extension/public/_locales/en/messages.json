@@ -6312,7 +6312,7 @@
         "description": "Options > AI > Ask AI: label"
     },
     "settings_askAiKeepChatsDesc": {
-        "message": "Keep Ask AI chats on this device: Ask AI opens on the last one, and Past chats reopens the others. Off keeps nothing and deletes the kept chats.",
+        "message": "Keep Ask AI chats on this device: Ask AI opens on the last one, and Past chats reopens the others. Off keeps only the chat you are in, until you start a new one, and deletes the others.",
         "description": "Under its setting in Options > AI > Ask AI"
     },
     "settings_askAiChatsMax": {
@@ -6344,7 +6344,7 @@
         "description": "Ask AI: toggle for the provider web search"
     },
     "askAI_empty": {
-        "message": "Ask about your bookmarks, the page you are on, or anything else. The chat is not saved; it ends when you close it.",
+        "message": "Ask about your bookmarks, the page you are on, or anything else. An answer keeps going when you close this.",
         "description": "Ask AI: empty state"
     },
     "askAI_suggestionPage": {

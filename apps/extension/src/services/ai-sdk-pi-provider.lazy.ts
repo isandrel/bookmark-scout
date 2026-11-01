@@ -38,9 +38,6 @@ import { SOURCES_DIAGNOSTIC } from '@/lib/ask-ai-ui-messages';
 /** The diagnostic an answer carries for each tool the provider ran itself, such as its web search. */
 export const PROVIDER_TOOL_DIAGNOSTIC = 'provider_tool';
 
-/** The diagnostic an answer carries for each tool the provider ran itself, such as its web search. */
-export const PROVIDER_TOOL_DIAGNOSTIC = 'provider_tool';
-
 /** The pi-ai api name of models served through the AI SDK. */
 export const AI_SDK_API = 'ai-sdk';
 

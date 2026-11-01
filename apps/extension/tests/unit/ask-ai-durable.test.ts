@@ -149,7 +149,8 @@ describe('Ask AI on Pi Durable', () => {
     const chat = await service.createChat();
     await (await service.send(chat, 'Read it', 'r1')).wait(service.context);
     expect(actions).toEqual([]);
-    expect(seen(calls[1])).toContain('turned off');
+    // The model is offered only the actions turned on now.
+    expect(calls[0].tools?.map((offered) => offered.name)).toEqual(['listFolders']);
   });
 
   it('tells the model to answer past Max steps, and ends a run that keeps calling tools', async () => {

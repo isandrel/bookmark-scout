@@ -769,7 +769,7 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     'Edited in Options > Behavior > Manager and popup shortcuts (PageShortcutsPanel).',
   ),
   askAiWebSearch: tested(
-    'services/ai-agent.ts',
+    'services/ask-ai-background.ts',
     [unit('ai-agent.test.ts', "adds the provider's web search only while the setting is on")],
     'A device setting, switched with the globe button in Ask AI.',
   ),
@@ -779,10 +779,10 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
       '[mocked provider contract] Ask AI keeps its chats: reopens the last one, lists the others, and deletes them',
     ),
   ]),
-  askAiChatsMax: tested('components/ai/AskAIPanel.lazy.tsx', [
+  askAiChatsMax: tested('services/ask-ai-background.ts', [
     unit(
       'ask-ai-chats.test.ts',
-      'keeps chats newest first, named by the first question, at most the setting',
+      'keeps chats newest first, at most the setting, and returns the ones it dropped',
     ),
   ]),
   aiMaxRecommendations: tested(POPUP, [
@@ -1500,10 +1500,14 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
       'closes the notification and offers as many folders as the quick save settings say',
     ),
   ]),
-  askAiMaxSteps: tested('services/ai-agent.ts', [
+  askAiMaxSteps: tested('services/ask-ai-background.ts', [
     unit(
       'ai-agent.test.ts',
-      'stops after as many model calls as the Most Steps per Answer setting',
+      'passes on the Most Steps per Answer setting, the prompt, and the actions turned on',
+    ),
+    unit(
+      'ask-ai-durable.test.ts',
+      'tells the model to answer past Max steps, and ends a run that keeps calling tools',
     ),
   ]),
   readPageSkipPrivateHosts: tested('services/page-reader.ts', [
