@@ -71,7 +71,10 @@ if [[ -n $full ]]; then
   step chromium zsh .agents/skills/feature-delivery/scripts/e2e-locked.sh "$wt" full
 else
   # Spec paths relative to apps/extension, as e2e-locked.sh takes them; changed ones first.
-  changed=(${(f)$(git diff --name-only --diff-filter=AM "origin/$base...HEAD" -- 'apps/extension/tests/e2e/*.spec.ts' | sed 's|^apps/extension/||')})
+  # Quoted, so (f) splits the output into one path per line; unquoted, zsh kept every changed path
+  # in one word, and the dedupe below never matched it.
+  changed=(${(f)"$(git diff --name-only --diff-filter=AM "origin/$base...HEAD" -- 'apps/extension/tests/e2e/*.spec.ts' | sed 's|^apps/extension/||')"})
+  changed=(${changed:#})
   run=(tests/e2e/startup-code.spec.ts $changed $specs)
   run=(${(u)run})
   echo "      chromium specs: ${run[*]}"
