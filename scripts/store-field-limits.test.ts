@@ -1,12 +1,12 @@
 import { describe, expect, it } from "bun:test";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import dashboardLimits from "../store/dashboard-limits.toml";
 
 /**
- * The blocks in store/ that are pasted into the Chrome Web Store dashboard must fit its fields
- * (limits in store/dashboard-limits.toml). Optional host access has no dashboard field, so its
- * blocks only serve Edge and AMO reviewers and are not limited here.
+ * The blocks in store/ that are pasted into the Chrome Web Store dashboard and the Firefox Add-ons
+ * Developer Hub must fit their fields (limits in store/dashboard-limits.toml). Optional host access
+ * has no dashboard field, so its blocks only serve Edge and AMO reviewers and are not limited here.
  */
 const root = join(import.meta.dir, "..");
 const read = (path: string) => readFileSync(join(root, path), "utf8");
@@ -16,6 +16,7 @@ const limits = dashboardLimits as {
     permission_justification: number;
     test_instructions: number;
   };
+  firefox_add_ons: { summary: number };
 };
 const chrome = limits.chrome_web_store;
 
@@ -71,5 +72,17 @@ describe("Chrome Web Store dashboard fields fit", () => {
     );
     expect(block).toBeDefined();
     expect(length(block.text)).toBeLessThanOrEqual(chrome.test_instructions);
+  });
+});
+
+describe("Firefox Add-ons listing fields fit", () => {
+  const listings = readdirSync(join(root, "store/listings")).filter((name) => name.endsWith(".md"));
+
+  it.each(listings)("the %s summary fits its field", (name) => {
+    const [block] = textBlocks(read(`store/listings/${name}`), "###").filter(({ heading }) =>
+      heading.startsWith("Firefox Add-ons summary"),
+    );
+    expect(block).toBeDefined();
+    expect(length(block.text)).toBeLessThanOrEqual(limits.firefox_add_ons.summary);
   });
 });
