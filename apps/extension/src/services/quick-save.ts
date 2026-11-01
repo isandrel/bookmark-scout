@@ -324,8 +324,7 @@ async function showInTab(
 
 /** The toolbar button's API, for its badge. */
 export function toolbarAction() {
-  // Firefox's Manifest V2 build has browserAction instead of action.
-  return browser.action ?? browser.browserAction;
+  return browser.action;
 }
 
 /**

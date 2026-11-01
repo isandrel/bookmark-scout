@@ -117,7 +117,7 @@ bun run build:edge
 
 1. Ve a `about:debugging#/runtime/this-firefox`
 2. Haz clic en «Cargar complemento temporal»
-3. Selecciona el archivo `manifest.json` de `apps/extension/dist/firefox-mv2`
+3. Selecciona el archivo `manifest.json` de `apps/extension/dist/firefox-mv3`
 
 ## 🔄 Proceso de pull request
 

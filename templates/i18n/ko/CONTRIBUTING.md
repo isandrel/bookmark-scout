@@ -105,7 +105,7 @@ bun run build:edge
 
 1. `about:debugging#/runtime/this-firefox`로 이동합니다
 2. "Load Temporary Add-on"(임시 부가 기능 로드)을 클릭합니다
-3. `apps/extension/dist/firefox-mv2`에 있는 `manifest.json` 파일을 선택합니다
+3. `apps/extension/dist/firefox-mv3`에 있는 `manifest.json` 파일을 선택합니다
 
 ## 🔄 풀 리퀘스트 절차
 

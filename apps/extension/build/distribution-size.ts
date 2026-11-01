@@ -2,8 +2,10 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { inflateRawSync } from 'node:zlib';
+import { MANIFEST_VERSIONS } from './browser-targets';
 
-export const DISTRIBUTION_TARGETS = { chrome: 3, edge: 3, firefox: 2 } as const;
+/** Each browser build and the Manifest version it targets (build/browser-targets.toml). */
+export const DISTRIBUTION_TARGETS = MANIFEST_VERSIONS;
 export type DistributionTarget = keyof typeof DISTRIBUTION_TARGETS;
 export const DISTRIBUTION_CATEGORIES = [
   'javascript',

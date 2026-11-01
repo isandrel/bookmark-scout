@@ -1,6 +1,5 @@
 import { readOmniboxKeyword, readShortcutConfig, site } from '@bookmark-scout/config';
 import type { ConfigEnv, FirefoxDataCollectionPermissions, UserManifest } from 'wxt';
-import type { Browser } from 'wxt/browser';
 import { getManifestCommands } from './src/lib/command-catalog';
 import {
   getFirefoxDataCollectionPermissions,
@@ -96,16 +95,4 @@ export function createManifest({ browser }: Pick<ConfigEnv, 'browser'>): UserMan
         }
       : {}),
   };
-}
-
-/**
- * Adapts the generated manifest for Manifest V2 (Firefox), from the `build:manifestGenerated` hook.
- * MV2 has no optional_host_permissions (WXT drops the key), so origins go in optional_permissions.
- */
-export function adaptManifestV2(manifest: Browser.runtime.Manifest): void {
-  manifest.optional_permissions = [
-    ...(manifest.optional_permissions ?? []),
-    ...getManifestOptionalOrigins(),
-  ] as typeof manifest.optional_permissions;
-  delete manifest.optional_host_permissions;
 }

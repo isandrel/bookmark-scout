@@ -2,7 +2,8 @@ import { site } from '@bookmark-scout/config';
 import { defineConfig } from 'wxt';
 import react from '@vitejs/plugin-react';
 import path from 'node:path';
-import { adaptManifestV2, createManifest } from './manifest.config';
+import { sharedManifestVersion } from './build/browser-targets';
+import { createManifest } from './manifest.config';
 import { tomlConfig } from './build/toml-config';
 import { compactDistributionLocales } from './build/distribution-assets';
 import { createProviderLogoAssets } from './build/provider-logo-assets';
@@ -33,6 +34,9 @@ export default defineConfig({
         ],
     },
 
+    // WXT targets Manifest V2 for Firefox unless told otherwise; build/browser-targets.toml sets
+    // the version every build targets.
+    manifestVersion: sharedManifestVersion(),
     // Per-browser keys (permissions, the Firefox add-on ID and data collection declaration) live
     // in manifest.config.ts so unit tests can check them.
     manifest: createManifest,
@@ -44,9 +48,6 @@ export default defineConfig({
             const retained = output.publicAssets.filter((asset) => !removed.has(asset.fileName));
             output.publicAssets.splice(0, output.publicAssets.length, ...retained);
             await compactDistributionLocales(wxt.config.outDir);
-        },
-        'build:manifestGenerated': (wxt, manifest) => {
-            if (wxt.config.manifestVersion === 2) adaptManifestV2(manifest);
         },
     },
 

@@ -21,6 +21,17 @@ describe('search history storage', () => {
     expect(await getSearchHistory()).toEqual(['beta', 'alpha']);
   });
 
+  it('keeps no search made in a private window', async () => {
+    await addSearchHistoryEntry('alpha');
+    Object.assign(fakeBrowser.extension, { inIncognitoContext: true });
+    try {
+      expect(await addSearchHistoryEntry('private')).toEqual(['alpha']);
+    } finally {
+      Object.assign(fakeBrowser.extension, { inIncognitoContext: false });
+    }
+    expect(await getSearchHistory()).toEqual(['alpha']);
+  });
+
   it('moves a repeated query to the front without case-insensitive duplicates', async () => {
     await addSearchHistoryEntry('Alpha');
     await addSearchHistoryEntry('beta');
