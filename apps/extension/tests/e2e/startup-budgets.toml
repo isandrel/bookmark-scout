@@ -236,4 +236,6 @@
 # Raised from 655 on 2026-10-23 with ai-host, for the same list items and migrations registry (657).
 # Raised from 665 on 2026-10-22 for for the backup parts and their review on top of the 0.3.5
 # review fixes (feat/backup-categories rebased on 430c4163) (665).
-"welcome.html" = 672
+# Raised from 672 on 2026-10-29 for the Search Matching settings in the settings schema every page
+# loads, on top of main's card options (673).
+"welcome.html" = 680

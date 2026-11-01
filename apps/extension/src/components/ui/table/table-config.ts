@@ -43,6 +43,12 @@ const managerTableConfig = readConfig(
       facet_badges_max: z.number().int().nonnegative(),
       card_min_width_px: cardWidthsSchema,
       cover_aspect_ratio: z.number().positive(),
+      card_cover_shapes: z.strictObject({
+        wide: z.number().positive(),
+        classic: z.number().positive(),
+        square: z.number().positive(),
+        portrait: z.number().positive(),
+      }),
       card_placeholder_icon_px: pixels,
       column_max_tags: z.number().int().positive(),
       summary_column_lines: z.number().int().positive(),
@@ -110,6 +116,9 @@ export const CARD_MIN_WIDTH_PX: Readonly<Record<'small' | 'medium' | 'large', nu
 
 /** Width over height of a cover, and of the room a card keeps for it. */
 export const COVER_ASPECT_RATIO = managerTableConfig.cover_aspect_ratio;
+
+/** The width-to-height ratio of each Cover Shape the cards can take. */
+export const CARD_COVER_SHAPES = managerTableConfig.card_cover_shapes;
 
 /** The site or folder icon in a card's room for a cover while it has none, in pixels. */
 export const CARD_PLACEHOLDER_ICON_PX = managerTableConfig.card_placeholder_icon_px;
