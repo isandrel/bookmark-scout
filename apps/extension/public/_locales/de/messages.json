@@ -6575,6 +6575,10 @@
         "message": "Im Web gesucht",
         "description": "Ask AI tool step"
     },
+    "askAI_toolReadSkill": {
+        "message": "Skill „$1“ gelesen",
+        "description": "Ask AI tool step; $1 is the skill name"
+    },
     "askAI_toolOther": {
         "message": "Ein Tool verwendet",
         "description": "Ask AI step for a provider tool that has no description of its own"
@@ -6597,6 +6601,10 @@
     },
     "prompt_varAboutMe": {
         "message": "Ihr Text unter „Über mich“ als Block (leer, wenn nichts eingetragen ist)",
+        "description": "Prompt variable description"
+    },
+    "prompt_varSkills": {
+        "message": "Die Skills, die Ask AI lesen kann, und wie es sie liest (leer, wenn es keine gibt)",
         "description": "Prompt variable description"
     },
     "prompt_placeholders": {

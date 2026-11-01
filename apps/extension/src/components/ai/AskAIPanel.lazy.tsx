@@ -62,6 +62,9 @@ function hostOf(url: unknown): string {
 /** What a tool call did, in words, from its name and input. */
 function describeTool(name: string, input: unknown): string {
   if (ASK_AI_WEB_SEARCH_TOOL_NAMES.has(name)) return t('askAI_toolWebSearch');
+  if (name === ASK_AI_SKILL_TOOL) {
+    return t('askAI_toolReadSkill', String((input as { name?: unknown } | undefined)?.name ?? ''));
+  }
   // A provider's own tool has no description; its internal name means nothing to the user.
   return describeActionCall(name, input) ?? t('askAI_toolOther');
 }

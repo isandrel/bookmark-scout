@@ -127,6 +127,8 @@ export type AskAIAgentOptions = {
   webSearch: boolean;
   maxSteps: number;
   webSearchMaxUses: number;
+  /** Tools besides the bookmark actions and web search, such as the one that reads skills. */
+  extraTools?: ToolSet;
   /** A model to use instead of the service's; tests drive the agent with a scripted one. */
   model?: LanguageModel;
 };
@@ -145,6 +147,7 @@ export async function buildAskAIAgent(options: AskAIAgentOptions) {
     instructions: options.instructions,
     tools: {
       ...(await createAgentToolSet(options.toolContext)),
+      ...options.extraTools,
       ...(webSearchTool ? { [ASK_AI_WEB_SEARCH_TOOL]: webSearchTool as ToolSet[string] } : {}),
     },
     toolApproval: askAIToolApproval,

@@ -273,6 +273,16 @@ const PROMPT_PLACEHOLDERS = {
     settings: ['summarizerIncludeDomainHint'],
     resolve: (settings) => (settings.summarizerIncludeDomainHint ? 'true' : 'false'),
   }),
+  skills: placeholder({
+    tasks: ['ask_ai'],
+    descriptionKey: 'prompt_varSkills',
+    settings: [],
+    load: async () => {
+      const { askAISkillCatalog, createAskAISkills } = await import('./ask-ai-skills.lazy');
+      return askAISkillCatalog(await createAskAISkills());
+    },
+    resolve: (_settings, catalog) => catalog ?? '',
+  }),
   today: placeholder({
     tasks: 'all',
     descriptionKey: 'prompt_varToday',
