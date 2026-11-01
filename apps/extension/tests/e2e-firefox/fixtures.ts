@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { test as base, expect } from '@playwright/test';
 import { Builder, By, until, type WebDriver, type WebElement } from 'selenium-webdriver';
 import firefox from 'selenium-webdriver/firefox.js';
+import { buildFolder } from '../../build/browser-targets';
 import { FIREFOX_ADDON_ID } from '../../manifest.config';
 import { removeTempDir, workerTempDir } from '../e2e/temp-dirs';
 
@@ -12,8 +13,8 @@ import { removeTempDir, workerTempDir } from '../e2e/temp-dirs';
  *
  * Playwright's Firefox cannot open moz-extension:// pages (navigation never commits), and its
  * WebDriver BiDi mode rejects them as well, so these tests drive the stock Firefox through
- * geckodriver (Selenium) and keep Playwright Test as the runner. geckodriver installs the MV2 build
- * as a temporary add-on, and `--allow-system-access` lets it navigate to moz-extension:// URLs.
+ * geckodriver (Selenium) and keep Playwright Test as the runner. geckodriver installs the Manifest V3
+ * build as a temporary add-on, and `--allow-system-access` lets it navigate to moz-extension:// URLs.
  */
 
 /**
@@ -25,9 +26,14 @@ const ADDON_UUID = '5b0f8e1c-2f6a-4d2e-9a7c-3e1d4c5b6a70';
 /** Empty page added to the test copy so extension APIs can be called from a privileged page. */
 const API_PAGE = 'e2e-api.html';
 const DEFAULT_WAIT_MS = 10_000;
+/**
+ * The Manifest V3 background is an event page that Firefox suspends when idle (30 seconds by
+ * default). A short idle time makes every test run across suspensions, as long tasks do for users.
+ */
+const BACKGROUND_IDLE_MS = 2_000;
 
 const currentDirectory = path.dirname(fileURLToPath(import.meta.url));
-const firefoxBuild = path.resolve(currentDirectory, '../../dist/firefox-mv2');
+const firefoxBuild = path.resolve(currentDirectory, '../../dist', buildFolder('firefox'));
 
 /** The page-side `browser` namespace; Firefox's promise-based API matches Chrome's MV3 typings. */
 export type ExtensionApi = typeof chrome;
@@ -102,7 +108,8 @@ export const test = base.extend<FirefoxFixtures, FirefoxWorkerFixtures>({
       .setPreference('browser.download.manager.showWhenStarting', false)
       // Optional permissions requested from a real click are granted without the doorhanger,
       // which headless tests cannot answer; a request outside the manifest still fails.
-      .setPreference('extensions.webextOptionalPermissionPrompts', false);
+      .setPreference('extensions.webextOptionalPermissionPrompts', false)
+      .setPreference('extensions.background.idle.timeout', BACKGROUND_IDLE_MS);
     if (process.env.FIREFOX_BIN) options.setBinary(process.env.FIREFOX_BIN);
 
     const service = new firefox.ServiceBuilder().addArguments('--allow-system-access');

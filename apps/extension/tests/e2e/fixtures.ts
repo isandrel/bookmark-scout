@@ -10,6 +10,7 @@ import {
   type Page,
   type Worker,
 } from '@playwright/test';
+import { buildFolder } from '../../build/browser-targets';
 import { extensionOutDir } from '../../build/e2e-coverage';
 import { readConfigToml } from '../config-files';
 import { coverageLaunchArgs, saveCoverage, watchCoverage } from './coverage';
@@ -125,7 +126,7 @@ export async function launchExtension(userDataDir: string, extensionPath: string
 
 export const test = base.extend<ExtensionFixtures, WorkerFixtures>({
   extensionBrowser: ['chromium', { option: true, scope: 'worker' }],
-  extensionBuild: ['chrome-mv3', { option: true, scope: 'worker' }],
+  extensionBuild: [buildFolder('chrome'), { option: true, scope: 'worker' }],
   extensionPath: [
     async ({ extensionBuild }, use) => {
       // An absolute `extensionBuild` (the perf comparison's base build) is used as it is.
