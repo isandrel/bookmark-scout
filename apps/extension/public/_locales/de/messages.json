@@ -7011,6 +7011,14 @@
         "message": "Ihre Intelligenten Regeln (ihre Suchen, Tags und Ordner), nicht das, was sie ausgeführt haben.",
         "description": "Backup part: what the Smart Rules part holds"
     },
+    "backup_categorySkills": {
+        "message": "Skills für „KI fragen“",
+        "description": "Backup part: the user’s own Ask AI skills"
+    },
+    "backup_categorySkillsDesc": {
+        "message": "Die Skills, die Sie „KI fragen“ hinzugefügt haben, jeweils mit ihren Dateien. Welche Skills aktiv sind, gehört zu den Einstellungen.",
+        "description": "Backup part: what the Ask AI skills part holds"
+    },
     "backup_categoryAiServices": {
         "message": "KI-Dienste",
         "description": "Backup part: the AI services without their keys"

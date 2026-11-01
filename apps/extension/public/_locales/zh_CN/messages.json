@@ -6765,6 +6765,14 @@
         "message": "你的智能规则（其搜索、标签和文件夹），不含它们执行过的操作。",
         "description": "Backup part: what the Smart Rules part holds"
     },
+    "backup_categorySkills": {
+        "message": "询问 AI 的技能",
+        "description": "Backup part: the user’s own Ask AI skills"
+    },
+    "backup_categorySkillsDesc": {
+        "message": "你添加到询问 AI 的技能，以及每个技能的文件。哪些技能已开启属于设置部分。",
+        "description": "Backup part: what the Ask AI skills part holds"
+    },
     "backup_categoryAiServices": {
         "message": "AI 服务",
         "description": "Backup part: the AI services without their keys"

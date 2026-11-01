@@ -7011,6 +7011,14 @@
         "message": "Vos Règles intelligentes (leurs recherches, étiquettes et dossiers), pas ce qu'elles ont fait.",
         "description": "Backup part: what the Smart Rules part holds"
     },
+    "backup_categorySkills": {
+        "message": "Compétences de Demander à l'IA",
+        "description": "Backup part: the user’s own Ask AI skills"
+    },
+    "backup_categorySkillsDesc": {
+        "message": "Les compétences que vous avez ajoutées à Demander à l'IA, chacune avec ses fichiers. Les compétences activées font partie des Paramètres.",
+        "description": "Backup part: what the Ask AI skills part holds"
+    },
     "backup_categoryAiServices": {
         "message": "Services d'IA",
         "description": "Backup part: the AI services without their keys"

@@ -7003,6 +7003,14 @@
         "message": "スマートルール（検索、タグ、フォルダ）。ルールが行った処理は含みません。",
         "description": "Backup part: what the Smart Rules part holds"
     },
+    "backup_categorySkills": {
+        "message": "AI に質問のスキル",
+        "description": "Backup part: the user’s own Ask AI skills"
+    },
+    "backup_categorySkillsDesc": {
+        "message": "AI に質問に追加したスキルと、それぞれのファイル。どのスキルがオンかは設定に含まれます。",
+        "description": "Backup part: what the Ask AI skills part holds"
+    },
     "backup_categoryAiServices": {
         "message": "AI サービス",
         "description": "Backup part: the AI services without their keys"

@@ -67,7 +67,7 @@ The **Back up settings** and **Restore settings** buttons at the bottom of the S
 - A cover you picked with **Use this view as the cover** ranks first: it is replaced only by a newer picked cover from the file, and a picked cover from the file replaces one that was not picked; otherwise the newer cover wins. A date in the future counts as today. **Cover Storage** still applies, so the oldest covers are removed past it, the ones you picked last.
 - **Settings**: the settings you changed that sync, including the menus and lists.
 - **This computer's settings**: settings kept for one computer, such as the layout, sidebars, keyboard keys, and the quick save folder. Not selected at first, because they suit one screen and keyboard.
-- **Saved searches and table view**, **Prompts and About me**, **Smart Rules**, and **AI services** (name, provider, model, Base URL, and provider-specific fields).
+- **Saved searches and table view**, **Prompts and About me**, **Smart Rules**, **Ask AI skills** (the skills you added, each with its files), and **AI services** (name, provider, model, Base URL, and provider-specific fields).
 - **Covers**, marked **Large**: the cover pictures, by address. Covers never sync and bookmark exports do not hold them, so a backup is how they reach another computer.
 - **AI service keys**: the API keys and extra headers, never selected unless you select them. Selecting them warns that anyone with the file can use the keys and run up charges, and you confirm before saving.
 
@@ -86,7 +86,7 @@ The parts you save become the selection next time on this computer (**Parts in N
 2. Each part shows how many items are in the file and how many importing it would add, change, or leave as they are. A part from a newer version of Bookmark Scout is listed as not supported and skipped. Enter the password to unlock protected parts.
 3. Pick the parts to import. **This computer's settings** and **AI service keys** start unselected; the keys again ask you to confirm.
 4. For each part, choose **Merge** (adds and updates what the file has, keeps what only this device has) or **Replace** (makes the part exactly what the file has, removing what only this device has; you confirm first).
-5. With Merge, items changed both here and in the file (prompts, Smart Rules, saved searches, AI services) are listed: keep the newer one, use the file's, or keep this device's, for all of them or each one. A cover you picked with **Use this view as the cover** is replaced only by a newer picked cover from the file.
+5. With Merge, items changed both here and in the file (prompts, Smart Rules, Ask AI skills, saved searches, AI services) are listed: keep the newer one, use the file's, or keep this device's, for all of them or each one. A cover you picked with **Use this view as the cover** is replaced only by a newer picked cover from the file.
 6. Click **Import**. The result lists what each part added, changed, removed, kept, and skipped. AI services whose keys were not in the file show **Needs setup** until you enter them in [AI](/settings#ai).
 
 A setting that names a folder, such as the quick save folder, is restored only where a folder with the same path exists on this computer, and then names that folder; otherwise it stays as it is here. Every part is checked before anything is written, and a part that cannot be imported whole is left as it was.
