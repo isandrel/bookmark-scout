@@ -115,6 +115,12 @@ describe('manifest config', () => {
     },
   );
 
+  it('declares the Address Bar Search keyword in every build, from config/ui/omnibox.toml', () => {
+    for (const browser of ['chrome', 'edge', 'firefox']) {
+      expect(createManifest({ browser }).omnibox).toEqual({ keyword: ADDRESS_BAR_KEYWORD });
+    }
+  });
+
   it('exposes no extension resources to web pages', () => {
     for (const browser of ['chrome', 'edge', 'firefox']) {
       expect(createManifest({ browser })).not.toHaveProperty('web_accessible_resources');
