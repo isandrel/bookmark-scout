@@ -23,6 +23,8 @@ Then turn on **Allow local AI agents** in Bookmark Scout's Options, under For de
 
 For tests, `install`, `uninstall`, and `doctor` also take `--home <dir>` (the launcher goes under that folder instead of your home) and `--manifest-dir <dir>` (the manifest goes in that folder, such as a test browser profile's `NativeMessagingHosts`, instead of the browser's own; `install` then needs exactly one `--browser`). Pass the same flags to all three, so a test never reads or removes your real registration.
 
+The browser-started host also answers Ask AI when **Skills from this computer** is on in Bookmark Scout (Settings > AI > Skills): it reads the Agent Skills in the folders you list there (a folder holding a `SKILL.md`, or folders of them), sending each `SKILL.md` and the text files below it within the `[skills]` limits in `config/bridge.toml`. It only reads them; a skill's `scripts/` folder is never read or run. This needs `install`, not agent access.
+
 Set `BOOKMARK_SCOUT_MCP_LOG` to a file to see what the browser-started host logs.
 
 ## Development

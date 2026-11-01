@@ -45,6 +45,20 @@ const bridgeSchema = z.strictObject({
     data_dir_name: z.string().regex(/^[A-Za-z0-9._-]+$/),
     launcher_name: z.string().regex(/^[A-Za-z0-9._-]+$/),
   }),
+  skills: z.strictObject({
+    max_folders: z.number().int().positive(),
+    max_skills: z.number().int().positive(),
+    max_files: z.number().int().positive(),
+    max_file_bytes: z.number().int().positive(),
+    max_reply_bytes: z
+      .number()
+      .int()
+      .positive()
+      .max(1024 * 1024),
+    max_depth: z.number().int().nonnegative(),
+    file_extensions: z.array(z.string().regex(/^\.[a-z0-9]+$/)),
+    skip_folders: z.array(z.string().min(1)),
+  }),
   browsers: z.record(z.string().regex(/^[a-z][a-z0-9-]*$/), browserSchema),
 });
 

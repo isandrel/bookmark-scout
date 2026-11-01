@@ -90,3 +90,26 @@ macos_profile = "Firefox"
 linux = ".mozilla/native-messaging-hosts"
 linux_profile = ".mozilla/firefox"
 windows = 'Software\Mozilla\NativeMessagingHosts'
+
+# Ask AI skills from this computer: the extension asks the native host for the Agent Skills
+# (agentskills.io) in the folders the user named in Settings > AI > Skills (a one-shot native
+# message, src/local-skills.ts). The host only reads; it never runs a skill's scripts.
+[skills]
+# Folders one request may name.
+max_folders = 10
+# Skills read in all; past it the rest are reported as left out.
+max_skills = 30
+# Files read for one skill, SKILL.md included.
+max_files = 21
+# Largest file read, in bytes; a larger one is left out.
+max_file_bytes = 200000
+# Largest reply, in bytes. Chrome caps a message from a native host at 1 MB, so skills past this
+# are left out (the reply says which).
+max_reply_bytes = 1000000
+# How deep below a skill's folder files are read.
+max_depth = 3
+# Files read besides SKILL.md, by extension: text the model can read.
+file_extensions = [".md", ".txt", ".json", ".yaml", ".yml", ".csv", ".xml", ".html"]
+# Folders inside a skill that are not read: scripts are never run in the browser, and the rest
+# hold no text for the model.
+skip_folders = ["scripts", "node_modules"]
