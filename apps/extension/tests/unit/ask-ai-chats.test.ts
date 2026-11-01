@@ -48,6 +48,38 @@ describe('Ask AI kept chats', () => {
     });
   });
 
+  it('keeps an answer still being written as finished text, without tool steps that have no result', async () => {
+    const writing = {
+      id: 'm',
+      role: 'assistant',
+      parts: [
+        {
+          type: 'tool-listFolders',
+          toolCallId: 'a',
+          state: 'output-available',
+          input: {},
+          output: [],
+        },
+        { type: 'tool-findBookmarks', toolCallId: 'b', state: 'input-streaming', input: {} },
+        { type: 'tool-listFolders', toolCallId: 'c', state: 'input-available', input: {} },
+        {
+          type: 'tool-applyChanges',
+          toolCallId: 'd',
+          state: 'approval-responded',
+          input: {},
+          approval: { id: 'approve-2', approved: true },
+        },
+        { type: 'text', text: 'Half an ans', state: 'streaming' },
+      ],
+    } as unknown as UIMessage;
+    await keepChat('a', [ask('1', 'Tidy up'), writing], 5);
+    const [chat] = await askAiChatsValue.get();
+    expect(chat.messages[1].parts).toEqual([
+      expect.objectContaining({ toolCallId: 'a', state: 'output-available' }),
+      { type: 'text', text: 'Half an ans', state: 'done' },
+    ]);
+  });
+
   it('deletes one chat or all of them', async () => {
     await keepChat('a', [ask('1', 'One')], 5);
     await keepChat('b', [ask('2', 'Two')], 5);

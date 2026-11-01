@@ -1,8 +1,10 @@
 /**
  * Ask AI's kept chats (Settings > AI > Ask AI > Keep Chats): on this device only, newest first, at
  * most the user's Chats Kept, each with at most `max_messages` messages. A chat is named by its
- * first question. A change that was waiting for approval when a chat was kept is kept as declined,
- * so reopening a chat never offers to apply an old plan.
+ * first question. A chat is kept while its answer is written too, and what was unfinished then is
+ * settled: a change still waiting for approval is kept as declined, so reopening a chat never
+ * offers to apply an old plan, and a tool step with no result yet (approved but not run included)
+ * is left out, so reopening never sends it again.
  */
 import type { UIMessage } from 'ai';
 import { z } from 'zod';
@@ -13,8 +15,19 @@ const chatConfig = readConfig(
   z.strictObject({
     title_chars: boundedNumber({ integer: true }),
     max_messages: boundedNumber({ integer: true }),
+    save_interval_ms: boundedNumber({ integer: true }),
   }),
 );
+
+/** How often a chat is kept while its answer is still being written. */
+export const CHAT_SAVE_INTERVAL_MS = chatConfig.save_interval_ms;
+
+/** Tool step states that have no result yet: kept, they would show as running forever. */
+const UNFINISHED_TOOL_STATES: ReadonlySet<string | undefined> = new Set([
+  'input-streaming',
+  'input-available',
+  'approval-responded',
+]);
 
 export type AskAIChat = {
   id: string;
@@ -55,16 +68,23 @@ export function chatTitle(messages: readonly UIMessage[]): string {
   return truncateText(text, chatConfig.title_chars);
 }
 
-/** A tool call still waiting for the user\'s approval, kept as declined. */
+/**
+ * `message` as it can be reopened: a tool call still waiting for the user's approval kept as
+ * declined, a tool step with no result left out, and text still being written marked done.
+ */
 function settled(message: UIMessage): UIMessage {
   return {
     ...message,
-    parts: message.parts.map((part) => {
-      if (!('state' in part) || part.state !== 'approval-requested' || !('approval' in part)) {
-        return part;
+    parts: message.parts.flatMap<UIMessage['parts'][number]>((part) => {
+      if (!('state' in part)) return [part];
+      if (part.state === 'streaming') return [{ ...part, state: 'done' }];
+      if (part.state === 'approval-requested' && 'approval' in part) {
+        return [
+          { ...part, state: 'output-denied', approval: { ...part.approval, approved: false } },
+        ];
       }
-      return { ...part, state: 'output-denied', approval: { ...part.approval, approved: false } };
-    }) as UIMessage['parts'],
+      return UNFINISHED_TOOL_STATES.has(part.state) ? [] : [part];
+    }),
   };
 }
 
