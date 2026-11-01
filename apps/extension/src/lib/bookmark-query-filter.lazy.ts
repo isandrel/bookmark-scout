@@ -98,9 +98,24 @@ let searchedQuery:
     }
   | undefined;
 
+/**
+ * Search Matching as the page's settings hold it now (`useSettings` keeps them live): plain words
+ * also match near spellings when Fuzzy Matching is on.
+ */
+function currentMatching(): SearchMatching {
+  return searchMatchingOf(getStoredValueStore(settingsValue).getSnapshot().value);
+}
+
 function resultOf(text: string, query: SearchQuery, document: SearchDocument) {
-  if (searchedQuery?.text !== text) {
-    searchedQuery = { text, match: compileSearchQuery(query), results: new WeakMap() };
+  const matching = currentMatching();
+  // A changed setting matches afresh, as a changed query does.
+  const key = `${text}\n${JSON.stringify(matching)}`;
+  if (searchedQuery?.text !== key) {
+    searchedQuery = {
+      text: key,
+      match: compileSearchQuery(query, matching),
+      results: new WeakMap(),
+    };
   }
   let result = searchedQuery.results.get(document);
   if (result === undefined) {
@@ -142,6 +157,8 @@ function needsText(term: SearchNode): term is SearchTerm & { kind: 'text' } {
  * or a group are not compared, so typing on in one checks the whole library again.
  */
 function narrows(previous: SearchQuery, next: SearchQuery): boolean {
+  // A longer word may match a near spelling the shorter one did not (`rec`, then `rect` for React).
+  if (currentMatching().fuzzy) return false;
   const last = previous.terms.length - 1;
   if (last < 0 || next.terms.length < previous.terms.length) return false;
   return previous.terms.every((term, index) => {

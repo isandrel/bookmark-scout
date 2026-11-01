@@ -64,23 +64,27 @@ function keepWord(word: string): boolean {
   return wordLength(word) >= rankingConfig.min_token_length && !STOP_WORDS.has(word);
 }
 
+/** Every word of `text`, lowercased and NFKC-normalized, in order (repeats kept). */
+export function splitWords(text: string): string[] {
+  if (!text) return [];
+  const normalized = normalizeWord(text);
+  if (UNSPACED_SCRIPT.test(normalized)) {
+    segmenter ??= new Intl.Segmenter(undefined, { granularity: 'word' });
+    const words: string[] = [];
+    for (const { segment, isWordLike } of segmenter.segment(normalized)) {
+      if (isWordLike) words.push(segment);
+    }
+    return words;
+  }
+  return Array.from(normalized.matchAll(WORD), ([word]) => word);
+}
+
 /**
  * The words of `text`, lowercased, without stop words and words shorter than the configured
  * minimum, in order (repeats kept).
  */
 export function tokenizeText(text: string): string[] {
-  if (!text) return [];
-  const normalized = normalizeWord(text);
-  const words: string[] = [];
-  if (UNSPACED_SCRIPT.test(normalized)) {
-    segmenter ??= new Intl.Segmenter(undefined, { granularity: 'word' });
-    for (const { segment, isWordLike } of segmenter.segment(normalized)) {
-      if (isWordLike && keepWord(segment)) words.push(segment);
-    }
-  } else {
-    for (const [word] of normalized.matchAll(WORD)) if (keepWord(word)) words.push(word);
-  }
-  return words;
+  return splitWords(text).filter(keepWord);
 }
 
 /**
@@ -222,23 +226,22 @@ export function rankFolders(
   const total = index.documents.length;
   if (words.length === 0 || total === 0 || limit <= 0) return [];
 
-  const { k1, b, idf_smoothing: smoothing } = rankingConfig;
   const weights = words.flatMap((word) => {
     const frequency = index.documentFrequency.get(word);
     if (!frequency) return [];
-    // BM25 with the +1 that keeps a word found in most folders from scoring below zero.
-    return [{ word, idf: Math.log(1 + (total - frequency + smoothing) / (frequency + smoothing)) }];
+    return [{ word, idf: bm25Idf(total, frequency, rankingConfig.idf_smoothing) }];
   });
   if (weights.length === 0) return [];
 
   const ranked: RankedFolder[] = [];
   for (const document of index.documents) {
     if (excludeIds?.has(document.id)) continue;
-    const norm = k1 * (1 - b + (b * document.length) / (index.averageLength || 1));
     let score = 0;
     for (const { word, idf } of weights) {
       const frequency = document.terms.get(word);
-      if (frequency) score += (idf * frequency * (k1 + 1)) / (frequency + norm);
+      if (frequency) {
+        score += bm25TermScore(idf, frequency, document.length, index.averageLength, rankingConfig);
+      }
     }
     if (score >= minScore) ranked.push({ id: document.id, path: document.path, score });
   }

@@ -37,7 +37,20 @@ En dessous, **L'IA est facultative** indique que Bookmark Scout fonctionne sans 
 | --- | --- | --- |
 | **Dossiers correspondants** | Activé | Pendant la recherche, affiche au-dessus des résultats les dossiers dont le nom correspond, pour y enregistrer la page actuelle |
 | **Nombre maximal de dossiers correspondants** | <SettingDefault path="search.folder_matches.max" /> | Combien de dossiers correspondants afficher |
-| **Tolérer les fautes de frappe** | Activé | Un mot de 4 lettres ou plus correspond à un nom de dossier malgré une faute de frappe |
+| **Poids du nom du dossier** | <SettingDefault path="search.folder_matches.name_weight" /> | Ce que compte un mot du nom du dossier lui-même |
+| **Poids des dossiers parents** | <SettingDefault path="search.folder_matches.parent_weight" /> | Ce que compte un mot des noms des dossiers qui le contiennent : « react hooks » trouve Hooks dans React |
+| **Poids des favoris contenus** | <SettingDefault path="search.folder_matches.bookmark_weight" /> | Ce que compte un mot des titres et sites des favoris du dossier. 0 ne cherche que dans les noms de dossiers |
+
+### Correspondance de recherche [#search-matching]
+
+| Paramètre | Valeur par défaut | Effet |
+| --- | --- | --- |
+| **Correspondance approximative** | Activé | Les mots écrits un peu différemment correspondent aussi, dans la recherche et les dossiers proposés : « rect » trouve React. Les dossiers sont classés par pertinence (BM25), les orthographes les plus proches en premier |
+| **Une modification dès** | <SettingDefault path="search.search_matching.one_edit" /> | Mot le plus court, en lettres, qui peut différer d’une modification : une lettre ajoutée, retirée ou changée, ou deux inversées |
+| **Deux modifications dès** | <SettingDefault path="search.search_matching.two_edits" /> | Mot le plus court, en lettres, qui peut différer de deux modifications |
+| **Correspondre aux débuts de mots** | Activé | Un mot saisi correspond aussi aux mots plus longs qu’il commence : « rea » trouve React pendant la saisie. Le mot entier reste mieux classé |
+| **Saturation des termes (BM25 k1)** | <SettingDefault path="search.search_matching.bm25_k1" /> | Ce qu’un mot qui revient ajoute encore au score d’un résultat. Plus bas, une mention compte presque autant que plusieurs |
+| **Normalisation de longueur (BM25 b)** | <SettingDefault path="search.search_matching.bm25_b" /> | À quel point les résultats courts sont préférés aux longs avec les mêmes mots : 0 pas du tout, 1 entièrement |
 
 ### Recherche [#searching]
 
@@ -207,6 +220,10 @@ Sous le tableau, trois listes organisent la fenêtre contextuelle et le panneau 
 | **Taille des cartes** | Moyenne | La largeur minimale de chaque carte de la vue en cartes : **Petite**, **Moyenne** ou **Grande**. Chaque ligne en place autant que la place le permet. Conservé sur cet appareil uniquement |
 | **Étiquettes par carte** | <SettingDefault path="behavior.manager_cards.max_tags" /> | Une carte affiche ce nombre d'étiquettes, puis **+N** pour les autres. Conservé sur cet appareil uniquement |
 | **Lignes du résumé** | <SettingDefault path="behavior.manager_cards.summary_lines" /> | Lignes du résumé d'un favori qu'affiche une carte ; les lecteurs d'écran lisent tout le résumé. Conservé sur cet appareil uniquement |
+| **Colonnes** | <SettingDefault path="behavior.manager_cards.columns" /> | Nombre de cartes par rangée. 0 en met autant que la taille des cartes le permet |
+| **Forme de la couverture** | Large (1,91:1) | La forme de la couverture en haut de chaque carte |
+| **Ajustement de la couverture** | Remplir | L’image remplit la couverture en rognant ce qui dépasse, ou s’affiche en entier |
+| **Lignes du titre** | <SettingDefault path="behavior.manager_cards.title_lines" /> | Nombre de lignes que le titre d’une carte peut occuper avant d’être coupé |
 
 **Contenu des cartes** choisit ce qu'affiche chaque carte sous son titre, dans l'ordre : la couverture, l'URL, le chemin du dossier, les étiquettes et le résumé (tout sauf le chemin du dossier au départ). Une couverture placée en premier reste au-dessus du titre. La carte d'un dossier indique toujours combien d'éléments il contient. Conservé sur cet appareil uniquement.
 

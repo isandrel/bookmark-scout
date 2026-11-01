@@ -343,27 +343,43 @@
 # languages. Measured on feat/date-column-options from 0db9a7e4: ZIP 2,200,932 / 2,201,010 /
 # 2,201,109 B, uncompressed 7,451,218 / 7,451,214 / 7,451,401 B (Chrome / Edge / Firefox),
 # 4,105,468 B of JavaScript, and 2,775,879 B of locales.
+# Raised on 2026-10-29 (uncompressed 7,475,000 to 7,500,000, locales 2,800,000 to 2,825,000) for
+# Search Matching (fuzzy matching, word starts, BM25 k1 and b) and the folder match weights, with
+# their copy in 12 languages. Firefox measured ZIP 2,209,031, 7,481,404 B uncompressed, and
+# 2,799,489 B of locales.
+# Raised on 2026-10-29 (css 92,000 to 92,750) for the cards view's Title Lines and Cover Fit (a clamp
+# and an object-fit read from CSS variables). Measured 92,205 B of CSS.
+# Raised on 2026-10-31 (ZIP 2,215,000 to 2,225,000, uncompressed 7,500,000 to 7,515,000) when the
+# BM25 search ranking and Search Matching settings met the cards view options and covers changes on
+# main: feat/search-ranking-bm25 measured ZIP 2,215,813 / 2,215,785 / 2,215,844 B and uncompressed
+# 7,506,122 / 7,506,118 / 7,506,305 B (Chrome / Edge / Firefox).
+# Raised on 2026-10-31 (uncompressed 7,515,000 to 7,530,000, javascript 4,120,000 to 4,130,000,
+# locales 2,825,000 to 2,835,000) for
+# Address Bar Search (its background service and settings, with their copy in 12 languages) on
+# top of the BM25 search ranking: feat/omnibox-search measured 4,123,970 B of JavaScript (Firefox)
+# and 2,828,519 B of locales, and uncompressed 7,522,851 / 7,522,847 / 7,523,034 B (Chrome / Edge /
+# Firefox).
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
-zip_bytes = 2_215_000
-raw_bytes = 7_475_000
+zip_bytes = 2_225_000
+raw_bytes = 7_530_000
 
 [targets.edge]
-zip_bytes = 2_215_000
-raw_bytes = 7_475_000
+zip_bytes = 2_225_000
+raw_bytes = 7_530_000
 
 [targets.firefox]
-zip_bytes = 2_215_000
-raw_bytes = 7_475_000
+zip_bytes = 2_225_000
+raw_bytes = 7_530_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 4_120_000
-css = 92_500
+javascript = 4_130_000
+css = 92_750
 fonts = 143_000
-locales = 2_800_000
+locales = 2_835_000
 images = 320_000
 other = 30_000

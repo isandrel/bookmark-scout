@@ -100,6 +100,15 @@ size = "medium"
 # many lines (the whole text stays in the page for screen readers)
 max_tags = { default = 3, min = 1, max = 12, step = 1, integer = true }
 summary_lines = { default = 2, min = 1, max = 8, step = 1, integer = true }
+# A card's cover: its shape, a key of `card_cover_shapes` in config/ui/manager-table.toml ("wide",
+# the Open Graph ratio, "classic" 4:3, "square", or "portrait" 3:4), and whether a picture fills it
+# ("fill", cropping what does not fit) or shows whole ("fit", with bands where its shape differs)
+cover_shape = "wide"
+cover_fit = "fill"
+# Columns: how many cards a row holds; 0 fits as many as Card Size allows
+columns = { default = 0, min = 0, max = 8, step = 1, integer = true }
+# Lines a card's title may take before it is cut
+title_lines = { default = 2, min = 1, max = 4, step = 1, integer = true }
 
 [manager_preview]
 # What a bookmark's preview shows under its title and address, in order: "cover", "folder",

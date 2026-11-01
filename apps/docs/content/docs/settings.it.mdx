@@ -37,7 +37,20 @@ Sotto di esse, **L'IA è facoltativa** spiega che Bookmark Scout funziona senza 
 | --- | --- | --- |
 | **Cartelle corrispondenti** | Attivo | Durante la ricerca, elenca sopra i risultati le cartelle il cui nome corrisponde, per salvarvi la pagina corrente |
 | **Numero massimo di cartelle corrispondenti** | <SettingDefault path="search.folder_matches.max" /> | Quante cartelle corrispondenti elencare |
-| **Tollera errori di battitura** | Attivo | Una parola cercata di 4 o più lettere può corrispondere al nome di una cartella con un errore di battitura |
+| **Peso del nome della cartella** | <SettingDefault path="search.folder_matches.name_weight" /> | Quanto conta una parola nel nome della cartella stessa |
+| **Peso delle cartelle superiori** | <SettingDefault path="search.folder_matches.parent_weight" /> | Quanto conta una parola nei nomi delle cartelle che la contengono, così «react hooks» trova Hooks dentro React |
+| **Peso dei segnalibri contenuti** | <SettingDefault path="search.folder_matches.bookmark_weight" /> | Quanto conta una parola nei titoli e nei siti dei segnalibri nella cartella. 0 cerca solo nei nomi delle cartelle |
+
+### Corrispondenza della ricerca [#search-matching]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Corrispondenza approssimativa** | Attivo | Corrispondono anche parole scritte in modo un po’ diverso, nella ricerca e nelle cartelle suggerite, così «rect» trova React. Le cartelle sono ordinate per pertinenza (BM25), le grafie più vicine prima |
+| **Una modifica da** | <SettingDefault path="search.search_matching.one_edit" /> | Parola più corta, in lettere, che può differire di una modifica: una lettera aggiunta, tolta o cambiata, o due scambiate |
+| **Due modifiche da** | <SettingDefault path="search.search_matching.two_edits" /> | Parola più corta, in lettere, che può differire di due modifiche |
+| **Corrispondenza con l’inizio delle parole** | Attivo | Una parola digitata corrisponde anche alle parole più lunghe che inizia, così «rea» trova React mentre scrivi. La parola intera resta prima |
+| **Saturazione dei termini (BM25 k1)** | <SettingDefault path="search.search_matching.bm25_k1" /> | Quanto una parola che ricompare aggiunge ancora al punteggio. Più basso fa contare una menzione quasi quanto molte |
+| **Normalizzazione della lunghezza (BM25 b)** | <SettingDefault path="search.search_matching.bm25_b" /> | Quanto i risultati più brevi sono preferiti a quelli lunghi con le stesse parole: 0 per niente, 1 del tutto |
 
 ### Ricerca [#searching]
 
@@ -207,6 +220,10 @@ Sotto la tabella, tre elenchi organizzano il popup e il riquadro laterale. Selez
 | **Dimensione dei riquadri** | Medio | La larghezza minima di ogni riquadro della vista a riquadri: **Piccolo**, **Medio** o **Grande**. Ogni riga ne contiene quanti ne entrano. Salvata solo su questo dispositivo |
 | **Tag per riquadro** | <SettingDefault path="behavior.manager_cards.max_tags" /> | Un riquadro mostra questo numero di tag e poi **+N** per gli altri. Salvato solo su questo dispositivo |
 | **Righe del riassunto** | <SettingDefault path="behavior.manager_cards.summary_lines" /> | Righe del riassunto di un preferito mostrate da un riquadro; gli screen reader leggono tutto il riassunto. Salvato solo su questo dispositivo |
+| **Colonne** | <SettingDefault path="behavior.manager_cards.columns" /> | Quante schede stanno in una riga. 0 ne mette quante ne consente la dimensione delle schede |
+| **Forma della copertina** | Larga (1,91:1) | La forma della copertina in cima a ogni scheda |
+| **Adattamento copertina** | Riempi | Se l’immagine riempie la copertina tagliando ciò che avanza, o si vede intera |
+| **Righe del titolo** | <SettingDefault path="behavior.manager_cards.title_lines" /> | Quante righe può occupare il titolo di una scheda prima di essere tagliato |
 
 **Contenuto dei riquadri** sceglie cosa mostra ogni riquadro sotto il titolo, in ordine: la copertina, l'URL, il percorso della cartella, i tag e il riassunto (tutto tranne il percorso della cartella all'inizio). Una copertina messa per prima resta sopra il titolo. Il riquadro di una cartella indica sempre quanti elementi contiene. Salvato solo su questo dispositivo.
 

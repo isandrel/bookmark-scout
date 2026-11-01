@@ -136,10 +136,14 @@ describe('backup import in History', () => {
       reason: 'replaced',
     });
 
-    const later = Date.now() + BACKUP_LIMITS.undoKeepMs;
+    // Expiry counts from the record's own start, which History takes from the performance clock and
+    // can be a fraction of a millisecond past Date.now(): measuring from Date.now() left the copy
+    // just short of expiring, which read as replaced. A millisecond past also clears float rounding.
+    const secondStartedAt = (await getAuditOperation(second.operationId))?.startedAt ?? 0;
+    const later = secondStartedAt + BACKUP_LIMITS.undoKeepMs + 1;
     expect(
       await backupFile.checkUndoAvailability(
-        { id: second.operationId, startedAt: Date.now() },
+        { id: second.operationId, startedAt: secondStartedAt },
         later,
       ),
     ).toEqual({ available: false, reason: 'expired' });

@@ -39,10 +39,14 @@ function currentDocuments(): Promise<SearchDocument[]> {
 }
 
 /** The bookmarks `text` finds, best first, at most `limit`. */
-export async function searchAddressBar(text: string, limit: number): Promise<SearchResult[]> {
+export async function searchAddressBar(
+  text: string,
+  limit: number,
+  matching?: SearchMatching,
+): Promise<SearchResult[]> {
   const { query } = parseSearchQuery(text);
   if (query.terms.length === 0) return [];
-  const match = compileSearchQuery(query);
+  const match = compileSearchQuery(query, matching);
   const results: SearchResult[] = [];
   for (const document of await currentDocuments()) {
     const result = match(document);
@@ -112,10 +116,12 @@ let revision = 0;
 
 const OPTIONS_SEARCH_PATH = '/options.html?category=search';
 
-/** How many to list, or null while Address Bar Search is off. */
-async function readAddressBarLimit(): Promise<number | null> {
+/** How many to list and how words match (Search Matching), or null while it is off. */
+async function readAddressBarSearch(): Promise<{ limit: number; matching: SearchMatching } | null> {
   const settings = await getSettings();
-  return settings.addressBarEnabled ? settings.addressBarMaxResults : null;
+  return settings.addressBarEnabled
+    ? { limit: settings.addressBarMaxResults, matching: searchMatchingOf(settings) }
+    : null;
 }
 
 async function describeDefault(enabled: boolean): Promise<void> {
@@ -131,17 +137,17 @@ async function suggestFor(
 ): Promise<void> {
   revision += 1;
   const asked = revision;
-  const limit = await readAddressBarLimit();
-  await describeDefault(limit !== null);
+  const search = await readAddressBarSearch();
+  await describeDefault(search !== null);
   const query = text.trim();
-  if (limit === null || !query) {
+  if (search === null || !query) {
     if (asked === revision) {
       suggested = new Set();
       suggest([]);
     }
     return;
   }
-  const results = await searchAddressBar(query, limit);
+  const results = await searchAddressBar(query, search.limit, search.matching);
   if (asked !== revision) return;
   const markup = browserProfile().omniboxMarkup;
   const suggestions = results.map((result) => addressBarSuggestion(result, markup));
@@ -156,7 +162,7 @@ async function openFor(url: string, disposition: Disposition): Promise<void> {
 }
 
 async function enter(text: string, disposition: Disposition): Promise<void> {
-  if ((await readAddressBarLimit()) === null) {
+  if ((await readAddressBarSearch()) === null) {
     await openFor(browser.runtime.getURL(OPTIONS_SEARCH_PATH), disposition);
     return;
   }
@@ -175,8 +181,8 @@ export function registerAddressBarSearch(): void {
   if (!browser.omnibox) return;
   const log = (error: unknown) => console.error('[Address bar search]', error);
   browser.omnibox.onInputStarted.addListener(() => {
-    void readAddressBarLimit()
-      .then((limit) => describeDefault(limit !== null))
+    void readAddressBarSearch()
+      .then((search) => describeDefault(search !== null))
       .catch(log);
   });
   browser.omnibox.onInputChanged.addListener((text, suggest) => {

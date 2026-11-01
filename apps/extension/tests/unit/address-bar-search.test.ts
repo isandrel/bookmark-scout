@@ -126,6 +126,22 @@ describe('Address Bar Search', () => {
     });
   });
 
+  it('finds near spellings as the search box does, unless Fuzzy Matching is off', async () => {
+    await seedStored(STORAGE_ITEMS.settings, { language: 'en', addressBarEnabled: true });
+    const { omnibox } = installOmnibox();
+    await register();
+    expect((await suggestionsFor(omnibox, 'reakt')).map(({ content }) => content)).toContain(
+      'https://react.dev/',
+    );
+
+    await seedStored(STORAGE_ITEMS.settings, {
+      language: 'en',
+      addressBarEnabled: true,
+      searchFuzzy: false,
+    });
+    expect(await suggestionsFor(omnibox, 'reakt')).toEqual([]);
+  });
+
   it('reads a changed library again after a bookmark event', async () => {
     await seedStored(STORAGE_ITEMS.settings, { language: 'en', addressBarEnabled: true });
     const { omnibox, bookmarkEvents } = installOmnibox();

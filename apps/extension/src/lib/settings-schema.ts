@@ -983,7 +983,28 @@ const fields = {
   searchHistory: switchField('search.search.history', 'searchHistory'),
   folderMatchesEnabled: switchField('search.folder_matches.enabled', 'folderMatchesEnabled'),
   folderMatchesMax: numberField('search.folder_matches.max', 'folderMatchesMax'),
-  folderMatchesTypos: switchField('search.folder_matches.typos', 'folderMatchesTypos'),
+  folderMatchesNameWeight: numberField(
+    'search.folder_matches.name_weight',
+    'folderMatchesNameWeight',
+  ),
+  folderMatchesParentWeight: numberField(
+    'search.folder_matches.parent_weight',
+    'folderMatchesParentWeight',
+  ),
+  folderMatchesBookmarkWeight: numberField(
+    'search.folder_matches.bookmark_weight',
+    'folderMatchesBookmarkWeight',
+  ),
+  searchFuzzy: switchField('search.search_matching.fuzzy', 'searchFuzzy'),
+  searchFuzzyOneEdit: numberField('search.search_matching.one_edit', 'searchFuzzyOneEdit'),
+  searchFuzzyTwoEdits: numberField('search.search_matching.two_edits', 'searchFuzzyTwoEdits'),
+  searchPrefix: switchField('search.search_matching.prefix', 'searchPrefix'),
+  searchBm25K1: numberField('search.search_matching.bm25_k1', 'searchBm25K1', {
+    control: 'slider',
+  }),
+  searchBm25B: numberField('search.search_matching.bm25_b', 'searchBm25B', {
+    control: 'slider',
+  }),
   settingsSearchSources: choiceListField(
     'search.settings_search.sources',
     'settingsSearchSources',
@@ -1233,6 +1254,30 @@ const fields = {
         large: t('settings_managerCardSizeLarge'),
       })[value],
   ),
+  managerCardCoverShape: enumField(
+    'behavior.manager_cards.cover_shape',
+    'managerCardCoverShape',
+    z.enum(['wide', 'classic', 'square', 'portrait']),
+    (value) =>
+      ({
+        wide: t('settings_managerCardCoverShapeWide'),
+        classic: t('settings_managerCardCoverShapeClassic'),
+        square: t('settings_managerCardCoverShapeSquare'),
+        portrait: t('settings_managerCardCoverShapePortrait'),
+      })[value],
+  ),
+  managerCardCoverFit: enumField(
+    'behavior.manager_cards.cover_fit',
+    'managerCardCoverFit',
+    z.enum(['fill', 'fit']),
+    (value) =>
+      ({
+        fill: t('settings_managerCardCoverFitFill'),
+        fit: t('settings_managerCardCoverFitFit'),
+      })[value],
+  ),
+  managerCardColumns: numberField('behavior.manager_cards.columns', 'managerCardColumns'),
+  managerCardTitleLines: numberField('behavior.manager_cards.title_lines', 'managerCardTitleLines'),
   cardMaxTags: numberField('behavior.manager_cards.max_tags', 'cardMaxTags'),
   cardSummaryLines: numberField('behavior.manager_cards.summary_lines', 'cardSummaryLines'),
   previewFields: idListField('behavior.manager_preview.fields', 'previewFields', SHOWN_ID_PATTERN),
@@ -1888,7 +1933,18 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         id: 'folderMatches',
         labelKey: 'settings_folderMatchesEnabled',
         toggle: 'folderMatchesEnabled',
-        fields: ['folderMatchesMax', 'folderMatchesTypos'],
+        fields: ['folderMatchesMax'],
+        advanced: [
+          'folderMatchesNameWeight',
+          'folderMatchesParentWeight',
+          'folderMatchesBookmarkWeight',
+        ],
+      },
+      {
+        id: 'searchMatching',
+        labelKey: 'settings_sectionSearchMatching',
+        fields: ['searchFuzzy', 'searchFuzzyOneEdit', 'searchFuzzyTwoEdits'],
+        advanced: ['searchPrefix', 'searchBm25K1', 'searchBm25B'],
       },
       {
         id: 'search',
@@ -1996,7 +2052,15 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       {
         id: 'managerCards',
         labelKey: 'settings_sectionManagerCards',
-        fields: ['managerCardSize', 'cardMaxTags', 'cardSummaryLines'],
+        fields: [
+          'managerCardSize',
+          'managerCardColumns',
+          'managerCardCoverShape',
+          'managerCardCoverFit',
+          'managerCardTitleLines',
+          'cardMaxTags',
+          'cardSummaryLines',
+        ],
         panel: 'managerCardFields',
       },
       { id: 'managerPreview', fields: [], panel: 'previewFields' },
@@ -2515,6 +2579,11 @@ export function getSettingsFieldGroups(): SettingsFieldGroup[] {
       id: 'recentFolders',
       kind: 'switch',
       fields: ['recentFoldersEnabled', 'recentFoldersMax'],
+    }),
+    group({
+      id: 'searchFuzzy',
+      kind: 'switch',
+      fields: ['searchFuzzy', 'searchFuzzyOneEdit', 'searchFuzzyTwoEdits'],
     }),
     group({
       id: 'favicons',
