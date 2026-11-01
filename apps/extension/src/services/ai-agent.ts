@@ -1,9 +1,8 @@
 /**
- * The Ask AI chat agent: a tool-calling loop over the user's default AI service, with the
- * bookmark actions AI may call (`actions.ts`) and, when the user turns it on,
- * the provider's built-in web search. Page reading is offered only while Read page content is on
- * and allowed. The loop needs the AI SDK, so it lives in ai-agent.lazy.ts and loads with the
- * first message.
+ * What Ask AI's pages and its host need to know without loading the AI SDK: which providers have
+ * their own web search, the names of the web search and skill tools, and what a call from a page
+ * may use (`createAskAIToolContext`, for the chat's suggestion buttons). The chat itself runs on Pi
+ * Durable in the AI host page (`ask-ai-host.lazy.ts`).
  */
 /** Providers whose own built-in web search Ask AI can add (tools in ai-agent.lazy.ts). */
 const WEB_SEARCH_PROVIDERS = ['openai', 'anthropic', 'google', 'xai'] as const;

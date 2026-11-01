@@ -1,15 +1,10 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { parseSkillContent, validateSkillEntries } from 'agent-skills-ts-sdk';
-import type { ToolExecutionOptions } from 'ai';
 import { describe, expect, it } from 'vitest';
 import { agentActionChoices } from '@/services/actions';
 import { ASK_AI_SKILL_TOOL } from '@/services/ai-agent';
-import {
-  askAISkillCatalog,
-  createAskAISkills,
-  createSkillToolSet,
-} from '@/services/ask-ai-skills.lazy';
+import { askAISkillCatalog, createAskAISkills } from '@/services/ask-ai-skills.lazy';
 
 const SKILLS_DIR = join(__dirname, '../../src/assets/ask-ai-skills');
 const folders = readdirSync(SKILLS_DIR);
@@ -45,12 +40,7 @@ describe('Ask AI skill catalog and tool', () => {
     for (const folder of folders) expect(catalog).toContain(folder);
     expect(catalog).toContain(ASK_AI_SKILL_TOOL);
 
-    const readSkill = createSkillToolSet(skills)[ASK_AI_SKILL_TOOL];
-    const options = { toolCallId: 't', messages: [] } as unknown as ToolExecutionOptions;
-    const result = await readSkill.execute?.({ name: folders[0] }, options);
-    expect(result).toMatchObject({ ok: true });
-    expect(await readSkill.execute?.({ name: 'no-such-skill' }, options)).toMatchObject({
-      ok: false,
-    });
+    expect(await skills.read({ name: folders[0] })).toMatchObject({ ok: true });
+    expect(await skills.read({ name: 'no-such-skill' })).toMatchObject({ ok: false });
   });
 });
