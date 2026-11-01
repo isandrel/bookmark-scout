@@ -6046,7 +6046,7 @@
         "description": "Options > AI > Ask AI: label"
     },
     "settings_askAiKeepChatsDesc": {
-        "message": "Simpan obrolan Tanya AI di perangkat ini: Tanya AI terbuka di obrolan terakhir, dan Obrolan sebelumnya membuka yang lain. Jika nonaktif, tidak ada yang disimpan dan obrolan yang tersimpan dihapus.",
+        "message": "Simpan obrolan Ask AI di perangkat ini: Ask AI membuka obrolan terakhir, dan Obrolan sebelumnya membuka yang lain. Nonaktif hanya menyimpan obrolan yang sedang dibuka, sampai Anda memulai yang baru, dan menghapus yang lain.",
         "description": "Under its setting in Options > AI > Ask AI"
     },
     "settings_askAiChatsMax": {
@@ -6078,7 +6078,7 @@
         "description": "Ask AI: toggle for the provider web search"
     },
     "askAI_empty": {
-        "message": "Tanyakan tentang bookmark Anda, halaman yang sedang Anda buka, atau hal lainnya. Chat tidak disimpan; chat berakhir saat Anda menutupnya.",
+        "message": "Tanyakan tentang bookmark Anda, halaman yang sedang dibuka, atau hal lain. Jawaban tetap berjalan saat Anda menutup ini.",
         "description": "Ask AI: empty state"
     },
     "askAI_suggestionPage": {

@@ -1,20 +1,12 @@
 /**
- * Ask AI: a chat with the default AI service inside the popup and side panel. With Keep Chats on
- * (the default), each finished answer keeps the chat on this device (`ask-ai-chats.ts`), the panel
- * opens on the last chat, and Past chats reopens or deletes the others; with it off, messages stay
- * in memory only and closing the panel ends the conversation. Answers render as Markdown without raw
- * HTML, and links open in a new tab. The chat needs the AI SDK, so `AskAIPanel` loads this file
- * when Ask AI opens; like every `*.lazy.tsx` file it is left out of auto-imports.
+ * Ask AI: a chat with the default AI service inside the popup and side panel. The chat runs in the
+ * AI host page on Pi Durable (`use-ask-ai-chat.ts`), so an answer goes on after the panel closes
+ * and the panel shows it again when it reopens. With Keep Chats on (the default) the panel opens on
+ * the last chat and Past chats reopens or deletes the others; with it off, a new chat deletes the
+ * last one. A private window's chat stays in memory only. Answers render as Markdown without raw
+ * HTML, and links open in a new tab. Like every `*.lazy.tsx` file it is left out of auto-imports.
  */
-import { useChat } from '@ai-sdk/react';
-import {
-  type ChatTransport,
-  DirectChatTransport,
-  getToolName,
-  isToolUIPart,
-  lastAssistantMessageIsCompleteWithApprovalResponses,
-  type UIMessage,
-} from 'ai';
+import { getToolName, isToolUIPart, type UIMessage } from 'ai';
 import {
   ArrowLeft,
   ArrowUp,
@@ -31,25 +23,6 @@ import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { ActionApprovalRequest } from './ActionApproval.lazy';
 import { ChatSuggestions } from './ChatSuggestions.lazy';
-
-/** Builds the agent per message, so the current service and settings always apply. */
-class AskAITransport implements ChatTransport<UIMessage> {
-  async sendMessages(options: Parameters<ChatTransport<UIMessage>['sendMessages']>[0]) {
-    const agent = await createAskAIAgent();
-    const transport = new DirectChatTransport({
-      agent,
-      sendSources: true,
-      // The stream hides errors by default; say what to fix in the user's language, keeping the
-      // provider's own words when its status alone is not specific.
-      onError: (error) => describeAIErrorWithDetail(error),
-    }) as unknown as ChatTransport<UIMessage>;
-    return transport.sendMessages(options);
-  }
-
-  async reconnectToStream() {
-    return null;
-  }
-}
 
 function hostOf(url: unknown): string {
   try {
@@ -190,27 +163,39 @@ export function AskAIChat({ onClose }: AskAIPanelProps) {
   const provider = service?.provider;
   const canSearchWeb = provider ? supportsWebSearch(provider) : false;
   const { value: webSearch, setValue: setWebSearch } = useSetting('askAiWebSearch');
-  const [transport] = useState(() => new AskAITransport());
   const { value: keepChats, isLoading: keepChatsLoading } = useSetting('askAiKeepChats');
-  const { value: chatsMax } = useSetting('askAiChatsMax');
   const { value: chats, isLoading: chatsLoading } = useStoredValue(askAiChatsValue);
-  const [chatId, setChatId] = useState<string>(() => crypto.randomUUID());
-  const resumed = useRef(false);
+  // Which chat to show first, once the chat list is read: a running one, else the last kept one.
+  const [initialChatId, setInitialChatId] = useState<string | undefined>();
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    if (ready || chatsLoading || keepChatsLoading) return;
+    const running = chats.find((chat) => chat.running);
+    setInitialChatId(running?.id ?? (keepChats ? chats[0]?.id : undefined));
+    setReady(true);
+  }, [chats, chatsLoading, keepChats, keepChatsLoading, ready]);
+  const [ephemeral] = useState(() => inPrivateWindow());
   const {
+    chatId,
     messages,
-    sendMessage,
     status,
-    stop,
     error,
+    sendMessage,
+    stop,
     regenerate,
-    setMessages,
     clearError,
-    addToolApprovalResponse,
-  } = useChat({
-    transport,
-    // An approved or declined change goes straight back to the agent to carry on.
-    sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithApprovalResponses,
-  });
+    respond,
+    openChat: showChat,
+    deleteChat,
+    deleteAllChats,
+  } = useAskAIChat({ initialChatId, ephemeral, ready });
+  // With Keep Chats off, chats that are not running are not kept.
+  useEffect(() => {
+    if (!ready || keepChatsLoading || keepChats) return;
+    for (const chat of chats) {
+      if (!chat.running && chat.id !== chatId) deleteChat(chat.id);
+    }
+  }, [chatId, chats, deleteChat, keepChats, keepChatsLoading, ready]);
   const [draft, setDraft] = useState('');
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
@@ -222,60 +207,16 @@ export function AskAIChat({ onClose }: AskAIPanelProps) {
     inputRef.current?.focus();
   }, []);
 
-  // Opens on the last chat once the kept chats are read; turning Keep Chats off deletes them.
-  useEffect(() => {
-    if (resumed.current || chatsLoading || keepChatsLoading) return;
-    resumed.current = true;
-    const [last] = chats;
-    if (keepChats && last) {
-      setChatId(last.id);
-      setMessages(last.messages);
-    }
-  }, [chats, chatsLoading, keepChats, keepChatsLoading, setMessages]);
-  useEffect(() => {
-    if (!keepChatsLoading && !keepChats) void clearChats();
-  }, [keepChats, keepChatsLoading]);
-  // Keeps the chat, never in a private window: at once when an answer is finished (or failed), and
-  // at most every `save_interval_ms` while it is written, so closing the popup mid-answer loses at
-  // most that much. The popup closing keeps what is waiting, though the browser may end the page
-  // before the write lands.
-  const latestChat = useRef({ chatId, messages, chatsMax });
-  const pendingKeep = useRef<ReturnType<typeof setTimeout> | null>(null);
-  useEffect(() => {
-    latestChat.current = { chatId, messages, chatsMax };
-  });
-  useEffect(() => {
-    if (!keepChats || inPrivateWindow() || !resumed.current || messages.length === 0) return;
-    const keep = () => {
-      if (pendingKeep.current) clearTimeout(pendingKeep.current);
-      pendingKeep.current = null;
-      const latest = latestChat.current;
-      void keepChat(latest.chatId, latest.messages, latest.chatsMax).catch((error) => {
-        aiLogger.error({ error }, 'Failed to keep the Ask AI chat');
-      });
-    };
-    if (status === 'ready' || status === 'error') keep();
-    else pendingKeep.current ??= setTimeout(keep, CHAT_SAVE_INTERVAL_MS);
-  }, [chatId, chatsMax, keepChats, messages, status]);
-  useEffect(
-    () => () => {
-      if (!pendingKeep.current) return;
-      clearTimeout(pendingKeep.current);
-      pendingKeep.current = null;
-      const latest = latestChat.current;
-      void keepChat(latest.chatId, latest.messages, latest.chatsMax).catch(() => undefined);
-    },
-    [],
-  );
-
-  const openChat = (id: string, kept: readonly UIMessage[]) => {
-    stop();
+  const openChat = (id?: string) => {
     clearError();
-    setChatId(id);
-    setMessages([...kept]);
+    showChat(id);
     inputRef.current?.focus();
   };
-  const startChat = () => openChat(crypto.randomUUID(), []);
+  const startChat = () => {
+    // Without Keep Chats the chat being left is not kept, unless its answer still runs.
+    if (!keepChats && chatId && !busy) deleteChat(chatId);
+    openChat();
+  };
 
   // Scrolls only the message list; scrollIntoView would also scroll the popup itself.
   // biome-ignore lint/correctness/useExhaustiveDependencies: scrolls as the answer grows
@@ -288,7 +229,7 @@ export function AskAIChat({ onClose }: AskAIPanelProps) {
     const trimmed = text.trim();
     if (!trimmed || busy) return;
     clearError();
-    void sendMessage({ text: trimmed });
+    sendMessage(trimmed);
     setDraft('');
   };
 
@@ -356,7 +297,7 @@ export function AskAIChat({ onClose }: AskAIPanelProps) {
                 chats.map((chat) => (
                   <DropdownMenuItem
                     key={chat.id}
-                    onClick={() => openChat(chat.id, chat.messages)}
+                    onClick={() => openChat(chat.id)}
                     data-current={chat.id === chatId || undefined}
                   >
                     <span className="min-w-0">
@@ -374,8 +315,8 @@ export function AskAIChat({ onClose }: AskAIPanelProps) {
                   {chats.some((chat) => chat.id === chatId) && (
                     <DropdownMenuItem
                       onClick={() => {
-                        void deleteChat(chatId);
-                        startChat();
+                        if (chatId) deleteChat(chatId);
+                        openChat();
                       }}
                     >
                       {t('askAI_deleteChat')}
@@ -383,8 +324,8 @@ export function AskAIChat({ onClose }: AskAIPanelProps) {
                   )}
                   <DropdownMenuItem
                     onClick={() => {
-                      void clearChats();
-                      startChat();
+                      deleteAllChats();
+                      openChat();
                     }}
                   >
                     {t('askAI_deleteAllChats')}
@@ -431,7 +372,7 @@ export function AskAIChat({ onClose }: AskAIPanelProps) {
             <MessageView
               key={message.id}
               message={message}
-              respond={(response) => void addToolApprovalResponse(response)}
+              respond={(response) => respond(response.id, response.approved)}
             />
           ))
         )}
@@ -454,7 +395,7 @@ export function AskAIChat({ onClose }: AskAIPanelProps) {
                   {t('ai_openServiceSettings')}
                 </Button>
               ) : (
-                <Button variant="outline" size="sm" onClick={() => void regenerate()}>
+                <Button variant="outline" size="sm" onClick={() => regenerate()}>
                   {t('askAI_retry')}
                 </Button>
               )}

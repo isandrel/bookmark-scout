@@ -19,7 +19,7 @@ import { createAIModel } from './ai-client.lazy';
  * differently, so they are held as plain objects and typed as a tool where they join the set.
  * Each loads only its own provider package.
  */
-const WEB_SEARCH_TOOLS: Record<
+export const WEB_SEARCH_TOOLS: Record<
   WebSearchProvider,
   (options: { maxUses: number }) => Promise<object>
 > = {

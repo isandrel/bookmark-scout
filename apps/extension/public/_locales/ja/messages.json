@@ -6268,7 +6268,7 @@
         "description": "Options > AI > Ask AI: label"
     },
     "settings_askAiKeepChatsDesc": {
-        "message": "AI に質問 のチャットをこのデバイスに残します。AI に質問 は最後のチャットを開き、「過去のチャット」から他のチャットを開き直せます。オフにすると何も残さず、残したチャットも削除します。",
+        "message": "Ask AI のチャットをこの端末に保存します。Ask AI は最後のチャットを開き、「過去のチャット」から他のチャットを開き直せます。オフにすると、新しいチャットを始めるまで今のチャットだけを保存し、他は削除します。",
         "description": "Under its setting in Options > AI > Ask AI"
     },
     "settings_askAiChatsMax": {
@@ -6300,7 +6300,7 @@
         "description": "Ask AI: toggle for the provider web search"
     },
     "askAI_empty": {
-        "message": "ブックマーク、表示中のページ、その他なんでも質問できます。チャットは保存されず、閉じると終了します。",
+        "message": "ブックマークや開いているページ、そのほか何でも質問できます。ここを閉じても回答は続きます。",
         "description": "Ask AI: empty state"
     },
     "askAI_suggestionPage": {

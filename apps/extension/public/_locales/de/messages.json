@@ -6312,7 +6312,7 @@
         "description": "Options > AI > Ask AI: label"
     },
     "settings_askAiKeepChatsDesc": {
-        "message": "Behält Chats von „KI fragen“ auf diesem Gerät: KI fragen öffnet den letzten, und Frühere Chats öffnet die anderen wieder. Aus behält nichts und löscht die behaltenen Chats.",
+        "message": "Ask-AI-Chats auf diesem Gerät behalten: Ask AI öffnet den letzten, und „Frühere Chats“ öffnet die anderen erneut. Aus behält nur den aktuellen Chat, bis Sie einen neuen beginnen, und löscht die anderen.",
         "description": "Under its setting in Options > AI > Ask AI"
     },
     "settings_askAiChatsMax": {
@@ -6344,7 +6344,7 @@
         "description": "Ask AI: toggle for the provider web search"
     },
     "askAI_empty": {
-        "message": "Fragen Sie zu Ihren Lesezeichen, der aktuellen Seite oder zu allem anderen. Der Chat wird nicht gespeichert; er endet, wenn Sie ihn schließen.",
+        "message": "Fragen Sie nach Ihren Lesezeichen, der aktuellen Seite oder etwas anderem. Eine Antwort läuft weiter, wenn Sie das hier schließen.",
         "description": "Ask AI: empty state"
     },
     "askAI_suggestionPage": {

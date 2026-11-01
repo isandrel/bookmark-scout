@@ -6066,7 +6066,7 @@
         "description": "Options > AI > Ask AI: label"
     },
     "settings_askAiKeepChatsDesc": {
-        "message": "在此设备上保留 询问 AI 的对话：打开时显示上一个对话，可在“历史对话”中重新打开其他对话。关闭后不保留任何对话，并删除已保留的对话。",
+        "message": "在此设备上保留 Ask AI 聊天：Ask AI 会打开上一次的聊天，“历史对话”可以重新打开其他聊天。关闭后只保留当前聊天，直到你开始新的聊天，其余的会被删除。",
         "description": "Under its setting in Options > AI > Ask AI"
     },
     "settings_askAiChatsMax": {
@@ -6098,7 +6098,7 @@
         "description": "Ask AI: toggle for the provider web search"
     },
     "askAI_empty": {
-        "message": "可以询问有关你的书签、当前网页或任何其他问题。对话不会保存，关闭后即结束。",
+        "message": "可以询问你的书签、当前页面或其他任何问题。关闭这里后，回答仍会继续。",
         "description": "Ask AI: empty state"
     },
     "askAI_suggestionPage": {

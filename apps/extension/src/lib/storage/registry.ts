@@ -133,10 +133,10 @@ export const STORAGE_ITEMS = {
   /** Local: tags and summaries are keyed by bookmark id, which differs on every device. */
   bookmarkMetadata: { area: 'local', name: 'bookmarks.metadata', v: 1, backup: 'exclude' },
   /**
-   * Local: Ask AI's past chats hold what the user asked, bookmark titles and addresses, and page text
-   * the model read; never synced or backed up, and cleared when Keep Chats is turned off.
+   * Local: Ask AI's chat list, each chat's first question and time (the conversations are
+   * `INDEXED_DATABASES.askAiChat`); never synced or backed up, cleared with Keep Chats off.
    */
-  askAiChats: { area: 'local', name: 'ai.chats', v: 1, backup: 'exclude' },
+  askAiChats: { area: 'local', name: 'ai.chats', v: 2, backup: 'exclude' },
   /** Local: queries can reveal bookmark contents. */
   searchHistory: { area: 'local', name: 'search.history', v: 1, backup: 'exclude' },
   /** Local: filters can reveal bookmark contents and name folder ids local to this device. */
@@ -344,6 +344,13 @@ export const THEME_CACHE_STORAGE_KEY = 'theme';
  * upgrade step) and prunes by its own retention.
  */
 export const INDEXED_DATABASES = {
+  /**
+   * Ask AI's conversations (`services/ask-ai-host.lazy.ts`), one database per chat, named this
+   * prefix, a hyphen, and the chat's id, so deleting a chat deletes all of it: what the user asked,
+   * the answers, and what the tools returned (bookmark titles and addresses, page text). Never
+   * backed up; deleted with the chat, when the chat list drops it, or with Keep Chats off.
+   */
+  askAiChat: { name: 'bookmark-scout-ask-ai', backup: 'exclude' },
   /**
    * The Bookmark Audit History (`lib/bookmark-audit-store.ts`): records of bookmark changes and
    * their item rows, kept for `config/bookmarks/audit.toml`'s retention.

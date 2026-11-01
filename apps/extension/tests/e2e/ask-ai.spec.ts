@@ -547,17 +547,17 @@ test('[mocked provider contract] Ask AI keeps its chats: reopens the last one, l
   await box.press('Enter');
   await expect(chat.getByTestId('ask-ai-tool')).toBeVisible();
   await expect(chat.getByTestId('ask-ai-message').last()).toHaveAttribute('data-role', 'assistant');
-  // The finished chat is written once the answer ends; reopening before that write lands (a
-  // navigation cancels it) found no chat on a loaded CI runner.
+  // The chat list names the chat once its answer is done; the conversation itself is kept by the
+  // AI host page, so reopening shows it whenever the answer ended.
   await expect
     .poll(async () => {
-      const chats = await readStored<{ messages: unknown[] }[]>(
+      const chats = await readStored<{ title: string; running: boolean }[]>(
         extensionWorker,
         STORAGE_ITEMS.askAiChats,
       );
-      return chats?.[0]?.messages.length ?? 0;
+      return chats?.[0];
     })
-    .toBeGreaterThanOrEqual(2);
+    .toMatchObject({ title: 'Which Rust pages did I save?', running: false });
 
   // Closing the popup ends nothing: Ask AI opens on the same chat.
   chat = await openAskAI();
@@ -596,4 +596,64 @@ test('[mocked provider contract] Ask AI keeps its chats: reopens the last one, l
   await expect(chat.getByRole('button', { name: 'Past chats' })).toHaveCount(0);
   chat = await openAskAI();
   await expect(chat.getByTestId('ask-ai-message')).toHaveCount(0);
+});
+
+test('[mocked provider contract] Ask AI finishes an answer after the popup closes and shows it when it reopens', async ({
+  context,
+  extensionId,
+  extensionWorker,
+}) => {
+  await replaceSettings(extensionWorker, {
+    language: 'en',
+    aiEnabled: true,
+    aiAutoTriggerOnOpen: false,
+  });
+  await seedAskService(extensionWorker);
+  // The provider answers only once the popup is gone: nothing but the AI host page is left to
+  // receive it.
+  let release: () => void = () => {};
+  const popupClosed = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  let answered = 0;
+  await context.route(`${BASE_URL}/**`, async (route) => {
+    await popupClosed;
+    answered += 1;
+    await streamChunks(
+      route,
+      [{ role: 'assistant', content: 'Finished while you were away.' }],
+      'stop',
+    );
+  });
+
+  const popup = await context.newPage();
+  await popup.goto(`chrome-extension://${extensionId}/popup.html`);
+  await popup.getByRole('button', { name: 'Ask AI about your bookmarks or this page' }).click();
+  const box = popup
+    .getByTestId('ask-ai')
+    .getByRole('textbox', { name: /Ask about your bookmarks/ });
+  await box.fill('Summarize my week');
+  await box.press('Enter');
+  await expect(popup.getByTestId('ask-ai-message').first()).toHaveText('Summarize my week');
+  await popup.close();
+  release();
+  await expect.poll(() => answered).toBe(1);
+  await expect
+    .poll(async () => {
+      const chats = await readStored<{ running: boolean }[]>(
+        extensionWorker,
+        STORAGE_ITEMS.askAiChats,
+      );
+      return chats?.[0]?.running;
+    })
+    .toBe(false);
+
+  const reopened = await context.newPage();
+  await reopened.goto(`chrome-extension://${extensionId}/popup.html`);
+  await reopened.getByRole('button', { name: 'Ask AI about your bookmarks or this page' }).click();
+  const messages = reopened.getByTestId('ask-ai').getByTestId('ask-ai-message');
+  await expect(messages.first()).toHaveText('Summarize my week');
+  await expect(messages.last()).toHaveText('Finished while you were away.');
+  // The answer was requested once: reopening shows it, it does not ask again.
+  expect(answered).toBe(1);
 });

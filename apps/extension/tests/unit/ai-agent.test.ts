@@ -1,19 +1,13 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { setLanguage } from '@/hooks/use-i18n';
 import { saveStoredAIProviderConfig } from '@/lib/ai-provider-storage';
 import { addAIService } from '@/lib/ai-services-storage';
 import { defaultSettings } from '@/lib/settings-schema';
 import { saveSettings } from '@/lib/settings-storage';
-import { ASK_AI_WEB_SEARCH_TOOL, createAskAIAgent, supportsWebSearch } from '@/services/ai-agent';
-import { buildAskAIAgent } from '@/services/ai-agent.lazy';
+import { supportsWebSearch } from '@/services/ai-agent';
+import { askAISetup } from '@/services/ask-ai-background';
 import { formatToday, getPromptVariables, PROMPT_TASKS } from '@/services/prompt-config';
-
-// Wraps the real builder, so the options Ask AI passes can be read.
-vi.mock('@/services/ai-agent.lazy', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@/services/ai-agent.lazy')>();
-  return { ...actual, buildAskAIAgent: vi.fn(actual.buildAskAIAgent) };
-});
 
 describe('Ask AI setup', () => {
   it('offers web search only for providers with a built-in search tool', () => {
@@ -39,23 +33,32 @@ describe('Ask AI web search', () => {
   it("adds the provider's web search only while the setting is on", async () => {
     const service = await addAIService('openai');
     await saveStoredAIProviderConfig(service.id, { apiKey: 'sk-synthetic' });
-    const toolNames = async () => Object.keys((await createAskAIAgent()).tools);
-
-    expect(await toolNames()).not.toContain(ASK_AI_WEB_SEARCH_TOOL);
+    const webSearch = async () => {
+      const setup = await askAISetup('chat');
+      return setup.ok && setup.webSearch;
+    };
+    expect(await webSearch()).toBe(false);
     await saveSettings({ askAiWebSearch: true });
-    expect(await toolNames()).toContain(ASK_AI_WEB_SEARCH_TOOL);
+    expect(await webSearch()).toBe(true);
   });
 
-  it('stops after as many model calls as the Most Steps per Answer setting', async () => {
+  it('passes on the Most Steps per Answer setting, the prompt, and the actions turned on', async () => {
     const service = await addAIService('openai');
     await saveStoredAIProviderConfig(service.id, { apiKey: 'sk-synthetic' });
-    const maxSteps = async () => {
-      vi.mocked(buildAskAIAgent).mockClear();
-      await createAskAIAgent();
-      return vi.mocked(buildAskAIAgent).mock.calls[0]?.[0].maxSteps;
+    const setup = async () => {
+      const result = await askAISetup('chat');
+      if (!result.ok) throw new Error(result.error);
+      return result;
     };
-    expect(await maxSteps()).toBe(defaultSettings.askAiMaxSteps);
-    await saveSettings({ askAiMaxSteps: 3 });
-    expect(await maxSteps()).toBe(3);
+    expect((await setup()).maxSteps).toBe(defaultSettings.askAiMaxSteps);
+    expect((await setup()).tools).toContain('listFolders');
+    expect((await setup()).system).toContain(formatToday());
+    await saveSettings({ askAiMaxSteps: 3, askAiDisabledActions: ['listFolders'] });
+    expect((await setup()).maxSteps).toBe(3);
+    expect((await setup()).tools).not.toContain('listFolders');
+  });
+
+  it('says what to fix when no AI service is set up', async () => {
+    expect(await askAISetup('chat')).toMatchObject({ ok: false });
   });
 });

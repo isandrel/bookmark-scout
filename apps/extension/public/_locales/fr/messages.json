@@ -6312,7 +6312,7 @@
         "description": "Options > AI > Ask AI: label"
     },
     "settings_askAiKeepChatsDesc": {
-        "message": "Conserve les discussions d’Demander à l'IA sur cet appareil : Demander à l'IA s’ouvre sur la dernière, et Discussions précédentes rouvre les autres. Désactivé, rien n’est conservé et les discussions gardées sont supprimées.",
+        "message": "Garder les discussions Ask AI sur cet appareil : Ask AI s’ouvre sur la dernière, et Discussions précédentes rouvre les autres. Désactivé, seule la discussion en cours est gardée, jusqu’à ce que vous en commenciez une nouvelle, et les autres sont supprimées.",
         "description": "Under its setting in Options > AI > Ask AI"
     },
     "settings_askAiChatsMax": {
@@ -6344,7 +6344,7 @@
         "description": "Ask AI: toggle for the provider web search"
     },
     "askAI_empty": {
-        "message": "Posez une question sur vos favoris, la page que vous consultez ou tout autre sujet. La discussion n'est pas enregistrée ; elle se termine lorsque vous la fermez.",
+        "message": "Posez une question sur vos favoris, la page affichée ou autre chose. Une réponse continue même si vous fermez ceci.",
         "description": "Ask AI: empty state"
     },
     "askAI_suggestionPage": {
