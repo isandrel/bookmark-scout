@@ -28,18 +28,42 @@ import type { SupportedBrowser } from './supported-browsers';
 
 export type QuickSaveMode = 'local' | 'ai';
 
+/** What a command does: save the current page (with a quick save mode), or open a page. */
+type CommandSpec =
+  | { run: 'quickSave'; mode: QuickSaveMode; descriptionKey: string }
+  | { run: 'openManager'; descriptionKey: string };
+
 export const EXTENSION_COMMANDS = {
   'quick-save': {
+    run: 'quickSave',
     mode: 'local',
     descriptionKey: 'command_quickSave',
   },
   'ai-quick-save': {
+    run: 'quickSave',
     mode: 'ai',
     descriptionKey: 'command_aiQuickSave',
   },
-} as const satisfies Record<string, { mode: QuickSaveMode; descriptionKey: string }>;
+  // Opens the bookmark manager in a tab: the way in where the browser's own bookmarks page cannot
+  // be replaced (Firefox), and a shortcut to it everywhere.
+  'open-manager': {
+    run: 'openManager',
+    descriptionKey: 'command_openManager',
+  },
+} as const satisfies Record<string, CommandSpec>;
 
 export type ExtensionCommand = keyof typeof EXTENSION_COMMANDS;
+
+/** The commands that quick save the current page. */
+export type QuickSaveCommand = {
+  [Name in ExtensionCommand]: (typeof EXTENSION_COMMANDS)[Name] extends { run: 'quickSave' }
+    ? Name
+    : never;
+}[ExtensionCommand];
+
+export function isQuickSaveCommand(name: string): name is QuickSaveCommand {
+  return isExtensionCommand(name) && EXTENSION_COMMANDS[name].run === 'quickSave';
+}
 
 /** The browser's keys (`[browser]` in shortcuts.toml) the extension acts on. */
 export type BrowserKeyName = 'bookmarkPage' | 'bookmarkAllTabs';

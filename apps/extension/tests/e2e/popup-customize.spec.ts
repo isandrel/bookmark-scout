@@ -244,3 +244,33 @@ test('hover card delay and details follow their settings', async ({
   await expect(card.getByTestId('bookmark-hover-card-folder')).toHaveCount(0);
   await expect(card.getByText('hidden-tag')).toHaveCount(0);
 });
+
+test('the Settings buttons in the popup and the manager open the options page', async ({
+  extensionId,
+  extensionWorker,
+  page,
+  context,
+}) => {
+  await setSettings(extensionWorker, { language: 'en' });
+  await openPopup(page, extensionId);
+  // Off by default, so the popup keeps today's buttons.
+  await expect(page.getByRole('button', { name: 'Settings', exact: true })).toHaveCount(0);
+
+  await setSettings(extensionWorker, { popupToolbarButtons: ['openSettings'] });
+  await page.reload();
+  const [fromPopup] = await Promise.all([
+    context.waitForEvent('page'),
+    page.getByRole('button', { name: 'Settings', exact: true }).click(),
+  ]);
+  await expect(fromPopup).toHaveURL(new RegExp(`^chrome-extension://${extensionId}/options.html`));
+  await fromPopup.close();
+
+  await page.goto(`chrome-extension://${extensionId}/bookmarks.html`);
+  const [fromManager] = await Promise.all([
+    context.waitForEvent('page'),
+    page.getByRole('button', { name: 'Settings', exact: true }).click(),
+  ]);
+  await expect(fromManager).toHaveURL(
+    new RegExp(`^chrome-extension://${extensionId}/options.html`),
+  );
+});
