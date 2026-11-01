@@ -548,6 +548,11 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     ],
     'A device setting: it never syncs.',
   ),
+  askAiDisabledSkills: tested(
+    'services/ask-ai-background.ts',
+    [unit('ask-ai-skills.test.ts', "leaves out the skills turned off, built-in or the user's own")],
+    'Edited in Options > AI > Skills (AskAISkillsPanel).',
+  ),
   askAiDisabledActions: tested(
     'services/actions.ts',
     [

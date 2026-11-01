@@ -136,7 +136,7 @@ Keep several prompts per tool, up to 10 in all, and switch between them with the
 | **Auto-Tagging** | Manager, Tools, **AI** | Titles, URLs, and folder paths of the bookmarks in the current folder, and with **Read page content** on, each page's main text; with **Send Existing Tags** on (the default), also the names of your most used tags |
 | **Content Summarizer** | Manager, Tools, **AI** | Titles, URLs, and folder paths of the bookmarks in the current folder, and with **Read page content** on, each page's main text |
 | **AI Folder Reorganization** | Manager, Tools, **AI** | Titles, URLs, and folder paths of the bookmarks in the scope you choose |
-| **Ask AI** | Popup and side panel, the chat button next to the search box (shown only when AI is on) | Your messages and the conversation so far, and what it looks up: matching bookmarks (with their folders, dates added, tags, and summaries), folder names, the current page's title and URL, whether bookmarked links it checks still work, and with **Read page content** on, the text of pages it reads |
+| **Ask AI** | Popup and side panel, the chat button next to the search box (shown only when AI is on) | Your messages and the conversation so far, and what it looks up: matching bookmarks (with their folders, dates added, tags, and summaries), folder names, the current page's title and URL, whether bookmarked links it checks still work, and with **Read page content** on, the text of pages it reads; the names and descriptions of the skills that are on, and a skill's text when the AI reads it |
 | **AI Context Packer** | Manager, Tools, **AI** | Nothing. It saves a file on your computer and works with AI turned off. |
 
 Every AI feature that uses a provider also sends your **About me** text (**AI** settings) while it has any; it is empty by default.
@@ -163,7 +163,7 @@ Click the chat button next to the search box in the popup or side panel to ask a
 - An answer keeps going after you close the popup or side panel, and picks up where it stopped after the browser restarts; open Ask AI again to see it. **New chat** starts a new conversation.
 - The instructions it follows are the **Ask AI** prompt in the prompt library, so you can view or replace them like any other prompt.
 - **What Ask AI may do**, in **Settings**, then **AI**, lists every lookup and change it can make. Turn one off and Ask AI is not offered it at all. Applying a plan of changes always asks you first.
-- For some requests, such as organizing a folder or cleaning up duplicates and broken links, Ask AI follows a built-in skill: step-by-step instructions it reads only when your request matches one. The chat shows this as a step, for example “Read the “organize-folder” skill”. A skill is only text for the AI; it never runs code.
+- For some requests, such as organizing a folder or cleaning up duplicates and broken links, Ask AI follows a built-in skill: step-by-step instructions it reads only when your request matches one. The chat shows this as a step, for example “Read the “organize-folder” skill”. A skill is only text for the AI; it never runs code. Turn a skill off, or add your own, in **Settings**, then **AI**, then **Skills**.
 - For developers: AI agents on your computer, such as Claude Code, can use the same lookups and changes; see [Use with local AI agents](/guides/local-agents).
 
 ## See what was sent

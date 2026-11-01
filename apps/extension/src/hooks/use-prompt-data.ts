@@ -9,7 +9,13 @@ import { useEffect, useState } from 'react';
 async function loadSkillCatalog(taskId: PromptTaskId): Promise<PromptData> {
   if (!PROMPT_TASKS[taskId].variables.some((variable) => variable.name === 'skills')) return {};
   const { askAISkillCatalog, createAskAISkills } = await import('@/services/ask-ai-skills.lazy');
-  return { skills: askAISkillCatalog(await createAskAISkills()) };
+  const [user, { askAiDisabledSkills }] = await Promise.all([
+    askAiSkillsValue.get(),
+    getSettings(),
+  ]);
+  return {
+    skills: askAISkillCatalog(await createAskAISkills({ user, disabled: askAiDisabledSkills })),
+  };
 }
 
 export function usePromptData(taskId: PromptTaskId | undefined): PromptData {

@@ -6312,7 +6312,7 @@
         "description": "Options > AI > Ask AI: label"
     },
     "settings_askAiKeepChatsDesc": {
-        "message": "Conserva le chat di Ask AI su questo dispositivo: Ask AI si apre sull’ultima e Chat precedenti riapre le altre. Disattivato conserva solo la chat in corso, finché non ne inizi una nuova, ed elimina le altre.",
+        "message": "Conserva le chat di Chiedi all'IA su questo dispositivo: Chiedi all'IA si apre sull’ultima e Chat precedenti riapre le altre. Disattivato conserva solo la chat in corso, finché non ne inizi una nuova, ed elimina le altre.",
         "description": "Under its setting in Options > AI > Ask AI"
     },
     "settings_askAiChatsMax": {
@@ -6604,7 +6604,7 @@
         "description": "Prompt variable description"
     },
     "prompt_varSkills": {
-        "message": "Le skill che Ask AI può leggere e come leggerle (vuoto se non ce ne sono)",
+        "message": "Le skill che Chiedi all'IA può leggere e come leggerle (vuoto se non ce ne sono)",
         "description": "Prompt variable description"
     },
     "prompt_placeholders": {
@@ -7874,6 +7874,74 @@
     "settings_askAiDisabledActionsDesc": {
         "message": "Disattiva ciò che non vuoi che l'IA faccia; in questo modo non le viene proprio proposto. Applicare un piano di modifiche richiede sempre prima la tua conferma.",
         "description": "Options > AI: description of the panel for choosing what Ask AI may do"
+    },
+    "settings_askAiDisabledSkills": {
+        "message": "Skill",
+        "description": "Options > AI: panel title for Ask AI skills"
+    },
+    "settings_askAiDisabledSkillsDesc": {
+        "message": "Istruzioni passo passo che Chiedi all'IA legge solo quando la richiesta corrisponde. Disattivane una perché Chiedi all'IA non la legga, oppure aggiungi le tue nel formato Agent Skills (un file SKILL.md). Una skill è solo testo per l’IA e non esegue mai codice.",
+        "description": "Options > AI > Skills: description"
+    },
+    "askAI_skillNew": {
+        "message": "Nuova skill",
+        "description": "Options > AI > Skills: button that opens the editor for a new skill"
+    },
+    "askAI_skillImportFiles": {
+        "message": "Importa file",
+        "description": "Options > AI > Skills: button that imports a SKILL.md and its files"
+    },
+    "askAI_skillImportFolder": {
+        "message": "Importa cartella",
+        "description": "Options > AI > Skills: button that imports a skill folder"
+    },
+    "askAI_skillBuiltIn": {
+        "message": "Integrata",
+        "description": "Options > AI > Skills: badge of a skill that comes with the extension"
+    },
+    "askAI_skillYours": {
+        "message": "Tua",
+        "description": "Options > AI > Skills: badge of a skill the user added"
+    },
+    "askAI_skillEditorTitle": {
+        "message": "Skill",
+        "description": "Options > AI > Skills: editor title, and the label of its text box"
+    },
+    "askAI_skillEditorDesc": {
+        "message": "Scrivi la skill come file SKILL.md: il nome e una descrizione di quando usarla tra le righe ---, poi le istruzioni.",
+        "description": "Options > AI > Skills: editor description"
+    },
+    "askAI_skillTemplate": {
+        "message": "---\nname: mia-skill\ndescription: Cosa fa questa skill e quando Chiedi all'IA deve usarla.\n---\n\n# La mia skill\n\n1. Il primo passo.\n2. Il passo successivo.\n",
+        "description": "Options > AI > Skills: the text a new skill starts with; keep the --- lines, name: and description: as they are, and the name in lowercase letters and hyphens"
+    },
+    "askAI_skillInvalid": {
+        "message": "Questa non è una skill valida:",
+        "description": "Options > AI > Skills: shown above the reasons a skill is not valid"
+    },
+    "askAI_skillNameTaken": {
+        "message": "Esiste già una skill integrata chiamata «$1».",
+        "description": "Options > AI > Skills: $1 is the skill name"
+    },
+    "askAI_skillTooMany": {
+        "message": "Puoi conservare al massimo $1 skill.",
+        "description": "Options > AI > Skills: $1 is the most skills"
+    },
+    "askAI_skillTooManyFiles": {
+        "message": "Una skill può avere al massimo $1 file oltre a SKILL.md.",
+        "description": "Options > AI > Skills: $1 is the most files"
+    },
+    "askAI_skillTooLarge": {
+        "message": "Una skill può contenere al massimo $1 caratteri.",
+        "description": "Options > AI > Skills: $1 is the most characters"
+    },
+    "askAI_skillImported": {
+        "message": "Skill importata.",
+        "description": "Options > AI > Skills: toast after an import"
+    },
+    "askAI_skillDeleteConfirm": {
+        "message": "Eliminare la skill «$1»?",
+        "description": "Options > AI > Skills: delete confirmation; $1 is the skill name"
     },
     "settings_agentBridge": {
         "message": "Agenti IA locali",

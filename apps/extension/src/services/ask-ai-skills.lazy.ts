@@ -33,12 +33,53 @@ function builtInSkillEntries(): Map<string, SkillContentEntry[]> {
   return skills;
 }
 
-/** Every skill Ask AI can read, built-in first. */
-export function createAskAISkills(): Promise<SkillRegistry> {
-  const sources = [...builtInSkillEntries()].map(([folder, entries]) =>
-    skillSourceFromEntries(entries, { id: `built-in:${folder}`, location: 'built-in' }),
+/** Where a skill comes from, as the catalog and Options name it. */
+export const SKILL_LOCATIONS = { builtIn: 'built-in', user: 'yours' } as const;
+
+/**
+ * Every skill Ask AI can read: the built-in ones, then the user's own (`user`), leaving out
+ * those named in `disabled`. A skill whose files do not parse is left out on its own.
+ */
+export function createAskAISkills({
+  user = [],
+  disabled = [],
+}: {
+  user?: readonly UserSkill[];
+  disabled?: readonly string[];
+} = {}): Promise<SkillRegistry> {
+  const off = new Set(disabled);
+  const builtIn = [...builtInSkillEntries()].flatMap(([folder, entries]) =>
+    off.has(folder)
+      ? []
+      : [
+          skillSourceFromEntries(entries, {
+            id: `built-in:${folder}`,
+            location: SKILL_LOCATIONS.builtIn,
+          }),
+        ],
   );
-  return createSkillRegistry(sources);
+  const own = user.flatMap((skill) => {
+    if (off.has(skill.name)) return [];
+    try {
+      return [
+        skillSourceFromEntries(
+          skill.files.map((file) => ({ name: file.path, content: file.content })),
+          { id: `user:${skill.name}`, location: SKILL_LOCATIONS.user },
+        ),
+      ];
+    } catch {
+      return [];
+    }
+  });
+  return createSkillRegistry([...builtIn, ...own]);
+}
+
+/** The built-in skills as files, for Options to show and export. */
+export function builtInSkillFiles(): { name: string; files: SkillFile[] }[] {
+  return [...builtInSkillEntries()].map(([name, entries]) => ({
+    name,
+    files: entries.map((entry) => ({ path: entry.name, content: entry.content })),
+  }));
 }
 
 /** The system prompt part that lists the skills and says how to read them; empty without any. */

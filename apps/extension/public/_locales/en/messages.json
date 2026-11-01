@@ -7875,6 +7875,74 @@
         "message": "Turn off what you do not want the AI to do; it is then not offered to it at all. Applying a plan of changes always asks you first.",
         "description": "Options > AI: description of the panel for choosing what Ask AI may do"
     },
+    "settings_askAiDisabledSkills": {
+        "message": "Skills",
+        "description": "Options > AI: panel title for Ask AI skills"
+    },
+    "settings_askAiDisabledSkillsDesc": {
+        "message": "Step-by-step instructions Ask AI reads only when your request matches one. Turn one off to keep Ask AI from reading it, or add your own in the Agent Skills format (a SKILL.md file). A skill is only text for the AI; it never runs code.",
+        "description": "Options > AI > Skills: description"
+    },
+    "askAI_skillNew": {
+        "message": "New skill",
+        "description": "Options > AI > Skills: button that opens the editor for a new skill"
+    },
+    "askAI_skillImportFiles": {
+        "message": "Import files",
+        "description": "Options > AI > Skills: button that imports a SKILL.md and its files"
+    },
+    "askAI_skillImportFolder": {
+        "message": "Import folder",
+        "description": "Options > AI > Skills: button that imports a skill folder"
+    },
+    "askAI_skillBuiltIn": {
+        "message": "Built-in",
+        "description": "Options > AI > Skills: badge of a skill that comes with the extension"
+    },
+    "askAI_skillYours": {
+        "message": "Yours",
+        "description": "Options > AI > Skills: badge of a skill the user added"
+    },
+    "askAI_skillEditorTitle": {
+        "message": "Skill",
+        "description": "Options > AI > Skills: editor title, and the label of its text box"
+    },
+    "askAI_skillEditorDesc": {
+        "message": "Write the skill as a SKILL.md file: its name and a description of when to use it between the --- lines, then the instructions.",
+        "description": "Options > AI > Skills: editor description"
+    },
+    "askAI_skillTemplate": {
+        "message": "---\nname: my-skill\ndescription: What this skill does, and when Ask AI should use it.\n---\n\n# My skill\n\n1. The first step.\n2. The next step.\n",
+        "description": "Options > AI > Skills: the text a new skill starts with; keep the --- lines, name: and description: as they are, and the name in lowercase letters and hyphens"
+    },
+    "askAI_skillInvalid": {
+        "message": "This is not a valid skill:",
+        "description": "Options > AI > Skills: shown above the reasons a skill is not valid"
+    },
+    "askAI_skillNameTaken": {
+        "message": "A built-in skill is already named “$1”.",
+        "description": "Options > AI > Skills: $1 is the skill name"
+    },
+    "askAI_skillTooMany": {
+        "message": "You can keep at most $1 skills.",
+        "description": "Options > AI > Skills: $1 is the most skills"
+    },
+    "askAI_skillTooManyFiles": {
+        "message": "A skill can have at most $1 files besides SKILL.md.",
+        "description": "Options > AI > Skills: $1 is the most files"
+    },
+    "askAI_skillTooLarge": {
+        "message": "A skill can hold at most $1 characters.",
+        "description": "Options > AI > Skills: $1 is the most characters"
+    },
+    "askAI_skillImported": {
+        "message": "Skill imported.",
+        "description": "Options > AI > Skills: toast after an import"
+    },
+    "askAI_skillDeleteConfirm": {
+        "message": "Delete the skill “$1”?",
+        "description": "Options > AI > Skills: delete confirmation; $1 is the skill name"
+    },
     "settings_agentBridge": {
         "message": "Local AI agents",
         "description": "Options > For developers: section heading for access for local AI agents (Claude Code, Codex, Cursor); also names them in the AI activity log"

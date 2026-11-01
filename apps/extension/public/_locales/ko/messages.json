@@ -6304,7 +6304,7 @@
         "description": "Options > AI > Ask AI: label"
     },
     "settings_askAiKeepChatsDesc": {
-        "message": "Ask AI 채팅을 이 기기에 보관합니다. Ask AI는 마지막 채팅을 열고, 이전 채팅에서 다른 채팅을 다시 열 수 있습니다. 끄면 새 채팅을 시작할 때까지 지금 채팅만 보관하고 나머지는 삭제합니다.",
+        "message": "AI에게 묻기채팅을 이 기기에 보관합니다. AI에게 묻기는 마지막 채팅을 열고, 이전 채팅에서 다른 채팅을 다시 열 수 있습니다. 끄면 새 채팅을 시작할 때까지 지금 채팅만 보관하고 나머지는 삭제합니다.",
         "description": "Under its setting in Options > AI > Ask AI"
     },
     "settings_askAiChatsMax": {
@@ -6596,7 +6596,7 @@
         "description": "Prompt variable description"
     },
     "prompt_varSkills": {
-        "message": "Ask AI가 읽을 수 있는 스킬과 읽는 방법(스킬이 없으면 비어 있음)",
+        "message": "AI에게 묻기가 읽을 수 있는 스킬과 읽는 방법(스킬이 없으면 비어 있음)",
         "description": "Prompt variable description"
     },
     "prompt_placeholders": {
@@ -7862,6 +7862,74 @@
     "settings_askAiDisabledActionsDesc": {
         "message": "AI가 하지 않았으면 하는 일은 끄세요. 끈 작업은 AI에 아예 제공되지 않습니다. 변경 계획을 적용할 때는 항상 먼저 확인합니다.",
         "description": "Options > AI: description of the panel for choosing what Ask AI may do"
+    },
+    "settings_askAiDisabledSkills": {
+        "message": "스킬",
+        "description": "Options > AI: panel title for Ask AI skills"
+    },
+    "settings_askAiDisabledSkillsDesc": {
+        "message": "요청이 맞을 때만 AI에게 묻기가 읽는 단계별 지침입니다. 끄면 AI에게 묻기가 그 스킬을 읽지 않습니다. Agent Skills 형식(SKILL.md 파일)으로 직접 만든 스킬을 추가할 수도 있습니다. 스킬은 AI가 읽는 텍스트일 뿐이며 코드를 실행하지 않습니다.",
+        "description": "Options > AI > Skills: description"
+    },
+    "askAI_skillNew": {
+        "message": "새 스킬",
+        "description": "Options > AI > Skills: button that opens the editor for a new skill"
+    },
+    "askAI_skillImportFiles": {
+        "message": "파일 가져오기",
+        "description": "Options > AI > Skills: button that imports a SKILL.md and its files"
+    },
+    "askAI_skillImportFolder": {
+        "message": "폴더 가져오기",
+        "description": "Options > AI > Skills: button that imports a skill folder"
+    },
+    "askAI_skillBuiltIn": {
+        "message": "기본 제공",
+        "description": "Options > AI > Skills: badge of a skill that comes with the extension"
+    },
+    "askAI_skillYours": {
+        "message": "내 스킬",
+        "description": "Options > AI > Skills: badge of a skill the user added"
+    },
+    "askAI_skillEditorTitle": {
+        "message": "스킬",
+        "description": "Options > AI > Skills: editor title, and the label of its text box"
+    },
+    "askAI_skillEditorDesc": {
+        "message": "스킬을 SKILL.md 파일로 작성하세요. --- 줄 사이에 이름과 사용할 때에 대한 설명을 쓰고, 그다음에 지침을 씁니다.",
+        "description": "Options > AI > Skills: editor description"
+    },
+    "askAI_skillTemplate": {
+        "message": "---\nname: my-skill\ndescription: 이 스킬이 하는 일과 AI에게 묻기가 언제 사용해야 하는지.\n---\n\n# 내 스킬\n\n1. 첫 단계.\n2. 다음 단계.\n",
+        "description": "Options > AI > Skills: the text a new skill starts with; keep the --- lines, name: and description: as they are, and the name in lowercase letters and hyphens"
+    },
+    "askAI_skillInvalid": {
+        "message": "올바른 스킬이 아닙니다:",
+        "description": "Options > AI > Skills: shown above the reasons a skill is not valid"
+    },
+    "askAI_skillNameTaken": {
+        "message": "“$1”(이)라는 기본 제공 스킬이 이미 있습니다.",
+        "description": "Options > AI > Skills: $1 is the skill name"
+    },
+    "askAI_skillTooMany": {
+        "message": "스킬은 최대 $1개까지 보관할 수 있습니다.",
+        "description": "Options > AI > Skills: $1 is the most skills"
+    },
+    "askAI_skillTooManyFiles": {
+        "message": "스킬에는 SKILL.md 외에 최대 $1개의 파일을 넣을 수 있습니다.",
+        "description": "Options > AI > Skills: $1 is the most files"
+    },
+    "askAI_skillTooLarge": {
+        "message": "스킬에는 최대 $1자까지 담을 수 있습니다.",
+        "description": "Options > AI > Skills: $1 is the most characters"
+    },
+    "askAI_skillImported": {
+        "message": "스킬을 가져왔습니다.",
+        "description": "Options > AI > Skills: toast after an import"
+    },
+    "askAI_skillDeleteConfirm": {
+        "message": "“$1” 스킬을 삭제할까요?",
+        "description": "Options > AI > Skills: delete confirmation; $1 is the skill name"
     },
     "settings_agentBridge": {
         "message": "로컬 AI 에이전트",

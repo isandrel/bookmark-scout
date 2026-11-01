@@ -154,7 +154,7 @@ function openChat(chatId: string, ephemeral: boolean): Promise<OpenChat> {
           untrustedContentSeen: conversation.untrustedContentSeen,
           knownUrls: [...conversation.knownUrls],
         }),
-      skills: createAskAISkills,
+      skills: async () => createAskAISkills((open?.setup ?? (await currentSetup())).skills),
       describeError: describeAIErrorWithDetail,
     });
     const chat = await service.root();

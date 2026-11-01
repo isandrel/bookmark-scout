@@ -35,6 +35,9 @@ recording = false
 web_search = false
 # Actions Ask AI may not use, as action ids; empty lets it use all of them. Edited in Options > AI.
 disabled_actions = { default = [], max_items = 16, max_length = 20 }
+# Skills Ask AI may not read, built-in or the user's own, by name; empty lets it read all of them.
+# Edited in Options > AI > Skills. A skill name is at most 64 characters (agentskills.io).
+disabled_skills = { default = [], max_items = 20, max_length = 64 }
 # Model calls in one Ask AI answer at most, counting each round of tool use: fewer keep an answer
 # cheaper, more let it look further
 max_steps = { default = 8, min = 1, max = 30, step = 1 }

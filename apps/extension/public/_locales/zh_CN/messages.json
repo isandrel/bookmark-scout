@@ -6066,7 +6066,7 @@
         "description": "Options > AI > Ask AI: label"
     },
     "settings_askAiKeepChatsDesc": {
-        "message": "在此设备上保留 Ask AI 聊天：Ask AI 会打开上一次的聊天，“历史对话”可以重新打开其他聊天。关闭后只保留当前聊天，直到你开始新的聊天，其余的会被删除。",
+        "message": "在此设备上保留询问 AI 聊天：询问 AI 会打开上一次的聊天，“历史对话”可以重新打开其他聊天。关闭后只保留当前聊天，直到你开始新的聊天，其余的会被删除。",
         "description": "Under its setting in Options > AI > Ask AI"
     },
     "settings_askAiChatsMax": {
@@ -6358,7 +6358,7 @@
         "description": "Prompt variable description"
     },
     "prompt_varSkills": {
-        "message": "Ask AI 可读取的技能及其读取方式（没有技能时为空）",
+        "message": "询问 AI 可读取的技能及其读取方式（没有技能时为空）",
         "description": "Prompt variable description"
     },
     "prompt_placeholders": {
@@ -7624,6 +7624,74 @@
     "settings_askAiDisabledActionsDesc": {
         "message": "关闭你不希望 AI 执行的操作；关闭后它将完全不会提供给 AI。应用更改方案前总会先征求你的同意。",
         "description": "Options > AI: description of the panel for choosing what Ask AI may do"
+    },
+    "settings_askAiDisabledSkills": {
+        "message": "技能",
+        "description": "Options > AI: panel title for Ask AI skills"
+    },
+    "settings_askAiDisabledSkillsDesc": {
+        "message": "分步骤的说明，只在你的请求与之匹配时询问 AI 才会读取。关闭某个技能后询问 AI 就不会读取它；你也可以按 Agent Skills 格式（一个 SKILL.md 文件）添加自己的技能。技能只是给 AI 读的文字，从不运行代码。",
+        "description": "Options > AI > Skills: description"
+    },
+    "askAI_skillNew": {
+        "message": "新建技能",
+        "description": "Options > AI > Skills: button that opens the editor for a new skill"
+    },
+    "askAI_skillImportFiles": {
+        "message": "导入文件",
+        "description": "Options > AI > Skills: button that imports a SKILL.md and its files"
+    },
+    "askAI_skillImportFolder": {
+        "message": "导入文件夹",
+        "description": "Options > AI > Skills: button that imports a skill folder"
+    },
+    "askAI_skillBuiltIn": {
+        "message": "内置",
+        "description": "Options > AI > Skills: badge of a skill that comes with the extension"
+    },
+    "askAI_skillYours": {
+        "message": "我的",
+        "description": "Options > AI > Skills: badge of a skill the user added"
+    },
+    "askAI_skillEditorTitle": {
+        "message": "技能",
+        "description": "Options > AI > Skills: editor title, and the label of its text box"
+    },
+    "askAI_skillEditorDesc": {
+        "message": "把技能写成 SKILL.md 文件：在 --- 行之间写名称和何时使用的说明，然后写具体步骤。",
+        "description": "Options > AI > Skills: editor description"
+    },
+    "askAI_skillTemplate": {
+        "message": "---\nname: my-skill\ndescription: 这个技能做什么，以及询问 AI 何时应该使用它。\n---\n\n# 我的技能\n\n1. 第一步。\n2. 下一步。\n",
+        "description": "Options > AI > Skills: the text a new skill starts with; keep the --- lines, name: and description: as they are, and the name in lowercase letters and hyphens"
+    },
+    "askAI_skillInvalid": {
+        "message": "这不是有效的技能：",
+        "description": "Options > AI > Skills: shown above the reasons a skill is not valid"
+    },
+    "askAI_skillNameTaken": {
+        "message": "已有名为“$1”的内置技能。",
+        "description": "Options > AI > Skills: $1 is the skill name"
+    },
+    "askAI_skillTooMany": {
+        "message": "最多可以保留 $1 个技能。",
+        "description": "Options > AI > Skills: $1 is the most skills"
+    },
+    "askAI_skillTooManyFiles": {
+        "message": "一个技能除 SKILL.md 外最多可包含 $1 个文件。",
+        "description": "Options > AI > Skills: $1 is the most files"
+    },
+    "askAI_skillTooLarge": {
+        "message": "一个技能最多可包含 $1 个字符。",
+        "description": "Options > AI > Skills: $1 is the most characters"
+    },
+    "askAI_skillImported": {
+        "message": "已导入技能。",
+        "description": "Options > AI > Skills: toast after an import"
+    },
+    "askAI_skillDeleteConfirm": {
+        "message": "删除技能“$1”？",
+        "description": "Options > AI > Skills: delete confirmation; $1 is the skill name"
     },
     "settings_agentBridge": {
         "message": "本地 AI 智能体",
