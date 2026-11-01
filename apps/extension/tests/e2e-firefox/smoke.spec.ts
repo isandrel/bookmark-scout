@@ -8,7 +8,7 @@ import { solidPng } from '../solid-png';
 import { By, expect, type FirefoxExtension, test } from './fixtures';
 
 /**
- * Firefox runtime smoke suite for the MV2 build. It covers one representative path per surface;
+ * Firefox runtime smoke suite for the Manifest V3 build. It covers one representative path per surface;
  * the full behavior matrix runs in Chromium and Edge. See apps/docs/content/docs/status.mdx for the
  * APIs that differ in Firefox.
  */
@@ -545,7 +545,7 @@ test('manager drag and drop reorders rows and turns dropped links into bookmarks
 });
 
 test('extension pages share Web Locks, which serialize storage writes', async ({ extension }) => {
-  // The MV2 background page cannot be scripted here; it shares the pages' origin, and so their
+  // The background event page cannot be scripted here; it shares the pages' origin, and so their
   // locks. Hold a lock in one extension page and look for it from another.
   await extension.call(async () => {
     void navigator.locks.request('sync:settings', () => new Promise(() => undefined));

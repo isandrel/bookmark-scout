@@ -44,7 +44,7 @@ The material lives at the repository root, not under `apps/extension/`:
 
 Derived from `apps/extension/dist/*/manifest.json` after `bunx nx run extension:build:chrome|firefox|edge` on 2026-10-01; the permission rows were re-checked against the 0.3.5 builds on 2026-10-23.
 
-| Surface | Chrome (MV3) | Edge (MV3) | Firefox (MV2) |
+| Surface | Chrome (MV3) | Edge (MV3) | Firefox (MV3) |
 | --- | --- | --- | --- |
 | Toolbar popup | Yes | Yes | Yes |
 | Side panel | `side_panel` | `side_panel` | `sidebar_action`: the same page in the Firefox sidebar. Checked by hand in Firefox 157 on 2026-10-09; the smoke suite loads the page in a tab, not the sidebar itself. |

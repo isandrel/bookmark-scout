@@ -50,6 +50,7 @@ bunx nx run-many -t lint typecheck test:unit build:chrome build:firefox build:ed
   - `nx run-many -t types:check lint build -p docs`, then `bun run --cwd apps/docs verify`. A stale `.next` type error goes away after the build.
   - `nx run-many -t lint verify -p website`.
   - `bun test scripts`.
+- **Before every push of an extension PR:** `zsh .agents/skills/feature-delivery/scripts/pre-push-check.sh <abs-worktree> [--firefox] [--base <lower-branch>]` (`--base` for a stacked layer). It refuses to run until the latest `origin/main` is merged in, then runs lint, types, unit and script tests, all three distribution size checks, and the full Chromium suite (startup budgets included) under the E2E lock, and lists every failure. Running only the specs a change touches let three PRs fail CI in October 2026: a shortcut test that typed the old command list, a manager header that overlapped at 420px, and size budgets that two PRs passed alone but not together.
 - **Biome:** run it from `apps/extension` for extension files. A `biome.json` above the repository makes a run from the root fail with "nested root configuration".
 
 ## 4. Commit, PR, merge
@@ -58,6 +59,7 @@ bunx nx run-many -t lint typecheck test:unit build:chrome build:firefox build:ed
 - **Push and open the PR.** Push right after the first commit. Open the PR from `.github/pull_request_template.md` with a summary, the privacy impact, the tests, and the exact verification. Then run `gh pr merge <n> --squash --auto`.
 - **One PR at a time.** Only the next PR in line is updated (`repo-maintenance`).
   - When a PR goes DIRTY, merge `origin/main` into it and resolve: keep both sides' locale keys (`parallel-agent-delivery/scripts/merge-locales.ts`), take `main`'s budget values and re-measure (`extension-performance`, "Startup size budgets"), and union the docs rows.
+  - When a measurement passes a budget, raise it to the headroom the budget file states (distribution: about 15 KB ZIP and 40 KB uncompressed above the largest measurement; startup: a few KiB), with the dated note. Raising to a few bytes above the measurement made the next PR in the queue fail CI after the queue merged `main` into it, every time.
   - Re-verify, then push. Never force-push a branch that has a PR.
 - **CI failures.** Read the failed job's log (`gh api repos/<o>/<r>/actions/jobs/<id>/logs --allow-escape-sequences`). Fix the cause, or rerun only a known flake. CodeQL findings block the merge even in tests.
 

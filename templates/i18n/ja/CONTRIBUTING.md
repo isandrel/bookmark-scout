@@ -105,7 +105,7 @@ bun run build:edge
 
 1. `about:debugging#/runtime/this-firefox` を開きます
 2. 「一時的なアドオンを読み込む」をクリックします
-3. `apps/extension/dist/firefox-mv2` にある `manifest.json` ファイルを選びます
+3. `apps/extension/dist/firefox-mv3` にある `manifest.json` ファイルを選びます
 
 ## 🔄 プルリクエストの流れ
 

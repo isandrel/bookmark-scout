@@ -38,3 +38,8 @@ disabled_actions = { default = [], max_items = 16, max_length = 20 }
 # Model calls in one Ask AI answer at most, counting each round of tool use: fewer keep an answer
 # cheaper, more let it look further
 max_steps = { default = 8, min = 1, max = 30, step = 1 }
+# Keep Chats: Ask AI keeps its chats on this device, opens on the last one, and lists the others to
+# reopen or delete. Off keeps nothing, and turning it off deletes what was kept.
+keep_chats = true
+# Chats kept at most; the oldest go first
+chats_max = { default = 20, min = 1, max = 100, step = 1 }

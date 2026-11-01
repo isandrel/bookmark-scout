@@ -10,7 +10,7 @@ unzip -q ~/.cache/bookmark-scout-repro/export/apps/extension/dist/*-sources.zip 
 unzip -q ~/.cache/bookmark-scout-repro/export/apps/extension/dist/*-firefox.zip -d ~/.cache/bookmark-scout-repro/release
 (cd ~/.cache/bookmark-scout-repro/review && bun install --frozen-lockfile && cd apps/extension && bun run build:firefox)
 diff <(cd ~/.cache/bookmark-scout-repro/release && find . -type f | sort | xargs shasum -a 256) \
-     <(cd ~/.cache/bookmark-scout-repro/review/apps/extension/dist/firefox-mv2 && find . -type f | sort | xargs shasum -a 256)
+     <(cd ~/.cache/bookmark-scout-repro/review/apps/extension/dist/firefox-mv3 && find . -type f | sort | xargs shasum -a 256)
 ```
 
 A CSS change also renames every chunk that imports it, so one extra rule shows up as a dozen differing files; diff the CSS first.
