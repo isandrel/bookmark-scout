@@ -95,7 +95,9 @@ export function hasStoredCover(
  * Undo, which puts the same covers back (image, source, and date) unless a bookmark has a new one
  * by then. No confirmation: nothing but the cover is touched, and Undo restores it.
  */
-export async function removeCoversWithUndo(bookmarks: readonly Bookmark[]): Promise<void> {
+export async function removeCoversWithUndo(
+  bookmarks: readonly Pick<Bookmark, 'id'>[],
+): Promise<void> {
   try {
     const taken = await takeCovers(bookmarks.map((bookmark) => bookmark.id));
     if (taken.length === 0) return;
