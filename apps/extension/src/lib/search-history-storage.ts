@@ -18,11 +18,11 @@ export function getSearchHistory(): Promise<string[]> {
 
 /**
  * Move the query to the front, dropping case-insensitive duplicates and the oldest past the
- * Recent Searches Kept setting.
+ * Recent Searches Kept setting. A search in a private window is not kept.
  */
 export async function addSearchHistoryEntry(query: string): Promise<string[]> {
   const entry = query.trim();
-  if (!entry) return getSearchHistory();
+  if (!entry || inPrivateWindow()) return getSearchHistory();
   const key = entry.toLocaleLowerCase();
   const { searchHistoryMax } = await getSettings();
   return searchHistoryValue.update((current) =>
