@@ -4,9 +4,14 @@ Build instructions for add-on reviewers. This archive is a subset of the Bookmar
 
 ## Requirements
 
-- [Bun](https://bun.sh/) at the version declared by `packageManager` in the root `package.json`
-- Node.js supported by the installed Vite version (Vite 8: Node.js 20.19+ or 22.12+)
-- macOS, Linux, or Windows with WSL
+- [Bun](https://bun.sh/) at the exact version declared by `packageManager` in the root `package.json`. On Linux or macOS, this installs that version (it reads the version with Node.js):
+
+  ```bash
+  curl -fsSL https://bun.sh/install | bash -s "bun-v$(node -p "require('./package.json').packageManager.split('@')[1]")"
+  ```
+
+- Node.js supported by the installed Vite version (Vite 8: Node.js 20.19+ or 22.12+); the reviewers' default Node.js 24 works
+- Linux (the release package is built on GitHub's `ubuntu-latest` runner), macOS, or Windows with WSL. No other tools, and no network access beyond `bun install` fetching the locked packages from the npm registry
 
 ## Build
 
@@ -18,7 +23,7 @@ cd apps/extension
 bun run build:firefox
 ```
 
-The unpacked Firefox build is written to `apps/extension/dist/firefox-mv2/`. A clean rebuild from the sources ZIP should match the add-on package from the CI release; compare against that file, not a build from a developer checkout.
+The unpacked Firefox build is written to `apps/extension/dist/firefox-mv3/` (Manifest V3, the version `apps/extension/build/browser-targets.toml` sets for every browser). A clean rebuild from the sources ZIP should match the add-on package from the CI release; compare against that file, not a build from a developer checkout.
 
 ## Notes
 

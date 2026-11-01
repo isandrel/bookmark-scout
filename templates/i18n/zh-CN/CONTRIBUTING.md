@@ -105,7 +105,7 @@ bun run build:edge
 
 1. 前往 `about:debugging#/runtime/this-firefox`
 2. 点击“临时载入附加组件”
-3. 选择 `apps/extension/dist/firefox-mv2` 中的 `manifest.json` 文件
+3. 选择 `apps/extension/dist/firefox-mv3` 中的 `manifest.json` 文件
 
 ## 🔄 拉取请求流程
 

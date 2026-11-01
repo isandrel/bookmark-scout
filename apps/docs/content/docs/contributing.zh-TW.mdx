@@ -40,7 +40,7 @@ bun run build
 | --- | --- |
 | Chrome | `apps/extension/dist/chrome-mv3` |
 | Edge | `apps/extension/dist/edge-mv3` |
-| Firefox | `apps/extension/dist/firefox-mv2` |
+| Firefox | `apps/extension/dist/firefox-mv3` |
 
 請以載入未封裝擴充功能的方式載入所用瀏覽器的資料夾，做法與「[安裝](/installation)」中下載的版本相同：在 Chrome 中使用「**載入未封裝項目**」、在 Edge 中使用「**載入解壓縮**」，在 Firefox 中則使用「**載入暫用附加元件**」並選取該資料夾的 `manifest.json`。如果只要建置一個瀏覽器，請執行 `bunx nx run extension:build:chrome`、`extension:build:edge` 或 `extension:build:firefox`。
 

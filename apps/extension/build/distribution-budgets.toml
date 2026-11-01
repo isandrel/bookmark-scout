@@ -353,6 +353,9 @@
 # BM25 search ranking and Search Matching settings met the cards view options and covers changes on
 # main: feat/search-ranking-bm25 measured ZIP 2,215,813 / 2,215,785 / 2,215,844 B and uncompressed
 # 7,506,122 / 7,506,118 / 7,506,305 B (Chrome / Edge / Firefox).
+# Other raised on 2026-10-31 (30,000 to 30,500) for the Firefox build's move to Manifest V3, whose
+# manifest names its action, host permissions, and background in longer keys: chore/firefox-guidance
+# measured 30,053 B of other files in Firefox.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
@@ -376,4 +379,4 @@ css = 92_750
 fonts = 143_000
 locales = 2_825_000
 images = 320_000
-other = 30_000
+other = 30_500

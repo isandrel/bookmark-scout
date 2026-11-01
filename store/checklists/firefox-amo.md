@@ -27,7 +27,7 @@ Follow the release runbook in the root `AGENTS.md`.
   - `bookmark-scout-vX.Y.Z-sources.zip` (source code for review)
 - [ ] Unzip the add-on and confirm `manifest.json` has `"version": "X.Y.Z"`, the expected permissions, and the `gecko` block.
 - [ ] `bunx addons-linter bookmark-scout-vX.Y.Z-firefox.zip` reports 0 errors. Known warnings and their explanations are in [`../permissions.md`](../permissions.md#linter-results).
-- [ ] Reproduce the build from the sources ZIP in an empty folder with [`apps/extension/SOURCE_CODE_REVIEW.md`](../../apps/extension/SOURCE_CODE_REVIEW.md) (`bun install --frozen-lockfile`, then `bun run build:firefox` in `apps/extension`), and compare `dist/firefox-mv2` with the add-on ZIP from the CI release, not with a local developer build: clean rebuilds from the sources ZIP match each other byte for byte, but a build in a developer checkout differs in minified identifier names. AMO reviewers will do the same.
+- [ ] Reproduce the build from the sources ZIP in an empty folder with [`apps/extension/SOURCE_CODE_REVIEW.md`](../../apps/extension/SOURCE_CODE_REVIEW.md) (`bun install --frozen-lockfile`, then `bun run build:firefox` in `apps/extension`), and compare `dist/firefox-mv3` with the add-on ZIP from the CI release, not with a local developer build: clean rebuilds from the sources ZIP match each other byte for byte, but a build in a developer checkout differs in minified identifier names. AMO reviewers will do the same.
 
 ## 2. Manual smoke test in Firefox
 
@@ -70,7 +70,7 @@ The required `Firefox E2E smoke` CI check covers popup search and folder creatio
 No test account is needed. Paste:
 
 ```text
-No account or login is required. Build instructions for the attached sources are in apps/extension/SOURCE_CODE_REVIEW.md (Bun 1.3+, `bun install --frozen-lockfile`, then `bun run build:firefox` in apps/extension; output in apps/extension/dist/firefox-mv2).
+No account or login is required. Build instructions for the attached sources are in apps/extension/SOURCE_CODE_REVIEW.md (Bun 1.3+, `bun install --frozen-lockfile`, then `bun run build:firefox` in apps/extension; output in apps/extension/dist/firefox-mv3).
 
 The bundle is built with WXT and Vite from TypeScript and React sources; nothing is minified by hand and no code is loaded remotely.
 

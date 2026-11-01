@@ -56,7 +56,7 @@
         "build:firefox": {
             "command": "wxt build -b firefox",
             "outputs": [
-                "{projectRoot}/dist/firefox-mv2"
+                "{projectRoot}/dist/firefox-mv3"
             ],
             "options": {
                 "cwd": "apps/extension"

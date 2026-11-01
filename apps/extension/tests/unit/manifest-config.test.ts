@@ -5,7 +5,8 @@ import {
   BROWSER_KEPT_SHORTCUTS,
   COMMAND_SUGGESTED_KEYS,
 } from '@/lib/keyboard-shortcuts';
-import { adaptManifestV2, createManifest, FIREFOX_ADDON_ID } from '../../manifest.config';
+import { buildFolder, MANIFEST_VERSIONS, sharedManifestVersion } from '../../build/browser-targets';
+import { createManifest, FIREFOX_ADDON_ID } from '../../manifest.config';
 
 describe('manifest config', () => {
   it('gives the Firefox build its permanent add-on ID and asks for no data at install', () => {
@@ -121,23 +122,15 @@ describe('manifest config', () => {
     }
   });
 
-  it('moves optional website access into optional_permissions for Manifest V2', () => {
-    const manifest = {
-      manifest_version: 2,
-      name: 'Test',
-      version: '1.0.0',
-      ...createManifest({ browser: 'firefox' }),
-    } as Browser.runtime.Manifest;
-
-    adaptManifestV2(manifest);
-
-    expect(manifest.optional_permissions).toEqual([
-      'tabs',
-      'nativeMessaging',
+  it('builds every browser for Manifest V3, Firefox included, from build/browser-targets.toml', () => {
+    expect(MANIFEST_VERSIONS).toEqual({ chrome: 3, edge: 3, firefox: 3 });
+    expect(sharedManifestVersion()).toBe(3);
+    expect(buildFolder('firefox')).toBe('firefox-mv3');
+    // Manifest V3 keeps optional website access in its own key in Firefox too.
+    expect(createManifest({ browser: 'firefox' }).optional_host_permissions).toEqual([
       'http://*/*',
       'https://*/*',
       '<all_urls>',
     ]);
-    expect(manifest).not.toHaveProperty('optional_host_permissions');
   });
 });

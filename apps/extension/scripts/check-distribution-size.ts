@@ -3,10 +3,10 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { site } from '@bookmark-scout/config';
 import { parse } from 'smol-toml';
+import { buildFolder } from '../build/browser-targets';
 import {
   assertDistributionBudgets,
   assertDistributionManifest,
-  DISTRIBUTION_TARGETS,
   measureDistribution,
   parseDistributionBudgets,
   parseDistributionTarget,
@@ -21,7 +21,7 @@ try {
     version: string;
   };
   const zipPath = path.join(appRoot, 'dist', `${site.slug}-v${version}-${target}.zip`);
-  const distDir = path.join(appRoot, 'dist', `${target}-mv${DISTRIBUTION_TARGETS[target]}`);
+  const distDir = path.join(appRoot, 'dist', buildFolder(target));
   const archive = readFileSync(zipPath);
   if (statSync(zipPath).size !== archive.length)
     throw new Error('Distribution ZIP changed during read');

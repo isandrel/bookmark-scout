@@ -117,7 +117,7 @@ bun run build:edge
 
 1. Öffnen Sie `about:debugging#/runtime/this-firefox`
 2. Klicken Sie auf „Temporäres Add-on laden…“
-3. Wählen Sie die Datei `manifest.json` in `apps/extension/dist/firefox-mv2` aus
+3. Wählen Sie die Datei `manifest.json` in `apps/extension/dist/firefox-mv3` aus
 
 ## 🔄 Ablauf eines Pull Requests
 

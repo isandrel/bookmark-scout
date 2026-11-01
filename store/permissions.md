@@ -6,7 +6,7 @@ Derived on 2026-10-23 from the built manifests, which `apps/extension/manifest.c
 NX_DAEMON=false bunx nx run extension:build:chrome
 NX_DAEMON=false bunx nx run extension:build:firefox
 NX_DAEMON=false bunx nx run extension:build:edge
-# then read apps/extension/dist/{chrome-mv3,firefox-mv2,edge-mv3}/manifest.json
+# then read apps/extension/dist/{chrome-mv3,firefox-mv3,edge-mv3}/manifest.json
 ```
 
 Rebuild and compare before each submission. If a permission is added or removed, update this file, the docs `permissions.mdx`, and the privacy documents; update the README's Permissions summary (`templates/README*.md`) only if what the browser asks at install changes.
@@ -15,12 +15,12 @@ Rebuild and compare before each submission. If a permission is added or removed,
 
 Every permission that a browser lets an extension ask for later is optional and requested only when the user turns on or runs the feature that needs it. The table of permissions and features is `apps/extension/src/lib/permission-catalog.ts`; the manifests and the runtime requests both read it.
 
-| Key | Chrome `chrome-mv3` | Edge `edge-mv3` | Firefox `firefox-mv2` |
+| Key | Chrome `chrome-mv3` | Edge `edge-mv3` | Firefox `firefox-mv3` |
 | --- | --- | --- | --- |
 | `manifest_version` | 3 | 3 | 2 |
 | `permissions` (granted at install) | `bookmarks`, `storage`, `activeTab`, `sidePanel`, `scripting`, `offscreen`, `alarms` | Same as Chrome | `bookmarks`, `storage`, `activeTab`, `scripting`, `alarms`, `contextMenus` |
 | `optional_permissions` | `tabs`, `favicon`, `contextMenus`, `nativeMessaging` | Same as Chrome | `tabs`, `nativeMessaging`, `http://*/*`, `https://*/*`, `<all_urls>` |
-| Optional host access | `optional_host_permissions`: `http://*/*`, `https://*/*`, `<all_urls>` | Same as Chrome | In `optional_permissions` (MV2) |
+| Optional host access | `optional_host_permissions`: `http://*/*`, `https://*/*`, `<all_urls>` | Same as Chrome | Same as Chrome |
 | Host permissions at install | None | None | None |
 | `chrome_url_overrides` | `bookmarks` → `bookmarks.html` | Same as Chrome | Absent |
 | Side panel or sidebar | `side_panel.default_path` | Same as Chrome | `sidebar_action.default_panel` |
@@ -181,7 +181,7 @@ Answer "No, I am not using remote code." All JavaScript ships in the package. Th
 
 ## Linter results
 
-`bunx addons-linter@latest --output json apps/extension/dist/firefox-mv2` (addons-linter 10.14.0) on 2026-10-23 reported 0 errors, 0 notices, and 8 warnings, on the 0.3.4 build and again on the 0.3.5 release package (`bookmark-scout-v0.3.5-firefox.zip`), with the same warnings in the same chunks. The four manifest warnings of 2026-10-01 (`MANIFEST_PERMISSIONS` for `favicon` and `sidePanel`, `MISSING_DATA_COLLECTION_PERMISSIONS`, `MISSING_ADDON_ID`) are fixed. What remains is third-party library code:
+`bunx addons-linter@latest --output json apps/extension/dist/firefox-mv3` (addons-linter 10.14.0) on 2026-10-23 reported 0 errors, 0 notices, and 8 warnings, on the 0.3.4 build and again on the 0.3.5 release package (`bookmark-scout-v0.3.5-firefox.zip`), with the same warnings in the same chunks. On 2026-10-31 the first Manifest V3 build for Firefox reported the same with addons-linter 10.15.0. The four manifest warnings of 2026-10-01 (`MANIFEST_PERMISSIONS` for `favicon` and `sidePanel`, `MISSING_DATA_COLLECTION_PERMISSIONS`, `MISSING_ADDON_ID`) are fixed. What remains is third-party library code:
 
 | Code | Where | Meaning and action |
 | --- | --- | --- |
