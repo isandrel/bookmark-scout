@@ -308,6 +308,10 @@ Tout ce que Demander à l'IA peut consulter et modifier figure ici, et tout est 
 
 Des instructions étape par étape qu’Demander à l'IA ne lit que lorsque votre demande y correspond. Désactivez-en une pour qu’Demander à l'IA ne la lise pas, ou ajoutez les vôtres au format Agent Skills (un fichier SKILL.md). Une compétence n’est que du texte pour l’IA ; elle n’exécute jamais de code.
 
+### Compétences de cet ordinateur [#ask-ai-local-skills]
+
+Désactivé par défaut. Demander à l'IA lit aussi les Agent Skills des dossiers de cet ordinateur, comme `~/.agents/skills`, où les installateurs de compétences les placent. Le programme bookmark-scout-mcp les lit pour le navigateur et se contente de les lire : les scripts d'une compétence ne sont jamais exécutés. Installez-le comme dans [Utiliser avec des agents d'IA locaux](/guides/local-agents) ; l'accès pour les agents peut rester désactivé. **Dossiers de compétences** liste les dossiers, séparés par des virgules ; un dossier peut contenir un SKILL.md ou des dossiers qui en contiennent. Leurs compétences apparaissent sous **Compétences** avec la mention **Cet ordinateur**, où vous pouvez désactiver chacune. Conservé sur cet appareil uniquement.
+
 ### Activité de l'IA [#ai-activity]
 
 **Enregistrer les requêtes** (désactivé par défaut, pour cet appareil uniquement) conserve les 50 dernières requêtes d'IA sur cet appareil, sans les clés API ni les en-têtes d'identification, pour que vous voyiez exactement ce qui a été envoyé. Le désactiver supprime le journal. Consultez [Voir ce qui a été envoyé](/guides/ai-tools#see-what-was-sent).

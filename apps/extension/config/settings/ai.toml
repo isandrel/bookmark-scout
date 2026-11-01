@@ -46,3 +46,13 @@ max_steps = { default = 8, min = 1, max = 30, step = 1 }
 keep_chats = true
 # Chats kept at most; the oldest go first
 chats_max = { default = 20, min = 1, max = 100, step = 1 }
+
+[ask_ai_local_skills]
+# Skills From This Computer: Ask AI also reads the Agent Skills in `folders`, through the
+# bookmark-scout-mcp program (packages/mcp-bridge), which only reads them. A device setting, since
+# the folders are on this computer. Turning it on asks for the native messaging permission.
+enabled = false
+# The folders it reads: a folder holding a SKILL.md, or a folder of them; `~` is the home folder,
+# and commas separate folders. ~/.agents/skills is where Agent Skills installers put skills. At most
+# the bridge's [skills] max_folders (tests/unit/ask-ai-local-skills.test.ts checks).
+folders = { default = ["~/.agents/skills"], max_items = 10, max_length = 1024 }

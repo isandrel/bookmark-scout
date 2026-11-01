@@ -308,6 +308,10 @@ Hier steht alles, was „KI fragen“ nachschlagen und ändern kann; standardmä
 
 Schritt-für-Schritt-Anweisungen, die KI fragen nur liest, wenn Ihre Anfrage dazu passt. Schalten Sie einen aus, damit KI fragen ihn nicht liest, oder fügen Sie eigene im Agent-Skills-Format (eine SKILL.md-Datei) hinzu. Ein Skill ist nur Text für die KI und führt nie Code aus.
 
+### Skills von diesem Computer [#ask-ai-local-skills]
+
+Standardmäßig aus. „KI fragen“ liest auch die Agent Skills in Ordnern auf diesem Computer, etwa `~/.agents/skills`, wohin Skill-Installer sie legen. Das Programm bookmark-scout-mcp liest sie für den Browser und liest sie nur: Die Skripte eines Skills werden nie ausgeführt. Installieren Sie es wie unter [Mit lokalen KI-Agenten verwenden](/guides/local-agents) beschrieben; der Zugriff für Agenten kann aus bleiben. **Skill-Ordner** nennt die Ordner, durch Kommas getrennt; ein Ordner kann eine SKILL.md oder Ordner davon enthalten. Ihre Skills erscheinen unter **Skills** mit **Dieser Computer**, wo Sie jeden ausschalten können. Nur auf diesem Gerät gespeichert.
+
 ### KI-Aktivität [#ai-activity]
 
 **Anfragen aufzeichnen** (standardmäßig aus, nur für dieses Gerät) speichert die letzten 50 KI-Anfragen auf diesem Gerät, ohne API-Schlüssel und Header mit Zugangsdaten, damit Sie genau sehen, was gesendet wurde. Beim Ausschalten wird das Protokoll gelöscht. Siehe [Sehen, was gesendet wurde](/guides/ai-tools#see-what-was-sent).

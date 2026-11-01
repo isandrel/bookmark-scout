@@ -69,6 +69,37 @@ describe("the user's own skills", () => {
     expect(await skills.read({ name: 'my-steps' })).toMatchObject({ ok: true });
   });
 
+  it('reads skills from this computer after the user’s own, turned off by their SKILL.md names', async () => {
+    const fromFolder = (folder: string, name: string) => ({
+      name: folder,
+      files: [
+        {
+          path: 'SKILL.md',
+          content: `---\nname: ${name}\ndescription: From ${folder}\n---\nSteps`,
+        },
+      ],
+    });
+    const skills = await createAskAISkills({
+      user: [userSkill('my-steps')],
+      local: [
+        fromFolder('folder-a', 'local-steps'),
+        fromFolder('folder-b', 'my-steps'),
+        fromFolder('folder-c', 'off-steps'),
+      ],
+      disabled: ['off-steps'],
+    });
+    const listed = skills.list();
+    expect(listed.map((entry) => entry.name).sort()).toEqual(
+      expect.arrayContaining(['local-steps', 'my-steps']),
+    );
+    expect(listed.map((entry) => entry.name)).not.toContain('off-steps');
+    // The user's own skill keeps its name; the one from this computer is ignored.
+    expect(listed.find((entry) => entry.name === 'my-steps')?.sourceId).toBe('user:my-steps');
+    expect(listed.find((entry) => entry.name === 'local-steps')?.sourceId).toBe('local:folder-a');
+    expect(await skills.read({ name: 'local-steps' })).toMatchObject({ ok: true });
+    expect(await skills.read({ name: 'off-steps' })).toMatchObject({ ok: false });
+  });
+
   it('checks a SKILL.md and reads a picked folder relative to it', async () => {
     const { checkSkillFiles, skillFilesFromUpload } = await import(
       '@/services/ask-ai-skill-files.lazy'

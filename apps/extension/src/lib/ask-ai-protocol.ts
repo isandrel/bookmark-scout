@@ -96,7 +96,14 @@ export type AskAIHostSetup =
       maxSteps: number;
       webSearch: boolean;
       webSearchMaxUses: number;
-      /** The user's own skills and the skills turned off (Options > AI > Skills). */
-      skills: { user: UserSkill[]; disabled: string[] };
+      /**
+       * The user's own skills, those from folders on this computer, and the skills turned off
+       * (Options > AI > Skills).
+       */
+      skills: {
+        user: UserSkill[];
+        local: { name: string; files: SkillFile[] }[];
+        disabled: string[];
+      };
     }
   | { ok: false; error: string };

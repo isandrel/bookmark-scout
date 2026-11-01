@@ -9,12 +9,12 @@ import { useEffect, useState } from 'react';
 async function loadSkillCatalog(taskId: PromptTaskId): Promise<PromptData> {
   if (!PROMPT_TASKS[taskId].variables.some((variable) => variable.name === 'skills')) return {};
   const { askAISkillCatalog, createAskAISkills } = await import('@/services/ask-ai-skills.lazy');
-  const [user, { askAiDisabledSkills }] = await Promise.all([
-    askAiSkillsValue.get(),
-    getSettings(),
-  ]);
+  const [user, settings] = await Promise.all([askAiSkillsValue.get(), getSettings()]);
+  const local = localSkillFiles(await localSkillsFor(settings));
   return {
-    skills: askAISkillCatalog(await createAskAISkills({ user, disabled: askAiDisabledSkills })),
+    skills: askAISkillCatalog(
+      await createAskAISkills({ user, local, disabled: settings.askAiDisabledSkills }),
+    ),
   };
 }
 

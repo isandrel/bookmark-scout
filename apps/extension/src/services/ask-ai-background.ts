@@ -39,10 +39,11 @@ export async function askAISetup(chatId: string): Promise<AskAIHostSetup> {
   const appSettings = await getSettings();
   try {
     const settings = await getActiveAISettings(appSettings.aiEnabled, 'askAI');
-    const [tools, prompt, userSkills] = await Promise.all([
+    const [tools, prompt, userSkills, localSkills] = await Promise.all([
       askAIContext(appSettings).then(agentActionIds),
       buildPrompt('ask_ai', appSettings),
       askAiSkillsValue.get(),
+      localSkillsFor(appSettings),
     ]);
     chatTokens.get(chatId)?.();
     const token = crypto.randomUUID();
@@ -64,7 +65,11 @@ export async function askAISetup(chatId: string): Promise<AskAIHostSetup> {
       maxSteps: appSettings.askAiMaxSteps,
       webSearch: appSettings.askAiWebSearch && supportsWebSearch(settings.provider),
       webSearchMaxUses: ASK_AI_CONFIG.web_search_max_uses,
-      skills: { user: userSkills, disabled: appSettings.askAiDisabledSkills },
+      skills: {
+        user: userSkills,
+        local: localSkillFiles(localSkills),
+        disabled: appSettings.askAiDisabledSkills,
+      },
     };
   } catch (error) {
     return { ok: false, error: describeAIError(error) };

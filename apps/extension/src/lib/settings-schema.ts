@@ -677,6 +677,8 @@ type ShortcutBindingValue = z.infer<typeof shortcutBindingSchema>;
 
 /** A shortcut id of config/ui/shortcuts.toml: `manager.undo`. */
 const SHORTCUT_ID_PATTERN = /^[a-z]+\.[a-z_]+$/;
+/** A folder on this computer, as typed: no comma (the list editor splits there) or line break. */
+const LOCAL_FOLDER_PATTERN = /^[^,\r\n\0]+$/;
 /** An Agent Skill's name (agentskills.io): lowercase letters and digits, joined by single hyphens. */
 export const SKILL_NAME_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
@@ -1149,6 +1151,12 @@ const fields = {
     'ai.ask_ai.disabled_skills',
     'askAiDisabledSkills',
     SKILL_NAME_PATTERN,
+  ),
+  askAiLocalSkills: switchField('ai.ask_ai_local_skills.enabled', 'askAiLocalSkills'),
+  askAiLocalSkillFolders: idListField(
+    'ai.ask_ai_local_skills.folders',
+    'askAiLocalSkillFolders',
+    LOCAL_FOLDER_PATTERN,
   ),
   agentBridgeEnabled: switchField('developers.agent_bridge.enabled', 'agentBridgeEnabled'),
   agentBridgeWrites: switchField('developers.agent_bridge.writes', 'agentBridgeWrites'),
@@ -2117,6 +2125,13 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       },
       { id: 'askAiActions', fields: [], panel: 'askAiActions', requires: 'aiEnabled' },
       { id: 'askAiSkills', fields: [], panel: 'askAiSkills', requires: 'aiEnabled' },
+      {
+        id: 'askAiLocalSkills',
+        labelKey: 'settings_askAiLocalSkills',
+        toggle: 'askAiLocalSkills',
+        fields: ['askAiLocalSkillFolders'],
+        requires: 'aiEnabled',
+      },
       { id: 'activity', fields: [], panel: 'aiActivity' },
     ]),
     aiTools: category('settings_aiTools', 'settings_aiToolsDesc', [
@@ -2367,6 +2382,7 @@ export const SETTING_PERMISSIONS = {
   aiEnabled: 'ai',
   aiReadPageContent: 'pageReading',
   agentBridgeEnabled: 'agentBridge',
+  askAiLocalSkills: 'localSkills',
   browserIconCache: 'browserIcons',
   contextMenuEnabled: 'contextMenu',
   coversBrowseCapture: 'browseCovers',

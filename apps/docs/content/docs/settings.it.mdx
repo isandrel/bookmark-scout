@@ -308,6 +308,10 @@ Qui sono elencate tutte le consultazioni e le modifiche che Chiedi all'IA può f
 
 Istruzioni passo passo che Chiedi all'IA legge solo quando la richiesta corrisponde. Disattivane una perché Chiedi all'IA non la legga, oppure aggiungi le tue nel formato Agent Skills (un file SKILL.md). Una skill è solo testo per l’IA e non esegue mai codice.
 
+### Skill da questo computer [#ask-ai-local-skills]
+
+Disattivato per impostazione predefinita. Chiedi all'IA legge anche le Agent Skills nelle cartelle di questo computer, come `~/.agents/skills`, dove le mettono gli installer di skill. Il programma bookmark-scout-mcp le legge per il browser e si limita a leggerle: gli script di una skill non vengono mai eseguiti. Installalo come in [Usare con agenti IA locali](/guides/local-agents); l'accesso per gli agenti può restare disattivato. **Cartelle delle skill** elenca le cartelle, separate da virgole; una cartella può contenere un SKILL.md o cartelle che li contengono. Le loro skill compaiono in **Skill** con l'etichetta **Questo computer**, dove puoi disattivarle una per una. Conservato solo su questo dispositivo.
+
 ### Attività IA [#ai-activity]
 
 **Registra le richieste** (disattivato per impostazione predefinita, solo per questo dispositivo) conserva su questo dispositivo le ultime 50 richieste IA, con le chiavi API e le intestazioni delle credenziali rimosse, così puoi vedere esattamente cosa è stato inviato. Disattivandolo, il registro viene eliminato. Vedi [Vedere cosa è stato inviato](/guides/ai-tools#see-what-was-sent).

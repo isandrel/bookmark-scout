@@ -4449,6 +4449,22 @@
         "message": "本地 AI 智能体的访问保持关闭。开启时，浏览器会请你允许扩展与 bookmark-scout-mcp 程序通信。",
         "description": "Toast text when the native messaging permission for local AI agents is declined"
     },
+    "permission_localSkillsTitle": {
+        "message": "读取这台电脑上的技能",
+        "description": "Title of the dialog shown before turning on Skills From This Computer"
+    },
+    "permission_localSkillsDesc": {
+        "message": "之后，询问 AI 可以使用你指定的文件夹中的 Agent Skills，由你安装的 bookmark-scout-mcp 程序读取。浏览器会请你允许扩展与该程序通信。",
+        "description": "What turning on Skills From This Computer does, in the dialog shown before the browser asks to allow native messaging"
+    },
+    "permission_localSkillsDetail": {
+        "message": "该程序只读取技能的文本文件，从不运行其脚本。和其他技能一样，只有在询问 AI 读取某个技能时，它才会发送给你的 AI 服务商。",
+        "description": "Privacy note in the dialog shown before turning on Skills From This Computer"
+    },
+    "permission_localSkillsDenied": {
+        "message": "“这台电脑上的技能”保持关闭。开启时，浏览器会请你允许扩展与 bookmark-scout-mcp 程序通信。",
+        "description": "Toast text when the native messaging permission for Skills From This Computer is declined"
+    },
     "permission_browseCoversTitle": {
         "message": "允许截取已加入书签的网页",
         "description": "Title of the dialog shown before turning on Capture Covers While Browsing, which asks for access to all pages"
@@ -7633,6 +7649,22 @@
         "message": "分步骤的说明，只在你的请求与之匹配时询问 AI 才会读取。关闭某个技能后询问 AI 就不会读取它；你也可以按 Agent Skills 格式（一个 SKILL.md 文件）添加自己的技能。技能只是给 AI 读的文字，从不运行代码。",
         "description": "Options > AI > Skills: description"
     },
+    "settings_askAiLocalSkills": {
+        "message": "这台电脑上的技能",
+        "description": "Options > AI > Skills From This Computer: switch label"
+    },
+    "settings_askAiLocalSkillsDesc": {
+        "message": "询问 AI 还会通过 bookmark-scout-mcp 程序读取这台电脑上文件夹中的 Agent Skills，该程序只读取它们。技能的脚本永远不会运行。",
+        "description": "Options > AI > Skills From This Computer: description"
+    },
+    "settings_askAiLocalSkillFolders": {
+        "message": "技能文件夹",
+        "description": "Options > AI > Skills From This Computer: the folders to read"
+    },
+    "settings_askAiLocalSkillFoldersDesc": {
+        "message": "包含 SKILL.md 的文件夹，或包含这类文件夹的文件夹，用逗号分隔。~ 表示你的主文件夹。",
+        "description": "Options > AI > Skills From This Computer: how to type the folders"
+    },
     "askAI_skillNew": {
         "message": "新建技能",
         "description": "Options > AI > Skills: button that opens the editor for a new skill"
@@ -7652,6 +7684,34 @@
     "askAI_skillYours": {
         "message": "我的",
         "description": "Options > AI > Skills: badge of a skill the user added"
+    },
+    "askAI_skillThisComputer": {
+        "message": "这台电脑",
+        "description": "Options > AI > Skills: badge of a skill read from a folder on this computer"
+    },
+    "askAI_localSkillsFound": {
+        "message": "已从这台电脑读取 $1 个技能。",
+        "description": "Options > AI > Skills: $1 is how many skills were read from this computer"
+    },
+    "askAI_localSkillsLeftOut": {
+        "message": "$1 个未读取：超出限制或无法读取。",
+        "description": "Options > AI > Skills: $1 is how many skills or folders were not read"
+    },
+    "askAI_localSkillsNotInstalled": {
+        "message": "要读取这台电脑上的技能，请安装 bookmark-scout-mcp 程序，并运行一次“$1”。",
+        "description": "Options > AI > Skills: the bridge program is not installed; $1 is the install command"
+    },
+    "askAI_localSkillsOutdated": {
+        "message": "bookmark-scout-mcp 程序没有响应。请将它更新到最新版本，然后选择刷新。",
+        "description": "Options > AI > Skills: the bridge program did not answer or is too old"
+    },
+    "askAI_localSkillsFailed": {
+        "message": "无法读取这台电脑上的技能。",
+        "description": "Options > AI > Skills: reading the skills from this computer failed"
+    },
+    "askAI_localSkillsRefresh": {
+        "message": "刷新",
+        "description": "Options > AI > Skills: button that reads the skills from this computer again"
     },
     "askAI_skillEditorTitle": {
         "message": "技能",

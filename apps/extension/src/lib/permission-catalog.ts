@@ -211,6 +211,19 @@ export const PERMISSION_FEATURES = {
     },
     denied: { titleKey: 'permission_deniedTitle', descriptionKey: 'permission_agentBridgeDenied' },
   },
+  /**
+   * Skills from this computer: the bridge program the user installed reads the Agent Skills in the
+   * folders the user named; Ask AI sends a skill to the AI provider as any skill (covered by `ai`).
+   */
+  localSkills: {
+    permissions: ['nativeMessaging'],
+    explanation: {
+      titleKey: 'permission_localSkillsTitle',
+      descriptionKey: 'permission_localSkillsDesc',
+      detailKey: 'permission_localSkillsDetail',
+    },
+    denied: { titleKey: 'permission_deniedTitle', descriptionKey: 'permission_localSkillsDenied' },
+  },
   /** Verify Service and Refresh Models send only the API key to the provider. */
   aiProviderCheck: {
     dataCollection: ['authenticationInfo'],

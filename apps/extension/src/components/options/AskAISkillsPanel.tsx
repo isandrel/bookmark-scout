@@ -1,17 +1,52 @@
 /**
- * Options > AI > Skills: the skills Ask AI may read, built-in and the user's own, each on or off
- * (`askAiDisabledSkills`), with an editor for a new or changed `SKILL.md`, import from files or a
- * folder, export, and delete. Reading and checking skills needs the skills SDK, so it loads from
+ * Options > AI > Skills: the skills Ask AI may read, built-in, the user's own, and those from
+ * folders on this computer (`services/ask-ai-local-skills.ts`, while Skills From This Computer is
+ * on), each on or off (`askAiDisabledSkills`), with an editor for a new or changed `SKILL.md`,
+ * import from files or a folder, export, and delete. Reading and checking skills needs the skills SDK, so it loads from
  * `ask-ai-skills.lazy.ts` and `ask-ai-skill-files.lazy.ts` when this panel opens.
  */
 import { useEffect, useRef, useState } from 'react';
 
+type SkillOrigin = 'builtIn' | 'user' | 'local';
+
 type ShownSkill = {
   name: string;
   description: string;
-  builtIn: boolean;
+  origin: SkillOrigin;
   files: SkillFile[];
 };
+
+const ORIGIN_BADGES: Record<SkillOrigin, MessageKey> = {
+  builtIn: 'askAI_skillBuiltIn',
+  user: 'askAI_skillYours',
+  local: 'askAI_skillThisComputer',
+};
+
+/** What reading the skills from this computer came to, in a line under the list. */
+function localStatus(result: LocalSkillsResult): string | undefined {
+  switch (result.state) {
+    case 'off':
+      return undefined;
+    case 'ready':
+      return [
+        t('askAI_localSkillsFound', formatCount(result.skills.length)),
+        ...(result.leftOut.length > 0
+          ? [t('askAI_localSkillsLeftOut', formatCount(result.leftOut.length))]
+          : []),
+      ].join(' ');
+    case 'notInstalled':
+      return t('askAI_localSkillsNotInstalled', BRIDGE_INSTALL_COMMAND);
+    case 'noAnswer':
+    case 'outdated':
+      return t('askAI_localSkillsOutdated');
+    case 'failed':
+      return t('askAI_localSkillsFailed');
+  }
+}
+
+/** The command that registers the bridge program with this computer's browsers. */
+const BRIDGE_INSTALL_COMMAND = 'bookmark-scout-mcp install';
+const LOCAL_SOURCE_PREFIX = 'local:';
 
 type Editor = { replacing?: string; text: string };
 
@@ -36,6 +71,10 @@ function exportSkill(skill: ShownSkill): void {
 export function AskAISkillsPanel() {
   const { value: userSkills } = useStoredValue(askAiSkillsValue);
   const { value: disabled, setValue: setDisabled } = useSetting('askAiDisabledSkills');
+  const { value: localOn } = useSetting('askAiLocalSkills');
+  const { value: localFolders } = useSetting('askAiLocalSkillFolders');
+  const [local, setLocal] = useState<LocalSkillsResult>({ state: 'off' });
+  const [refreshes, setRefreshes] = useState(0);
   const [shown, setShown] = useState<ShownSkill[]>([]);
   const [editor, setEditor] = useState<Editor | null>(null);
   const [errors, setErrors] = useState<string[]>([]);
@@ -44,27 +83,61 @@ export function AskAISkillsPanel() {
   const folderInput = useRef<HTMLInputElement>(null);
   const off = new Set(disabled);
 
+  // The skills from this computer, read again when their settings change or on Refresh.
+  useEffect(() => {
+    let current = true;
+    void localSkillsFor(
+      { askAiLocalSkills: localOn, askAiLocalSkillFolders: localFolders },
+      refreshes > 0,
+    ).then((result) => {
+      if (current) setLocal(result);
+    });
+    return () => {
+      current = false;
+    };
+  }, [localOn, localFolders, refreshes]);
+
   // The list with each skill's description, read by the skills SDK.
   useEffect(() => {
     let current = true;
     void import('@/services/ask-ai-skills.lazy').then(async (skills) => {
-      const registry = await skills.createAskAISkills({ user: userSkills });
+      const localFiles = localSkillFiles(local);
+      const registry = await skills.createAskAISkills({ user: userSkills, local: localFiles });
       const builtIn = new Map(skills.builtInSkillFiles().map((skill) => [skill.name, skill.files]));
       const own = new Map(userSkills.map((skill) => [skill.name, skill.files]));
+      const fromComputer = new Map(localFiles.map((skill) => [skill.name, skill.files]));
+      const origins: Record<string, SkillOrigin> = {
+        [skills.SKILL_LOCATIONS.builtIn]: 'builtIn',
+        [skills.SKILL_LOCATIONS.user]: 'user',
+        [skills.SKILL_LOCATIONS.local]: 'local',
+      };
       if (!current) return;
       setShown(
-        registry.list().map((descriptor) => ({
-          name: descriptor.name,
-          description: descriptor.description,
-          builtIn: descriptor.location === skills.SKILL_LOCATIONS.builtIn,
-          files: builtIn.get(descriptor.name) ?? own.get(descriptor.name) ?? [],
-        })),
+        registry.list().map((descriptor) => {
+          const origin = origins[descriptor.location ?? ''] ?? 'user';
+          // A skill from this computer is found by its folder, which its source id names.
+          const folder = descriptor.sourceId?.startsWith(LOCAL_SOURCE_PREFIX)
+            ? descriptor.sourceId.slice(LOCAL_SOURCE_PREFIX.length)
+            : '';
+          return {
+            name: descriptor.name,
+            description: descriptor.description,
+            origin,
+            files:
+              (origin === 'builtIn'
+                ? builtIn.get(descriptor.name)
+                : origin === 'local'
+                  ? fromComputer.get(folder)
+                  : own.get(descriptor.name)) ?? [],
+          };
+        }),
       );
     });
     return () => {
       current = false;
     };
-  }, [userSkills]);
+  }, [userSkills, local]);
+  const status = localStatus(local);
 
   const toggle = (name: string, on: boolean) => {
     const next = on ? disabled.filter((other) => other !== name) : [...disabled, name];
@@ -76,7 +149,7 @@ export function AskAISkillsPanel() {
     const { checkSkillFiles } = await import('@/services/ask-ai-skill-files.lazy');
     const checked = checkSkillFiles(files);
     if (!checked.ok) return [t('askAI_skillInvalid'), ...checked.errors];
-    if (shown.some((skill) => skill.builtIn && skill.name === checked.name)) {
+    if (shown.some((skill) => skill.origin === 'builtIn' && skill.name === checked.name)) {
       return [t('askAI_skillNameTaken', checked.name)];
     }
     const refused = await saveUserSkill({ name: checked.name, files: checked.files }, replacing);
@@ -176,9 +249,7 @@ export function AskAISkillsPanel() {
             <label htmlFor={`ask-ai-skill-${skill.name}`} className="min-w-0 flex-1 space-y-0.5">
               <span className="flex items-center gap-1.5 text-sm font-medium">
                 <span className="truncate font-mono">{skill.name}</span>
-                <Badge variant="secondary">
-                  {skill.builtIn ? t('askAI_skillBuiltIn') : t('askAI_skillYours')}
-                </Badge>
+                <Badge variant="secondary">{t(ORIGIN_BADGES[skill.origin])}</Badge>
               </span>
               <span className="block text-xs text-muted-foreground">{skill.description}</span>
             </label>
@@ -186,7 +257,7 @@ export function AskAISkillsPanel() {
               <Button type="button" variant="ghost" size="sm" onClick={() => exportSkill(skill)}>
                 {t('action_export')}
               </Button>
-              {!skill.builtIn && (
+              {skill.origin === 'user' && (
                 <>
                   <Button type="button" variant="ghost" size="sm" onClick={() => editing(skill)}>
                     {t('table_edit')}
@@ -205,6 +276,21 @@ export function AskAISkillsPanel() {
           </li>
         ))}
       </ul>
+      {status && (
+        <div className="flex flex-wrap items-center gap-2" data-testid="ask-ai-local-skills-status">
+          <p role="status" data-state={local.state} className="text-sm text-muted-foreground">
+            {status}
+          </p>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => setRefreshes((count) => count + 1)}
+          >
+            {t('askAI_localSkillsRefresh')}
+          </Button>
+        </div>
+      )}
 
       <Dialog open={editor !== null} onOpenChange={(open) => !open && setEditor(null)}>
         <DialogContent className="max-h-dialog-tall max-w-2xl overflow-y-auto">

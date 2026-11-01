@@ -4541,6 +4541,22 @@
         "message": "로컬 AI 에이전트 접근은 꺼진 상태로 유지됩니다. 켜면 브라우저가 확장 프로그램이 bookmark-scout-mcp 프로그램과 통신하도록 허용할지 묻습니다.",
         "description": "Toast text when the native messaging permission for local AI agents is declined"
     },
+    "permission_localSkillsTitle": {
+        "message": "이 컴퓨터의 스킬 읽기",
+        "description": "Title of the dialog shown before turning on Skills From This Computer"
+    },
+    "permission_localSkillsDesc": {
+        "message": "AI에게 묻기가 지정한 폴더의 Agent Skills를 사용할 수 있게 됩니다. 읽는 것은 설치한 bookmark-scout-mcp 프로그램입니다. 브라우저가 확장 프로그램이 그 프로그램과 통신하도록 허용할지 묻습니다.",
+        "description": "What turning on Skills From This Computer does, in the dialog shown before the browser asks to allow native messaging"
+    },
+    "permission_localSkillsDetail": {
+        "message": "프로그램은 스킬의 텍스트 파일만 읽으며 스크립트는 실행하지 않습니다. 스킬은 다른 스킬과 마찬가지로 AI에게 묻기가 읽을 때만 AI 제공업체로 전송됩니다.",
+        "description": "Privacy note in the dialog shown before turning on Skills From This Computer"
+    },
+    "permission_localSkillsDenied": {
+        "message": "이 컴퓨터의 스킬은 꺼진 상태로 유지됩니다. 켜면 브라우저가 확장 프로그램이 bookmark-scout-mcp 프로그램과 통신하도록 허용할지 묻습니다.",
+        "description": "Toast text when the native messaging permission for Skills From This Computer is declined"
+    },
     "permission_browseCoversTitle": {
         "message": "북마크한 페이지 캡처 허용",
         "description": "Title of the dialog shown before turning on Capture Covers While Browsing, which asks for access to all pages"
@@ -7871,6 +7887,22 @@
         "message": "요청이 맞을 때만 AI에게 묻기가 읽는 단계별 지침입니다. 끄면 AI에게 묻기가 그 스킬을 읽지 않습니다. Agent Skills 형식(SKILL.md 파일)으로 직접 만든 스킬을 추가할 수도 있습니다. 스킬은 AI가 읽는 텍스트일 뿐이며 코드를 실행하지 않습니다.",
         "description": "Options > AI > Skills: description"
     },
+    "settings_askAiLocalSkills": {
+        "message": "이 컴퓨터의 스킬",
+        "description": "Options > AI > Skills From This Computer: switch label"
+    },
+    "settings_askAiLocalSkillsDesc": {
+        "message": "AI에게 묻기가 이 컴퓨터 폴더에 있는 Agent Skills도 bookmark-scout-mcp 프로그램을 통해 읽습니다. 프로그램은 읽기만 하며 스킬의 스크립트는 실행되지 않습니다.",
+        "description": "Options > AI > Skills From This Computer: description"
+    },
+    "settings_askAiLocalSkillFolders": {
+        "message": "스킬 폴더",
+        "description": "Options > AI > Skills From This Computer: the folders to read"
+    },
+    "settings_askAiLocalSkillFoldersDesc": {
+        "message": "SKILL.md가 있는 폴더 또는 그런 폴더를 담은 폴더를 쉼표로 구분해 입력합니다. ~는 홈 폴더입니다.",
+        "description": "Options > AI > Skills From This Computer: how to type the folders"
+    },
     "askAI_skillNew": {
         "message": "새 스킬",
         "description": "Options > AI > Skills: button that opens the editor for a new skill"
@@ -7890,6 +7922,34 @@
     "askAI_skillYours": {
         "message": "내 스킬",
         "description": "Options > AI > Skills: badge of a skill the user added"
+    },
+    "askAI_skillThisComputer": {
+        "message": "이 컴퓨터",
+        "description": "Options > AI > Skills: badge of a skill read from a folder on this computer"
+    },
+    "askAI_localSkillsFound": {
+        "message": "이 컴퓨터에서 스킬 $1개를 읽었습니다.",
+        "description": "Options > AI > Skills: $1 is how many skills were read from this computer"
+    },
+    "askAI_localSkillsLeftOut": {
+        "message": "$1개는 한도를 넘었거나 읽을 수 없어 제외했습니다.",
+        "description": "Options > AI > Skills: $1 is how many skills or folders were not read"
+    },
+    "askAI_localSkillsNotInstalled": {
+        "message": "이 컴퓨터의 스킬을 읽으려면 bookmark-scout-mcp 프로그램을 설치하고 “$1”을 한 번 실행하세요.",
+        "description": "Options > AI > Skills: the bridge program is not installed; $1 is the install command"
+    },
+    "askAI_localSkillsOutdated": {
+        "message": "bookmark-scout-mcp 프로그램이 응답하지 않았습니다. 최신 버전으로 업데이트한 뒤 새로고침을 선택하세요.",
+        "description": "Options > AI > Skills: the bridge program did not answer or is too old"
+    },
+    "askAI_localSkillsFailed": {
+        "message": "이 컴퓨터의 스킬을 읽지 못했습니다.",
+        "description": "Options > AI > Skills: reading the skills from this computer failed"
+    },
+    "askAI_localSkillsRefresh": {
+        "message": "새로고침",
+        "description": "Options > AI > Skills: button that reads the skills from this computer again"
     },
     "askAI_skillEditorTitle": {
         "message": "스킬",

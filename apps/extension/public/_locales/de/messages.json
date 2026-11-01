@@ -4549,6 +4549,22 @@
         "message": "Der Zugriff für lokale KI-Agenten bleibt aus. Beim Einschalten fragt Ihr Browser, ob die Erweiterung mit dem Programm bookmark-scout-mcp kommunizieren darf.",
         "description": "Toast text when the native messaging permission for local AI agents is declined"
     },
+    "permission_localSkillsTitle": {
+        "message": "Skills von diesem Computer lesen",
+        "description": "Title of the dialog shown before turning on Skills From This Computer"
+    },
+    "permission_localSkillsDesc": {
+        "message": "„KI fragen“ kann dann die Agent Skills in den von Ihnen genannten Ordnern nutzen, gelesen vom installierten Programm bookmark-scout-mcp. Ihr Browser fragt, ob die Erweiterung mit diesem Programm kommunizieren darf.",
+        "description": "What turning on Skills From This Computer does, in the dialog shown before the browser asks to allow native messaging"
+    },
+    "permission_localSkillsDetail": {
+        "message": "Das Programm liest nur die Textdateien der Skills; ihre Skripte werden nie ausgeführt. Ein Skill geht nur an Ihren KI-Anbieter, wenn „KI fragen“ ihn liest, wie jeder andere Skill.",
+        "description": "Privacy note in the dialog shown before turning on Skills From This Computer"
+    },
+    "permission_localSkillsDenied": {
+        "message": "Skills von diesem Computer bleibt aus. Beim Einschalten fragt Ihr Browser, ob die Erweiterung mit dem Programm bookmark-scout-mcp kommunizieren darf.",
+        "description": "Toast text when the native messaging permission for Skills From This Computer is declined"
+    },
     "permission_browseCoversTitle": {
         "message": "Bilder von Seiten mit Lesezeichen erlauben",
         "description": "Title of the dialog shown before turning on Capture Covers While Browsing, which asks for access to all pages"
@@ -7883,6 +7899,22 @@
         "message": "Schritt-für-Schritt-Anweisungen, die KI fragen nur liest, wenn Ihre Anfrage dazu passt. Schalten Sie einen aus, damit KI fragen ihn nicht liest, oder fügen Sie eigene im Agent-Skills-Format (eine SKILL.md-Datei) hinzu. Ein Skill ist nur Text für die KI und führt nie Code aus.",
         "description": "Options > AI > Skills: description"
     },
+    "settings_askAiLocalSkills": {
+        "message": "Skills von diesem Computer",
+        "description": "Options > AI > Skills From This Computer: switch label"
+    },
+    "settings_askAiLocalSkillsDesc": {
+        "message": "„KI fragen“ liest auch die Agent Skills in Ordnern auf diesem Computer, über das Programm bookmark-scout-mcp, das sie nur liest. Die Skripte eines Skills werden nie ausgeführt.",
+        "description": "Options > AI > Skills From This Computer: description"
+    },
+    "settings_askAiLocalSkillFolders": {
+        "message": "Skill-Ordner",
+        "description": "Options > AI > Skills From This Computer: the folders to read"
+    },
+    "settings_askAiLocalSkillFoldersDesc": {
+        "message": "Ordner mit einer SKILL.md oder Ordner mit solchen Ordnern, durch Kommas getrennt. ~ ist Ihr Benutzerordner.",
+        "description": "Options > AI > Skills From This Computer: how to type the folders"
+    },
     "askAI_skillNew": {
         "message": "Neuer Skill",
         "description": "Options > AI > Skills: button that opens the editor for a new skill"
@@ -7902,6 +7934,34 @@
     "askAI_skillYours": {
         "message": "Eigener",
         "description": "Options > AI > Skills: badge of a skill the user added"
+    },
+    "askAI_skillThisComputer": {
+        "message": "Dieser Computer",
+        "description": "Options > AI > Skills: badge of a skill read from a folder on this computer"
+    },
+    "askAI_localSkillsFound": {
+        "message": "$1 Skills von diesem Computer gelesen.",
+        "description": "Options > AI > Skills: $1 is how many skills were read from this computer"
+    },
+    "askAI_localSkillsLeftOut": {
+        "message": "$1 ausgelassen: über einem Limit oder nicht lesbar.",
+        "description": "Options > AI > Skills: $1 is how many skills or folders were not read"
+    },
+    "askAI_localSkillsNotInstalled": {
+        "message": "Um Skills von diesem Computer zu lesen, installieren Sie das Programm bookmark-scout-mcp und führen Sie einmal „$1“ aus.",
+        "description": "Options > AI > Skills: the bridge program is not installed; $1 is the install command"
+    },
+    "askAI_localSkillsOutdated": {
+        "message": "Das Programm bookmark-scout-mcp hat nicht geantwortet. Aktualisieren Sie es auf die neueste Version und wählen Sie dann Aktualisieren.",
+        "description": "Options > AI > Skills: the bridge program did not answer or is too old"
+    },
+    "askAI_localSkillsFailed": {
+        "message": "Die Skills von diesem Computer konnten nicht gelesen werden.",
+        "description": "Options > AI > Skills: reading the skills from this computer failed"
+    },
+    "askAI_localSkillsRefresh": {
+        "message": "Aktualisieren",
+        "description": "Options > AI > Skills: button that reads the skills from this computer again"
     },
     "askAI_skillEditorTitle": {
         "message": "Skill",
