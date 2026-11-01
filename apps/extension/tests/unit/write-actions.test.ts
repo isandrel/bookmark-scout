@@ -6,7 +6,7 @@ import { defaultSettings } from '@/lib/settings-schema';
 import { saveSettings } from '@/lib/settings-storage';
 import type { ActionContext } from '@/services/action-kit';
 import { actionApproval, actionApprovalPreview, runAction } from '@/services/actions';
-import { hasUntrustedContent } from '@/services/ai-agent.lazy';
+import { readDurableConversation } from '@/services/ask-ai-durable.lazy';
 import { bookmarkHistoryValue, describeBookmarkHistoryLabel } from '@/services/bookmark-history';
 import { actionPlansValue } from '@/services/plan-actions';
 import { type FakeBookmarks, installFakeBookmarks } from '../fake-bookmarks';
@@ -251,20 +251,20 @@ describe('approval rules', () => {
   });
 
   it('sees page text and web search results in the conversation as untrusted', () => {
-    const toolResult = (toolName: string) => ({
-      role: 'tool' as const,
-      content: [
+    const untrusted = (toolName: string) =>
+      readDurableConversation([
         {
-          type: 'tool-result' as const,
+          role: 'toolResult',
           toolCallId: '1',
           toolName,
-          output: { type: 'json' as const, value: {} },
+          content: [{ type: 'text', text: '{}' }],
+          isError: false,
+          timestamp: 1,
         },
-      ],
-    });
-    expect(hasUntrustedContent([toolResult('searchBookmarks')])).toBe(false);
-    expect(hasUntrustedContent([toolResult('readPage')])).toBe(true);
-    expect(hasUntrustedContent([toolResult('web_search')])).toBe(true);
+      ]).untrustedContentSeen;
+    expect(untrusted('searchBookmarks')).toBe(false);
+    expect(untrusted('readPage')).toBe(true);
+    // A provider's web search is recorded on the answer (`ask-ai-durable.test.ts` checks it).
   });
 });
 

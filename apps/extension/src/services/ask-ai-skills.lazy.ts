@@ -1,7 +1,8 @@
 /**
  * Ask AI's skills: Agent Skills (agentskills.io, a `SKILL.md` per folder) the model reads on
  * demand. The system prompt lists each skill's name and description; the `readSkill` tool returns
- * a skill's instructions, or one of its linked files, when the model picks it. Parsing, checking,
+ * a skill's instructions, or one of its linked files, when the model picks it (the tool is in
+ * `ask-ai-durable.lazy.ts`). Parsing, checking,
  * the catalog, and reads come from agent-skills-ts-sdk. The built-in skills are the folders under
  * src/assets/ask-ai-skills/. A skill's scripts never run: a skill is text for the model.
  */
@@ -11,7 +12,6 @@ import {
   type SkillRegistry,
   skillSourceFromEntries,
 } from 'agent-skills-ts-sdk';
-import { jsonSchema, type ToolSet, tool } from 'ai';
 
 const BUILT_IN_DIR = '../assets/ask-ai-skills/';
 
@@ -44,19 +44,4 @@ export function createAskAISkills(): Promise<SkillRegistry> {
 /** The system prompt part that lists the skills and says how to read them; empty without any. */
 export function askAISkillCatalog(skills: SkillRegistry): string {
   return skills.systemPrompt({ toolName: ASK_AI_SKILL_TOOL }) ?? '';
-}
-
-/** The tool that reads a skill's instructions or one of its files; none without skills. */
-export function createSkillToolSet(skills: SkillRegistry): ToolSet {
-  if (skills.list().length === 0) return {};
-  const declaration = skills.readTool({ toolName: ASK_AI_SKILL_TOOL });
-  return {
-    [ASK_AI_SKILL_TOOL]: tool({
-      description: declaration.description,
-      inputSchema: jsonSchema<{ name: string; resource?: string }>(
-        declaration.parametersJsonSchema,
-      ),
-      execute: (args) => skills.read(args),
-    }),
-  };
 }

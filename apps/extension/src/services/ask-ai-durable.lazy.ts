@@ -31,6 +31,7 @@ import { z } from 'zod';
 import { ASK_AI_DECISION_ENTRY, ASK_AI_OUTCOME_ENTRY } from '@/lib/ask-ai-ui-messages';
 import { boundedNumber } from '@/lib/config/bounded';
 import { createAISdkPiProvider, PROVIDER_TOOL_DIAGNOSTIC } from './ai-sdk-pi-provider.lazy';
+import { askAISkillCatalog } from './ask-ai-skills.lazy';
 
 export const durableConfig = readConfig(
   'ai/durable',
@@ -212,7 +213,7 @@ export class AskAIDurable {
                 'skills',
                 async () => {
                   const skills = await deps.skills?.();
-                  return skills ? askAISkillCatalogText(skills) : undefined;
+                  return skills ? askAISkillCatalog(skills) || undefined : undefined;
                 },
                 { tag: false },
               ),
@@ -226,6 +227,12 @@ export class AskAIDurable {
             name,
             description: agent?.description ?? name,
             parameters: (input ? z.toJSONSchema(input) : { type: 'object' }) as TSchema,
+            // As the AI SDK did: the action's own schema drops fields a model guessed, so one bad
+            // item fails on its own in `execute` instead of failing the whole call.
+            prepareArguments: (args: unknown) => {
+              const parsed = input?.safeParse(args);
+              return (parsed?.success ? parsed.data : args) as never;
+            },
             // Reads run again after a restart; a change never runs twice.
             replay: risk === 'read' ? 'safe' : 'unsafe',
             execute: async (args, api, callContext) => {
@@ -445,9 +452,4 @@ export class AskAIDurable {
   async close(): Promise<void> {
     await this.harness.close(this.context);
   }
-}
-
-/** The skills part of the system prompt, built in this page from the skill registry. */
-function askAISkillCatalogText(skills: SkillRegistry): string {
-  return skills.systemPrompt({ toolName: ASK_AI_SKILL_TOOL }) ?? '';
 }
