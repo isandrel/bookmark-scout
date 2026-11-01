@@ -114,6 +114,8 @@ export function registerAskAI(): void {
   });
   browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (!isPlainObject(message) || sender.id !== browser.runtime.id) return undefined;
+    // Receiving it is the point: it resets the idle timer of Firefox's event page.
+    if (message.type === ASK_AI_MESSAGE.keepAlive) return undefined;
     // From any extension page (the tests open the popup as a tab); never from a web page.
     if (
       message.type === ASK_AI_MESSAGE.open &&

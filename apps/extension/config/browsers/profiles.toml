@@ -21,6 +21,11 @@
 #                                   the extension opens the browser's own editor through its API.
 # omnibox_markup                    Address bar suggestions read Chrome's XML markup (<match>, <url>,
 #                                   <dim>). Firefox shows it as text, so it gets plain text.
+# chat_keep_alive_seconds           How often an open Ask AI chat messages the background, in seconds,
+#                                   or 0 for never. Firefox suspends its event page after about 30
+#                                   idle seconds, which stops the AI host frame in it and with it a
+#                                   running answer; each message resets that timer. Chrome's and
+#                                   Edge's host is an offscreen document, which outlives the worker.
 
 [profiles.chrome]
 separators = false
@@ -30,6 +35,7 @@ data_collection_consent = false
 bookmark_manager_url = "chrome://bookmarks/"
 shortcut_settings_url = "chrome://extensions/shortcuts"
 omnibox_markup = true
+chat_keep_alive_seconds = 0
 
 [profiles.firefox]
 separators = true
@@ -39,6 +45,7 @@ data_collection_consent = true
 bookmark_manager_url = ""
 shortcut_settings_url = ""
 omnibox_markup = false
+chat_keep_alive_seconds = 20
 
 [profiles.edge]
 separators = false
@@ -48,3 +55,4 @@ data_collection_consent = false
 bookmark_manager_url = "edge://favorites/"
 shortcut_settings_url = "edge://extensions/shortcuts"
 omnibox_markup = true
+chat_keep_alive_seconds = 0
