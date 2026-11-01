@@ -1,0 +1,8 @@
+# Ask AI's kept chats (Settings > AI > Ask AI > Keep Chats). Read by src/lib/ask-ai-chats.ts; how many
+# chats are kept is the user's setting (config/settings/ai.toml, chats_max).
+
+# Characters of the first question a chat is named by in the list of chats
+title_chars = { value = 60, min = 10, max = 200 }
+# Messages kept per chat at most, the oldest dropped first, so one long chat cannot fill the
+# device's storage
+max_messages = { value = 200, min = 10, max = 1000 }
