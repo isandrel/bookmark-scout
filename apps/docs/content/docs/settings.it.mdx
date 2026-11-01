@@ -154,7 +154,7 @@ Sotto di esse, **Scorciatoie da tastiera** mostra i tasti di ogni scorciatoia ne
 Sotto la tabella, tre elenchi organizzano il popup e il riquadro laterale. Seleziona una voce per mostrarla e trascinala dalla maniglia per spostarla; la maniglia è anche un pulsante il cui menu sposta la voce in cima, su, giù o in fondo. **Ripristina predefiniti** riporta l'ordine abituale di ogni elenco. Gli elenchi sono salvati solo su questo dispositivo.
 
 - **Parti del popup**: cosa compare sotto la casella di ricerca, dall'alto in basso: la pagina corrente, le attività in background, l'ultimo salvataggio rapido, le cartelle recenti, le cartelle suggerite dall'IA, le cartelle corrispondenti, i preferiti, gli avvisi e i suggerimenti dei tasti. I preferiti sono sempre visibili; sposta le parti sopra o sotto di essi.
-- **Pulsanti della barra**: i pulsanti accanto alla casella di ricerca: **Espandi tutto** (durante una ricerca), la gestione preferiti, il tema e i pulsanti dell'IA (una volta configurata l'IA).
+- **Pulsanti della barra**: i pulsanti accanto alla casella di ricerca: **Espandi tutto** (durante una ricerca), la gestione preferiti, il tema, i pulsanti dell'IA (una volta configurata l'IA) e le impostazioni (disattivato finché non lo attivi).
 - **Contenuto della scheda dei dettagli**: cosa mostra la scheda, in ordine: titolo, indirizzo, copertina, tag, riassunto, cartella e data di aggiunta. Finché titolo, indirizzo e copertina vengono per primi, condividono la riga in alto della scheda.
 
 ### Notifiche [#notifications]
@@ -316,7 +316,6 @@ Ogni strumento ha un interruttore **Attiva** (attivo per impostazione predefinit
 
 | Strumento | Impostazioni e valori predefiniti |
 | --- | --- |
-| **Pacchetto contesto IA** | **Formato di output** Markdown; **Includi percorsi delle cartelle**, **Includi date**, **Includi tag salvati** e **Includi riassunti salvati** attivi; **Elementi massimi** <SettingDefault path="ai_tools.context_packer.max_items" />; **Profondità massima** <SettingDefault path="ai_tools.context_packer.max_depth" />; **Lunghezza dell'estratto** <SettingDefault path="ai_tools.context_packer.excerpt_length" /> |
 | **Tag automatici** | **Tag minimi** <SettingDefault path="ai_tools.auto_tagging.min_tags" />; **Tag massimi** <SettingDefault path="ai_tools.auto_tagging.max_tags" />; **Stile dei tag** kebab-case; **Modalità di unione** Aggiungi; **Rimuovi tag duplicati** attivo; **Invia i tag esistenti** attivo |
 | **Riassunti dei contenuti** | **Lunghezza del riassunto** <SettingDefault path="ai_tools.summarizer.summary_length" />; **Includi il dominio** attivo; **Modalità di unione** Sostituisci |
 | **Riorganizzazione cartelle con IA** | **Affidabilità minima** 55% (gli spostamenti al di sotto vengono scartati); **Dimensione del blocco** <SettingDefault path="ai_tools.reorganization.batch_size" /> preferiti per richiesta |
@@ -396,7 +395,7 @@ Sotto, **Indice del testo delle pagine** indica quante pagine sono indicizzate, 
 | **Dimensione massima dell'immagine** | <SettingDefault path="metadata_content.covers.max_image_kb" /> KB | I file di immagine più grandi di questa dimensione non vengono scaricati |
 | **Spazio per le copertine** | <SettingDefault path="metadata_content.covers.max_cache_mb" /> MB | Lo spazio che le copertine possono occupare su questo dispositivo; le più vecchie vengono rimosse per prime. Conservato solo su questo dispositivo. Quelle scelte con **Usa questa vista come copertina** vengono rimosse per ultime |
 
-Sotto, **Copertine dei preferiti** indica quante copertine sono archiviate e quanto spazio occupano, e **Elimina le copertine** le elimina tutte senza toccare preferiti, tag o Cronologia.
+Sotto, **Copertine dei preferiti** indica quante copertine sono archiviate e quanto spazio occupano, e **Elimina le copertine** le elimina tutte senza toccare preferiti, tag o Cronologia. **Scegli copertine…** le elenca con una miniatura, per tipo (**Immagine della pagina** o **Immagine della scheda**): imposta quelle da eliminare su **Elimina**, una alla volta o con **Imposta i selezionati su…**, poi eliminale; **Annulla** le rimette.
 
 ## Sicurezza [#security]
 
@@ -429,6 +428,10 @@ Sotto, **Copertine dei preferiti** indica quante copertine sono archiviate e qua
 | **Parti dei nuovi backup** | Tutto tranne le impostazioni di questo computer e le chiavi dei servizi IA | Le parti selezionate all'inizio in **Esegui il backup delle impostazioni**; ogni backup che salvi su questo computer diventa la nuova scelta. Le chiavi dei servizi IA non sono mai selezionate all'inizio |
 | **Proteggi i nuovi backup con una password** | Disattivato | Se **Proteggi questo backup con una password** è selezionata all'inizio |
 | **Proteggi le chiavi API con una password** | Attivo | Se un backup con le chiavi dei servizi IA le protegge all'inizio con una password; disattivarla nella finestra di dialogo chiede una conferma |
+
+| Strumento | Impostazioni e valori predefiniti |
+| --- | --- |
+| **Pacchetto contesto IA** | **Formato di output** Markdown; **Includi percorsi delle cartelle**, **Includi date**, **Includi tag salvati** e **Includi riassunti salvati** attivi; **Elementi massimi** <SettingDefault path="data.context_packer.max_items" />; **Profondità massima** <SettingDefault path="data.context_packer.max_depth" />; **Lunghezza dell'estratto** <SettingDefault path="data.context_packer.excerpt_length" /> |
 
 Vedi [Importazione ed esportazione](/guides/import-export).
 

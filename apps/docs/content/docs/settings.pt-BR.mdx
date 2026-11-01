@@ -154,7 +154,7 @@ Abaixo delas, **Atalhos de teclado** mostra as teclas de cada atalho no seu nave
 Abaixo da tabela, três listas organizam o pop-up e o painel lateral. Marque um item para mostrá-lo e arraste-o pela alça para movê-lo; a alça também é um botão cujo menu move o item para o topo, para cima, para baixo ou para o fim. **Restaurar padrões** devolve a ordem habitual de cada lista. As listas são salvas apenas neste dispositivo.
 
 - **Partes do pop-up**: o que aparece abaixo da caixa de pesquisa, de cima para baixo: a página atual, as tarefas em segundo plano, o último salvamento rápido, as pastas recentes, as sugestões de pasta com IA, as pastas correspondentes, os favoritos, os avisos e as dicas de teclas. Os favoritos sempre aparecem; mova as partes para cima ou para baixo deles.
-- **Botões da barra**: os botões ao lado da caixa de pesquisa: **Expandir tudo** (durante uma pesquisa), o gerenciador de favoritos, o tema e os botões de IA (depois que a IA é configurada).
+- **Botões da barra**: os botões ao lado da caixa de pesquisa: **Expandir tudo** (durante uma pesquisa), o gerenciador de favoritos, o tema, os botões de IA (depois que a IA é configurada) e as configurações (desativado até você ativá-lo).
 - **Conteúdo do cartão de detalhes**: o que o cartão mostra, em ordem: título, endereço, capa, tags, resumo, pasta e data de adição. Enquanto o título, o endereço e a capa vêm primeiro, eles dividem a linha de cima do cartão.
 
 ### Notificações [#notifications]
@@ -316,7 +316,6 @@ Cada ferramenta tem uma chave **Ativar** (ativada por padrão). Ao desativar uma
 
 | Ferramenta | Configurações e padrões |
 | --- | --- |
-| **Empacotador de contexto para IA** | **Formato de saída** Markdown; **Incluir caminhos das pastas**, **Incluir datas**, **Incluir tags salvas** e **Incluir resumos salvos** ativados; **Máximo de itens** <SettingDefault path="ai_tools.context_packer.max_items" />; **Profundidade máxima** <SettingDefault path="ai_tools.context_packer.max_depth" />; **Tamanho do trecho** <SettingDefault path="ai_tools.context_packer.excerpt_length" /> |
 | **Tags automáticas** | **Mínimo de tags** <SettingDefault path="ai_tools.auto_tagging.min_tags" />; **Máximo de tags** <SettingDefault path="ai_tools.auto_tagging.max_tags" />; **Estilo das tags** kebab-case; **Modo de mesclagem** Acrescentar; **Remover tags duplicadas** ativado; **Enviar tags existentes** ativado |
 | **Gerador de resumos** | **Tamanho do resumo** <SettingDefault path="ai_tools.summarizer.summary_length" />; **Incluir domínio como dica** ativado; **Modo de mesclagem** Substituir |
 | **Reorganização de pastas com IA** | **Confiança mínima** 55% (as movimentações abaixo desse valor são descartadas); **Tamanho do lote** <SettingDefault path="ai_tools.reorganization.batch_size" /> favoritos por solicitação |
@@ -396,7 +395,7 @@ Abaixo, **Índice de texto das páginas** mostra quantas páginas estão indexad
 | **Tamanho máximo da imagem** | <SettingDefault path="metadata_content.covers.max_image_kb" /> KB | Arquivos de imagem maiores não são baixados |
 | **Armazenamento de capas** | <SettingDefault path="metadata_content.covers.max_cache_mb" /> MB | Espaço que as capas podem ocupar neste dispositivo; as mais antigas são removidas primeiro. Só neste dispositivo. As escolhidas com **Usar esta visualização como capa** são removidas por último |
 
-Abaixo, **Capas dos favoritos** mostra quantas capas estão guardadas e o tamanho delas, e **Excluir capas** exclui todas sem mexer em favoritos, tags ou no histórico.
+Abaixo, **Capas dos favoritos** mostra quantas capas estão guardadas e o tamanho delas, e **Excluir capas** exclui todas sem mexer em favoritos, tags ou no histórico. **Escolher capas…** mostra as capas com miniatura, por tipo (**Imagem da página** ou **Captura da aba**): marque as que quer excluir como **Excluir**, uma a uma ou com **Definir seleção como…**, e depois exclua; **Desfazer** devolve as capas.
 
 ## Segurança [#security]
 
@@ -429,6 +428,10 @@ Abaixo, **Capas dos favoritos** mostra quantas capas estão guardadas e o tamanh
 | **Partes dos novos backups** | Tudo, menos as configurações deste computador e as chaves dos serviços de IA | As partes que **Fazer backup das configurações** já traz selecionadas; cada backup que você salva neste computador passa a ser a nova escolha. As chaves dos serviços de IA nunca vêm selecionadas no início |
 | **Proteger novos backups com senha** | Desativado | Se **Proteger este backup com senha** já vem marcado |
 | **Proteger chaves de API com senha** | Ativado | Se um backup com as chaves dos serviços de IA já começa com elas protegidas por senha; desativar isso na caixa de diálogo pede confirmação |
+
+| Ferramenta | Configurações e padrões |
+| --- | --- |
+| **Empacotador de contexto para IA** | **Formato de saída** Markdown; **Incluir caminhos das pastas**, **Incluir datas**, **Incluir tags salvas** e **Incluir resumos salvos** ativados; **Máximo de itens** <SettingDefault path="data.context_packer.max_items" />; **Profundidade máxima** <SettingDefault path="data.context_packer.max_depth" />; **Tamanho do trecho** <SettingDefault path="data.context_packer.excerpt_length" /> |
 
 Consulte [Importar e exportar](/guides/import-export).
 

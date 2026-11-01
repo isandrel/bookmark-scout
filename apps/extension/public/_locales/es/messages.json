@@ -6731,6 +6731,10 @@
         "message": "Guardado rápido de la página actual con IA",
         "description": "Keyboard shortcut name in the browser's shortcut settings"
     },
+    "command_openManager": {
+        "message": "Abrir el administrador de marcadores",
+        "description": "Keyboard shortcut name in the browser's shortcut settings"
+    },
     "quickSave_aiSaving": {
         "message": "La IA está eligiendo una carpeta...",
         "description": "Quick save notification while the AI chooses a folder"
@@ -7930,6 +7934,10 @@
     "agentBridge_retry": {
         "message": "Reintentar",
         "description": "Button: try to start the bridge program again now"
+    },
+    "agentApproval_waitingTitle": {
+        "message": "Cambios de agentes de IA locales a la espera de tu aprobación: $1",
+        "description": "Toolbar button title while local AI agent changes wait for approval; $1 is how many (the badge shows the same number)"
     },
     "agentApproval_title": {
         "message": "Aprobar cambios",
@@ -10100,6 +10108,30 @@
     "covers_storeLoading": {
         "message": "Contando portadas…",
         "description": "Settings: shown while the stored covers are counted"
+    },
+    "covers_choose": {
+        "message": "Elegir portadas…",
+        "description": "Options > Page Details > Bookmark covers: button that opens the list of stored covers to choose from"
+    },
+    "covers_chooseDesc": {
+        "message": "Marca las portadas que quieras borrar, una a una o varias a la vez. Los marcadores y sus etiquetas no cambian, y Deshacer devuelve las portadas.",
+        "description": "Under the title of the Choose covers dialog"
+    },
+    "covers_kindPage": {
+        "message": "Imagen de la página",
+        "description": "Choose covers tab: covers that are the page's own preview image"
+    },
+    "covers_kindScreenshot": {
+        "message": "Captura de la pestaña",
+        "description": "Choose covers tab: covers that are a picture of the tab"
+    },
+    "covers_deleteCount": {
+        "message": "Borrar $1 portadas",
+        "description": "Choose covers dialog button; $1 is how many covers are set to Delete"
+    },
+    "covers_deleteCount_one": {
+        "message": "Borrar $1 portada",
+        "description": "Choose covers dialog button; $1 is how many covers are set to Delete"
     },
     "covers_clear": {
         "message": "Eliminar portadas",

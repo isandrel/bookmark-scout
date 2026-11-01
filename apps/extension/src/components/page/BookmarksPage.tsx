@@ -13,6 +13,7 @@ import {
   PanelLeftClose,
   PanelRight,
   PanelRightClose,
+  Settings,
   X,
 } from 'lucide-react';
 import {
@@ -524,6 +525,17 @@ export default function BookmarksPage() {
                 onClick={() => openHistory()}
               >
                 <History className="h-4 w-4" />
+              </Button>
+              {/* A narrow window has no room for it; Settings stays in the browser's menus. */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="shrink-0 max-sm:hidden"
+                title={t('settings_title')}
+                aria-label={t('settings_title')}
+                onClick={() => void browser.runtime.openOptionsPage()}
+              >
+                <Settings className="h-4 w-4" />
               </Button>
               <ManagerShortcutsHelp
                 open={shortcuts.helpOpen}

@@ -6731,6 +6731,10 @@
         "message": "Quick save the current page with AI",
         "description": "Keyboard shortcut name in the browser's shortcut settings"
     },
+    "command_openManager": {
+        "message": "Open bookmark manager",
+        "description": "Keyboard shortcut name in the browser's shortcut settings"
+    },
     "quickSave_aiSaving": {
         "message": "Choosing a folder with AI...",
         "description": "Quick save notification while the AI chooses a folder"
@@ -7930,6 +7934,10 @@
     "agentBridge_retry": {
         "message": "Try again",
         "description": "Button: try to start the bridge program again now"
+    },
+    "agentApproval_waitingTitle": {
+        "message": "Changes from local AI agents waiting for your approval: $1",
+        "description": "Toolbar button title while local AI agent changes wait for approval; $1 is how many (the badge shows the same number)"
     },
     "agentApproval_title": {
         "message": "Approve changes",
@@ -10100,6 +10108,30 @@
     "covers_storeLoading": {
         "message": "Counting covers…",
         "description": "Settings: shown while the stored covers are counted"
+    },
+    "covers_choose": {
+        "message": "Choose covers…",
+        "description": "Options > Page Details > Bookmark covers: button that opens the list of stored covers to choose from"
+    },
+    "covers_chooseDesc": {
+        "message": "Set the covers to delete, one by one or several at once. The bookmarks and their tags stay as they are, and Undo puts the covers back.",
+        "description": "Under the title of the Choose covers dialog"
+    },
+    "covers_kindPage": {
+        "message": "Page image",
+        "description": "Choose covers tab: covers that are the page's own preview image"
+    },
+    "covers_kindScreenshot": {
+        "message": "Picture of the tab",
+        "description": "Choose covers tab: covers that are a picture of the tab"
+    },
+    "covers_deleteCount": {
+        "message": "Delete $1 covers",
+        "description": "Choose covers dialog button; $1 is how many covers are set to Delete"
+    },
+    "covers_deleteCount_one": {
+        "message": "Delete $1 cover",
+        "description": "Choose covers dialog button; $1 is how many covers are set to Delete"
     },
     "covers_clear": {
         "message": "Delete covers",

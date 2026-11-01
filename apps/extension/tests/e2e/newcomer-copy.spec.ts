@@ -42,14 +42,19 @@ test('with AI off, AI settings are greyed out under one notice and keep their va
   // Still on, and still editable, so it can be set up before AI is turned on.
   await expect(autoTagging.getByRole('switch').first()).toBeChecked();
   await expect(autoTagging.getByRole('switch').first()).toBeEnabled();
-  // The context packer works without AI, so it is not greyed out.
-  await expect(page.locator('[data-settings-section="contextPacker"]')).not.toHaveAttribute(
-    'data-requirement-off',
-  );
+  // The context packer works without AI, so it lives in Import & Export, not here.
+  await expect(page.locator('[data-settings-section="contextPacker"]')).toHaveCount(0);
 
   await setSettings(extensionWorker, { aiEnabled: true });
   await expect(notice).toHaveCount(0);
   await expect(autoTagging).not.toHaveAttribute('data-requirement-off');
+
+  // With AI off again, Import & Export shows the context packer, not greyed out.
+  await setSettings(extensionWorker, { aiEnabled: false });
+  await page.goto(`chrome-extension://${extensionId}/options.html?category=data`);
+  const packer = page.locator('[data-settings-section="contextPacker"]');
+  await expect(packer).toBeVisible();
+  await expect(packer).not.toHaveAttribute('data-requirement-off');
 });
 
 test('Export Bookmarks in Options opens the manager on the export card', async ({
