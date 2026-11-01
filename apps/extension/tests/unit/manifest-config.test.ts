@@ -99,8 +99,8 @@ describe('manifest config', () => {
     'suggests no key the %s build would leave unassigned or never receive',
     (browser) => {
       const manifest = createManifest({ browser });
-      const suggested = Object.values(manifest.commands ?? {}).map(
-        (command) => command.suggested_key?.default,
+      const suggested = Object.values(manifest.commands ?? {}).flatMap((command) =>
+        command.suggested_key?.default ? [command.suggested_key.default] : [],
       );
       expect(suggested).toEqual(Object.values(COMMAND_SUGGESTED_KEYS));
       // Chrome and Edge never auto-assign their bookmark keys, and Firefox keeps them for itself.
@@ -114,6 +114,15 @@ describe('manifest config', () => {
       expect(manifest).not.toHaveProperty('chrome_ui_overrides');
     },
   );
+
+  it('declares the toolbar button command everywhere and the sidebar one in Firefox, with no keys', () => {
+    for (const browser of ['chrome', 'edge', 'firefox'] as const) {
+      const commands = createManifest({ browser }).commands ?? {};
+      expect(commands._execute_action).toEqual({});
+      expect('_execute_sidebar_action' in commands).toBe(browser === 'firefox');
+    }
+    expect(createManifest({ browser: 'firefox' }).commands?._execute_sidebar_action).toEqual({});
+  });
 
   it('declares the Address Bar Search keyword in every build, from config/ui/omnibox.toml', () => {
     for (const browser of ['chrome', 'edge', 'firefox']) {

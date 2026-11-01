@@ -30,6 +30,17 @@ async function showCount(): Promise<void> {
   try {
     await action?.setBadgeBackgroundColor({ color: approvalConfig.badge_color });
     await action?.setBadgeText({ text: waiting.size > 0 ? String(waiting.size) : '' });
+    // The title says what the number means, for screen readers and on hover.
+    await whenLanguageReady();
+    await action?.setTitle({
+      title:
+        waiting.size > 0
+          ? t('page_title', [
+              t('agentApproval_waitingTitle', String(waiting.size)),
+              getExtensionPageTitle(),
+            ])
+          : getExtensionPageTitle(),
+    });
   } catch {
     // The badge is a hint; the window is what asks.
   }

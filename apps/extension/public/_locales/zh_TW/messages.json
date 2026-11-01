@@ -7653,6 +7653,10 @@
         "message": "重試",
         "description": "Button: try to start the bridge program again now"
     },
+    "agentApproval_waitingTitle": {
+        "message": "等待你核准的本機 AI 代理變更：$1 項",
+        "description": "Toolbar button title while local AI agent changes wait for approval; $1 is how many (the badge shows the same number)"
+    },
     "agentApproval_title": {
         "message": "核准變更",
         "description": "Title of the window where the user approves changes local AI agents asked for"

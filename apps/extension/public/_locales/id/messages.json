@@ -7633,6 +7633,10 @@
         "message": "Coba lagi",
         "description": "Button: try to start the bridge program again now"
     },
+    "agentApproval_waitingTitle": {
+        "message": "Perubahan dari agen AI lokal yang menunggu persetujuan Anda: $1",
+        "description": "Toolbar button title while local AI agent changes wait for approval; $1 is how many (the badge shows the same number)"
+    },
     "agentApproval_title": {
         "message": "Setujui perubahan",
         "description": "Title of the window where the user approves changes local AI agents asked for"
