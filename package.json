@@ -33,14 +33,14 @@
   "devDependencies": {
     "@biomejs/biome": "^2.6.4",
     "@bookmark-scout/config": "workspace:*",
-    "@nx/js": "^23.3.1",
+    "@nx/js": "^24.0.3",
     "@playwright/test": "^1.64.1",
     "@types/bun": "1.4.4",
     "github-slugger": "2.0.0",
     "husky": "^9.1.7",
     "lint-staged": "^17.6.0",
     "minijinja-js": "3.0.5",
-    "nx": "^23.3.1",
+    "nx": "^24.0.3",
     "typescript": "^6.0.3"
   },
   "lint-staged": {
