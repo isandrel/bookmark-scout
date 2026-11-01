@@ -1,16 +1,10 @@
 # "Save to folder" matches at the top of popup and side panel search results. Read by
-# src/lib/folder-match.ts. Whether they show, how many, and typo matching are user settings
-# (config/settings/search.toml, [folder_matches]).
+# src/lib/folder-match.ts. Whether they show, how many, and the weight of each part of a folder are
+# user settings (config/settings/search.toml, [folder_matches]); how words match is Search Matching.
 
-# With Settings > Search > Allow typos on, a search word this long or longer may match a folder
-# name with one typo ("rect" finds React). Shorter words would match too many unrelated names.
-fuzzy_min_length = { value = 4, min = 2, max = 20 }
-# How many typos such a word may have: letters added, removed, changed, or two swapped.
-typo_max_edits = 1
-
-# Extra rank for a folder you saved to recently: the most recent folder gets this much, and each
-# older one a step less, so recent folders win ties between equally good name matches.
-recent_bonus = { value = 30, min = 0, max = 100 }
+# Extra rank for a folder you saved to recently: the most recent folder's score grows by this share,
+# and each older one by a step less, so recent folders win ties between equally good matches.
+recent_boost = { value = 0.5, min = 0, max = 5 }
 
 # Largest share of the popup's height the matches may take, from 0 to 1. More matches scroll
 # inside the list, so the bookmark tree below stays usable.

@@ -526,10 +526,11 @@ export default function BookmarksPage() {
               >
                 <History className="h-4 w-4" />
               </Button>
+              {/* A narrow window has no room for it; Settings stays in the browser's menus. */}
               <Button
                 variant="ghost"
                 size="icon"
-                className="shrink-0"
+                className="shrink-0 max-sm:hidden"
                 title={t('settings_title')}
                 aria-label={t('settings_title')}
                 onClick={() => void browser.runtime.openOptionsPage()}

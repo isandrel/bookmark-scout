@@ -319,6 +319,74 @@ function folderReadings(value: string): (readonly string[])[] {
 
 type TermMatch = { matched: boolean; score: number; reasons: SearchMatchReason[] };
 
+/** A run of letters, combining marks, and digits: one word of a field's text. */
+const TEXT_WORD = /[\p{L}\p{M}\p{N}]+/gu;
+
+/**
+ * The words of `folded` within `budget` edits of `needle` (Damerau-Levenshtein), as ranges in
+ * the original text, and the fewest edits any of them took; none when no word is close enough.
+ */
+function fuzzyWordRanges(
+  folded: FoldedText,
+  needle: string,
+  budget: number,
+): { ranges: SearchMatchRange[]; edits: number } {
+  const ranges: SearchMatchRange[] = [];
+  let fewest = budget + 1;
+  for (const match of folded.text.matchAll(TEXT_WORD)) {
+    const edits = editDistanceWithin(needle, match[0], budget);
+    if (edits > budget) continue;
+    const at = match.index ?? 0;
+    const last = at + match[0].length - 1;
+    ranges.push([folded.starts?.[at] ?? at, folded.ends?.[last] ?? last + 1]);
+    fewest = Math.min(fewest, edits);
+  }
+  return { ranges, edits: fewest };
+}
+
+/**
+ * Where a plain word, found nowhere as typed, matches a word spelled a little differently (Search
+ * Matching's Fuzzy Matching): in the title, a tag, a folder name, or the summary, each weighed as
+ * its field is and less for each edit. Addresses and page text are left out, where near spellings
+ * are mostly noise.
+ */
+function matchFuzzy(
+  document: SearchDocument,
+  compiled: CompiledText,
+  matching: SearchMatching,
+): TermMatch {
+  const { needle } = compiled;
+  const budget = /\s/u.test(needle) ? 0 : fuzzyBudget(needle.length, matching);
+  if (budget === 0) return NO_MATCH;
+  const folded = foldedOf(document);
+  const reasons: SearchMatchReason[] = [];
+  let score = 0;
+  const add = (reason: SearchMatchReason, weight: number, edits: number) => {
+    reasons.push(reason);
+    score = Math.max(score, (weight * FUZZY_MATCH_WEIGHT) / 2 ** (edits - 1));
+  };
+  const title = fuzzyWordRanges(folded.title, needle, budget);
+  if (title.ranges.length > 0)
+    add({ field: 'title', ranges: title.ranges }, SEARCH_WEIGHTS.title, title.edits);
+  document.tags.forEach((tag, index) => {
+    const text = folded.tags[index];
+    const found = text ? fuzzyWordRanges(text, needle, budget) : undefined;
+    if (found?.ranges.length)
+      add({ field: 'tag', value: tag, ranges: found.ranges }, SEARCH_WEIGHTS.tag, found.edits);
+  });
+  if (document.folders.length > 0) {
+    const found = fuzzyWordRanges(folded.folderPath, needle, budget);
+    if (found.ranges.length > 0)
+      add({ field: 'folder', ranges: found.ranges }, SEARCH_WEIGHTS.folder, found.edits);
+  }
+  if (folded.summary) {
+    const found = fuzzyWordRanges(folded.summary, needle, budget);
+    if (found.ranges.length > 0)
+      add({ field: 'summary', ranges: found.ranges }, SEARCH_WEIGHTS.summary, found.edits);
+  }
+  return reasons.length > 0 ? { matched: true, score, reasons } : NO_MATCH;
+}
+
 /** Where a text term matches in one document, and its best weight. */
 function matchText(document: SearchDocument, compiled: CompiledText): TermMatch {
   const { term, needle } = compiled;
@@ -462,11 +530,15 @@ function excludes(node: CompiledNode): boolean {
 }
 
 /** Nodes that must all match: their scores add up, and the first that fails ends the check. */
-function matchAll(document: SearchDocument, nodes: readonly CompiledNode[]): TermMatch {
+function matchAll(
+  document: SearchDocument,
+  nodes: readonly CompiledNode[],
+  matching: SearchMatching | undefined,
+): TermMatch {
   let score = 0;
   const reasons: SearchMatchReason[] = [];
   for (const node of nodes) {
-    const match = matchNode(document, node);
+    const match = matchNode(document, node, matching);
     if (!match.matched) return NO_MATCH;
     score += match.score;
     reasons.push(...match.reasons);
@@ -479,12 +551,16 @@ function matchAll(document: SearchDocument, nodes: readonly CompiledNode[]): Ter
  * the branches that match and the reasons are theirs only: a term in a branch that does not match
  * is never a reason.
  */
-function matchAny(document: SearchDocument, branches: readonly CompiledNode[]): TermMatch {
+function matchAny(
+  document: SearchDocument,
+  branches: readonly CompiledNode[],
+  matching: SearchMatching | undefined,
+): TermMatch {
   let matched = false;
   let score = 0;
   const reasons: SearchMatchReason[] = [];
   for (const branch of branches) {
-    const match = matchNode(document, branch);
+    const match = matchNode(document, branch, matching);
     if (!match.matched) continue;
     matched = true;
     score += match.score;
@@ -493,27 +569,47 @@ function matchAny(document: SearchDocument, branches: readonly CompiledNode[]): 
   return matched ? { matched, score, reasons } : NO_MATCH;
 }
 
-/** A node against a document, its exclusion applied: an excluded node never gives reasons. */
-function matchNode(document: SearchDocument, node: CompiledNode): TermMatch {
+/**
+ * A node against a document, its exclusion applied: an excluded node never gives reasons. A plain
+ * word found nowhere as typed may match a near spelling when `matching` allows it; a word
+ * excluded with `-` never does, so it excludes only what it names.
+ */
+function matchNode(
+  document: SearchDocument,
+  node: CompiledNode,
+  matching: SearchMatching | undefined,
+): TermMatch {
+  const plain = (text: CompiledText) => {
+    const exact = matchText(document, text);
+    if (exact.matched || !matching || text.term.field !== undefined || text.term.negate) {
+      return exact;
+    }
+    return matchFuzzy(document, text, matching);
+  };
   const match =
     node.kind === 'text'
-      ? matchText(document, node)
+      ? plain(node)
       : node.kind === 'condition'
         ? { matched: holds(node.term, document), score: 0, reasons: [] }
         : node.kind === 'all'
-          ? matchAll(document, node.nodes)
-          : matchAny(document, node.branches);
+          ? matchAll(document, node.nodes, matching)
+          : matchAny(document, node.branches, matching);
   if (!excludes(node)) return match;
   return match.matched ? NO_MATCH : EXCLUDED;
 }
 
-/** A query read once, to match documents one at a time: undefined for one that does not match. */
+/**
+ * A query read once, to match documents one at a time: undefined for one that does not match.
+ * With `matching` (a search box's or AI's search), plain words also match near spellings as
+ * Search Matching says; without it (Smart Rules), only what is typed matches.
+ */
 export function compileSearchQuery(
   query: SearchQuery,
+  matching?: SearchMatching,
 ): (document: SearchDocument) => SearchResult | undefined {
   const nodes = query.terms.map(compileNode);
   return (document) => {
-    const match = matchAll(document, nodes);
+    const match = matchAll(document, nodes, matching);
     if (!match.matched) return undefined;
     return { document, score: match.score, reasons: mergeReasons(match.reasons) };
   };

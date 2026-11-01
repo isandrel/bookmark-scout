@@ -92,7 +92,7 @@ test('a query with operators finds bookmarks only, so Enter never saves into a f
   expect(await childCount(extensionWorker, deep)).toBe(0);
 });
 
-test('folder matches put exact names first, forgive one typo, and rank recent folders higher', async ({
+test('folder matches put exact names first, match a word spelled a little differently, and rank recent folders higher', async ({
   extensionId,
   extensionWorker,
   page,
@@ -102,8 +102,8 @@ test('folder matches put exact names first, forgive one typo, and rank recent fo
   await openPopup(page, extensionId);
   const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
 
+  // React first; the folders inside it follow, found by its name in their path.
   await search.fill('rect');
-  await expect(matches(page)).toHaveCount(1);
   await expect(matches(page).first()).toContainText('React');
 
   // Two folders named Hooks: the shallower one first, until the deeper one is used.
@@ -118,7 +118,7 @@ test('folder matches put exact names first, forgive one typo, and rank recent fo
   await expect(matches(page).first()).toContainText('Frontend / React');
 });
 
-test('folder match settings hide the list, limit its length, and turn off typo matching', async ({
+test('folder match settings hide the list, limit its length, and turn off fuzzy matching', async ({
   extensionId,
   extensionWorker,
   page,
@@ -131,7 +131,7 @@ test('folder match settings hide the list, limit its length, and turn off typo m
   await search.fill('hooks');
   await expect(matches(page)).toHaveCount(1);
 
-  await setSettings(extensionWorker, { folderMatchesTypos: false });
+  await setSettings(extensionWorker, { searchFuzzy: false });
   await search.fill('rect');
   await expect(page.getByTestId('folder-matches')).toHaveCount(0);
   await search.fill('react');

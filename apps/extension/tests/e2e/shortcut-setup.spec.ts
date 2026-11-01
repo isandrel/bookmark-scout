@@ -1,3 +1,4 @@
+import { formatCommandShortcut, readShortcutConfig } from '@bookmark-scout/config';
 import type { Page } from '@playwright/test';
 import { readConfigToml } from '../config-files';
 import { type ExtensionBrowser, expect, test } from './fixtures';
@@ -58,10 +59,15 @@ test('the browser assigns the suggested keys, not its own bookmark keys', async 
       .filter((command) => command.name !== '_execute_action')
       .map((command) => [command.name, command.shortcut]),
   );
+  // Every command the shortcuts file suggests keys for, shown as Chrome shows them.
+  const apple = process.platform === 'darwin';
   expect(shortcuts).toEqual(
-    process.platform === 'darwin'
-      ? { 'quick-save': '⌥⇧S', 'ai-quick-save': '⌥⇧D' }
-      : { 'quick-save': 'Alt+Shift+S', 'ai-quick-save': 'Alt+Shift+D' },
+    Object.fromEntries(
+      Object.entries(readShortcutConfig().commands).map(([name, keys]) => [
+        name,
+        formatCommandShortcut(keys, { apple }),
+      ]),
+    ),
   );
 });
 
