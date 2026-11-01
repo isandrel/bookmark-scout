@@ -5,6 +5,7 @@ import defaultMdxComponents from "fumadocs-ui/mdx";
 import type { MDXComponents } from "mdx/types";
 import type { ComponentType } from "react";
 import { StartHere } from "@/components/home/start-here";
+import { AddressBarKeyword } from "@/components/mdx/address-bar-keyword";
 import { Languages } from "@/components/mdx/languages";
 import {
   Contact,
@@ -30,6 +31,7 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     Steps,
     Tab,
     Tabs,
+    AddressBarKeyword,
     Contact,
     Languages,
     License,

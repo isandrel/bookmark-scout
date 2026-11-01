@@ -39,8 +39,12 @@ Keep shared briefs (rules, interfaces, findings) in files under `~/.cache/` that
 
 ## Stacked PRs
 
+- **Prefer GitHub's native stacks** (generally available 2026-10-06, every plan, no setup; [docs](https://docs.github.com/en/pull-requests/get-started/about-stacked-prs)) for changes that build on a PR still in review, instead of waiting for it to merge. Each PR targets the branch below it, CI runs for every layer, and branch rules apply as for the bottom PR's base. Merging a layer merges the ones below it bottom-up, and GitHub rebases the rest onto `main` on its side.
+  - The `gh stack` extension (`gh extension install github/gh-stack`, `gh` 2.90 or later) drives it: `gh stack init` and `add` make the layers, `submit` opens and links the PRs, `link <bottom> <top>` turns an open PR and a new branch into a stack, `view` shows it, and `merge` merges up to a layer. The legacy merge endpoints cannot merge a stack.
+  - `gh stack rebase`, `sync`, and `push` push with `--force-with-lease`. The maintainer allows that only for stack branches the agent created and only through `gh stack`; every other branch keeps the no-force-push rule, so fix a lower layer with a new commit where possible.
+  - Verify a layer against the branch below it: `feature-delivery/scripts/pre-push-check.sh <wt> --base <lower-branch>`.
 - Merging a PR with `--delete-branch` **closes** (does not retarget) PRs based on that branch. Retarget dependents first with `gh pr edit <n> --base main`, or merge the base without deleting its branch.
-- **Keep the stack local and open one PR at a time against `main`.** Build the next change on a local branch while the previous PR's CI runs, and write down the previous branch's tip SHA (`git rev-parse <prev-branch>`) **before** its branch and worktree are deleted after the merge; the cleanup removes the name you would otherwise use. After the base squash-merges, move only your own commits onto `main`:
+- **Without a native stack, keep it local and open one PR at a time against `main`.** Build the next change on a local branch while the previous PR's CI runs, and write down the previous branch's tip SHA (`git rev-parse <prev-branch>`) **before** its branch and worktree are deleted after the merge; the cleanup removes the name you would otherwise use. After the base squash-merges, move only your own commits onto `main`:
   ```bash
   git fetch -q origin
   git rebase --onto origin/main <prev-tip-sha>   # replays the commits after <prev-tip-sha>

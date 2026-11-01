@@ -99,6 +99,13 @@ Abaixo delas, **Atalhos de teclado** mostra as teclas de cada atalho no seu nave
 
 **Itens do menu** escolhe o que o menu oferece, nesta ordem: **Pastas recentes** (um submenu) e **Barra de favoritos**. Marque um item para mostrá-lo e arraste-o pela alça (ou use o menu da alça) para movê-lo; **Restaurar padrões** mostra os dois de novo na ordem inicial.
 
+### Pesquisa na barra de endereços [#address-bar]
+
+| Configuração | Padrão | O que faz |
+| --- | --- | --- |
+| **Pesquisa na barra de endereços** | Desativado | Digite <AddressBarKeyword /> e um espaço na barra de endereços do navegador e depois as palavras que procura: a barra de endereços lista os favoritos correspondentes, ordenados como na caixa de pesquisa. **Enter** em um favorito o abre nesta guia ou, com a tecla que seu navegador usa para isso, em uma nova; **Enter** no que você digitou abre o gerenciador de favoritos com essa pesquisa. Enquanto estiver desativada, a palavra-chave avisa e **Enter** abre esta configuração. A pesquisa acontece no seu dispositivo e não guarda nada |
+| **Resultados na barra de endereços** | <SettingDefault path="search.address_bar.max_results" /> | Quantos favoritos a barra de endereços mostra em uma pesquisa |
+
 ### Pesquisa nas configurações [#settings-search]
 
 | Configuração | Padrão | O que faz |
@@ -290,6 +297,8 @@ Abaixo delas, o painel do provedor contém **Chave de API**, **URL base**, **Mod
 | Configuração | Padrão | O que faz |
 | --- | --- | --- |
 | **Máximo de etapas por resposta** | <SettingDefault path="ai.ask_ai.max_steps" /> | Quantas vezes Perguntar à IA pode chamar o modelo para uma resposta: menos sai mais barato, mais permite pesquisar mais |
+| **Manter conversas** | Ativado | Mantém as conversas do Perguntar à IA neste dispositivo: o Perguntar à IA abre na última, e Conversas anteriores reabre as outras. Desativado, nada é mantido e as conversas guardadas são excluídas |
+| **Conversas mantidas** | <SettingDefault path="ai.ask_ai.chats_max" /> | Quantas conversas manter; as mais antigas saem primeiro |
 
 ### O que Perguntar à IA pode fazer [#ask-ai-actions]
 

@@ -132,6 +132,11 @@ export const STORAGE_ITEMS = {
   aiActivity: { area: 'local', name: 'ai.activity-log', v: 1, backup: 'exclude' },
   /** Local: tags and summaries are keyed by bookmark id, which differs on every device. */
   bookmarkMetadata: { area: 'local', name: 'bookmarks.metadata', v: 1, backup: 'exclude' },
+  /**
+   * Local: Ask AI's past chats hold what the user asked, bookmark titles and addresses, and page text
+   * the model read; never synced or backed up, and cleared when Keep Chats is turned off.
+   */
+  askAiChats: { area: 'local', name: 'ai.chats', v: 1, backup: 'exclude' },
   /** Local: queries can reveal bookmark contents. */
   searchHistory: { area: 'local', name: 'search.history', v: 1, backup: 'exclude' },
   /** Local: filters can reveal bookmark contents and name folder ids local to this device. */

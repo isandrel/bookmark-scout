@@ -496,10 +496,17 @@ type FieldExtras = Pick<SettingsFieldMeta, 'control' | 'percent'> & {
   unit?: SettingUnit;
   /** Edit in a friendlier unit: `{ unit: 's', scale: 1000 }` for a value stored in ms. */
   display?: { unit: SettingUnit; scale: number };
+  /** Values for the $1, $2, ... placeholders of the description. */
+  descriptionArgs?: readonly string[];
 };
 
 /** Field meta for `extras`, with the unit localized when the meta is read. */
-function extrasMeta({ unit, display, ...extras }: FieldExtras): Partial<SettingsFieldMeta> {
+function extrasMeta({
+  unit,
+  display,
+  descriptionArgs: _args,
+  ...extras
+}: FieldExtras): Partial<SettingsFieldMeta> {
   const shownUnit = display?.unit ?? unit;
   return {
     ...extras,
@@ -513,12 +520,13 @@ const IN_SECONDS = { unit: 's', scale: 1000 } as const;
 /** Labels follow `settings_<stem>` and `settings_<stem>Desc` in the locale files. */
 function fieldLabels(
   stem: string,
+  descriptionArgs: readonly string[] = [],
 ): Pick<SettingsFieldMeta, 'label' | 'description' | 'help' | 'keywords'> {
   const help = tOptional(`settings_${stem}Help`);
   const keywords = tOptional(`settings_${stem}Keywords`);
   return {
     label: t(`settings_${stem}`),
-    description: t(`settings_${stem}Desc`),
+    description: t(`settings_${stem}Desc`, [...descriptionArgs]),
     ...(help ? { help } : {}),
     ...(keywords ? { keywords } : {}),
   };
@@ -533,7 +541,11 @@ function switchField(
   return {
     section: sectionOf(path),
     schema: z.boolean().default(value),
-    meta: () => ({ ...fieldLabels(stem), type: 'switch', ...extrasMeta(extras) }),
+    meta: () => ({
+      ...fieldLabels(stem, extras.descriptionArgs),
+      type: 'switch',
+      ...extrasMeta(extras),
+    }),
   };
 }
 
@@ -1126,6 +1138,8 @@ const fields = {
   ),
   aiActivityRecording: switchField('ai.activity.recording', 'aiActivityRecording'),
   askAiWebSearch: switchField('ai.ask_ai.web_search', 'askAiWebSearch'),
+  askAiKeepChats: switchField('ai.ask_ai.keep_chats', 'askAiKeepChats'),
+  askAiChatsMax: numberField('ai.ask_ai.chats_max', 'askAiChatsMax'),
   askAiDisabledActions: idListField('ai.ask_ai.disabled_actions', 'askAiDisabledActions'),
   agentBridgeEnabled: switchField('developers.agent_bridge.enabled', 'agentBridgeEnabled'),
   agentBridgeWrites: switchField('developers.agent_bridge.writes', 'agentBridgeWrites'),
@@ -1344,6 +1358,11 @@ const fields = {
     SHOWN_ID_PATTERN,
   ),
   contextMenuRecentMax: numberField('search.context_menu.recent_max', 'contextMenuRecentMax'),
+
+  addressBarEnabled: switchField('search.address_bar.enabled', 'addressBarEnabled', {
+    descriptionArgs: [ADDRESS_BAR_KEYWORD],
+  }),
+  addressBarMaxResults: numberField('search.address_bar.max_results', 'addressBarMaxResults'),
 
   quickSaveFolderStrategy: enumField(
     'search.quick_save.folder_strategy',
@@ -1967,6 +1986,12 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         panel: 'contextMenuEntries',
       },
       {
+        id: 'addressBar',
+        labelKey: 'settings_sectionAddressBar',
+        // A row, not a section switch, so its description names the keyword to type.
+        fields: ['addressBarEnabled', 'addressBarMaxResults'],
+      },
+      {
         id: 'settingsSearch',
         labelKey: 'settings_sectionSettingsSearch',
         fields: [
@@ -2084,7 +2109,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       {
         id: 'askAi',
         labelKey: 'askAI_title',
-        fields: ['askAiMaxSteps'],
+        fields: ['askAiMaxSteps', 'askAiKeepChats', 'askAiChatsMax'],
         requires: 'aiEnabled',
       },
       { id: 'askAiActions', fields: [], panel: 'askAiActions', requires: 'aiEnabled' },
@@ -2353,6 +2378,7 @@ export const SETTING_SHOWN_WHEN = {
   coversBrowseIntervalMs: 'coversBrowseCapture',
   coversBrowseMaxAgeDays: 'coversBrowseCapture',
   quickSaveCoverSource: 'quickSaveCover',
+  addressBarMaxResults: 'addressBarEnabled',
   quickSaveCoverExisting: 'quickSaveCover',
   // The folder to start on, only while Start Folder says to use a chosen one.
   managerStartFolderId: { key: 'managerStartFolder', equals: 'chosen' },
@@ -2555,6 +2581,11 @@ export function getSettingsFieldGroups(): SettingsFieldGroup[] {
       id: 'recentFolders',
       kind: 'switch',
       fields: ['recentFoldersEnabled', 'recentFoldersMax'],
+    }),
+    group({
+      id: 'askAiChats',
+      kind: 'switch',
+      fields: ['askAiKeepChats', 'askAiChatsMax'],
     }),
     group({
       id: 'searchFuzzy',

@@ -1,5 +1,6 @@
 import { availableParallelism } from 'node:os';
 import { defineConfig } from '@playwright/test';
+import { buildFolder } from './build/browser-targets';
 import type { ExtensionProjectOptions } from './tests/e2e/fixtures';
 import { PERF_ENV } from './tests/perf/perf-env';
 
@@ -50,20 +51,20 @@ export default defineConfig<ExtensionProjectOptions>({
     {
       name: 'chromium',
       testDir: './tests/e2e',
-      use: { extensionBrowser: 'chromium', extensionBuild: 'chrome-mv3' },
+      use: { extensionBrowser: 'chromium', extensionBuild: buildFolder('chrome') },
     },
     {
       // The installed Microsoft Edge running the Edge build through the same suite.
       name: 'edge',
       testDir: './tests/e2e',
-      use: { extensionBrowser: 'msedge', extensionBuild: 'edge-mv3' },
+      use: { extensionBrowser: 'msedge', extensionBuild: buildFolder('edge') },
     },
     {
       // The local AI agent bridge end to end, with the compiled bookmark-scout-mcp binary as the
       // browser's native host (tests/e2e-bridge). Its own CI job; `nx run extension:test:e2e:bridge`.
       name: 'bridge',
       testDir: './tests/e2e-bridge',
-      use: { extensionBrowser: 'chromium', extensionBuild: 'chrome-mv3' },
+      use: { extensionBrowser: 'chromium', extensionBuild: buildFolder('chrome') },
     },
     {
       // Latency and scrolling measurements on a large library (tests/perf/README.md). Not part of
@@ -78,7 +79,7 @@ export default defineConfig<ExtensionProjectOptions>({
       use: {
         extensionBrowser: 'chromium',
         // The base build when the base-versus-head comparison runs it (tests/perf/compare.ts).
-        extensionBuild: process.env[PERF_ENV.extensionDir] ?? 'chrome-mv3',
+        extensionBuild: process.env[PERF_ENV.extensionDir] ?? buildFolder('chrome'),
         screenshot: 'off',
         trace: 'off',
       },
@@ -95,7 +96,7 @@ export default defineConfig<ExtensionProjectOptions>({
       retries: 0,
       use: {
         extensionBrowser: 'chromium',
-        extensionBuild: 'chrome-mv3',
+        extensionBuild: buildFolder('chrome'),
         screenshot: 'off',
         trace: 'off',
         video: 'off',

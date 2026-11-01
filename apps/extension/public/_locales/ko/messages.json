@@ -2259,6 +2259,42 @@
         "message": "마우스 오른쪽 버튼 메뉴에 표시할 최근 폴더 수입니다. 팝업에는 별도의 최근 폴더 최대 수가 있습니다.",
         "description": "Setting description for Recent Folders in Menu"
     },
+    "settings_sectionAddressBar": {
+        "message": "주소 표시줄",
+        "description": "Options section heading: Address Bar Search and its result count"
+    },
+    "settings_addressBarEnabled": {
+        "message": "주소 표시줄 검색",
+        "description": "Setting label: Address Bar Search, which lists matching bookmarks in the browser address bar after its keyword"
+    },
+    "settings_addressBarEnabledDesc": {
+        "message": "주소 표시줄에 $1와 공백을 입력하면 그 자리에서 북마크를 검색합니다. 켜기 전까지는 꺼져 있습니다.",
+        "description": "Setting description for Address Bar Search; $1 is the keyword typed in the address bar"
+    },
+    "settings_addressBarEnabledKeywords": {
+        "message": "옴니박스, 키워드, URL 표시줄, 위치 표시줄",
+        "description": "Other words the settings search finds Address Bar Search by, comma-separated, never shown"
+    },
+    "settings_addressBarMaxResults": {
+        "message": "주소 표시줄 결과 수",
+        "description": "Setting label: how many bookmarks Address Bar Search lists"
+    },
+    "settings_addressBarMaxResultsDesc": {
+        "message": "한 번 검색할 때 주소 표시줄에 표시할 북마크 수입니다.",
+        "description": "Setting description for Address Bar Results"
+    },
+    "addressBar_suggestion": {
+        "message": "$1 — $2",
+        "description": "One address bar suggestion: $1 is the bookmark title, $2 its address"
+    },
+    "addressBar_defaultSuggestion": {
+        "message": "북마크 검색. Enter를 누르면 북마크 관리자에서 모든 결과를 표시합니다",
+        "description": "First line of the address bar after the keyword, while Address Bar Search is on; Enter on it searches the manager"
+    },
+    "addressBar_off": {
+        "message": "주소 표시줄 검색이 꺼져 있습니다. Enter를 눌러 설정에서 켜세요",
+        "description": "First line of the address bar after the keyword, while Address Bar Search is off; Enter opens Settings"
+    },
     "settings_namingLinkText": {
         "message": "링크 텍스트",
         "description": "Use link text for bookmark name"
@@ -6246,6 +6282,38 @@
     "askAI_back": {
         "message": "북마크로 돌아가기",
         "description": "Ask AI: button that closes the chat"
+    },
+    "askAI_pastChats": {
+        "message": "이전 채팅",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "askAI_noPastChats": {
+        "message": "아직 이전 채팅이 없습니다",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "askAI_deleteChat": {
+        "message": "이 채팅 삭제",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "askAI_deleteAllChats": {
+        "message": "모든 채팅 삭제",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "settings_askAiKeepChats": {
+        "message": "채팅 보관",
+        "description": "Options > AI > Ask AI: label"
+    },
+    "settings_askAiKeepChatsDesc": {
+        "message": "AI에게 묻기 채팅을 이 기기에 보관합니다. AI에게 묻기는 마지막 채팅으로 열리고, 이전 채팅에서 다른 채팅을 다시 엽니다. 끄면 아무것도 보관하지 않고 보관된 채팅을 삭제합니다.",
+        "description": "Under its setting in Options > AI > Ask AI"
+    },
+    "settings_askAiChatsMax": {
+        "message": "보관할 채팅 수",
+        "description": "Options > AI > Ask AI: label"
+    },
+    "settings_askAiChatsMaxDesc": {
+        "message": "보관할 채팅 수. 가장 오래된 것부터 삭제됩니다",
+        "description": "Under its setting in Options > AI > Ask AI"
     },
     "askAI_newChat": {
         "message": "새 채팅",

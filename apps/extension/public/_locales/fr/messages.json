@@ -2267,6 +2267,42 @@
         "message": "Nombre de dossiers récents listés dans le menu du clic droit. La fenêtre contextuelle a son propre Nombre maximal de dossiers récents.",
         "description": "Setting description for Recent Folders in Menu"
     },
+    "settings_sectionAddressBar": {
+        "message": "Barre d'adresse",
+        "description": "Options section heading: Address Bar Search and its result count"
+    },
+    "settings_addressBarEnabled": {
+        "message": "Recherche dans la barre d'adresse",
+        "description": "Setting label: Address Bar Search, which lists matching bookmarks in the browser address bar after its keyword"
+    },
+    "settings_addressBarEnabledDesc": {
+        "message": "Tapez $1 puis une espace dans la barre d'adresse pour y rechercher vos favoris. Désactivée tant que vous ne l'activez pas.",
+        "description": "Setting description for Address Bar Search; $1 is the keyword typed in the address bar"
+    },
+    "settings_addressBarEnabledKeywords": {
+        "message": "omnibox, mot-clé, barre d'URL, barre d'adresse",
+        "description": "Other words the settings search finds Address Bar Search by, comma-separated, never shown"
+    },
+    "settings_addressBarMaxResults": {
+        "message": "Résultats dans la barre d'adresse",
+        "description": "Setting label: how many bookmarks Address Bar Search lists"
+    },
+    "settings_addressBarMaxResultsDesc": {
+        "message": "Nombre de favoris que la barre d'adresse affiche pour une recherche.",
+        "description": "Setting description for Address Bar Results"
+    },
+    "addressBar_suggestion": {
+        "message": "$1 — $2",
+        "description": "One address bar suggestion: $1 is the bookmark title, $2 its address"
+    },
+    "addressBar_defaultSuggestion": {
+        "message": "Rechercher dans vos favoris. Entrée affiche tous les résultats dans le gestionnaire de favoris",
+        "description": "First line of the address bar after the keyword, while Address Bar Search is on; Enter on it searches the manager"
+    },
+    "addressBar_off": {
+        "message": "La recherche dans la barre d'adresse est désactivée. Appuyez sur Entrée pour l'activer dans les paramètres",
+        "description": "First line of the address bar after the keyword, while Address Bar Search is off; Enter opens Settings"
+    },
     "settings_namingLinkText": {
         "message": "Texte du lien",
         "description": "Use link text for bookmark name"
@@ -6254,6 +6290,38 @@
     "askAI_back": {
         "message": "Retour aux favoris",
         "description": "Ask AI: button that closes the chat"
+    },
+    "askAI_pastChats": {
+        "message": "Discussions précédentes",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "askAI_noPastChats": {
+        "message": "Aucune discussion précédente",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "askAI_deleteChat": {
+        "message": "Supprimer cette discussion",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "askAI_deleteAllChats": {
+        "message": "Supprimer toutes les discussions",
+        "description": "Ask AI panel: Past chats menu"
+    },
+    "settings_askAiKeepChats": {
+        "message": "Conserver les discussions",
+        "description": "Options > AI > Ask AI: label"
+    },
+    "settings_askAiKeepChatsDesc": {
+        "message": "Conserve les discussions d’Demander à l'IA sur cet appareil : Demander à l'IA s’ouvre sur la dernière, et Discussions précédentes rouvre les autres. Désactivé, rien n’est conservé et les discussions gardées sont supprimées.",
+        "description": "Under its setting in Options > AI > Ask AI"
+    },
+    "settings_askAiChatsMax": {
+        "message": "Discussions conservées",
+        "description": "Options > AI > Ask AI: label"
+    },
+    "settings_askAiChatsMaxDesc": {
+        "message": "Combien de discussions conserver ; les plus anciennes partent en premier",
+        "description": "Under its setting in Options > AI > Ask AI"
     },
     "askAI_newChat": {
         "message": "Nouvelle discussion",

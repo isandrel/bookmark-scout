@@ -99,6 +99,13 @@ Sotto di esse, **Scorciatoie da tastiera** mostra i tasti di ogni scorciatoia ne
 
 **Voci del menu** sceglie cosa offre il menu, in ordine: **Cartelle recenti** (un sottomenu) e **Barra dei preferiti**. Seleziona una voce per mostrarla e trascinala dalla maniglia (o usa il menu della maniglia) per spostarla; **Ripristina predefiniti** le mostra di nuovo entrambe nell’ordine iniziale.
 
+### Ricerca nella barra degli indirizzi [#address-bar]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Ricerca nella barra degli indirizzi** | Disattivato | Digita <AddressBarKeyword /> e uno spazio nella barra degli indirizzi del browser, poi le parole da cercare: la barra degli indirizzi elenca i preferiti corrispondenti, ordinati come nella casella di ricerca. **Invio** su un preferito lo apre in questa scheda o, con il tasto che il browser usa per questo, in una nuova; **Invio** su ciò che hai digitato apre la gestione preferiti con quella ricerca. Finché è disattivata, la parola chiave lo dice e **Invio** apre questa impostazione. La ricerca avviene sul tuo dispositivo e non conserva nulla |
+| **Risultati nella barra degli indirizzi** | <SettingDefault path="search.address_bar.max_results" /> | Quanti preferiti mostra la barra degli indirizzi per una ricerca |
+
 ### Ricerca nelle impostazioni [#settings-search]
 
 | Impostazione | Predefinito | Cosa fa |
@@ -290,6 +297,8 @@ Sotto di esse, il pannello del provider contiene **Chiave API**, **URL di base**
 | Impostazione | Predefinito | Cosa fa |
 | --- | --- | --- |
 | **Passaggi massimi per risposta** | <SettingDefault path="ai.ask_ai.max_steps" /> | Quante volte Chiedi all'IA può chiamare il modello per una risposta: meno passaggi costano meno, più passaggi gli permettono di cercare più a fondo |
+| **Conserva le chat** | Attivo | Conserva le chat di Chiedi all'IA su questo dispositivo: Chiedi all'IA si apre sull’ultima e Chat precedenti riapre le altre. Se disattivato non conserva nulla ed elimina le chat conservate |
+| **Chat conservate** | <SettingDefault path="ai.ask_ai.chats_max" /> | Quante chat conservare; le più vecchie vanno via per prime |
 
 ### Cosa può fare Chiedi all'IA [#ask-ai-actions]
 

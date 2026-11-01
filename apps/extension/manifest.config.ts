@@ -1,6 +1,5 @@
-import { readShortcutConfig, site } from '@bookmark-scout/config';
+import { readOmniboxKeyword, readShortcutConfig, site } from '@bookmark-scout/config';
 import type { ConfigEnv, FirefoxDataCollectionPermissions, UserManifest } from 'wxt';
-import type { Browser } from 'wxt/browser';
 import { getManifestCommands } from './src/lib/command-catalog';
 import {
   getFirefoxDataCollectionPermissions,
@@ -73,6 +72,9 @@ export function createManifest({ browser }: Pick<ConfigEnv, 'browser'>): UserMan
     },
     // Quick save shortcuts, with the keys config/ui/shortcuts.toml suggests.
     commands: getManifestCommands(readShortcutConfig().commands),
+    // Address Bar Search: the keyword that hands the address bar to the extension. Declaring it
+    // asks for no permission; the search stays off until the user turns it on in Options.
+    omnibox: { keyword: readOmniboxKeyword() },
     permissions: permissions as UserManifest['permissions'],
     optional_permissions: optional as UserManifest['optional_permissions'],
     // Requested at click time only, never at install: website access for the network tools and
@@ -92,16 +94,4 @@ export function createManifest({ browser }: Pick<ConfigEnv, 'browser'>): UserMan
         }
       : {}),
   };
-}
-
-/**
- * Adapts the generated manifest for Manifest V2 (Firefox), from the `build:manifestGenerated` hook.
- * MV2 has no optional_host_permissions (WXT drops the key), so origins go in optional_permissions.
- */
-export function adaptManifestV2(manifest: Browser.runtime.Manifest): void {
-  manifest.optional_permissions = [
-    ...(manifest.optional_permissions ?? []),
-    ...getManifestOptionalOrigins(),
-  ] as typeof manifest.optional_permissions;
-  delete manifest.optional_host_permissions;
 }

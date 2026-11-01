@@ -218,7 +218,7 @@ describe('distribution budgets and browser targets', () => {
     for (const [target, manifestVersion] of [
       ['chrome', 3],
       ['edge', 3],
-      ['firefox', 2],
+      ['firefox', 3],
     ] as const) {
       expect(parseDistributionTarget(target)).toBe(target);
       expect(() =>
@@ -240,8 +240,8 @@ describe('distribution budgets and browser targets', () => {
 
   it('rejects the wrong browser manifest or stale package version', () => {
     expect(() =>
-      assertDistributionManifest({ manifest_version: 3, version: '1.2.3' }, 'firefox', '1.2.3'),
-    ).toThrow(/firefox MV2/);
+      assertDistributionManifest({ manifest_version: 2, version: '1.2.3' }, 'firefox', '1.2.3'),
+    ).toThrow(/firefox MV3/);
     expect(() =>
       assertDistributionManifest({ manifest_version: 3, version: '1.2.2' }, 'chrome', '1.2.3'),
     ).toThrow(/v1.2.3/);
