@@ -34,6 +34,8 @@
 # migrations the background runs at every start, which it cannot load later (501).
 # Raised from 510 on 2026-10-22 for for the backup parts and their review on top of the 0.3.5
 # review fixes (feat/backup-categories rebased on 430c4163) (514).
+# Raised from 520 on 2026-10-29 for Address Bar Search: its listeners and the matching built on the
+# search box's documents (521).
 # Raised from 520 on 2026-10-29 for the Search Matching settings and the field weights of Folder
 # Matches in the settings schema every page loads (521).
 "background.js" = 530
@@ -177,6 +179,8 @@
 # settings schema, and History's backup restore records with their parts and Undo import (1565).
 # Raised from 1575 on 2026-10-22 for for the backup parts and their review on top of the 0.3.5
 # review fixes (feat/backup-categories rebased on 430c4163) (1,576).
+# Raised from 1585 on 2026-10-29 for the page title helper moved out of the page mount so
+# the background can name the manager without React (1,586).
 # Raised from 1585 on 2026-10-29 for the Search Matching settings and the field weights of Folder
 # Matches in the settings schema every page loads (1,589).
 "bookmarks.html" = 1595

@@ -49,6 +49,8 @@ export default defineBackground(() => {
 
   // Quick save shortcuts; listeners must be added synchronously so a key press can wake the worker.
   registerQuickSave();
+  // Address Bar Search: the keyword in the address bar, answered while the setting is on.
+  registerAddressBarSearch();
 
   // Access for local AI agents, while the user has it on (Options > For developers).
   registerAgentApprovals();

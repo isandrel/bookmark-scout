@@ -35,6 +35,7 @@ const profileSchema = z.strictObject({
   data_collection_consent: z.boolean(),
   bookmark_manager_url: optionalUrl(true),
   shortcut_settings_url: optionalUrl(false),
+  omnibox_markup: z.boolean(),
 });
 
 // Every supported browser has exactly one profile; an unknown or missing table fails the load.
@@ -59,6 +60,8 @@ export type BrowserProfile = {
   bookmarkManagerUrl: string | null;
   /** Null where the browser's shortcut editor opens through its API instead. */
   shortcutSettingsUrl: string | null;
+  /** Address bar suggestions take XML markup for highlights; otherwise plain text. */
+  omniboxMarkup: boolean;
 };
 
 const BROWSER_PROFILES = Object.fromEntries(
@@ -73,6 +76,7 @@ const BROWSER_PROFILES = Object.fromEntries(
         dataCollectionConsent: profile.data_collection_consent,
         bookmarkManagerUrl: profile.bookmark_manager_url || null,
         shortcutSettingsUrl: profile.shortcut_settings_url || null,
+        omniboxMarkup: profile.omnibox_markup,
       } satisfies BrowserProfile),
     ];
   }),
