@@ -2,7 +2,7 @@
 # Wait for one pull request to merge. Run it with the agent tool's background mode: the worktree
 # command guard refuses an inline `until` loop, and a foreground wait hits the tool timeout.
 #
-# usage: zsh .agents/skills/parallel-agent-delivery/scripts/wait-pr.sh <pr-number> [max-minutes]
+# usage: zsh .agents/skills/feature-delivery/scripts/wait-pr.sh <pr-number> [max-minutes]
 # exit:  0 merged, 2 closed without merging, 3 DIRTY (merge origin/main and resolve),
 #        4 a check failed (failing checks are printed), 5 still open after max-minutes.
 # A BEHIND PR is waited on, not updated: the coordinator updates only the PR next in line
