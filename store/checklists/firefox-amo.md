@@ -70,11 +70,12 @@ The required `Firefox E2E smoke` CI check covers popup search and folder creatio
 No test account is needed. Paste:
 
 ```text
-No account or login is required. Build instructions for the attached sources are in apps/extension/SOURCE_CODE_REVIEW.md (Bun 1.3+, `bun install --frozen-lockfile`, then `bun run build:firefox` in apps/extension; output in apps/extension/dist/firefox-mv3).
+No account or login is required. Build instructions for the attached sources are in apps/extension/SOURCE_CODE_REVIEW.md (the exact Bun version in `packageManager` of the root package.json, `bun install --frozen-lockfile`, then `bun run build:firefox` in apps/extension; output in apps/extension/dist/firefox-mv3, Manifest V3).
 
-The bundle is built with WXT and Vite from TypeScript and React sources; nothing is minified by hand and no code is loaded remotely.
+The bundle is built with WXT and Vite from TypeScript and React sources; nothing is minified by hand and no code is loaded remotely. Third-party libraries are the release versions that each workspace package.json declares and bun.lock pins, installed unmodified from the public npm registry; there are no private packages or vendored copies.
 
 Linter notes:
+- KEY_FIREFOX_ANDROID_UNSUPPORTED_BY_MIN_VERSION: the add-on is for Firefox desktop only (Firefox for Android has no bookmarks API), so the manifest has no gecko_android key, which would mark it compatible with Android.
 - DANGEROUS_EVAL: Zod 4 probes `Function('')` inside try/catch to detect JIT support. The extension CSP blocks it and Zod uses its non-JIT path.
 - UNSAFE_VAR_ASSIGNMENT: React DOM's dangerouslySetInnerHTML support code. The extension source never uses dangerouslySetInnerHTML or innerHTML. The "document().write" call is the Markdown parser (mdast-util-from-markdown) writing to its own tokenizer, not to a DOM document, and the same parser decodes named character references through a detached element. The two innerHTML assignments in the page reader are Mozilla Readability working on its own copy of a downloaded page, parsed with DOMParser, which runs no scripts and is never shown.
 
