@@ -1,7 +1,7 @@
 import type { BrowserContext, Worker } from '@playwright/test';
 import { streamChunks, stubPlanningProvider } from './ai-helpers';
 import { expect, test, toastRegion } from './fixtures';
-import { replaceSettings, seedAIServices } from './storage';
+import { readSettings, replaceSettings, seedAIServices } from './storage';
 
 const BASE_URL = 'https://ask.e2e.invalid/v1';
 
@@ -495,6 +495,11 @@ test('[mocked provider contract] Ask AI is not offered the actions turned off in
   await panel.getByRole('checkbox', { name: 'List folders' }).click();
   await panel.getByRole('checkbox', { name: 'Apply approved changes' }).click();
   await expect(panel.getByRole('checkbox', { name: 'List folders' })).not.toBeChecked();
+  // Options saves after a short delay: the popup must not open before the list is stored, or it
+  // reads the old one (it did on a loaded CI runner).
+  await expect
+    .poll(async () => (await readSettings(extensionWorker)).askAiDisabledActions)
+    .toEqual(expect.arrayContaining(['listFolders', 'applyChanges']));
 
   await page.goto(`chrome-extension://${extensionId}/popup.html`);
   await page.getByRole('button', { name: 'Ask AI about your bookmarks or this page' }).click();
