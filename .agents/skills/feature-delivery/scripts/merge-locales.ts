@@ -3,7 +3,7 @@
  * Resolve merge conflicts in JSON message files by key instead of by line.
  *
  * Run during a conflicted `git merge` (or `git rebase`), from the repository root:
- *   bun .agents/skills/parallel-agent-delivery/scripts/merge-locales.ts [file ...]
+ *   bun .agents/skills/feature-delivery/scripts/merge-locales.ts [file ...]
  * With no files it takes every conflicted *.json path from `git diff --name-only --diff-filter=U`.
  *
  * For each file it reads the base (:1), ours (:2), and theirs (:3) versions from the index and
