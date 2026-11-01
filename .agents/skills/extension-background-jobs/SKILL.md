@@ -73,7 +73,7 @@ Each step adds one entry; no step adds a special case.
 - **The review opens on its own.** A page that started a job, and is still open when the job finishes, opens the review, also after a pause and resume there. A modal hides the sidebar from role queries, so close the review before asserting on the card.
 - **Test servers.** Never echo the request path into HTML: CodeQL blocks the PR (reflected XSS). Map known paths instead.
 - **Firefox locally.** Every test timing out while setting up `extension` means `selenium-manager` is hung on the network. Run with `SE_OFFLINE=true`.
-- **Budgets.** The coordinator and adapters load at background start. Check `tests/e2e/startup-budgets.toml` and `build/distribution-budgets.toml`, and raise them only with a dated reason.
+- **Budgets.** The coordinator and adapters load at background start. Check `tests/e2e/startup-budgets.toml` and `build/distribution-budgets.toml`, and if a limit fails, find what grew before resetting it (`extension-performance`, "Startup size budgets").
 
 ## Disclosures
 
