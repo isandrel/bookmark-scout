@@ -37,7 +37,20 @@ Below them, **AI is optional** says that Bookmark Scout works without AI; **Set 
 | --- | --- | --- |
 | **Folder Matches** | On | While you search, list the folders whose names match above the results, to save the current page there |
 | **Maximum Folder Matches** | <SettingDefault path="search.folder_matches.max" /> | How many matching folders to list |
-| **Allow Typos** | On | A search word of 4 letters or more may match a folder name with one typo |
+| **Folder Name Weight** | <SettingDefault path="search.folder_matches.name_weight" /> | How much a word in the folder's own name counts |
+| **Parent Folders Weight** | <SettingDefault path="search.folder_matches.parent_weight" /> | How much a word in the names of the folders it is in counts, so "react hooks" finds Hooks inside React |
+| **Bookmarks Inside Weight** | <SettingDefault path="search.folder_matches.bookmark_weight" /> | How much a word in the titles and sites of the bookmarks in the folder counts. 0 searches folder names only |
+
+### Search Matching [#search-matching]
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| **Fuzzy Matching** | On | Words spelled a little differently match too, in the search box and in folder matches, so "rect" finds React. Folder matches are ranked by relevance (BM25), closer spellings first |
+| **One Edit From** | <SettingDefault path="search.search_matching.one_edit" /> | Shortest word, in letters, that may differ by one edit: a letter added, removed, or changed, or two swapped |
+| **Two Edits From** | <SettingDefault path="search.search_matching.two_edits" /> | Shortest word, in letters, that may differ by two edits |
+| **Match Word Starts** | On | A word you type also matches longer words it starts, so "rea" finds React while you type. A whole word still ranks higher |
+| **Term Saturation (BM25 k1)** | <SettingDefault path="search.search_matching.bm25_k1" /> | How much a word that appears again keeps adding to a result's score. Lower makes one mention count almost as much as many |
+| **Length Normalization (BM25 b)** | <SettingDefault path="search.search_matching.bm25_b" /> | How much shorter results are favored over longer ones with the same words: 0 not at all, 1 fully |
 
 ### Search [#searching]
 
