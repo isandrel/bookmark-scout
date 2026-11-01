@@ -4433,6 +4433,22 @@
         "message": "Akses untuk agen AI lokal tetap nonaktif. Mengaktifkannya akan meminta browser Anda mengizinkan ekstensi berkomunikasi dengan program bookmark-scout-mcp.",
         "description": "Toast text when the native messaging permission for local AI agents is declined"
     },
+    "permission_localSkillsTitle": {
+        "message": "Baca skill dari komputer ini",
+        "description": "Title of the dialog shown before turning on Skills From This Computer"
+    },
+    "permission_localSkillsDesc": {
+        "message": "Tanya AI kemudian dapat menggunakan Agent Skills di folder yang Anda sebutkan, dibaca oleh program bookmark-scout-mcp yang Anda instal. Browser Anda meminta izin agar ekstensi dapat berkomunikasi dengan program itu.",
+        "description": "What turning on Skills From This Computer does, in the dialog shown before the browser asks to allow native messaging"
+    },
+    "permission_localSkillsDetail": {
+        "message": "Program hanya membaca file teks skill; skripnya tidak pernah dijalankan. Sebuah skill dikirim ke penyedia AI Anda hanya saat Tanya AI membacanya, seperti skill lain.",
+        "description": "Privacy note in the dialog shown before turning on Skills From This Computer"
+    },
+    "permission_localSkillsDenied": {
+        "message": "Skill dari Komputer Ini tetap nonaktif. Mengaktifkannya meminta browser Anda mengizinkan ekstensi berkomunikasi dengan program bookmark-scout-mcp.",
+        "description": "Toast text when the native messaging permission for Skills From This Computer is declined"
+    },
     "permission_browseCoversTitle": {
         "message": "Izinkan gambar halaman yang di-bookmark",
         "description": "Title of the dialog shown before turning on Capture Covers While Browsing, which asks for access to all pages"
@@ -7621,6 +7637,22 @@
         "message": "Petunjuk langkah demi langkah yang hanya dibaca Tanya AI saat permintaan Anda cocok. Nonaktifkan salah satunya agar Tanya AI tidak membacanya, atau tambahkan milik Anda dalam format Agent Skills (file SKILL.md). Skill hanyalah teks untuk AI; skill tidak pernah menjalankan kode.",
         "description": "Options > AI > Skills: description"
     },
+    "settings_askAiLocalSkills": {
+        "message": "Skill dari Komputer Ini",
+        "description": "Options > AI > Skills From This Computer: switch label"
+    },
+    "settings_askAiLocalSkillsDesc": {
+        "message": "Tanya AI juga membaca Agent Skills di folder komputer ini, melalui program bookmark-scout-mcp, yang hanya membacanya. Skrip sebuah skill tidak pernah dijalankan.",
+        "description": "Options > AI > Skills From This Computer: description"
+    },
+    "settings_askAiLocalSkillFolders": {
+        "message": "Folder Skill",
+        "description": "Options > AI > Skills From This Computer: the folders to read"
+    },
+    "settings_askAiLocalSkillFoldersDesc": {
+        "message": "Folder yang berisi SKILL.md, atau folder berisi folder tersebut, dipisahkan koma. ~ adalah folder pribadi Anda.",
+        "description": "Options > AI > Skills From This Computer: how to type the folders"
+    },
     "askAI_skillNew": {
         "message": "Skill baru",
         "description": "Options > AI > Skills: button that opens the editor for a new skill"
@@ -7640,6 +7672,34 @@
     "askAI_skillYours": {
         "message": "Milik Anda",
         "description": "Options > AI > Skills: badge of a skill the user added"
+    },
+    "askAI_skillThisComputer": {
+        "message": "Komputer ini",
+        "description": "Options > AI > Skills: badge of a skill read from a folder on this computer"
+    },
+    "askAI_localSkillsFound": {
+        "message": "$1 skill dibaca dari komputer ini.",
+        "description": "Options > AI > Skills: $1 is how many skills were read from this computer"
+    },
+    "askAI_localSkillsLeftOut": {
+        "message": "$1 dilewati: melebihi batas, atau tidak dapat dibaca.",
+        "description": "Options > AI > Skills: $1 is how many skills or folders were not read"
+    },
+    "askAI_localSkillsNotInstalled": {
+        "message": "Untuk membaca skill dari komputer ini, instal program bookmark-scout-mcp dan jalankan “$1” sekali.",
+        "description": "Options > AI > Skills: the bridge program is not installed; $1 is the install command"
+    },
+    "askAI_localSkillsOutdated": {
+        "message": "Program bookmark-scout-mcp tidak menjawab. Perbarui ke versi terbaru, lalu pilih Muat ulang.",
+        "description": "Options > AI > Skills: the bridge program did not answer or is too old"
+    },
+    "askAI_localSkillsFailed": {
+        "message": "Tidak dapat membaca skill dari komputer ini.",
+        "description": "Options > AI > Skills: reading the skills from this computer failed"
+    },
+    "askAI_localSkillsRefresh": {
+        "message": "Muat ulang",
+        "description": "Options > AI > Skills: button that reads the skills from this computer again"
     },
     "askAI_skillEditorTitle": {
         "message": "Skill",

@@ -41,6 +41,16 @@ describe("bridge config", () => {
       },
       serve: { server_name: "x", reconnect_seconds: 1, connect_timeout_ms: 1 },
       paths: { runtime_dir_name: "x", data_dir_name: "x", launcher_name: "x" },
+      skills: {
+        max_folders: 1,
+        max_skills: 1,
+        max_files: 1,
+        max_file_bytes: 1,
+        max_reply_bytes: 1,
+        max_depth: 0,
+        file_extensions: [],
+        skip_folders: [],
+      },
       browsers: {},
     };
     const project = {

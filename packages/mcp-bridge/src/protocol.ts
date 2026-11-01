@@ -110,6 +110,46 @@ export const hostMessageSchema = z.discriminatedUnion("type", [
 ]);
 export type HostMessage = z.infer<typeof hostMessageSchema>;
 
+/**
+ * A one-shot request (`runtime.sendNativeMessage`) for the Agent Skills in folders on this
+ * computer, for Ask AI. It needs no hello and no agent access; the host answers and is done.
+ * A host from before this message ignores it, so the extension gives up after a while.
+ */
+export const skillsRequestSchema = z.object({
+  type: z.literal("skills"),
+  protocol: z.number().int().positive(),
+  /** As the user typed them; `~` is the home folder. */
+  folders: z.array(z.string().min(1).max(1024)).max(50),
+});
+export type SkillsRequest = z.infer<typeof skillsRequestSchema>;
+
+export const localSkillSchema = z.object({
+  /** The skill's folder name; the extension reads the real name from SKILL.md. */
+  name: z.string().min(1).max(255),
+  /** Which requested folder it is in, as requested. */
+  folder: z.string().max(1024),
+  /** SKILL.md first, then the files below it, with "/" paths relative to the skill. */
+  files: z.array(z.object({ path: z.string().min(1).max(1024), content: z.string() })).min(1),
+});
+export type LocalSkill = z.infer<typeof localSkillSchema>;
+
+/** Why a folder or skill was not read: not found, past a limit, or not readable. */
+export const leftOutReasonSchema = z.enum(["missing", "tooMany", "tooLarge", "unreadable"]);
+
+export const skillsReplySchema = z.object({
+  type: z.literal("skills"),
+  protocol: z.number().int().positive(),
+  skills: z.array(localSkillSchema),
+  leftOut: z.array(
+    z.object({
+      folder: z.string().max(1024),
+      name: z.string().max(255).optional(),
+      reason: leftOutReasonSchema,
+    }),
+  ),
+});
+export type SkillsReply = z.infer<typeof skillsReplySchema>;
+
 /** The error shape inside a result with `isError`, matching the extension's action errors. */
 export function bridgeError(code: string, message: string, hint?: string): Record<string, unknown> {
   return { error: { code, message, ...(hint ? { hint } : {}) } };

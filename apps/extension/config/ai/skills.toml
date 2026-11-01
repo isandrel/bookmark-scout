@@ -1,5 +1,7 @@
-# The user's own Ask AI skills (Options > AI > Skills), kept on this device only. Read by
-# src/lib/ask-ai-skill-library.ts. The built-in skills are src/assets/ask-ai-skills/.
+# The user's own Ask AI skills (Options > AI > Skills), kept on this device only, and the skills
+# read from folders on this computer. Read by src/lib/ask-ai-skill-library.ts. The built-in skills
+# are src/assets/ask-ai-skills/; the bridge's own limits on reading folders are [skills] in
+# packages/mcp-bridge/config/bridge.toml.
 
 # Skills the user can add at most
 max_skills = { value = 30, min = 1, max = 200 }
@@ -8,3 +10,9 @@ max_files = { value = 20, min = 0, max = 100 }
 # Characters one skill may hold in all, its SKILL.md and files together, so a few skills cannot
 # fill the device's storage
 max_skill_chars = { value = 100000, min = 1000, max = 1000000 }
+# How long to wait for bookmark-scout-mcp to answer with the skills from this computer, in ms; a
+# version from before it could answer never does
+local_timeout_ms = { value = 5000, min = 500, max = 60000 }
+# How long the skills read from this computer are reused before reading them again, in seconds, so
+# each Ask AI answer does not start the program; Refresh in Options reads them at once
+local_cache_seconds = { value = 60, min = 0, max = 3600 }

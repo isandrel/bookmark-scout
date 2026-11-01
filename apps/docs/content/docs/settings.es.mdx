@@ -308,6 +308,10 @@ Aquí aparece todo lo que Preguntar a la IA puede consultar y cambiar, y todo es
 
 Instrucciones paso a paso que Preguntar a la IA solo lee cuando tu petición encaja con una. Desactiva una para que Preguntar a la IA no la lea, o añade las tuyas en formato Agent Skills (un archivo SKILL.md). Una habilidad es solo texto para la IA; nunca ejecuta código.
 
+### Habilidades de este equipo [#ask-ai-local-skills]
+
+Desactivado por defecto. Preguntar a la IA también lee las Agent Skills de carpetas de este equipo, como `~/.agents/skills`, donde las dejan los instaladores de habilidades. El programa bookmark-scout-mcp las lee para el navegador y solo las lee: los scripts de una habilidad nunca se ejecutan. Instálalo como en [Usar con agentes de IA locales](/guides/local-agents); el acceso para agentes puede seguir desactivado. **Carpetas de habilidades** enumera las carpetas, separadas por comas; una carpeta puede contener un SKILL.md o carpetas de ellos. Sus habilidades aparecen en **Habilidades** marcadas como **Este equipo**, donde puedes desactivar cada una. Se guarda solo en este dispositivo.
+
 ### Actividad de IA [#ai-activity]
 
 **Registrar solicitudes** (desactivado de forma predeterminada, solo en este dispositivo) guarda las últimas 50 solicitudes de IA en este dispositivo, sin las claves de API ni los encabezados de credenciales, para que veas exactamente qué se envió. Al desactivarlo se elimina el registro. Consulta [Ver lo que se envió](/guides/ai-tools#see-what-was-sent).

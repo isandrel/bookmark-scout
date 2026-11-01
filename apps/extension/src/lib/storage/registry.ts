@@ -243,6 +243,9 @@ export const DEVICE_SETTING_KEYS = [
   'aiActivityRecording',
   /** Whether Ask AI adds the provider's web search, chosen where the chat runs. */
   'askAiWebSearch',
+  /** Skills from this computer: its folders, read by the bridge program installed on it. */
+  'askAiLocalSkills',
+  'askAiLocalSkillFolders',
   /** Access for local AI agents: the bridge program is installed on one computer. */
   'agentBridgeEnabled',
   'agentBridgeWrites',
