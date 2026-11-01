@@ -40,7 +40,7 @@ Check every option against the root `AGENTS.md` "Engineering intent" rules: conf
 Put it in `plans/<date>-<topic>.md` (git-ignored, local only) when it spans more than one PR. Include:
 
 - the decisions and their reasons;
-- a phased PR order (foundations first, then one surface or area per PR), with the files each phase owns so phases can run as parallel agents without conflicts (see the `parallel-agent-delivery` skill);
+- a phased PR order (foundations first, then one surface or area per PR), with the files each phase owns so phases can run as parallel agents without conflicts (see the `feature-delivery` skill: a native stack for dependent phases, `references/subagents.md` for parallel agents);
 - for each phase: tests to add, docs and disclosures to update, and the verification commands;
 - what is deliberately out of scope.
 
