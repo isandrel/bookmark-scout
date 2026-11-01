@@ -7935,6 +7935,10 @@
         "message": "Riprova",
         "description": "Button: try to start the bridge program again now"
     },
+    "agentApproval_waitingTitle": {
+        "message": "Modifiche di agenti IA locali in attesa della tua approvazione: $1",
+        "description": "Toolbar button title while local AI agent changes wait for approval; $1 is how many (the badge shows the same number)"
+    },
     "agentApproval_title": {
         "message": "Approva le modifiche",
         "description": "Title of the window where the user approves changes local AI agents asked for"

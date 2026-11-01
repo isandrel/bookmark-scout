@@ -7935,6 +7935,10 @@
         "message": "Try again",
         "description": "Button: try to start the bridge program again now"
     },
+    "agentApproval_waitingTitle": {
+        "message": "Changes from local AI agents waiting for your approval: $1",
+        "description": "Toolbar button title while local AI agent changes wait for approval; $1 is how many (the badge shows the same number)"
+    },
     "agentApproval_title": {
         "message": "Approve changes",
         "description": "Title of the window where the user approves changes local AI agents asked for"

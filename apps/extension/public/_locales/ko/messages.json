@@ -7923,6 +7923,10 @@
         "message": "다시 시도",
         "description": "Button: try to start the bridge program again now"
     },
+    "agentApproval_waitingTitle": {
+        "message": "승인을 기다리는 로컬 AI 에이전트의 변경: $1개",
+        "description": "Toolbar button title while local AI agent changes wait for approval; $1 is how many (the badge shows the same number)"
+    },
     "agentApproval_title": {
         "message": "변경 승인",
         "description": "Title of the window where the user approves changes local AI agents asked for"

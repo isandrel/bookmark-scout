@@ -7923,6 +7923,10 @@
         "message": "再試行",
         "description": "Button: try to start the bridge program again now"
     },
+    "agentApproval_waitingTitle": {
+        "message": "承認待ちのローカル AI エージェントの変更: $1 件",
+        "description": "Toolbar button title while local AI agent changes wait for approval; $1 is how many (the badge shows the same number)"
+    },
     "agentApproval_title": {
         "message": "変更の承認",
         "description": "Title of the window where the user approves changes local AI agents asked for"

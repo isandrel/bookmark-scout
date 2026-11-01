@@ -69,8 +69,9 @@ export function createManifest({ browser }: Pick<ConfigEnv, 'browser'>): UserMan
         48: 'icon-48.png',
       },
     },
-    // Quick save shortcuts, with the keys config/ui/shortcuts.toml suggests.
-    commands: getManifestCommands(readShortcutConfig().commands),
+    // The extension's shortcuts, with the keys config/ui/shortcuts.toml suggests, and the
+    // browser's commands for the toolbar button and sidebar, which the user gives keys.
+    commands: getManifestCommands(readShortcutConfig().commands, browser as SupportedBrowser),
     // Address Bar Search: the keyword that hands the address bar to the extension. Declaring it
     // asks for no permission; the search stays off until the user turns it on in Options.
     omnibox: { keyword: readOmniboxKeyword() },

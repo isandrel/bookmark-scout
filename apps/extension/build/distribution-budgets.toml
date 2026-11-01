@@ -372,6 +372,9 @@
 # Ask AI's kept chats (the past chats menu and its settings, with their copy in 12 languages):
 # feat/ask-ai-chat-history measured uncompressed 7,535,184 / 7,535,180 / 7,535,367 B (Chrome /
 # Edge / Firefox) and 2,837,083 B of locales.
+# Other raised on 2026-11-01 (30,500 to 31,500, about 3% above the measurement, as the categories
+# above are set) for the toolbar button and sidebar commands in the manifest on top of Firefox's
+# Manifest V3 keys: CI's Firefox build of PR #888 measured 30,519 B of other files.
 # Raised on 2026-11-01 (ZIP 2,225,000 to 2,243,000, uncompressed 7,545,000 to 7,586,000, javascript
 # 4,130,000 to 4,215,000) for Choose covers to delete on top of main, with the headroom stated at
 # the top of this file: feat/choose-covers-to-delete measured ZIP 2,227,226 / 2,227,103 / 2,227,315
@@ -400,4 +403,4 @@ css = 92_750
 fonts = 143_000
 locales = 2_845_000
 images = 320_000
-other = 30_500
+other = 31_500

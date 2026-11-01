@@ -93,22 +93,39 @@ export const BROWSER_KEPT_KEY_NAMES: Readonly<
   firefox: ['bookmarkPage', 'bookmarkAllTabs'],
 };
 
+/**
+ * The browser's own commands that open the extension's UI, by the browsers that have them,
+ * declared with no keys: the user gives them one on the browser's shortcut page. Mozilla's
+ * accessibility guide asks for a shortcut to the toolbar button and to the sidebar; the browser
+ * names these commands itself, so they take no description.
+ */
+export const BROWSER_UI_COMMANDS = {
+  _execute_action: ['chrome', 'edge', 'firefox'],
+  _execute_sidebar_action: ['firefox'],
+} as const satisfies Record<string, readonly SupportedBrowser[]>;
+
 export function isExtensionCommand(name: string): name is ExtensionCommand {
   return Object.hasOwn(EXTENSION_COMMANDS, name);
 }
 
-/** The manifest's `commands`, with the suggested keys from config and localized descriptions. */
+/**
+ * The manifest's `commands` for `browser`: the extension's own, with the suggested keys from
+ * config and localized descriptions, then the browser's UI commands it has, with no keys.
+ */
 export function getManifestCommands(
   suggestedKeys: Readonly<Record<string, string>>,
-): Record<string, { suggested_key: { default: string }; description: string }> {
-  return Object.fromEntries(
-    Object.entries(EXTENSION_COMMANDS).map(([name, command]) => {
-      const key = suggestedKeys[name];
-      if (!key) throw new Error(`config/ui/shortcuts.toml [commands] has no keys for "${name}"`);
-      return [
-        name,
-        { suggested_key: { default: key }, description: `__MSG_${command.descriptionKey}__` },
-      ];
-    }),
-  );
+  browser: SupportedBrowser,
+): Record<string, { suggested_key?: { default: string }; description?: string }> {
+  const own = Object.entries(EXTENSION_COMMANDS).map(([name, command]) => {
+    const key = suggestedKeys[name];
+    if (!key) throw new Error(`config/ui/shortcuts.toml [commands] has no keys for "${name}"`);
+    return [
+      name,
+      { suggested_key: { default: key }, description: `__MSG_${command.descriptionKey}__` },
+    ] as const;
+  });
+  const browserUi = Object.entries(BROWSER_UI_COMMANDS)
+    .filter(([, browsers]) => (browsers as readonly SupportedBrowser[]).includes(browser))
+    .map(([name]) => [name, {}] as const);
+  return Object.fromEntries([...own, ...browserUi]);
 }

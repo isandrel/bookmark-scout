@@ -327,23 +327,31 @@ export function toolbarAction() {
   return browser.action;
 }
 
-/** The badge shows the result for a moment, and the popup opens where the browser allows it. */
+/**
+ * The badge shows the result for a moment, and the popup opens where the browser allows it. The
+ * button's title says the same result meanwhile, for screen readers and on hover, as Mozilla's
+ * accessibility guide asks of a badge.
+ */
 async function showInToolbar(record: QuickSaveRecord): Promise<void> {
   const action = toolbarAction();
   if (!action) return;
   const ok = record.status === 'saved' || record.status === 'duplicate';
-  const tabId = record.tabId;
+  const target = record.tabId !== undefined ? { tabId: record.tabId } : {};
   try {
     await action.setBadgeBackgroundColor({
       color: ok ? quickSaveConfig.badge_success_color : quickSaveConfig.badge_failure_color,
-      ...(tabId !== undefined ? { tabId } : {}),
+      ...target,
     });
     await action.setBadgeText({
       text: ok ? quickSaveConfig.badge_success_text : quickSaveConfig.badge_failure_text,
-      ...(tabId !== undefined ? { tabId } : {}),
+      ...target,
     });
+    await whenLanguageReady();
+    const result = buildQuickSaveView(record, await getSettings()).title;
+    await action.setTitle({ title: t('page_title', [result, getExtensionPageTitle()]), ...target });
     setTimeout(() => {
-      void action.setBadgeText({ text: '', ...(tabId !== undefined ? { tabId } : {}) });
+      void action.setBadgeText({ text: '', ...target });
+      void action.setTitle({ title: getExtensionPageTitle(), ...target });
     }, quickSaveConfig.badge_clear_ms);
   } catch {
     // The tab may be gone; the popup still shows the result.
