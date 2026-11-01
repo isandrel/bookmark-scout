@@ -19,6 +19,20 @@ json_indent_size = { default = 2, min = 1, max = 8, step = 1 }
 html_indent_spaces = { default = 4, min = 1, max = 8, step = 1 }
 markdown_indent_spaces = { default = 2, min = 1, max = 8, step = 1 }
 
+[context_packer]
+# AI Context Packer saves bookmarks as a file to give to an AI chatbot. It sends nothing anywhere
+# and works with AI off, so it sits with the other exports.
+enabled = true
+default_scope = "all"
+output_format = "markdown"
+include_folder_path = true
+include_dates = true
+include_tags = true
+include_summaries = true
+max_items = { default = 200, min = 1, max = 2000, step = 10 }
+max_depth = { default = 8, min = 1, max = 20, step = 1 }
+excerpt_length = { default = 240, min = 40, max = 2000, step = 10 }
+
 [backup]
 # Parts in New Backups: the parts Back up settings starts with selected, as ids from
 # `[[categories]]` in config/data/backup.toml; every save stores the parts chosen, so the dialog
