@@ -7019,6 +7019,14 @@
         "message": "스마트 규칙(검색, 태그, 폴더)입니다. 규칙이 실행한 결과는 포함되지 않습니다.",
         "description": "Backup part: what the Smart Rules part holds"
     },
+    "backup_categorySkills": {
+        "message": "AI에게 묻기 스킬",
+        "description": "Backup part: the user’s own Ask AI skills"
+    },
+    "backup_categorySkillsDesc": {
+        "message": "AI에게 묻기에 추가한 스킬과 각 스킬의 파일입니다. 어떤 스킬이 켜져 있는지는 설정에 포함됩니다.",
+        "description": "Backup part: what the Ask AI skills part holds"
+    },
     "backup_categoryAiServices": {
         "message": "AI 서비스",
         "description": "Backup part: the AI services without their keys"

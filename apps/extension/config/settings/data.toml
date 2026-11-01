@@ -40,7 +40,7 @@ excerpt_length = { default = 240, min = 40, max = 2000, step = 10 }
 # Code's machine settings) nor the AI service keys (never preselected, never remembered) can be in
 # the default; tests/unit/backup-categories.test.ts checks it. Covers are in: the backup is how they
 # reach a new computer, and the dialog says their size before saving.
-parts = { default = ["settings", "views", "prompts", "rules", "aiServices", "covers"], max_items = 7, max_length = 14 }
+parts = { default = ["settings", "views", "prompts", "rules", "skills", "aiServices", "covers"], max_items = 8, max_length = 14 }
 # Protect New Backups With a Password: whether "Protect this backup with a password" starts
 # checked for every backup. Off: most backups hold no secrets, and a forgotten password cannot be
 # recovered.

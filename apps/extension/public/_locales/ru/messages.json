@@ -7559,6 +7559,14 @@
         "message": "Ваши «Умные правила» (их поиски, теги и папки), но не то, что они сделали.",
         "description": "Backup part: what the Smart Rules part holds"
     },
+    "backup_categorySkills": {
+        "message": "Навыки «Спросить ИИ»",
+        "description": "Backup part: the user’s own Ask AI skills"
+    },
+    "backup_categorySkillsDesc": {
+        "message": "Навыки, которые вы добавили в «Спросить ИИ», с их файлами. Какие навыки включены, входит в «Настройки».",
+        "description": "Backup part: what the Ask AI skills part holds"
+    },
     "backup_categoryAiServices": {
         "message": "ИИ-сервисы",
         "description": "Backup part: the AI services without their keys"
