@@ -6329,6 +6329,10 @@
         "message": "进行了联网搜索",
         "description": "Ask AI tool step"
     },
+    "askAI_toolReadSkill": {
+        "message": "读取了“$1”技能",
+        "description": "Ask AI tool step; $1 is the skill name"
+    },
     "askAI_toolOther": {
         "message": "使用了一个工具",
         "description": "Ask AI step for a provider tool that has no description of its own"
@@ -6351,6 +6355,10 @@
     },
     "prompt_varAboutMe": {
         "message": "“关于我”的内容（未填写时为空）",
+        "description": "Prompt variable description"
+    },
+    "prompt_varSkills": {
+        "message": "Ask AI 可读取的技能及其读取方式（没有技能时为空）",
         "description": "Prompt variable description"
     },
     "prompt_placeholders": {

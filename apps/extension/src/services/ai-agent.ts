@@ -13,6 +13,9 @@ export type WebSearchProvider = (typeof WEB_SEARCH_PROVIDERS)[number];
 /** The name the provider's web search is registered under. */
 export const ASK_AI_WEB_SEARCH_TOOL = 'webSearch';
 
+/** The tool that reads one of Ask AI's skills (ask-ai-skills.lazy.ts). */
+export const ASK_AI_SKILL_TOOL = 'readSkill';
+
 /** Names providers report for their own web search call, besides the registered one. */
 export const ASK_AI_WEB_SEARCH_TOOL_NAMES: ReadonlySet<string> = new Set([
   ASK_AI_WEB_SEARCH_TOOL,
@@ -44,8 +47,14 @@ export async function createAskAIToolContext(settings: Settings): Promise<Action
 export async function createAskAIAgent() {
   const appSettings = await getSettings();
   const settings = await getActiveAISettings(appSettings.aiEnabled, 'askAI');
-  const { system } = await buildPrompt('ask_ai', appSettings);
-  const { buildAskAIAgent } = await import('./ai-agent.lazy');
+  const [{ buildAskAIAgent }, skillKit] = await Promise.all([
+    import('./ai-agent.lazy'),
+    import('./ask-ai-skills.lazy'),
+  ]);
+  const skills = await skillKit.createAskAISkills();
+  const { system } = await buildPrompt('ask_ai', appSettings, {
+    data: { skills: skillKit.askAISkillCatalog(skills) },
+  });
 
   return buildAskAIAgent({
     settings,
@@ -54,5 +63,6 @@ export async function createAskAIAgent() {
     webSearch: appSettings.askAiWebSearch,
     maxSteps: appSettings.askAiMaxSteps,
     webSearchMaxUses: ASK_AI_CONFIG.web_search_max_uses,
+    extraTools: skillKit.createSkillToolSet(skills),
   });
 }

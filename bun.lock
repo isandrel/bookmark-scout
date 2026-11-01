@@ -71,6 +71,7 @@
         "@mozilla/readability": "^0.6.0",
         "@tanstack/react-table": "^9.3.1",
         "@tanstack/react-virtual": "^3.14.24",
+        "agent-skills-ts-sdk": "^2.5.0",
         "ai": "^7.0.159",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
@@ -1192,6 +1193,8 @@
     "acorn-walk": ["acorn-walk@8.3.5", "", { "dependencies": { "acorn": "^8.11.0" } }, "sha512-HEHNfbars9v4pgpW6SO1KSPkfoS0xVOM/9UzkJltjlsHZmJasxg8aXkuZa7SMf8vKGIBhpUsPluQSqhJFCqebw=="],
 
     "address": ["address@2.0.3", "", {}, "sha512-XNAb/a6TCqou+TufU8/u11HCu9x1gYvOoxLwtlXgIqmkrYQADVv6ljyW2zwiPhHz9R1gItAWpuDrdJMmrOBFEA=="],
+
+    "agent-skills-ts-sdk": ["agent-skills-ts-sdk@2.5.0", "", { "dependencies": { "yaml": "^2.9.1" } }, "sha512-Gilk1a4OJFeHKoDdV5WgVjucYmfI7zxXVmjRahnkC7KYS6MZVKb5lf2wbYB4RQDFfBHhtS9xY/q+vGq3F7tCSg=="],
 
     "ai": ["ai@7.0.159", "", { "dependencies": { "@ai-sdk/gateway": "4.0.132", "@ai-sdk/provider": "4.0.35", "@ai-sdk/provider-utils": "5.0.72" }, "peerDependencies": { "zod": "^3.25.76 || ^4.1.8" } }, "sha512-4e/BwDoKJlMNYZaqERcTbGte+4TwroN9qKnCprog/XVfD9InzVPlhCviDhN452JIRrRsYg9BT0WsQ2C3Ds2mVQ=="],
 

@@ -6567,6 +6567,10 @@
         "message": "웹을 검색함",
         "description": "Ask AI tool step"
     },
+    "askAI_toolReadSkill": {
+        "message": "“$1” 스킬을 읽었습니다",
+        "description": "Ask AI tool step; $1 is the skill name"
+    },
     "askAI_toolOther": {
         "message": "도구를 사용함",
         "description": "Ask AI step for a provider tool that has no description of its own"
@@ -6589,6 +6593,10 @@
     },
     "prompt_varAboutMe": {
         "message": "내 소개 내용(비어 있으면 빈 값)",
+        "description": "Prompt variable description"
+    },
+    "prompt_varSkills": {
+        "message": "Ask AI가 읽을 수 있는 스킬과 읽는 방법(스킬이 없으면 비어 있음)",
         "description": "Prompt variable description"
     },
     "prompt_placeholders": {

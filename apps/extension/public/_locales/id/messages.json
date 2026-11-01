@@ -6309,6 +6309,10 @@
         "message": "Menelusuri web",
         "description": "Ask AI tool step"
     },
+    "askAI_toolReadSkill": {
+        "message": "Membaca skill “$1”",
+        "description": "Ask AI tool step; $1 is the skill name"
+    },
     "askAI_toolOther": {
         "message": "Menggunakan alat",
         "description": "Ask AI step for a provider tool that has no description of its own"
@@ -6331,6 +6335,10 @@
     },
     "prompt_varAboutMe": {
         "message": "Teks Tentang saya Anda, dalam satu blok (kosong jika tidak diisi)",
+        "description": "Prompt variable description"
+    },
+    "prompt_varSkills": {
+        "message": "Skill yang dapat dibaca Ask AI dan cara membacanya (kosong jika tidak ada)",
         "description": "Prompt variable description"
     },
     "prompt_placeholders": {

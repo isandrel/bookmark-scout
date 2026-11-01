@@ -7107,6 +7107,10 @@
         "message": "Выполнен поиск в интернете",
         "description": "Ask AI tool step"
     },
+    "askAI_toolReadSkill": {
+        "message": "Прочитал навык «$1»",
+        "description": "Ask AI tool step; $1 is the skill name"
+    },
     "askAI_toolOther": {
         "message": "Использован инструмент",
         "description": "Ask AI step for a provider tool that has no description of its own"
@@ -7129,6 +7133,10 @@
     },
     "prompt_varAboutMe": {
         "message": "Ваш текст «Обо мне» в отдельном блоке (пусто, если он не заполнен)",
+        "description": "Prompt variable description"
+    },
+    "prompt_varSkills": {
+        "message": "Навыки, которые может читать Ask AI, и как их читать (пусто, если их нет)",
         "description": "Prompt variable description"
     },
     "prompt_placeholders": {
