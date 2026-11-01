@@ -148,9 +148,20 @@ describe('bookmark action menus', () => {
     });
     expect(sections([link], host).at(-1)).toEqual(['fetchCover', 'delete']);
     expect(sections([second], host).at(-1)).toEqual(['fetchCover', 'removeCover', 'delete']);
-    // Never for a folder, or a page Fetch Covers cannot read.
+    // Not for an empty folder, or a page Fetch Covers cannot read.
     expect(sections([folder], host).flat()).not.toContain('fetchCover');
     expect(sections([local], host).flat()).not.toContain('fetchCover');
+    // A folder: every web bookmark inside it, nested folders too, named with the count.
+    const inside = createItemHost({
+      canFetchCovers: true,
+      bookmarksWithin: (items) =>
+        items.some((item) => item.id === folder.id) ? [link, local, second] : [...items],
+    });
+    expect(sections([folder], inside).at(-1)).toContain('fetchCover');
+    expect(getAction('fetchCover').itemMenu?.label?.([folder], inside)).toBe('Fetch covers (2)');
+    expect(getAction('fetchCover').itemMenu?.label?.([link], inside)).toBe('Fetch cover');
+    expect(runItemMenuAction('fetchCover', [folder], inside)).toBe(true);
+    expect(inside.fetchCovers).toHaveBeenCalledWith([link, second]);
     // A selection: each runs on exactly the bookmarks it applies to.
     expect(runItemMenuAction('fetchCover', [link, local, second, folder], host)).toBe(true);
     expect(host.fetchCovers).toHaveBeenCalledWith([link, second]);

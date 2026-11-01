@@ -37,7 +37,20 @@ Darunter sagt **KI ist optional**, dass Bookmark Scout auch ohne KI funktioniert
 | --- | --- | --- |
 | **Passende Ordner** | An | Zeigt bei der Suche über den Ergebnissen die Ordner mit passendem Namen, um die aktuelle Seite dort zu speichern |
 | **Maximal passende Ordner** | <SettingDefault path="search.folder_matches.max" /> | Wie viele passende Ordner angezeigt werden |
-| **Tippfehler erlauben** | An | Ein Suchwort mit 4 oder mehr Buchstaben passt auch mit einem Tippfehler zu einem Ordnernamen |
+| **Gewicht des Ordnernamens** | <SettingDefault path="search.folder_matches.name_weight" /> | Wie viel ein Wort im Namen des Ordners selbst zählt |
+| **Gewicht der übergeordneten Ordner** | <SettingDefault path="search.folder_matches.parent_weight" /> | Wie viel ein Wort in den Namen der Ordner zählt, in denen er liegt, damit „react hooks“ Hooks in React findet |
+| **Gewicht der enthaltenen Lesezeichen** | <SettingDefault path="search.folder_matches.bookmark_weight" /> | Wie viel ein Wort in Titeln und Websites der Lesezeichen im Ordner zählt. 0 sucht nur in Ordnernamen |
+
+### Suchabgleich [#search-matching]
+
+| Einstellung | Standard | Wirkung |
+| --- | --- | --- |
+| **Unscharfe Suche** | An | Auch etwas anders geschriebene Wörter passen, im Suchfeld und bei passenden Ordnern, „rect“ findet also React. Passende Ordner werden nach Relevanz (BM25) sortiert, nähere Schreibweisen zuerst |
+| **Eine Änderung ab** | <SettingDefault path="search.search_matching.one_edit" /> | Kürzestes Wort in Buchstaben, das um eine Änderung abweichen darf: ein Buchstabe mehr, weniger oder anders, oder zwei vertauscht |
+| **Zwei Änderungen ab** | <SettingDefault path="search.search_matching.two_edits" /> | Kürzestes Wort in Buchstaben, das um zwei Änderungen abweichen darf |
+| **Wortanfänge finden** | An | Ein eingegebenes Wort passt auch auf längere Wörter, die damit beginnen: „rea“ findet React schon beim Tippen. Das ganze Wort steht weiter vorn |
+| **Termsättigung (BM25 k1)** | <SettingDefault path="search.search_matching.bm25_k1" /> | Wie viel ein erneut vorkommendes Wort noch zur Punktzahl beiträgt. Niedriger lässt eine Erwähnung fast so viel zählen wie viele |
+| **Längennormalisierung (BM25 b)** | <SettingDefault path="search.search_matching.bm25_b" /> | Wie stark kürzere Ergebnisse gegenüber längeren mit denselben Wörtern bevorzugt werden: 0 gar nicht, 1 ganz |
 
 ### Suche [#searching]
 
@@ -85,6 +98,13 @@ Darunter zeigt **Tastenkürzel** die Tasten, die jedes Tastenkürzel in Ihrem Br
 | **Letzte Ordner im Menü** | <SettingDefault path="search.context_menu.recent_max" /> | Wie viele zuletzt verwendete Ordner das Menü zeigt, unabhängig von **Max. letzte Ordner** im Pop-up |
 
 **Menüeinträge** legt fest, was das Menü anbietet, in dieser Reihenfolge: **Letzte Ordner** (ein Untermenü) und **Lesezeichenleiste**. Haken Sie einen Eintrag an, um ihn anzuzeigen, und ziehen Sie ihn am Griff (oder nutzen Sie das Menü des Griffs), um ihn zu verschieben; **Standard wiederherstellen** zeigt wieder beide in der ursprünglichen Reihenfolge.
+
+### Suche in der Adressleiste [#address-bar]
+
+| Einstellung | Standard | Wirkung |
+| --- | --- | --- |
+| **Suche in der Adressleiste** | Aus | Geben Sie <AddressBarKeyword /> und ein Leerzeichen in die Adressleiste des Browsers ein, dann die gesuchten Wörter: Die Adressleiste listet die passenden Lesezeichen auf, sortiert wie im Suchfeld. Die **Eingabetaste** auf einem Lesezeichen öffnet es in diesem Tab oder, mit der Taste, die Ihr Browser dafür verwendet, in einem neuen; die **Eingabetaste** auf Ihrer Eingabe öffnet den Lesezeichen-Manager mit dieser Suche. Solange die Suche aus ist, sagt das Schlüsselwort das, und die **Eingabetaste** öffnet diese Einstellung. Die Suche läuft auf Ihrem Gerät und speichert nichts |
+| **Treffer in der Adressleiste** | <SettingDefault path="search.address_bar.max_results" /> | Wie viele Lesezeichen die Adressleiste für eine Suche anzeigt |
 
 ### Einstellungssuche [#settings-search]
 
@@ -200,6 +220,10 @@ Unter der Tabelle ordnen drei Listen das Pop-up und die Seitenleiste. Haken Sie 
 | **Kartengröße** | Mittel | Die geringste Breite jeder Karte der Kartenansicht: **Klein**, **Mittel** oder **Groß**. Eine Reihe fasst so viele Karten, wie Platz haben. Nur auf diesem Gerät gespeichert |
 | **Tags pro Karte** | <SettingDefault path="behavior.manager_cards.max_tags" /> | Eine Karte zeigt so viele Tags, danach **+N** für den Rest. Nur auf diesem Gerät gespeichert |
 | **Zeilen der Zusammenfassung** | <SettingDefault path="behavior.manager_cards.summary_lines" /> | Zeilen der Zusammenfassung eines Lesezeichens, die eine Karte zeigt; Screenreader lesen die ganze Zusammenfassung. Nur auf diesem Gerät gespeichert |
+| **Spalten** | <SettingDefault path="behavior.manager_cards.columns" /> | Wie viele Karten eine Reihe hält. 0 passt so viele ein, wie die Kartengröße erlaubt |
+| **Form des Titelbilds** | Breit (1,91:1) | Die Form des Titelbilds oben auf jeder Karte |
+| **Titelbild einpassen** | Füllen | Ob ein Bild das Titelbild füllt und Überstehendes abschneidet oder ganz gezeigt wird |
+| **Titelzeilen** | <SettingDefault path="behavior.manager_cards.title_lines" /> | Wie viele Zeilen der Titel einer Karte belegen darf, bevor er gekürzt wird |
 
 **Karteninhalt** wählt, was jede Karte unter ihrem Titel zeigt, in dieser Reihenfolge: das Titelbild, die URL, den Ordnerpfad, die Tags und die Zusammenfassung (anfangs alles außer dem Ordnerpfad). Ein Titelbild an erster Stelle bleibt über dem Titel. Die Karte eines Ordners nennt immer, wie viele Elemente er enthält. Nur auf diesem Gerät gespeichert.
 
@@ -357,6 +381,7 @@ Darunter zeigt **Seitentext-Index**, wie viele Seiten indexiert sind, wie viele 
 | **Titelbilder laden aktivieren** | Aus | **Titelbilder laden** in der Tools-Leiste anzeigen |
 | **Standardbereich** | Aktueller Ordner | Lesezeichen, die das Werkzeug zu Beginn liest |
 | **Titelbildquelle** | Seitenbild zuerst, dann Screenshot | Welches Titelbild ein Lesezeichen behält, wenn sowohl das eigene Bild der Seite als auch ein Screenshot des Tabs möglich sind. **Seitenbild zuerst, dann Screenshot**: Titelbilder laden ersetzt einen Screenshot, und ein beim Surfen aufgenommener Screenshot gilt nur für Lesezeichen ohne das Bild der Seite. **Screenshot zuerst**: Ein beim Surfen aufgenommener Screenshot ersetzt das Bild der Seite. **Nur Seitenbild**: Beim Surfen werden keine Screenshots aufgenommen. **Diese Ansicht als Titelbild verwenden** behält immer das Bild, das Sie speichern. Ein mit **Diese Ansicht als Titelbild verwenden** gespeichertes Titelbild wird nie automatisch ersetzt, weder durch Titelbilder laden noch durch Screenshots beim Surfen; nur ein weiteres Bild, das Sie speichern, ersetzt es. **Nur Screenshot**: nur Screenshots; „Titelbilder laden“ liest keine Seite und sagt das in der Prüfung. |
+| **Einzelnes Titelbild prüfen** | An | **Titelbild laden** für ein einzelnes Lesezeichen zeigt das Bild in der Prüfung vor dem Speichern. Aus speichert das gefundene Bild sofort; eine Seite ohne brauchbares Titelbild öffnet weiterhin die Prüfung, die den Grund nennt |
 | **Titelbilder beim Surfen aufnehmen** | Aus | Wenn eine gespeicherte Seite ohne Titelbild oder mit einem alten Screenshot im Tab, den Sie gerade ansehen, fertig geladen ist, einen Screenshot des Tabs als ihr Titelbild aufnehmen, sobald sich die Seite beruhigt hat. Nicht in privaten Fenstern, außer Sie schalten das ebenfalls ein, nie von den eigenen Seiten der Erweiterung oder des Browsers oder von lokalen Dateien. Beim Einschalten wird Zugriff auf alle Seiten angefragt. Bleibt nur auf diesem Gerät. Die nächsten vier Einstellungen werden angezeigt, solange sie aktiviert ist |
 | **Auch in privaten Fenstern aufnehmen** | Aus | Screenshots auch in privaten Fenstern aufnehmen, nur wo Ihr Browser Bookmark Scout dort ausführen lässt: die Ausführung im Inkognito-Modus in Chrome und Edge bzw. in privaten Fenstern in Firefox, auf der Seite der Erweiterung in den Erweiterungseinstellungen des Browsers. Die Einstellungen weisen darauf hin, solange der Browser es nicht erlaubt. Bleibt nur auf diesem Gerät |
 | **Wartezeit vor der Aufnahme** | <SettingDefault path="metadata_content.covers.browse_settle_ms" seconds /> s | Wie lange eine gespeicherte Seite nach dem Laden im Vordergrund bleiben muss, bevor ihr Screenshot aufgenommen wird |

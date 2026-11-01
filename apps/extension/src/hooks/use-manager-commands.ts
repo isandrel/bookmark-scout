@@ -192,6 +192,8 @@ export function useManagerCommands(options: ManagerCommandOptions) {
       copy: (items: Bookmark[]) => void setClipboard('copy', items),
       hasCover: (bookmark: Bookmark) => hasStoredCover(coveredRef.current, bookmark),
       removeCovers: (items: Bookmark[]) => void removeCoversWithUndo(items),
+      bookmarksWithin: (items: readonly Bookmark[]) =>
+        getBookmarksWithin(items, latest.current.allData),
       fetchCovers: (items: Bookmark[]) => latest.current.fetchCovers(items),
     };
 

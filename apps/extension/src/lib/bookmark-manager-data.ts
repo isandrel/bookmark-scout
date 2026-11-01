@@ -413,6 +413,39 @@ export function getOpenableUrls(
   });
 }
 
+/**
+ * The bookmarks among `rows` and every bookmark inside the folders among them, at any depth, each
+ * once, in the folders' order (`items` holds the whole tree). Folders themselves are left out.
+ */
+export function getBookmarksWithin<Item extends ManagerItem>(
+  rows: readonly Item[],
+  items: readonly Item[],
+): Item[] {
+  const children = new Map<string, Item[]>();
+  for (const item of items) {
+    if (!item.parentId) continue;
+    const siblings = children.get(item.parentId) ?? [];
+    siblings.push(item);
+    children.set(item.parentId, siblings);
+  }
+  const seen = new Set<string>();
+  const found: Item[] = [];
+  const visit = (item: Item) => {
+    if (seen.has(item.id)) return;
+    seen.add(item.id);
+    if (item.type !== ItemTypeEnum.Folder) {
+      found.push(item);
+      return;
+    }
+    const inside = [...(children.get(item.id) ?? [])].sort(
+      (left, right) => (left.index ?? 0) - (right.index ?? 0),
+    );
+    for (const child of inside) visit(child);
+  };
+  for (const row of rows) visit(row);
+  return found;
+}
+
 /** Date range filter for epoch-millisecond values that includes the whole start and end days. */
 export function isWithinDateRange(
   value: unknown,

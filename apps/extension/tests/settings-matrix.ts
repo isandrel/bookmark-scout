@@ -45,6 +45,8 @@ const TABLE_DEFAULTS = 'hooks/use-bookmark-table-view-defaults.ts';
 const MENUS_NOTE =
   'Edited in Options > Behavior > Bookmark manager menus (ManagerMenusPanel); each menu syncs.';
 const POPUP_CUSTOMIZE = 'popup-customize.spec.ts';
+const ADDRESS_BAR = 'services/address-bar-search.ts';
+const ADDRESS_BAR_UNIT = 'address-bar-search.test.ts';
 
 // Shared test references.
 const CUSTOMIZE_UNIT = 'manager-customize.test.ts';
@@ -291,21 +293,71 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   folderMatchesEnabled: tested(POPUP, [
     e2e(
       'folder-match-save.spec.ts',
-      'folder match settings hide the list, limit its length, and turn off typo matching',
+      'folder match settings hide the list, limit its length, and turn off fuzzy matching',
     ),
   ]),
   folderMatchesMax: tested(POPUP, [
     e2e(
       'folder-match-save.spec.ts',
-      'folder match settings hide the list, limit its length, and turn off typo matching',
+      'folder match settings hide the list, limit its length, and turn off fuzzy matching',
     ),
   ]),
-  folderMatchesTypos: tested(POPUP, [
+  searchFuzzy: tested('hooks/use-search-matching.ts', [
     e2e(
       'folder-match-save.spec.ts',
-      'folder match settings hide the list, limit its length, and turn off typo matching',
+      'folder match settings hide the list, limit its length, and turn off fuzzy matching',
     ),
-    unit('folder-match.test.ts', 'accepts one typo in longer words only'),
+    unit(
+      'folder-match.test.ts',
+      'matches words with small spelling differences, in longer words only',
+    ),
+    unit(
+      'folder-match.test.ts',
+      'finds words with small spelling differences only with fuzzy matching on',
+    ),
+    unit(
+      'bookmark-search.test.ts',
+      'matches a plain word spelled a little differently, marking the word, but never an excluded one',
+    ),
+  ]),
+  searchFuzzyOneEdit: tested('hooks/use-search-matching.ts', [
+    unit(
+      'folder-match.test.ts',
+      'matches words with small spelling differences, in longer words only',
+    ),
+  ]),
+  searchFuzzyTwoEdits: tested('hooks/use-search-matching.ts', [
+    unit(
+      'folder-match.test.ts',
+      'matches words with small spelling differences, in longer words only',
+    ),
+  ]),
+  searchPrefix: tested('hooks/use-search-matching.ts', [
+    unit(
+      'folder-match.test.ts',
+      'matches word starts only with Match Word Starts on, and leaves out a part weighted 0',
+    ),
+  ]),
+  searchBm25K1: tested('hooks/use-search-matching.ts', [
+    unit('folder-match.test.ts', 'follows the folder weights and BM25 k1 and b'),
+  ]),
+  searchBm25B: tested('hooks/use-search-matching.ts', [
+    unit('folder-match.test.ts', 'follows the folder weights and BM25 k1 and b'),
+  ]),
+  folderMatchesNameWeight: tested('hooks/use-search-matching.ts', [
+    unit('folder-match.test.ts', 'follows the folder weights and BM25 k1 and b'),
+  ]),
+  folderMatchesParentWeight: tested('hooks/use-search-matching.ts', [
+    unit(
+      'folder-match.test.ts',
+      'ranks folders named for the words first, then folders inside them, then shallower paths',
+    ),
+  ]),
+  folderMatchesBookmarkWeight: tested('hooks/use-search-matching.ts', [
+    unit(
+      'folder-match.test.ts',
+      'matches word starts only with Match Word Starts on, and leaves out a part weighted 0',
+    ),
   ]),
   settingsSearchSources: tested(OPTIONS_PAGE, [
     e2e(OPTIONS_SPEC, SETTINGS_SEARCH_IN_TEST),
@@ -627,6 +679,30 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     cards,
   ]),
   managerCardSize: tested(MANAGER, [cards]),
+  managerCardColumns: tested(MANAGER, [
+    e2e(
+      'bookmark-manager-cards.spec.ts',
+      'Columns, Cover Shape, Cover Fit, and Title Lines lay out the cards',
+    ),
+  ]),
+  managerCardCoverShape: tested(MANAGER, [
+    e2e(
+      'bookmark-manager-cards.spec.ts',
+      'Columns, Cover Shape, Cover Fit, and Title Lines lay out the cards',
+    ),
+  ]),
+  managerCardCoverFit: tested(MANAGER, [
+    e2e(
+      'bookmark-manager-cards.spec.ts',
+      'Columns, Cover Shape, Cover Fit, and Title Lines lay out the cards',
+    ),
+  ]),
+  managerCardTitleLines: tested(MANAGER, [
+    e2e(
+      'bookmark-manager-cards.spec.ts',
+      'Columns, Cover Shape, Cover Fit, and Title Lines lay out the cards',
+    ),
+  ]),
   cardMaxTags: tested(MANAGER, [cardLimits, cards]),
   cardSummaryLines: tested(MANAGER, [cardLimits, cards]),
   previewFields: tested('components/bookmarks/BookmarkPreviewDialog.tsx', [
@@ -842,6 +918,22 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
       'shows recent folders limited by Recent Folders in Menu, not the popup max',
     ),
     e2e(CONTEXT_MENU_E2E, 'renaming, deleting, or hiding recent folders rebuilds the menu'),
+  ]),
+  addressBarEnabled: tested(ADDRESS_BAR, [
+    unit(
+      ADDRESS_BAR_UNIT,
+      'says it is off until turned on, lists nothing, and Enter opens that setting',
+    ),
+    unit(
+      ADDRESS_BAR_UNIT,
+      'opens a chosen bookmark where Enter asked, and typed text as a manager search',
+    ),
+  ]),
+  addressBarMaxResults: tested(ADDRESS_BAR, [
+    unit(
+      ADDRESS_BAR_UNIT,
+      'lists the bookmarks the text finds, at most Address Bar Results, folders left out',
+    ),
   ]),
   contextMenuBookmarkNaming: tested('services/context-menu.ts', [
     unit(SETTINGS_UNIT, 'names bookmarks from the page title or the link URL when selected'),
@@ -1267,6 +1359,12 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   ]),
   coversMaxCacheMb: tested(TOOL_OPTIONS, [
     unit(COVERS_UNIT, 'remove the oldest past the storage limit'),
+  ]),
+  coversReviewSingle: tested(TOOL_TABLE, [
+    e2e(
+      'covers.spec.ts',
+      "a right-click Fetch cover on one card saves that bookmark's cover and leaves the others untouched",
+    ),
   ]),
   coversSourcePreference: tested(BROWSE_COVERS, [
     unit(

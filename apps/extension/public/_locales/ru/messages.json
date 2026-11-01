@@ -931,6 +931,86 @@
         "message": "Во время поиска показывать над результатами папки с подходящими названиями, чтобы в них можно было сохранить текущую страницу",
         "description": "Settings > Search: description of the Folder Matches switch"
     },
+    "settings_sectionSearchMatching": {
+        "message": "Сопоставление при поиске",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzy": {
+        "message": "Нечёткий поиск",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyDesc": {
+        "message": "Слова, написанные немного иначе, тоже находятся — в поиске и среди подходящих папок: «rect» найдёт React. Папки упорядочены по релевантности (BM25), более близкое написание выше.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchFuzzyKeywords": {
+        "message": "опечатки, орфография, ошибки, расстояние редактирования, Дамерау-Левенштейн, релевантность, BM25",
+        "description": "Other words the Options search finds Fuzzy Matching by, comma-separated; never shown"
+    },
+    "settings_searchFuzzyOneEdit": {
+        "message": "Одна правка с",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyOneEditDesc": {
+        "message": "Самое короткое слово (в буквах), которое может отличаться на одну правку: буква добавлена, удалена, заменена или две переставлены",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchFuzzyTwoEdits": {
+        "message": "Две правки с",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyTwoEditsDesc": {
+        "message": "Самое короткое слово (в буквах), которое может отличаться на две правки",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchPrefix": {
+        "message": "Совпадение с началом слов",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchPrefixDesc": {
+        "message": "Введённое слово совпадает и с более длинными словами, которые с него начинаются: «rea» находит React уже при наборе. Целое слово всё равно выше.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchBm25K1": {
+        "message": "Насыщение частоты (BM25 k1)",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchBm25K1Desc": {
+        "message": "Сколько ещё добавляет к оценке слово, встретившееся снова. Ниже — одно упоминание весит почти как несколько.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchBm25B": {
+        "message": "Нормализация длины (BM25 b)",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchBm25BDesc": {
+        "message": "Насколько короткие результаты предпочтительнее длинных с теми же словами: 0 — нисколько, 1 — полностью.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesNameWeight": {
+        "message": "Вес названия папки",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesNameWeightDesc": {
+        "message": "Сколько весит слово в названии самой папки",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesParentWeight": {
+        "message": "Вес родительских папок",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesParentWeightDesc": {
+        "message": "Сколько весит слово в названиях папок, в которых она лежит, — так «react hooks» найдёт Hooks внутри React",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesBookmarkWeight": {
+        "message": "Вес закладок внутри",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesBookmarkWeightDesc": {
+        "message": "Сколько весит слово в названиях и сайтах закладок папки. 0 — искать только по названиям папок.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
     "settings_folderMatchesMax": {
         "message": "Максимум подходящих папок",
         "description": "Settings > Search: how many matching folders to list"
@@ -938,14 +1018,6 @@
     "settings_folderMatchesMaxDesc": {
         "message": "Сколько подходящих папок показывать",
         "description": "Settings > Search: description of the Maximum Folder Matches setting"
-    },
-    "settings_folderMatchesTypos": {
-        "message": "Допускать опечатки",
-        "description": "Settings > Search: switch that lets folder matching forgive one typo"
-    },
-    "settings_folderMatchesTyposDesc": {
-        "message": "Слово запроса из 4 и более букв находит название папки с одной опечаткой, например «rect» находит React",
-        "description": "Settings > Search: description of the Allow Typos switch"
     },
     "settings_sortOrder": {
         "message": "Порядок сортировки",
@@ -2234,6 +2306,42 @@
     "settings_contextMenuRecentMaxDesc": {
         "message": "Сколько недавних папок показывает контекстное меню. У всплывающего окна свой «Максимум недавних папок».",
         "description": "Setting description for Recent Folders in Menu"
+    },
+    "settings_sectionAddressBar": {
+        "message": "Адресная строка",
+        "description": "Options section heading: Address Bar Search and its result count"
+    },
+    "settings_addressBarEnabled": {
+        "message": "Поиск в адресной строке",
+        "description": "Setting label: Address Bar Search, which lists matching bookmarks in the browser address bar after its keyword"
+    },
+    "settings_addressBarEnabledDesc": {
+        "message": "Введите $1 и пробел в адресной строке, чтобы искать закладки прямо там. Выключено, пока вы его не включите.",
+        "description": "Setting description for Address Bar Search; $1 is the keyword typed in the address bar"
+    },
+    "settings_addressBarEnabledKeywords": {
+        "message": "омнибокс, ключевое слово, строка URL, адресная строка",
+        "description": "Other words the settings search finds Address Bar Search by, comma-separated, never shown"
+    },
+    "settings_addressBarMaxResults": {
+        "message": "Результаты в адресной строке",
+        "description": "Setting label: how many bookmarks Address Bar Search lists"
+    },
+    "settings_addressBarMaxResultsDesc": {
+        "message": "Сколько закладок адресная строка показывает при поиске.",
+        "description": "Setting description for Address Bar Results"
+    },
+    "addressBar_suggestion": {
+        "message": "$1 — $2",
+        "description": "One address bar suggestion: $1 is the bookmark title, $2 its address"
+    },
+    "addressBar_defaultSuggestion": {
+        "message": "Искать в закладках. Enter показывает все результаты в диспетчере закладок",
+        "description": "First line of the address bar after the keyword, while Address Bar Search is on; Enter on it searches the manager"
+    },
+    "addressBar_off": {
+        "message": "Поиск в адресной строке выключен. Нажмите Enter, чтобы включить его в настройках",
+        "description": "First line of the address bar after the keyword, while Address Bar Search is off; Enter opens Settings"
     },
     "settings_namingLinkText": {
         "message": "Текст ссылки",
@@ -8143,6 +8251,62 @@
         "message": "Только дату",
         "description": "Date Columns Show choice: the date alone"
     },
+    "settings_managerCardColumns": {
+        "message": "Столбцы",
+        "description": "Options > Behavior > Cards: label"
+    },
+    "settings_managerCardColumnsDesc": {
+        "message": "Сколько карточек в ряду. 0 — столько, сколько позволяет размер карточки.",
+        "description": "Under its setting in Options > Behavior > Cards"
+    },
+    "settings_managerCardCoverShape": {
+        "message": "Форма обложки",
+        "description": "Options > Behavior > Cards: label"
+    },
+    "settings_managerCardCoverShapeDesc": {
+        "message": "Форма обложки вверху каждой карточки",
+        "description": "Under its setting in Options > Behavior > Cards"
+    },
+    "settings_managerCardCoverShapeWide": {
+        "message": "Широкая (1,91:1)",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverShapeClassic": {
+        "message": "Классическая (4:3)",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverShapeSquare": {
+        "message": "Квадратная (1:1)",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverShapePortrait": {
+        "message": "Вертикальная (3:4)",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverFit": {
+        "message": "Заполнение обложки",
+        "description": "Options > Behavior > Cards: label"
+    },
+    "settings_managerCardCoverFitDesc": {
+        "message": "Заполнять обложку, обрезая лишнее, или показывать изображение целиком",
+        "description": "Under its setting in Options > Behavior > Cards"
+    },
+    "settings_managerCardCoverFitFill": {
+        "message": "Заполнить",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverFitFit": {
+        "message": "Целиком",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardTitleLines": {
+        "message": "Строк в названии",
+        "description": "Options > Behavior > Cards: label"
+    },
+    "settings_managerCardTitleLinesDesc": {
+        "message": "Сколько строк может занять название карточки до обрезки",
+        "description": "Under its setting in Options > Behavior > Cards"
+    },
     "settings_managerCardSize": {
         "message": "Размер карточек",
         "description": "Setting label: how wide the manager's cards are at least"
@@ -9789,10 +9953,6 @@
         "message": "Сколько всплывающее окно ждёт после последнего нажатия клавиши, прежде чем начать поиск, чтобы не искать после каждой буквы. При небольшой библиотеке меньшее значение ощущается быстрее.",
         "description": "Settings: more about the searchDelay setting, in a toggletip"
     },
-    "settings_folderMatchesTyposHelp": {
-        "message": "Также находить папки, названия которых отличаются от введённого на одну-две буквы, чтобы небольшая опечатка не мешала найти папку.",
-        "description": "Settings: more about the folderMatchesTypos setting, in a toggletip"
-    },
     "settings_jobsApplyInBackgroundAboveHelp": {
         "message": "Крупные изменения продолжаются, даже если закрыть страницу, и каждую их часть можно отменить в истории. Небольшие применяются сразу, а отменить их можно в уведомлении.",
         "description": "Settings: more about the jobsApplyInBackgroundAbove setting, in a toggletip"
@@ -10406,6 +10566,14 @@
     "settings_coversMaxCacheMbDesc": {
         "message": "Сколько места сохранённые обложки могут занимать на этом устройстве; сначала удаляются самые старые",
         "description": "Settings: description of the cover storage limit"
+    },
+    "settings_coversReviewSingle": {
+        "message": "Просматривать одну обложку",
+        "description": "Options > Page Details > Fetch Covers: switch label"
+    },
+    "settings_coversReviewSingleDesc": {
+        "message": "«Загрузить обложку» для одной закладки сначала показывает обложку, а потом сохраняет. Если выключено, найденная обложка сохраняется сразу; если подходящей обложки нет, по-прежнему показывается причина.",
+        "description": "Under the Review a Single Cover switch"
     },
     "settings_coversSourcePreference": {
         "message": "Источник обложки",
@@ -11416,6 +11584,10 @@
     "covers_privateAccessNote": {
         "message": "Браузер не разрешает Bookmark Scout работать в приватных окнах, поэтому они пропускаются. Чтобы разрешить, откройте страницу Bookmark Scout в настройках расширений браузера и включите работу в режиме инкогнито (в приватных окнах).",
         "description": "Settings: note under Also Capture in Private Windows while the browser does not let the extension run in private windows"
+    },
+    "menu_fetchCovers": {
+        "message": "Загрузить обложки ($1)",
+        "description": "Menu command on a folder or several items: Fetch Covers for the web bookmarks in them, folders included; $1 is how many"
     },
     "menu_fetchCover": {
         "message": "Загрузить обложку",

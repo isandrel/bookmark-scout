@@ -915,6 +915,86 @@
         "message": "Durante la ricerca, elenca sopra i risultati le cartelle il cui nome corrisponde, così puoi salvarci la pagina corrente",
         "description": "Settings > Search: description of the Folder Matches switch"
     },
+    "settings_sectionSearchMatching": {
+        "message": "Corrispondenza della ricerca",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzy": {
+        "message": "Corrispondenza approssimativa",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyDesc": {
+        "message": "Corrispondono anche parole scritte in modo un po’ diverso, nella ricerca e nelle cartelle suggerite, così «rect» trova React. Le cartelle sono ordinate per pertinenza (BM25), le grafie più vicine prima.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchFuzzyKeywords": {
+        "message": "refusi, ortografia, errori di battitura, distanza di modifica, Damerau-Levenshtein, pertinenza, BM25",
+        "description": "Other words the Options search finds Fuzzy Matching by, comma-separated; never shown"
+    },
+    "settings_searchFuzzyOneEdit": {
+        "message": "Una modifica da",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyOneEditDesc": {
+        "message": "Parola più corta, in lettere, che può differire di una modifica: una lettera aggiunta, tolta o cambiata, o due scambiate",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchFuzzyTwoEdits": {
+        "message": "Due modifiche da",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyTwoEditsDesc": {
+        "message": "Parola più corta, in lettere, che può differire di due modifiche",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchPrefix": {
+        "message": "Corrispondenza con l’inizio delle parole",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchPrefixDesc": {
+        "message": "Una parola digitata corrisponde anche alle parole più lunghe che inizia, così «rea» trova React mentre scrivi. La parola intera resta prima.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchBm25K1": {
+        "message": "Saturazione dei termini (BM25 k1)",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchBm25K1Desc": {
+        "message": "Quanto una parola che ricompare aggiunge ancora al punteggio. Più basso fa contare una menzione quasi quanto molte.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchBm25B": {
+        "message": "Normalizzazione della lunghezza (BM25 b)",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchBm25BDesc": {
+        "message": "Quanto i risultati più brevi sono preferiti a quelli lunghi con le stesse parole: 0 per niente, 1 del tutto.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesNameWeight": {
+        "message": "Peso del nome della cartella",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesNameWeightDesc": {
+        "message": "Quanto conta una parola nel nome della cartella stessa",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesParentWeight": {
+        "message": "Peso delle cartelle superiori",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesParentWeightDesc": {
+        "message": "Quanto conta una parola nei nomi delle cartelle che la contengono, così «react hooks» trova Hooks dentro React",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesBookmarkWeight": {
+        "message": "Peso dei segnalibri contenuti",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesBookmarkWeightDesc": {
+        "message": "Quanto conta una parola nei titoli e nei siti dei segnalibri nella cartella. 0 cerca solo nei nomi delle cartelle.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
     "settings_folderMatchesMax": {
         "message": "Numero massimo di cartelle corrispondenti",
         "description": "Settings > Search: how many matching folders to list"
@@ -922,14 +1002,6 @@
     "settings_folderMatchesMaxDesc": {
         "message": "Quante cartelle corrispondenti elencare",
         "description": "Settings > Search: description of the Maximum Folder Matches setting"
-    },
-    "settings_folderMatchesTypos": {
-        "message": "Tollera errori di battitura",
-        "description": "Settings > Search: switch that lets folder matching forgive one typo"
-    },
-    "settings_folderMatchesTyposDesc": {
-        "message": "Una parola di 4 o più lettere corrisponde a un nome di cartella anche con un errore di battitura, così \"rect\" trova React",
-        "description": "Settings > Search: description of the Allow Typos switch"
     },
     "settings_sortOrder": {
         "message": "Ordinamento",
@@ -2194,6 +2266,42 @@
     "settings_contextMenuRecentMaxDesc": {
         "message": "Quante cartelle recenti elenca il menu contestuale. Il popup ha il suo Numero massimo di cartelle recenti.",
         "description": "Setting description for Recent Folders in Menu"
+    },
+    "settings_sectionAddressBar": {
+        "message": "Barra degli indirizzi",
+        "description": "Options section heading: Address Bar Search and its result count"
+    },
+    "settings_addressBarEnabled": {
+        "message": "Ricerca nella barra degli indirizzi",
+        "description": "Setting label: Address Bar Search, which lists matching bookmarks in the browser address bar after its keyword"
+    },
+    "settings_addressBarEnabledDesc": {
+        "message": "Digita $1 e uno spazio nella barra degli indirizzi per cercare lì i tuoi preferiti. Disattivata finché non la attivi.",
+        "description": "Setting description for Address Bar Search; $1 is the keyword typed in the address bar"
+    },
+    "settings_addressBarEnabledKeywords": {
+        "message": "omnibox, parola chiave, barra URL, barra degli indirizzi",
+        "description": "Other words the settings search finds Address Bar Search by, comma-separated, never shown"
+    },
+    "settings_addressBarMaxResults": {
+        "message": "Risultati nella barra degli indirizzi",
+        "description": "Setting label: how many bookmarks Address Bar Search lists"
+    },
+    "settings_addressBarMaxResultsDesc": {
+        "message": "Quanti preferiti mostra la barra degli indirizzi per una ricerca.",
+        "description": "Setting description for Address Bar Results"
+    },
+    "addressBar_suggestion": {
+        "message": "$1 — $2",
+        "description": "One address bar suggestion: $1 is the bookmark title, $2 its address"
+    },
+    "addressBar_defaultSuggestion": {
+        "message": "Cerca nei tuoi preferiti. Invio mostra tutti i risultati nella gestione preferiti",
+        "description": "First line of the address bar after the keyword, while Address Bar Search is on; Enter on it searches the manager"
+    },
+    "addressBar_off": {
+        "message": "La ricerca nella barra degli indirizzi è disattivata. Premi Invio per attivarla nelle impostazioni",
+        "description": "First line of the address bar after the keyword, while Address Bar Search is off; Enter opens Settings"
     },
     "settings_namingLinkText": {
         "message": "Testo del link",
@@ -7603,6 +7711,62 @@
         "message": "Solo la data",
         "description": "Date Columns Show choice: the date alone"
     },
+    "settings_managerCardColumns": {
+        "message": "Colonne",
+        "description": "Options > Behavior > Cards: label"
+    },
+    "settings_managerCardColumnsDesc": {
+        "message": "Quante schede stanno in una riga. 0 ne mette quante ne consente la dimensione delle schede.",
+        "description": "Under its setting in Options > Behavior > Cards"
+    },
+    "settings_managerCardCoverShape": {
+        "message": "Forma della copertina",
+        "description": "Options > Behavior > Cards: label"
+    },
+    "settings_managerCardCoverShapeDesc": {
+        "message": "La forma della copertina in cima a ogni scheda",
+        "description": "Under its setting in Options > Behavior > Cards"
+    },
+    "settings_managerCardCoverShapeWide": {
+        "message": "Larga (1,91:1)",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverShapeClassic": {
+        "message": "Classica (4:3)",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverShapeSquare": {
+        "message": "Quadrata (1:1)",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverShapePortrait": {
+        "message": "Verticale (3:4)",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverFit": {
+        "message": "Adattamento copertina",
+        "description": "Options > Behavior > Cards: label"
+    },
+    "settings_managerCardCoverFitDesc": {
+        "message": "Se l’immagine riempie la copertina tagliando ciò che avanza, o si vede intera",
+        "description": "Under its setting in Options > Behavior > Cards"
+    },
+    "settings_managerCardCoverFitFill": {
+        "message": "Riempi",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverFitFit": {
+        "message": "Mostra intera",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardTitleLines": {
+        "message": "Righe del titolo",
+        "description": "Options > Behavior > Cards: label"
+    },
+    "settings_managerCardTitleLinesDesc": {
+        "message": "Quante righe può occupare il titolo di una scheda prima di essere tagliato",
+        "description": "Under its setting in Options > Behavior > Cards"
+    },
     "settings_managerCardSize": {
         "message": "Dimensione dei riquadri",
         "description": "Setting label: how wide the manager's cards are at least"
@@ -9145,10 +9309,6 @@
         "message": "Quanto attende il popup dopo l'ultimo tasto premuto prima di cercare, così non cerca a ogni lettera. Un valore più basso sembra più rapido con pochi preferiti.",
         "description": "Settings: more about the searchDelay setting, in a toggletip"
     },
-    "settings_folderMatchesTyposHelp": {
-        "message": "Trova anche le cartelle il cui nome differisce di una o due lettere da ciò che hai digitato, così un piccolo errore di battitura trova comunque la cartella.",
-        "description": "Settings: more about the folderMatchesTypos setting, in a toggletip"
-    },
     "settings_jobsApplyInBackgroundAboveHelp": {
         "message": "Le modifiche più grandi continuano anche se chiudi la pagina e ogni blocco può essere annullato dalla Cronologia. Quelle più piccole vengono applicate subito, con Annulla nella notifica.",
         "description": "Settings: more about the jobsApplyInBackgroundAbove setting, in a toggletip"
@@ -9634,6 +9794,14 @@
     "settings_coversMaxCacheMbDesc": {
         "message": "Spazio che le copertine salvate possono occupare su questo dispositivo; le meno recenti vengono rimosse per prime",
         "description": "Settings: description of the cover storage limit"
+    },
+    "settings_coversReviewSingle": {
+        "message": "Controlla una sola copertina",
+        "description": "Options > Page Details > Fetch Covers: switch label"
+    },
+    "settings_coversReviewSingleDesc": {
+        "message": "Recupera copertina su un solo segnalibro mostra la copertina prima di salvarla. Se disattivato, salva subito la copertina trovata; una pagina senza copertina utilizzabile mostra comunque il motivo.",
+        "description": "Under the Review a Single Cover switch"
     },
     "settings_coversSourcePreference": {
         "message": "Origine della copertina",
@@ -10436,6 +10604,10 @@
     "covers_privateAccessNote": {
         "message": "Il browser non consente a Bookmark Scout di funzionare nelle finestre private, quindi vengono saltate. Per consentirlo, apri la pagina di Bookmark Scout nelle impostazioni delle estensioni del browser e attiva il permesso per la navigazione in incognito o privata.",
         "description": "Settings: note under Also Capture in Private Windows while the browser does not let the extension run in private windows"
+    },
+    "menu_fetchCovers": {
+        "message": "Recupera copertine ($1)",
+        "description": "Menu command on a folder or several items: Fetch Covers for the web bookmarks in them, folders included; $1 is how many"
     },
     "menu_fetchCover": {
         "message": "Recupera copertina",

@@ -105,8 +105,11 @@ interface DataTableProps<TData extends RowData> {
   renderCardField?: (row: TData, field: string) => React.ReactNode | undefined;
   /** Drawn at the end of a card in the cards view, such as a folder's item count. */
   cardDetails?: (row: TData) => React.ReactNode;
-  /** The narrowest card of the cards view, in pixels. */
-  cardMinWidth?: number;
+  /**
+   * The cards view's layout as CSS variables and grid columns (Card Size, Columns, Cover Shape,
+   * Cover Fit, and Title Lines, applied by the page).
+   */
+  cardStyle?: React.CSSProperties;
   /** Receives the table's selection commands, for the page's keyboard shortcuts. */
   handleRef?: React.Ref<DataTableHandle<TData>>;
   /** Wraps the table's frame, for example in a right-click menu. */
@@ -225,7 +228,7 @@ export function DataTable<TData extends RowData>({
   cardFields = NO_CARD_FIELDS,
   renderCardField,
   cardDetails,
-  cardMinWidth,
+  cardStyle,
   handleRef,
   renderFrame,
   getRowProps,
@@ -1084,11 +1087,7 @@ export function DataTable<TData extends RowData>({
                       aria-rowcount={shownRows.length}
                       aria-label={label}
                       data-testid="bookmark-cards"
-                      style={
-                        cardMinWidth === undefined
-                          ? undefined
-                          : ({ '--card-min-width': `${cardMinWidth}px` } as React.CSSProperties)
-                      }
+                      style={cardStyle}
                       className="grid grid-cols-[repeat(auto-fill,minmax(var(--card-min-width),1fr))] gap-3 p-3"
                     >
                       {pageRows.length ? (
