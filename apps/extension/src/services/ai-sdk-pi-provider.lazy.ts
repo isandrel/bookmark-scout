@@ -34,6 +34,9 @@ import {
   tool,
 } from 'ai';
 
+/** The diagnostic an answer carries for each tool the provider ran itself, such as its web search. */
+export const PROVIDER_TOOL_DIAGNOSTIC = 'provider_tool';
+
 /** The pi-ai api name of models served through the AI SDK. */
 export const AI_SDK_API = 'ai-sdk';
 
@@ -257,8 +260,19 @@ function streamWith(options: AISdkPiProviderOptions) {
               break;
             }
             case 'tool-call': {
-              // The provider ran its own tool (web search); its answer comes as text.
-              if (part.providerExecuted) break;
+              // The provider ran its own tool (web search): its answer comes as text, and the
+              // diagnostic records that unreviewed text came in.
+              if (part.providerExecuted) {
+                partial.diagnostics = [
+                  ...(partial.diagnostics ?? []),
+                  {
+                    type: PROVIDER_TOOL_DIAGNOSTIC,
+                    timestamp: Date.now(),
+                    details: { toolName: part.toolName },
+                  },
+                ];
+                break;
+              }
               const call: ToolCall = {
                 type: 'toolCall',
                 id: part.toolCallId,
