@@ -37,7 +37,20 @@ Debajo, **La IA es opcional** explica que Bookmark Scout funciona sin IA; **Conf
 | --- | --- | --- |
 | **Carpetas coincidentes** | Activado | Mientras buscas, muestra sobre los resultados las carpetas cuyo nombre coincide, para guardar ahí la página actual |
 | **Máximo de carpetas coincidentes** | <SettingDefault path="search.folder_matches.max" /> | Cuántas carpetas coincidentes mostrar |
-| **Permitir errores de escritura** | Activado | Una palabra de 4 letras o más coincide con un nombre de carpeta aunque tenga un error |
+| **Peso del nombre de la carpeta** | <SettingDefault path="search.folder_matches.name_weight" /> | Cuánto cuenta una palabra del nombre de la propia carpeta |
+| **Peso de las carpetas superiores** | <SettingDefault path="search.folder_matches.parent_weight" /> | Cuánto cuenta una palabra en los nombres de las carpetas que la contienen, así «react hooks» encuentra Hooks dentro de React |
+| **Peso de los marcadores dentro** | <SettingDefault path="search.folder_matches.bookmark_weight" /> | Cuánto cuenta una palabra en los títulos y sitios de los marcadores de la carpeta. 0 busca solo en nombres de carpeta |
+
+### Coincidencia de búsqueda [#search-matching]
+
+| Ajuste | Predeterminado | Qué hace |
+| --- | --- | --- |
+| **Coincidencia aproximada** | Activado | También coinciden palabras escritas de forma algo distinta, en el cuadro de búsqueda y en las carpetas sugeridas, así que «rect» encuentra React. Las carpetas se ordenan por relevancia (BM25), las escrituras más parecidas primero |
+| **Una edición desde** | <SettingDefault path="search.search_matching.one_edit" /> | Palabra más corta, en letras, que puede diferir en una edición: una letra añadida, quitada o cambiada, o dos intercambiadas |
+| **Dos ediciones desde** | <SettingDefault path="search.search_matching.two_edits" /> | Palabra más corta, en letras, que puede diferir en dos ediciones |
+| **Coincidir con el inicio de palabras** | Activado | Una palabra que escribes también coincide con palabras más largas que empiezan por ella, así que «rea» encuentra React mientras escribes. La palabra completa sigue yendo antes |
+| **Saturación de términos (BM25 k1)** | <SettingDefault path="search.search_matching.bm25_k1" /> | Cuánto sigue sumando una palabra que vuelve a aparecer. Más bajo hace que una mención cuente casi como muchas |
+| **Normalización por longitud (BM25 b)** | <SettingDefault path="search.search_matching.bm25_b" /> | Cuánto se prefieren los resultados más cortos frente a los largos con las mismas palabras: 0 nada, 1 del todo |
 
 ### Búsqueda [#searching]
 
@@ -85,6 +98,13 @@ Debajo, **Atajos de teclado** muestra las teclas que tiene cada atajo en tu nave
 | **Carpetas recientes en el menú** | <SettingDefault path="search.context_menu.recent_max" /> | Cuántas carpetas recientes muestra el menú, aparte del **Máximo de carpetas recientes** de la ventana emergente |
 
 **Opciones del menú** elige lo que ofrece el menú, en orden: **Carpetas recientes** (un submenú) y **Barra de marcadores**. Marca una opción para mostrarla y arrástrala por su asa (o usa el menú del asa) para moverla; **Restablecer valores predeterminados** vuelve a mostrar ambas en su orden inicial.
+
+### Búsqueda en la barra de direcciones [#address-bar]
+
+| Ajuste | Predeterminado | Qué hace |
+| --- | --- | --- |
+| **Búsqueda en la barra de direcciones** | Desactivado | Escribe <AddressBarKeyword /> y un espacio en la barra de direcciones del navegador y luego las palabras que buscas: la barra de direcciones muestra los marcadores que coinciden, ordenados como en el cuadro de búsqueda. **Intro** sobre un marcador lo abre en esta pestaña o, con la tecla que usa tu navegador para ello, en una nueva; **Intro** sobre lo que escribiste abre el administrador de marcadores con esa búsqueda. Mientras está desactivada, la palabra clave lo indica e **Intro** abre este ajuste. La búsqueda se hace en tu dispositivo y no guarda nada |
+| **Resultados en la barra de direcciones** | <SettingDefault path="search.address_bar.max_results" /> | Cuántos marcadores muestra la barra de direcciones en una búsqueda |
 
 ### Búsqueda en la configuración [#settings-search]
 
@@ -200,6 +220,10 @@ Debajo de la tabla, tres listas organizan la ventana emergente y el panel latera
 | **Tamaño de tarjeta** | Mediano | El ancho mínimo de cada tarjeta de la vista de tarjetas: **Pequeño**, **Mediano** o **Grande**. Cada fila coloca tantas tarjetas como quepan. Solo se guarda en este dispositivo |
 | **Etiquetas por tarjeta** | <SettingDefault path="behavior.manager_cards.max_tags" /> | Una tarjeta muestra este número de etiquetas y luego **+N** para el resto. Solo se guarda en este dispositivo |
 | **Líneas del resumen** | <SettingDefault path="behavior.manager_cards.summary_lines" /> | Líneas del resumen de un marcador que muestra una tarjeta; los lectores de pantalla leen el resumen completo. Solo se guarda en este dispositivo |
+| **Columnas** | <SettingDefault path="behavior.manager_cards.columns" /> | Cuántas tarjetas caben en una fila. 0 pone tantas como permita el tamaño de tarjeta |
+| **Forma de la portada** | Ancha (1,91:1) | La forma de la portada en la parte superior de cada tarjeta |
+| **Ajuste de la portada** | Llenar | Si la imagen llena la portada y recorta lo que sobra, o se muestra entera |
+| **Líneas del título** | <SettingDefault path="behavior.manager_cards.title_lines" /> | Líneas que puede ocupar el título de una tarjeta antes de cortarse |
 
 **Contenido de las tarjetas** elige lo que muestra cada tarjeta bajo su título, en orden: la portada, la URL, la ruta de la carpeta, las etiquetas y el resumen (todo menos la ruta de la carpeta al principio). Una portada en primer lugar queda sobre el título. La tarjeta de una carpeta siempre dice cuántos elementos tiene. Solo se guarda en este dispositivo.
 
@@ -360,6 +384,7 @@ Debajo, **Índice de texto de páginas** indica cuántas páginas hay indexadas,
 | **Activar Obtener portadas** | Desactivado | Muestra **Obtener portadas** en la barra lateral Herramientas |
 | **Ámbito predeterminado** | Carpeta actual | Marcadores que la herramienta lee al empezar |
 | **Origen de la portada** | Imagen de la página primero, luego captura | Qué portada conserva un marcador cuando son posibles tanto la imagen propia de la página como una captura de la pestaña. **Imagen de la página primero, luego captura**: Obtener portadas reemplaza una captura, y una captura tomada al navegar solo es para marcadores sin la imagen de la página. **Captura primero**: una captura tomada al navegar reemplaza la imagen de la página. **Solo imagen de la página**: no se toman capturas al navegar. **Usar esta vista como portada** siempre conserva la imagen que guardas. Una portada guardada con **Usar esta vista como portada** nunca se reemplaza automáticamente, ni con Obtener portadas ni con capturas al navegar; solo la reemplaza otra imagen que guardes. **Solo captura**: solo capturas; Obtener portadas no lee ninguna página y su revisión lo indica. |
+| **Revisar una sola portada** | Activado | **Obtener portada** en un solo marcador muestra la portada en la revisión antes de guardarla. Desactivado, guarda al momento la portada que encuentre; si la página no tiene una portada útil, la revisión se abre igualmente y dice por qué |
 | **Capturar portadas al navegar** | Desactivado | Cuando una página marcada sin portada, o con una captura antigua, termina de cargarse en la pestaña que estás viendo, toma una captura de la pestaña como su portada una vez que la página se ha estabilizado. No en ventanas privadas salvo que también actives esa opción, nunca de las páginas propias de la extensión o del navegador ni de archivos locales. Al activarlo se pide acceso a todas las páginas. Se guarda solo en este dispositivo. Los cuatro ajustes siguientes se muestran mientras está activado |
 | **Capturar también en ventanas privadas** | Desactivado | Toma capturas también en ventanas privadas, solo donde el navegador deja que Bookmark Scout se ejecute ahí: el permiso de incógnito en Chrome y Edge, o el de ventanas privadas en Firefox, en la página de la extensión de la configuración de extensiones del navegador. Configuración lo indica mientras el navegador no lo permita. Se guarda solo en este dispositivo |
 | **Espera antes de capturar** | <SettingDefault path="metadata_content.covers.browse_settle_ms" seconds /> s | Cuánto tiempo debe seguir en primer plano una página marcada después de cargarse antes de tomar su captura |

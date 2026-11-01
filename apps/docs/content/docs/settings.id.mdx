@@ -37,7 +37,20 @@ Di bawahnya, **AI bersifat opsional** menyatakan bahwa Bookmark Scout berfungsi 
 | --- | --- | --- |
 | **Folder yang Cocok** | Aktif | Saat Anda menelusuri, cantumkan folder yang namanya cocok di atas hasil, untuk menyimpan halaman saat ini di sana |
 | **Maksimum Folder yang Cocok** | <SettingDefault path="search.folder_matches.max" /> | Berapa banyak folder cocok yang dicantumkan |
-| **Izinkan Salah Ketik** | Aktif | Kata penelusuran dengan 4 huruf atau lebih boleh cocok dengan nama folder yang berbeda satu huruf |
+| **Bobot Nama Folder** | <SettingDefault path="search.folder_matches.name_weight" /> | Seberapa besar kata dalam nama folder itu sendiri dihitung |
+| **Bobot Folder Induk** | <SettingDefault path="search.folder_matches.parent_weight" /> | Seberapa besar kata dalam nama folder tempatnya berada dihitung, jadi "react hooks" menemukan Hooks di dalam React |
+| **Bobot Bookmark di Dalam** | <SettingDefault path="search.folder_matches.bookmark_weight" /> | Seberapa besar kata dalam judul dan situs bookmark di folder dihitung. 0 hanya mencari nama folder |
+
+### Pencocokan Penelusuran [#search-matching]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Pencocokan Fuzzy** | Aktif | Kata yang ejaannya sedikit berbeda juga cocok, di kotak penelusuran dan di folder yang cocok, jadi "rect" menemukan React. Folder diurutkan menurut relevansi (BM25), ejaan terdekat lebih dulu |
+| **Satu Edit Mulai** | <SettingDefault path="search.search_matching.one_edit" /> | Kata terpendek, dalam huruf, yang boleh berbeda satu edit: satu huruf ditambah, dihapus, atau diganti, atau dua ditukar |
+| **Dua Edit Mulai** | <SettingDefault path="search.search_matching.two_edits" /> | Kata terpendek, dalam huruf, yang boleh berbeda dua edit |
+| **Cocokkan Awal Kata** | Aktif | Kata yang Anda ketik juga cocok dengan kata lebih panjang yang diawalinya, jadi "rea" menemukan React saat mengetik. Kata utuh tetap di atas |
+| **Saturasi Istilah (BM25 k1)** | <SettingDefault path="search.search_matching.bm25_k1" /> | Seberapa banyak kata yang muncul lagi masih menambah skor hasil. Lebih rendah membuat satu sebutan hampir sama dengan banyak |
+| **Normalisasi Panjang (BM25 b)** | <SettingDefault path="search.search_matching.bm25_b" /> | Seberapa hasil yang lebih pendek diutamakan dibanding yang panjang dengan kata yang sama: 0 tidak sama sekali, 1 sepenuhnya |
 
 ### Penelusuran [#searching]
 
@@ -85,6 +98,13 @@ Di bawahnya, **Pintasan keyboard** menampilkan tombol setiap pintasan di browser
 | **Folder Terbaru di Menu** | <SettingDefault path="search.context_menu.recent_max" /> | Jumlah folder terbaru yang ditampilkan menu, terpisah dari **Maks Folder Terbaru** di popup |
 
 **Entri menu** memilih apa yang ditawarkan menu, sesuai urutan: **Folder Terbaru** (submenu) dan **Bilah bookmark**. Centang entri untuk menampilkannya dan seret pegangannya (atau gunakan menu pegangan) untuk memindahkannya; **Pulihkan default** menampilkan keduanya lagi dalam urutan awal.
+
+### Pencarian di Bilah Alamat [#address-bar]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Pencarian di Bilah Alamat** | Nonaktif | Ketik <AddressBarKeyword /> dan spasi di bilah alamat browser, lalu kata yang dicari: bilah alamat menampilkan bookmark yang cocok, diurutkan seperti di kotak pencarian. **Enter** pada bookmark membukanya di tab ini atau, dengan tombol yang dipakai browser Anda untuk itu, di tab baru; **Enter** pada teks yang Anda ketik membuka pengelola bookmark dengan pencarian itu. Selama nonaktif, kata kunci memberi tahu hal itu dan **Enter** membuka setelan ini. Pencarian berjalan di perangkat Anda dan tidak menyimpan apa pun |
+| **Hasil di Bilah Alamat** | <SettingDefault path="search.address_bar.max_results" /> | Berapa banyak bookmark yang ditampilkan bilah alamat untuk satu pencarian |
 
 ### Penelusuran Setelan [#settings-search]
 
@@ -200,6 +220,10 @@ Di bawah tabel, tiga daftar mengatur popup dan panel samping. Centang item untuk
 | **Ukuran Kartu** | Sedang | Lebar terkecil setiap kartu pada tampilan kartu: **Kecil**, **Sedang**, atau **Besar**. Satu baris memuat sebanyak mungkin kartu. Hanya disimpan di perangkat ini |
 | **Tag per Kartu** | <SettingDefault path="behavior.manager_cards.max_tags" /> | Kartu menampilkan sebanyak ini tag, lalu **+N** untuk sisanya. Hanya disimpan di perangkat ini |
 | **Baris Ringkasan** | <SettingDefault path="behavior.manager_cards.summary_lines" /> | Baris ringkasan bookmark yang ditampilkan kartu; pembaca layar tetap membacakan seluruhnya. Hanya disimpan di perangkat ini |
+| **Kolom** | <SettingDefault path="behavior.manager_cards.columns" /> | Berapa kartu dalam satu baris. 0 memuat sebanyak yang diizinkan Ukuran Kartu |
+| **Bentuk Sampul** | Lebar (1,91:1) | Bentuk sampul di bagian atas tiap kartu |
+| **Penyesuaian Sampul** | Isi | Apakah gambar mengisi sampul dan memotong sisanya, atau ditampilkan utuh |
+| **Baris Judul** | <SettingDefault path="behavior.manager_cards.title_lines" /> | Berapa baris judul kartu sebelum dipotong |
 
 **Isi kartu** memilih yang ditampilkan setiap kartu di bawah judulnya, sesuai urutan: sampul, URL, jalur folder, tag, dan ringkasan (semuanya kecuali jalur folder pada awalnya). Sampul di urutan pertama tetap di atas judul. Kartu folder selalu menyebutkan jumlah item di dalamnya. Hanya disimpan di perangkat ini.
 
@@ -360,6 +384,7 @@ Di bawahnya, **Indeks teks halaman** menyebutkan berapa halaman yang sudah diind
 | **Aktifkan Ambil Sampul** | Nonaktif | Tampilkan **Ambil Sampul** di bilah samping Alat |
 | **Cakupan Default** | Folder saat ini | Bookmark yang dibaca alat saat dimulai |
 | **Sumber Sampul** | Gambar halaman dulu, lalu tangkapan layar | Sampul mana yang disimpan bookmark jika gambar halaman itu sendiri dan tangkapan layar tab sama-sama memungkinkan. **Gambar halaman dulu, lalu tangkapan layar**: Ambil Sampul menggantikan tangkapan layar, dan tangkapan layar yang diambil saat menjelajah hanya untuk bookmark tanpa gambar halaman. **Tangkapan layar dulu**: tangkapan layar yang diambil saat menjelajah menggantikan gambar halaman. **Hanya gambar halaman**: tidak ada tangkapan layar yang diambil saat menjelajah. **Gunakan tampilan ini sebagai sampul** selalu mempertahankan gambar yang Anda simpan. Sampul yang Anda simpan dengan **Gunakan tampilan ini sebagai sampul** tidak pernah diganti secara otomatis, baik oleh Ambil Sampul maupun tangkapan layar saat menjelajah; hanya gambar lain yang Anda simpan yang menggantinya. **Hanya tangkapan layar**: hanya tangkapan layar; Ambil Sampul tidak membaca halaman apa pun dan tinjauannya menyebutkan hal itu. |
+| **Tinjau satu sampul** | Aktif | **Ambil sampul** untuk satu bookmark menampilkan sampulnya di tinjauan sebelum disimpan. Jika nonaktif, sampul yang ditemukan langsung disimpan; halaman tanpa sampul yang bisa dipakai tetap membuka tinjauan, yang menjelaskan alasannya |
 | **Tangkap Sampul Saat Menjelajah** | Nonaktif | Saat halaman yang di-bookmark tanpa sampul, atau dengan tangkapan layar lama, selesai dimuat di tab yang sedang Anda lihat, ambil tangkapan layar tab itu sebagai sampulnya setelah halaman stabil. Tidak di jendela pribadi kecuali Anda juga mengaktifkannya, tidak pernah dari halaman milik ekstensi atau browser sendiri atau dari file lokal. Mengaktifkannya meminta akses ke semua halaman. Hanya disimpan di perangkat ini. Empat setelan berikutnya muncul selama setelan ini aktif |
 | **Tangkap Juga di Jendela Pribadi** | Nonaktif | Juga ambil tangkapan layar di jendela pribadi, hanya jika browser Anda mengizinkan Bookmark Scout berjalan di sana: izin mode penyamaran di Chrome dan Edge, izin berjalan di jendela pribadi di Firefox, di halaman ekstensi ini pada setelan ekstensi browser. Setelan memberi tahu hal ini selama browser belum mengizinkannya. Hanya disimpan di perangkat ini |
 | **Tunggu Sebelum Menangkap** | <SettingDefault path="metadata_content.covers.browse_settle_ms" seconds /> s | Berapa lama halaman yang di-bookmark harus tetap di depan setelah dimuat sebelum tangkapan layarnya diambil |

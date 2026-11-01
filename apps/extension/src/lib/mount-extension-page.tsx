@@ -27,14 +27,6 @@ export type ExtensionPageOptions = {
   preload?: () => Promise<unknown>;
 };
 
-/**
- * "Options - Bookmark Scout", or the extension name alone, in the current language. Every tab
- * title reads most specific first; the manager adds the folder or search in front.
- */
-export function getExtensionPageTitle(titleKey?: MessageKey): string {
-  return titleKey ? t('page_title', [t(titleKey), t('extName')]) : t('extName');
-}
-
 function PageTitle({ titleKey }: { titleKey?: MessageKey }) {
   // Re-runs once a newly selected language is applied to `t()`.
   const language = useLanguage();

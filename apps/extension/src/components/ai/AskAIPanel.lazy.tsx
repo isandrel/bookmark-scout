@@ -232,9 +232,16 @@ export function AskAIChat({ onClose }: AskAIPanelProps) {
   useEffect(() => {
     if (!keepChatsLoading && !keepChats) void clearChats();
   }, [keepChats, keepChatsLoading]);
-  // Keeps the chat once an answer is finished (or failed), never while it is still being written.
+  // Keeps the chat once an answer is finished (or failed), never while it is still being written,
+  // and never in a private window.
   useEffect(() => {
-    if (!keepChats || !resumed.current || (status !== 'ready' && status !== 'error')) return;
+    if (
+      !keepChats ||
+      inPrivateWindow() ||
+      !resumed.current ||
+      (status !== 'ready' && status !== 'error')
+    )
+      return;
     if (messages.length === 0) return;
     void keepChat(chatId, messages, chatsMax).catch((error) => {
       aiLogger.error({ error }, 'Failed to keep the Ask AI chat');

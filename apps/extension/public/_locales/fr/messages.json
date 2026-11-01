@@ -915,6 +915,86 @@
         "message": "Pendant la recherche, affiche au-dessus des résultats les dossiers dont le nom correspond, pour y enregistrer la page actuelle",
         "description": "Settings > Search: description of the Folder Matches switch"
     },
+    "settings_sectionSearchMatching": {
+        "message": "Correspondance de recherche",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzy": {
+        "message": "Correspondance approximative",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyDesc": {
+        "message": "Les mots écrits un peu différemment correspondent aussi, dans la recherche et les dossiers proposés : « rect » trouve React. Les dossiers sont classés par pertinence (BM25), les orthographes les plus proches en premier.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchFuzzyKeywords": {
+        "message": "fautes de frappe, orthographe, mal écrit, distance d’édition, Damerau-Levenshtein, pertinence, BM25",
+        "description": "Other words the Options search finds Fuzzy Matching by, comma-separated; never shown"
+    },
+    "settings_searchFuzzyOneEdit": {
+        "message": "Une modification dès",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyOneEditDesc": {
+        "message": "Mot le plus court, en lettres, qui peut différer d’une modification : une lettre ajoutée, retirée ou changée, ou deux inversées",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchFuzzyTwoEdits": {
+        "message": "Deux modifications dès",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchFuzzyTwoEditsDesc": {
+        "message": "Mot le plus court, en lettres, qui peut différer de deux modifications",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchPrefix": {
+        "message": "Correspondre aux débuts de mots",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchPrefixDesc": {
+        "message": "Un mot saisi correspond aussi aux mots plus longs qu’il commence : « rea » trouve React pendant la saisie. Le mot entier reste mieux classé.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchBm25K1": {
+        "message": "Saturation des termes (BM25 k1)",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchBm25K1Desc": {
+        "message": "Ce qu’un mot qui revient ajoute encore au score d’un résultat. Plus bas, une mention compte presque autant que plusieurs.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_searchBm25B": {
+        "message": "Normalisation de longueur (BM25 b)",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_searchBm25BDesc": {
+        "message": "À quel point les résultats courts sont préférés aux longs avec les mêmes mots : 0 pas du tout, 1 entièrement.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesNameWeight": {
+        "message": "Poids du nom du dossier",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesNameWeightDesc": {
+        "message": "Ce que compte un mot du nom du dossier lui-même",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesParentWeight": {
+        "message": "Poids des dossiers parents",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesParentWeightDesc": {
+        "message": "Ce que compte un mot des noms des dossiers qui le contiennent : « react hooks » trouve Hooks dans React",
+        "description": "Under its setting in Options > Saving & Search"
+    },
+    "settings_folderMatchesBookmarkWeight": {
+        "message": "Poids des favoris contenus",
+        "description": "Options > Saving & Search: label"
+    },
+    "settings_folderMatchesBookmarkWeightDesc": {
+        "message": "Ce que compte un mot des titres et sites des favoris du dossier. 0 ne cherche que dans les noms de dossiers.",
+        "description": "Under its setting in Options > Saving & Search"
+    },
     "settings_folderMatchesMax": {
         "message": "Nombre maximal de dossiers correspondants",
         "description": "Settings > Search: how many matching folders to list"
@@ -922,14 +1002,6 @@
     "settings_folderMatchesMaxDesc": {
         "message": "Combien de dossiers correspondants afficher",
         "description": "Settings > Search: description of the Maximum Folder Matches setting"
-    },
-    "settings_folderMatchesTypos": {
-        "message": "Tolérer les fautes de frappe",
-        "description": "Settings > Search: switch that lets folder matching forgive one typo"
-    },
-    "settings_folderMatchesTyposDesc": {
-        "message": "Un mot de 4 lettres ou plus correspond à un nom de dossier malgré une faute de frappe : « rect » trouve React",
-        "description": "Settings > Search: description of the Allow Typos switch"
     },
     "settings_sortOrder": {
         "message": "Ordre de tri",
@@ -2194,6 +2266,42 @@
     "settings_contextMenuRecentMaxDesc": {
         "message": "Nombre de dossiers récents listés dans le menu du clic droit. La fenêtre contextuelle a son propre Nombre maximal de dossiers récents.",
         "description": "Setting description for Recent Folders in Menu"
+    },
+    "settings_sectionAddressBar": {
+        "message": "Barre d'adresse",
+        "description": "Options section heading: Address Bar Search and its result count"
+    },
+    "settings_addressBarEnabled": {
+        "message": "Recherche dans la barre d'adresse",
+        "description": "Setting label: Address Bar Search, which lists matching bookmarks in the browser address bar after its keyword"
+    },
+    "settings_addressBarEnabledDesc": {
+        "message": "Tapez $1 puis une espace dans la barre d'adresse pour y rechercher vos favoris. Désactivée tant que vous ne l'activez pas.",
+        "description": "Setting description for Address Bar Search; $1 is the keyword typed in the address bar"
+    },
+    "settings_addressBarEnabledKeywords": {
+        "message": "omnibox, mot-clé, barre d'URL, barre d'adresse",
+        "description": "Other words the settings search finds Address Bar Search by, comma-separated, never shown"
+    },
+    "settings_addressBarMaxResults": {
+        "message": "Résultats dans la barre d'adresse",
+        "description": "Setting label: how many bookmarks Address Bar Search lists"
+    },
+    "settings_addressBarMaxResultsDesc": {
+        "message": "Nombre de favoris que la barre d'adresse affiche pour une recherche.",
+        "description": "Setting description for Address Bar Results"
+    },
+    "addressBar_suggestion": {
+        "message": "$1 — $2",
+        "description": "One address bar suggestion: $1 is the bookmark title, $2 its address"
+    },
+    "addressBar_defaultSuggestion": {
+        "message": "Rechercher dans vos favoris. Entrée affiche tous les résultats dans le gestionnaire de favoris",
+        "description": "First line of the address bar after the keyword, while Address Bar Search is on; Enter on it searches the manager"
+    },
+    "addressBar_off": {
+        "message": "La recherche dans la barre d'adresse est désactivée. Appuyez sur Entrée pour l'activer dans les paramètres",
+        "description": "First line of the address bar after the keyword, while Address Bar Search is off; Enter opens Settings"
     },
     "settings_namingLinkText": {
         "message": "Texte du lien",
@@ -7635,6 +7743,62 @@
         "message": "Date seule",
         "description": "Date Columns Show choice: the date alone"
     },
+    "settings_managerCardColumns": {
+        "message": "Colonnes",
+        "description": "Options > Behavior > Cards: label"
+    },
+    "settings_managerCardColumnsDesc": {
+        "message": "Nombre de cartes par rangée. 0 en met autant que la taille des cartes le permet.",
+        "description": "Under its setting in Options > Behavior > Cards"
+    },
+    "settings_managerCardCoverShape": {
+        "message": "Forme de la couverture",
+        "description": "Options > Behavior > Cards: label"
+    },
+    "settings_managerCardCoverShapeDesc": {
+        "message": "La forme de la couverture en haut de chaque carte",
+        "description": "Under its setting in Options > Behavior > Cards"
+    },
+    "settings_managerCardCoverShapeWide": {
+        "message": "Large (1,91:1)",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverShapeClassic": {
+        "message": "Classique (4:3)",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverShapeSquare": {
+        "message": "Carrée (1:1)",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverShapePortrait": {
+        "message": "Portrait (3:4)",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverFit": {
+        "message": "Ajustement de la couverture",
+        "description": "Options > Behavior > Cards: label"
+    },
+    "settings_managerCardCoverFitDesc": {
+        "message": "L’image remplit la couverture en rognant ce qui dépasse, ou s’affiche en entier",
+        "description": "Under its setting in Options > Behavior > Cards"
+    },
+    "settings_managerCardCoverFitFill": {
+        "message": "Remplir",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardCoverFitFit": {
+        "message": "Afficher en entier",
+        "description": "Choice of the cards view setting above it"
+    },
+    "settings_managerCardTitleLines": {
+        "message": "Lignes du titre",
+        "description": "Options > Behavior > Cards: label"
+    },
+    "settings_managerCardTitleLinesDesc": {
+        "message": "Nombre de lignes que le titre d’une carte peut occuper avant d’être coupé",
+        "description": "Under its setting in Options > Behavior > Cards"
+    },
     "settings_managerCardSize": {
         "message": "Taille des cartes",
         "description": "Setting label: how wide the manager's cards are at least"
@@ -9177,10 +9341,6 @@
         "message": "Combien de temps la fenêtre contextuelle attend après votre dernière touche avant de chercher, pour ne pas chercher à chaque lettre. Moins semble plus rapide sur une petite bibliothèque.",
         "description": "Settings: more about the searchDelay setting, in a toggletip"
     },
-    "settings_folderMatchesTyposHelp": {
-        "message": "Trouver aussi les dossiers dont le nom diffère d'une ou deux lettres de ce que vous avez tapé, pour qu'une petite faute de frappe trouve quand même le dossier.",
-        "description": "Settings: more about the folderMatchesTypos setting, in a toggletip"
-    },
     "settings_jobsApplyInBackgroundAboveHelp": {
         "message": "Les grosses modifications continuent si vous fermez la page, et chaque partie s'annule depuis l'Historique. Les petites s'appliquent tout de suite, avec Annuler dans la notification.",
         "description": "Settings: more about the jobsApplyInBackgroundAbove setting, in a toggletip"
@@ -9666,6 +9826,14 @@
     "settings_coversMaxCacheMbDesc": {
         "message": "Place que les couvertures peuvent occuper sur cet appareil ; les plus anciennes sont supprimées en premier",
         "description": "Settings: description of the cover storage limit"
+    },
+    "settings_coversReviewSingle": {
+        "message": "Vérifier une seule couverture",
+        "description": "Options > Page Details > Fetch Covers: switch label"
+    },
+    "settings_coversReviewSingleDesc": {
+        "message": "Récupérer la couverture d’un seul favori la montre avant de l’enregistrer. Désactivé, la couverture trouvée est enregistrée tout de suite ; une page sans couverture utilisable montre toujours pourquoi.",
+        "description": "Under the Review a Single Cover switch"
     },
     "settings_coversSourcePreference": {
         "message": "Source de la couverture",

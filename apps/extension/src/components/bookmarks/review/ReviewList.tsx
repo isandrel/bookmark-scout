@@ -1,7 +1,7 @@
 /**
  * The list a tool's review shows its items in, the same for every tool: category tabs with
  * counts, a checkbox per item and one for every item shown, "Set selected to…" for the batch
- * actions, and one action per item. Only the rows on screen are drawn, so a review of thousands
+ * actions, and one action per item; a review of one item shows only its action. Only the rows on screen are drawn, so a review of thousands
  * of bookmarks stays fast. What the categories and actions are, and what each row shows, comes
  * from the tool (`ReviewListProps`); the choices themselves are kept by the caller.
  */
@@ -84,6 +84,9 @@ export function ReviewList<Item, Category extends string, Action extends string>
   );
   const shownIds = category === ALL_CATEGORIES ? ids : shown.map(idOf);
   const selectedShown = shownIds.filter((id) => selected.has(id));
+  // One item has nothing to sort or choose in bulk: its own action is the whole review, so a
+  // checkbox beside it only looked like it decided what is applied.
+  const many = items.length > 1;
 
   const setSelected = (action: Action) =>
     onAction(
@@ -95,17 +98,22 @@ export function ReviewList<Item, Category extends string, Action extends string>
 
   return (
     <div className="flex min-h-0 min-w-0 flex-col gap-3" data-slot="review-list">
-      <CategoryTabs
-        items={items}
-        categories={categories}
-        categoryOf={categoryOf}
-        categoryLabel={categoryLabel}
-        value={category}
-        onValueChange={setCategory}
-      />
+      {many && (
+        <CategoryTabs
+          items={items}
+          categories={categories}
+          categoryOf={categoryOf}
+          categoryLabel={categoryLabel}
+          value={category}
+          onValueChange={setCategory}
+        />
+      )}
       <div
         data-slot="review-batch"
-        className="flex flex-wrap items-center gap-2 rounded-lg bg-muted/40 p-2 text-xs"
+        className={cn(
+          'flex flex-wrap items-center gap-2 rounded-lg bg-muted/40 p-2 text-xs',
+          !many && 'hidden',
+        )}
       >
         <Checkbox
           checked={selectedShown.length > 0 && selectedShown.length === shownIds.length}
@@ -135,13 +143,15 @@ export function ReviewList<Item, Category extends string, Action extends string>
           const title = titleOf(item);
           return (
             <div className="flex min-w-0 gap-3 rounded-lg border p-3 text-sm">
-              <Checkbox
-                className="mt-0.5"
-                checked={selected.has(id)}
-                onCheckedChange={(checked) => toggle(id, checked === true)}
-                aria-label={t('review_selectItem', title)}
-                disabled={disabled}
-              />
+              {many && (
+                <Checkbox
+                  className="mt-0.5"
+                  checked={selected.has(id)}
+                  onCheckedChange={(checked) => toggle(id, checked === true)}
+                  aria-label={t('review_selectItem', title)}
+                  disabled={disabled}
+                />
+              )}
               <div className="min-w-0 flex-1 space-y-1">
                 <div className="flex min-w-0 items-center justify-between gap-2">
                   <span className="min-w-0 truncate font-medium" title={title}>

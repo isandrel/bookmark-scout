@@ -209,7 +209,8 @@ export function useManagerDragDrop({ allData, currentFolderId, table }: DragDrop
     const frameProps: HTMLAttributes<HTMLDivElement> = {
       onDragOver: (event) => {
         if (!isUsable(event)) return;
-        const rowElement = (event.target as Element).closest?.('tr[data-row-id]');
+        // A table row or a card of the cards view.
+        const rowElement = (event.target as Element).closest?.('[data-row-id]');
         const item = rowElement
           ? getManagerItemsById(latest.current.allData).get(
               (rowElement as HTMLElement).dataset.rowId ?? '',
@@ -217,7 +218,11 @@ export function useManagerDragDrop({ allData, currentFolderId, table }: DragDrop
           : undefined;
         if (item) {
           const box = rowElement?.getBoundingClientRect();
-          const fraction = rowFraction(event.clientY, box);
+          // Cards sit side by side in reading order, so a card's zones run across its width.
+          const fraction =
+            rowElement instanceof HTMLTableRowElement || !box
+              ? rowFraction(event.clientY, box)
+              : rowFraction(event.clientX, { top: box.left, height: box.width });
           const target = dropTargetFor(item);
           const zone = getManagerDropZone(
             target,

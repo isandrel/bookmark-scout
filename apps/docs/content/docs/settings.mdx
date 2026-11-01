@@ -37,7 +37,20 @@ Below them, **AI is optional** says that Bookmark Scout works without AI; **Set 
 | --- | --- | --- |
 | **Folder Matches** | On | While you search, list the folders whose names match above the results, to save the current page there |
 | **Maximum Folder Matches** | <SettingDefault path="search.folder_matches.max" /> | How many matching folders to list |
-| **Allow Typos** | On | A search word of 4 letters or more may match a folder name with one typo |
+| **Folder Name Weight** | <SettingDefault path="search.folder_matches.name_weight" /> | How much a word in the folder's own name counts |
+| **Parent Folders Weight** | <SettingDefault path="search.folder_matches.parent_weight" /> | How much a word in the names of the folders it is in counts, so "react hooks" finds Hooks inside React |
+| **Bookmarks Inside Weight** | <SettingDefault path="search.folder_matches.bookmark_weight" /> | How much a word in the titles and sites of the bookmarks in the folder counts. 0 searches folder names only |
+
+### Search Matching [#search-matching]
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| **Fuzzy Matching** | On | Words spelled a little differently match too, in the search box and in folder matches, so "rect" finds React. Folder matches are ranked by relevance (BM25), closer spellings first |
+| **One Edit From** | <SettingDefault path="search.search_matching.one_edit" /> | Shortest word, in letters, that may differ by one edit: a letter added, removed, or changed, or two swapped |
+| **Two Edits From** | <SettingDefault path="search.search_matching.two_edits" /> | Shortest word, in letters, that may differ by two edits |
+| **Match Word Starts** | On | A word you type also matches longer words it starts, so "rea" finds React while you type. A whole word still ranks higher |
+| **Term Saturation (BM25 k1)** | <SettingDefault path="search.search_matching.bm25_k1" /> | How much a word that appears again keeps adding to a result's score. Lower makes one mention count almost as much as many |
+| **Length Normalization (BM25 b)** | <SettingDefault path="search.search_matching.bm25_b" /> | How much shorter results are favored over longer ones with the same words: 0 not at all, 1 fully |
 
 ### Search [#searching]
 
@@ -85,6 +98,13 @@ Below them, **Keyboard shortcuts** shows the keys each shortcut has in your brow
 | **Recent Folders in Menu** | <SettingDefault path="search.context_menu.recent_max" /> | How many recent folders the menu lists, apart from the popup's **Recent Folders Max** |
 
 **Menu entries** chooses what the menu offers, in order: **Recent Folders** (a submenu) and **Bookmarks Bar**. Check an entry to show it and drag it by its handle (or use the handle's menu) to move it; **Restore defaults** shows both again in their first order.
+
+### Address Bar Search [#address-bar]
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| **Address Bar Search** | Off | Type <AddressBarKeyword /> and a space in the browser's address bar, then the words to find: the address bar lists the bookmarks they match, ranked as in the search box. **Enter** on a bookmark opens it, in this tab or, with the key your browser uses for that, in a new one; **Enter** on what you typed opens the bookmark manager with that search. While it is off, the keyword says so and **Enter** opens this setting. The search runs on your device and keeps nothing |
+| **Address Bar Results** | <SettingDefault path="search.address_bar.max_results" /> | How many bookmarks the address bar lists for a search |
 
 ### Settings Search [#settings-search]
 
@@ -200,6 +220,10 @@ Below the table, three lists arrange the popup and side panel. Check an item to 
 | **Card Size** | Medium | How wide each card of the cards view is at least: **Small**, **Medium**, or **Large**. A row fits as many cards as there is room for. Kept on this device only |
 | **Tags per Card** | <SettingDefault path="behavior.manager_cards.max_tags" /> | A card shows this many tags, then a **+N** chip for the rest. Kept on this device only |
 | **Summary Lines** | <SettingDefault path="behavior.manager_cards.summary_lines" /> | Lines of a bookmark's summary a card shows; screen readers still read all of it. Kept on this device only |
+| **Columns** | <SettingDefault path="behavior.manager_cards.columns" /> | How many cards a row holds. 0 fits as many as Card Size allows |
+| **Cover Shape** | Wide (1.91:1) | The shape of the cover at the top of each card |
+| **Cover Fit** | Fill | Whether a picture fills the cover, cropping what does not fit, or shows whole |
+| **Title Lines** | <SettingDefault path="behavior.manager_cards.title_lines" /> | Lines a card's title may take before it is cut |
 
 **Card details** chooses what each card shows under its title, in order: the cover, the URL, the folder path, the tags, and the summary (all but the folder path at first). A cover listed first stays above the title. A folder's card always says how many items it holds. Kept on this device only.
 
@@ -360,6 +384,7 @@ Under it, **Page text index** says how many pages are indexed, how many are out 
 | **Enable Fetch Covers** | Off | Show **Fetch Covers** in the Tools sidebar |
 | **Default Scope** | Current folder | Bookmarks the tool reads when it starts |
 | **Cover Source** | Page image first, then screenshot | Which cover a bookmark keeps when both the page's own image and a screenshot of the tab are possible. **Page image first, then screenshot**: Fetch Covers replaces a screenshot taken while browsing, and such a screenshot is only for bookmarks without the page's image. **Screenshot first**: a screenshot taken while browsing replaces the page's image. **Page image only**: no screenshots are taken while browsing. A cover you saved with **Use this view as the cover** is never replaced automatically; only another picture you save replaces it. **Screenshot only**: only screenshots; Fetch Covers reads no page and its review says so. |
+| **Review a Single Cover** | On | **Fetch cover** on one bookmark shows the cover in the review before saving it. Off saves the cover it finds at once; a page without a usable cover still opens the review, which says why |
 | **Capture Covers While Browsing** | Off | When a bookmarked page with no cover, or an old screenshot, finishes loading in the tab you are viewing, take a screenshot of the tab as its cover once the page has settled. Not in private windows unless you turn that on too, never of the extension's or the browser's own pages or local files. Turning it on asks for access to all pages. Kept on this device only. The next four settings show while it is on |
 | **Also Capture in Private Windows** | Off | Also take screenshots in private windows, only where your browser lets Bookmark Scout run there: **Allow in Incognito** in Chrome and Edge, **Run in Private Windows** in Firefox, on the extension's page of the browser's extension settings. Settings says so while the browser does not allow it. Kept on this device only |
 | **Wait Before Capturing** | <SettingDefault path="metadata_content.covers.browse_settle_ms" seconds /> s | How long a bookmarked page must stay in front after it loads before its screenshot is taken |

@@ -56,6 +56,9 @@ max_cache_mb = { default = 200, min = 10, max = 1000, step = 10, integer = true 
 # Cover Source: which kind of cover a bookmark keeps when both its page's own image and a picture of
 # the tab can be had; one of the choices in config/bookmarks/cover-preferences.toml
 source_preference = "page_first"
+# Review a Single Cover: Fetch Cover on one bookmark opens the review before saving. Off saves the
+# cover it found at once; a page without a usable cover still opens the review, which says why
+review_single = true
 # Capture Covers While Browsing: when a bookmarked page without a cover (or with an old one)
 # finishes loading in the active tab of the focused window, take a picture of the tab as its cover
 # (config/bookmarks/browse-covers.toml). Off until the user turns it on; it needs access to all
