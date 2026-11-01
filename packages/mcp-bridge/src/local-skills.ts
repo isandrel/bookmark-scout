@@ -7,7 +7,15 @@
  * Folders the user named and the skill folders in them may be links (skill installers link them);
  * inside a skill, links are not followed, so nothing outside the skill is read.
  */
-import { lstatSync, readdirSync, readFileSync, statSync } from "node:fs";
+import {
+  closeSync,
+  constants,
+  fstatSync,
+  openSync,
+  readdirSync,
+  readFileSync,
+  statSync,
+} from "node:fs";
 import { basename, extname, join, resolve } from "node:path";
 import { config } from "./config";
 import { type LocalSkill, PROTOCOL_VERSION, type SkillsReply } from "./protocol";
@@ -25,21 +33,50 @@ export function expandHome(folder: string, home: string): string {
 }
 
 const isDirectory = (path: string) => statSync(path, { throwIfNoEntry: false })?.isDirectory();
-const isSkill = (path: string) =>
-  statSync(join(path, SKILL_FILE), { throwIfNoEntry: false })?.isFile();
+const holdsSkill = (dir: string) => readdirSync(dir).includes(SKILL_FILE);
+
+/**
+ * A regular file's text, or "tooLarge" past `maxBytes`, or undefined for anything else. Checked and
+ * read through one open handle, so the file cannot change in between; `noFollow` refuses a link
+ * where the system can (not Windows, where the folder listing already left links out).
+ */
+function readTextFile(
+  path: string,
+  maxBytes: number,
+  noFollow: boolean,
+): { text: string } | "tooLarge" | undefined {
+  let fd: number;
+  try {
+    fd = openSync(path, constants.O_RDONLY | (noFollow ? (constants.O_NOFOLLOW ?? 0) : 0));
+  } catch {
+    return undefined;
+  }
+  try {
+    const stat = fstatSync(fd);
+    if (!stat.isFile()) return undefined;
+    if (stat.size > maxBytes) return "tooLarge";
+    return { text: readFileSync(fd, "utf8") };
+  } finally {
+    closeSync(fd);
+  }
+}
 
 /** A skill's files: SKILL.md, then the readable files below it in name order. */
-function readSkillFiles(dir: string, limits: Limits): LocalSkill["files"] | "tooLarge" {
-  if (statSync(join(dir, SKILL_FILE)).size > limits.max_file_bytes) return "tooLarge";
-  const files = [{ path: SKILL_FILE, content: readFileSync(join(dir, SKILL_FILE), "utf8") }];
+function readSkillFiles(dir: string, limits: Limits): LocalSkill["files"] | "tooLarge" | undefined {
+  const skillMd = readTextFile(join(dir, SKILL_FILE), limits.max_file_bytes, false);
+  if (skillMd === undefined || skillMd === "tooLarge") return skillMd;
+  const files = [{ path: SKILL_FILE, content: skillMd.text }];
   const walk = (folder: string, prefix: string, depth: number) => {
-    const entries = readdirSync(folder).sort();
-    for (const name of entries) {
+    const entries = readdirSync(folder, { withFileTypes: true }).sort((a, b) =>
+      a.name < b.name ? -1 : a.name > b.name ? 1 : 0,
+    );
+    for (const entry of entries) {
       if (files.length >= limits.max_files) return;
+      const { name } = entry;
       if (name.startsWith(".")) continue;
       const path = join(folder, name);
       const relative = prefix ? `${prefix}/${name}` : name;
-      const entry = lstatSync(path);
+      // The listing does not follow links, so a linked folder or file is left out.
       if (entry.isDirectory()) {
         if (depth < limits.max_depth && !limits.skip_folders.includes(name)) {
           walk(path, relative, depth + 1);
@@ -47,10 +84,10 @@ function readSkillFiles(dir: string, limits: Limits): LocalSkill["files"] | "too
       } else if (
         entry.isFile() &&
         relative !== SKILL_FILE &&
-        limits.file_extensions.includes(extname(name).toLowerCase()) &&
-        entry.size <= limits.max_file_bytes
+        limits.file_extensions.includes(extname(name).toLowerCase())
       ) {
-        files.push({ path: relative, content: readFileSync(path, "utf8") });
+        const content = readTextFile(path, limits.max_file_bytes, true);
+        if (typeof content === "object") files.push({ path: relative, content: content.text });
       }
     }
   };
@@ -60,12 +97,12 @@ function readSkillFiles(dir: string, limits: Limits): LocalSkill["files"] | "too
 
 /** The skill folders in a requested folder: itself, or its subfolders that hold a SKILL.md. */
 function skillFolders(path: string): string[] {
-  if (isSkill(path)) return [path];
+  if (holdsSkill(path)) return [path];
   return readdirSync(path)
     .filter((name) => !name.startsWith("."))
     .sort()
     .map((name) => join(path, name))
-    .filter((dir) => isDirectory(dir) && isSkill(dir));
+    .filter((dir) => isDirectory(dir) && holdsSkill(dir));
 }
 
 const replyBytes = (reply: SkillsReply) => Buffer.byteLength(JSON.stringify(reply));
@@ -106,6 +143,7 @@ export function readLocalSkills(
       try {
         const files = readSkillFiles(dir, limits);
         if (files === "tooLarge") leave({ folder, name, reason: "tooLarge" });
+        else if (files === undefined) leave({ folder, name, reason: "unreadable" });
         else skills.push({ name, folder, files });
       } catch {
         leave({ folder, name, reason: "unreadable" });
