@@ -34,7 +34,7 @@
   <img src="https://img.shields.io/badge/TailwindCSS-4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" alt="TailwindCSS">
   <img src="https://img.shields.io/badge/Zustand-5-764ABC?style=flat-square" alt="Zustand">
   <img src="https://img.shields.io/badge/shadcn%2Fui-000000?style=flat-square" alt="shadcn/ui">
-  <img src="https://img.shields.io/badge/Nx-23-143055?style=flat-square&logo=nx&logoColor=white" alt="Nx">
+  <img src="https://img.shields.io/badge/Nx-24-143055?style=flat-square&logo=nx&logoColor=white" alt="Nx">
   <img src="https://img.shields.io/badge/Bun-1-000000?style=flat-square&logo=bun&logoColor=white" alt="Bun">
   <img src="https://img.shields.io/badge/Biome-2-60A5FA?style=flat-square" alt="Biome">
 </p>
@@ -156,7 +156,7 @@
 | :---------------------------------------------------------------------------------------------: | :-----: | -------------------- |
 |  ![WXT](https://img.shields.io/badge/WXT-646CFF?style=for-the-badge&logo=vite&logoColor=white)  |  0.21   | Extension framework  |
 | ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white) |    8    | Build tool           |
-|    ![Nx](https://img.shields.io/badge/Nx-143055?style=for-the-badge&logo=nx&logoColor=white)    |   23    | Monorepo management  |
+|    ![Nx](https://img.shields.io/badge/Nx-143055?style=for-the-badge&logo=nx&logoColor=white)    |   24    | Monorepo management  |
 |  ![Bun](https://img.shields.io/badge/Bun-000000?style=for-the-badge&logo=bun&logoColor=white)   |   1   | JavaScript runtime   |
 |             ![Biome](https://img.shields.io/badge/Biome-60A5FA?style=for-the-badge)             |   2   | Linting & formatting |
 
