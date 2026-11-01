@@ -1,7 +1,13 @@
 import type { BrowserContext, Worker } from '@playwright/test';
 import { streamChunks, stubPlanningProvider } from './ai-helpers';
 import { expect, test, toastRegion } from './fixtures';
-import { readSettings, replaceSettings, seedAIServices } from './storage';
+import {
+  readSettings,
+  readStored,
+  replaceSettings,
+  STORAGE_ITEMS,
+  seedAIServices,
+} from './storage';
 
 const BASE_URL = 'https://ask.e2e.invalid/v1';
 
@@ -541,6 +547,17 @@ test('[mocked provider contract] Ask AI keeps its chats: reopens the last one, l
   await box.press('Enter');
   await expect(chat.getByTestId('ask-ai-tool')).toBeVisible();
   await expect(chat.getByTestId('ask-ai-message').last()).toHaveAttribute('data-role', 'assistant');
+  // The finished chat is written once the answer ends; reopening before that write lands (a
+  // navigation cancels it) found no chat on a loaded CI runner.
+  await expect
+    .poll(async () => {
+      const chats = await readStored<{ messages: unknown[] }[]>(
+        extensionWorker,
+        STORAGE_ITEMS.askAiChats,
+      );
+      return chats?.[0]?.messages.length ?? 0;
+    })
+    .toBeGreaterThanOrEqual(2);
 
   // Closing the popup ends nothing: Ask AI opens on the same chat.
   chat = await openAskAI();
