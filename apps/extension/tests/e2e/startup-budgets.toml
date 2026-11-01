@@ -169,7 +169,9 @@
 # settings schema, and History's backup restore records with their parts and Undo import (1565).
 # Raised from 1575 on 2026-10-22 for for the backup parts and their review on top of the 0.3.5
 # review fixes (feat/backup-categories rebased on 430c4163) (1,576).
-"bookmarks.html" = 1585
+# Raised from 1585 on 2026-10-29 for the manager's Settings gear and the toolbar's Settings button
+# (1,586).
+"bookmarks.html" = 1595
 # The quick save notification, injected into web pages (10 on 2026-10-10); no framework, keep it small.
 "quick-save-toast.js" = 14
 # The window where the user approves changes local AI agents ask for (615 on 2026-10-11).

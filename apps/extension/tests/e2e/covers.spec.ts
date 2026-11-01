@@ -181,7 +181,8 @@ test.describe('with website access granted', () => {
       .getByRole('button', { name: 'Fetch', exact: true })
       .click();
     const review = page.getByRole('dialog', { name: 'Fetch Covers' });
-    await expect(review.getByRole('radio', { name: 'Cover found (1)' })).toBeVisible();
+    // One bookmark: the review shows its row alone, without category tabs.
+    await expect(review.getByTestId('cover-item')).toHaveCount(1);
     // The found image is drawn from the bytes the run keeps.
     await expect(review.getByTestId('cover-review-image')).toHaveAttribute('src', /^blob:/);
 
@@ -375,6 +376,10 @@ test.describe('Fetch cover from a card', () => {
     const review = page.getByRole('dialog', { name: 'Fetch Covers' });
     await expect(review.getByTestId('cover-item')).toHaveCount(1);
     await expect(review.getByTestId('cover-item')).toContainText('Chosen story');
+    // One item: its own action is the review; no checkbox, tabs, or "Set selected to…".
+    await expect(review.getByRole('checkbox')).toHaveCount(0);
+    await expect(review.getByRole('radio')).toHaveCount(0);
+    await expect(review.locator('[data-slot="review-batch"]')).toBeHidden();
     await review.getByRole('button', { name: 'Save 1 cover' }).click();
     await expect(review).toHaveCount(0);
 
@@ -388,6 +393,19 @@ test.describe('Fetch cover from a card', () => {
       seeded.ids['Chosen story'],
     ]);
     expect(new Set(requested)).toEqual(new Set(['chosen.e2e.invalid']));
+
+    // With Review a Single Cover off, the cover it finds is saved without the review.
+    await setSettings(extensionWorker, { coversReviewSingle: false });
+    await card('Other story').click({ button: 'right' });
+    await page.getByRole('menuitem', { name: 'Fetch cover' }).click();
+    await expect(card('Other story').getByTestId('bookmark-cover')).toHaveAttribute(
+      'src',
+      /^blob:/,
+    );
+    await expect(review).toHaveCount(0);
+    expect((await readCoverInfos(extensionWorker)).map((info) => info.bookmarkId).sort()).toEqual(
+      [seeded.ids['Chosen story'], seeded.ids['Other story']].sort(),
+    );
   });
 });
 

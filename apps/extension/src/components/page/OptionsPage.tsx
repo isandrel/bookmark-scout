@@ -74,6 +74,12 @@ const OptionsPage: React.FC = () => {
   const aiServiceSetUp = useAIServiceSetUp();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [activeTab, setActiveTab] = useState(initialCategory);
+  // A tab opens at its start. Keeping the scroll of the tab left behind put a long tab midway and
+  // a short one (Security) at the top, depending only on how tall each was.
+  const openTab = (tab: string) => {
+    setActiveTab(tab);
+    window.scrollTo({ top: 0 });
+  };
   const [searchQuery, setSearchQuery] = useState('');
   const [values, setValues] = useState<Settings>(settings);
   const [saveErrors, setSaveErrors] = useState<SettingsFieldErrors>({});
@@ -452,7 +458,7 @@ const OptionsPage: React.FC = () => {
             description={t('essentials_aiDescription')}
             actionsLayout="wrap"
             actions={
-              <Button type="button" variant="outline" size="sm" onClick={() => setActiveTab('ai')}>
+              <Button type="button" variant="outline" size="sm" onClick={() => openTab('ai')}>
                 <Sparkles className="mr-2 h-4 w-4 text-ai" />
                 {t('essentials_aiOpen')}
               </Button>
@@ -642,14 +648,18 @@ const OptionsPage: React.FC = () => {
           orientation="vertical"
           value={activeTab}
           onValueChange={(tab) => {
-            setActiveTab(tab);
             // During a search, a tab with matches jumps to them and keeps the search; a tab
             // without any leaves the search and opens the tab.
             const results = searchResults
               ? document.querySelector(`[data-search-category="${tab}"]`)
               : null;
-            if (results) results.scrollIntoView({ block: 'start' });
-            else setSearchQuery('');
+            if (results) {
+              setActiveTab(tab);
+              results.scrollIntoView({ block: 'start' });
+            } else {
+              setSearchQuery('');
+              openTab(tab);
+            }
           }}
           className="flex flex-col gap-6 sm:flex-row sm:items-start"
         >
