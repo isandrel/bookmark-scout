@@ -1,0 +1,15 @@
+# The Manifest version each browser build targets, one entry per browser in `[browsers] supported`
+# of config/project.toml. Read by build/browser-targets.ts for wxt.config.ts (`manifestVersion`),
+# the build folder names (`<browser>-mv<version>`, such as dist/firefox-mv3), and the distribution
+# size check, which confirms each built manifest says the same.
+#
+# Every browser targets Manifest V3: Chrome and Edge accept no other, and Firefox, whose WXT default
+# is still V2, supports it from version 109 (host permissions shown and granted at install from
+# 127), below `gecko.strict_min_version`. Mozilla's Extension Workshop treats V3 as the target, and
+# V3 brings the non-persistent background (an event page in Firefox) and no `browser_style`.
+# WXT takes one version per build run, so the entries must agree until a browser needs another.
+
+[manifest_version]
+chrome = 3
+firefox = 3
+edge = 3

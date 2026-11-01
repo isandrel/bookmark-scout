@@ -40,7 +40,7 @@ bun run build
 | --- | --- |
 | Chrome | `apps/extension/dist/chrome-mv3` |
 | Edge | `apps/extension/dist/edge-mv3` |
-| Firefox | `apps/extension/dist/firefox-mv2` |
+| Firefox | `apps/extension/dist/firefox-mv3` |
 
 按照与[安装](/installation)中加载下载版本相同的方式，将对应浏览器的文件夹作为未打包的扩展程序加载：在 Chrome 中使用**加载已解压的扩展程序**，在 Edge 中使用**加载解压缩的扩展**，在 Firefox 中使用**临时载入附加组件**并选择该文件夹中的 `manifest.json`。如需只构建一个浏览器版本，请运行 `bunx nx run extension:build:chrome`、`extension:build:edge` 或 `extension:build:firefox`。
 

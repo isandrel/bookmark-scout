@@ -117,7 +117,7 @@ bun run build:edge
 
 1. 前往 `about:debugging#/runtime/this-firefox`
 2. 按一下「載入暫用附加元件」
-3. 選取 `apps/extension/dist/firefox-mv2` 中的 `manifest.json` 檔案
+3. 選取 `apps/extension/dist/firefox-mv3` 中的 `manifest.json` 檔案
 
 ## 🔄 Pull Request 流程
 

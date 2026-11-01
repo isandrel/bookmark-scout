@@ -6,24 +6,41 @@
 # CI after each merge. Pass PR numbers an agent owns to skip them.
 set -u
 skip=$(printf '%s\n' "$@" | jq -R 'select(length>0)|tonumber' | jq -s .)
+# PRs set aside for a failing check. Each comes back once its checks stop failing (a fix pushed,
+# or a rerun passed), so the queue never needs a restart after a fix.
+held='[]'
 current=""
+
+# How many of a PR's checks failed. Only `fail` counts: a run cancelled because the branch was
+# updated (`cancel`) is replaced by the new run, and counting it once stalled a green PR.
+failing() {
+  gh pr checks "$1" --json bucket --jq '[.[] | select(.bucket == "fail")] | length' 2>/dev/null || echo 0
+}
+
 for round in $(seq 1 60); do
-  open=$(gh pr list --state open --json number,mergeStateStatus,autoMergeRequest \
+  all=$(gh pr list --state open --json number,mergeStateStatus,autoMergeRequest \
     | jq --argjson skip "$skip" '[.[] | select(.autoMergeRequest != null) | select(.number as $n | $skip | index($n) | not)]')
-  if [[ $(echo "$open" | jq length) == 0 ]]; then
+  for n in $(echo "$held" | jq -r '.[]'); do
+    if ! echo "$all" | jq -e --argjson n "$n" 'any(.[]; .number == $n)' >/dev/null || [[ $(failing "$n") == 0 ]]; then
+      held=$(echo "$held" | jq --argjson n "$n" 'map(select(. != $n))')
+      echo "$(date +%H:%M) #$n back in the queue"
+    fi
+  done
+  open=$(echo "$all" | jq --argjson held "$held" '[.[] | select(.number as $n | $held | index($n) | not)]')
+  if [[ $(echo "$all" | jq length) == 0 ]]; then
     echo "queue empty"
     break
   fi
-  if [[ -n "$current" ]] && ! echo "$open" | jq -e --argjson n "$current" 'any(.[]; .number == $n)' >/dev/null; then
+  if [[ -n "$current" ]] && ! echo "$all" | jq -e --argjson n "$current" 'any(.[]; .number == $n)' >/dev/null; then
     echo "$(date +%H:%M) #$current left the queue (merged or closed)"
     current=""
   fi
   if [[ -n "$current" ]]; then
-    gh pr checks "$current" >/dev/null 2>&1
-    if [[ $? == 1 ]]; then
-      # A failing check would hold the queue forever: leave the PR for a fix and move on.
-      echo "$(date +%H:%M) #$current has a failing check; fix it, then run this again"
-      skip=$(echo "$skip" | jq --argjson n "$current" '. + [$n]')
+    if [[ $(failing "$current") != 0 ]]; then
+      # A failing check would hold the queue forever: set the PR aside until its checks pass.
+      echo "$(date +%H:%M) #$current has a failing check; held until it passes"
+      held=$(echo "$held" | jq --argjson n "$current" '. + [$n]')
+      open=$(echo "$open" | jq --argjson n "$current" 'map(select(.number != $n))')
       current=""
     elif [[ $(echo "$open" | jq -r --argjson n "$current" '.[] | select(.number == $n) | .mergeStateStatus') == "BEHIND" ]]; then
       gh pr update-branch "$current" >/dev/null 2>&1 && echo "$(date +%H:%M) updated #$current again"
@@ -37,6 +54,6 @@ for round in $(seq 1 60); do
       [[ -n "$current" ]] && gh pr update-branch "$current" >/dev/null 2>&1 && echo "$(date +%H:%M) updated #$current"
     fi
   fi
-  echo "$(date +%H:%M) next: #${current:-none} $(echo "$open" | jq -c '[.[] | "\(.number):\(.mergeStateStatus)"]')"
+  echo "$(date +%H:%M) next: #${current:-none} held: $(echo "$held" | jq -c .) $(echo "$open" | jq -c '[.[] | "\(.number):\(.mergeStateStatus)"]')"
   sleep 180
 done

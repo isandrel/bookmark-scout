@@ -117,7 +117,7 @@ bun run build:edge
 
 1. Откройте `about:debugging#/runtime/this-firefox`
 2. Нажмите «Загрузить временное дополнение»
-3. Выберите файл `manifest.json` в `apps/extension/dist/firefox-mv2`
+3. Выберите файл `manifest.json` в `apps/extension/dist/firefox-mv3`
 
 ## 🔄 Процесс pull request
 

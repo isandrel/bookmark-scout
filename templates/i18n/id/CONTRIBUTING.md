@@ -105,7 +105,7 @@ bun run build:edge
 
 1. Buka `about:debugging#/runtime/this-firefox`
 2. Klik "Muat Pengaya Sementara"
-3. Pilih file `manifest.json` di `apps/extension/dist/firefox-mv2`
+3. Pilih file `manifest.json` di `apps/extension/dist/firefox-mv3`
 
 ## 🔄 Proses pull request
 
