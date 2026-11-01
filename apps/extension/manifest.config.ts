@@ -19,16 +19,15 @@ import type { SupportedBrowser } from './src/lib/supported-browsers';
 export const FIREFOX_ADDON_ID = 'bookmark-scout@isandrel.github.io';
 
 /**
+ * Desktop only: there is no `gecko_android` key. Firefox for Android has no bookmarks API, and
+ * AMO marks an add-on whose manifest has `gecko_android` as compatible with Android and locks that
+ * setting (Extension Workshop, "Firefox version compatibility"). addons-linter's
+ * KEY_FIREFOX_ANDROID_UNSUPPORTED_BY_MIN_VERSION warning about Android 142 follows from this.
+ *
  * Firefox 140 (also an ESR) is the first desktop release with built-in data collection consent
  * (`data_collection_permissions`). Every other key and API the build uses is older.
  */
 export const FIREFOX_STRICT_MIN_VERSION = '140.0';
-
-/**
- * Firefox for Android added the same key in 142. Android is not a supported platform (no bookmarks
- * API there, and the AMO listing is desktop only); this only keeps the declaration valid.
- */
-export const FIREFOX_ANDROID_STRICT_MIN_VERSION = '142.0';
 
 /**
  * Nothing at install and nothing to the developer. When the user turns on an AI feature, Firefox
@@ -90,7 +89,6 @@ export function createManifest({ browser }: Pick<ConfigEnv, 'browser'>): UserMan
               strict_min_version: FIREFOX_STRICT_MIN_VERSION,
               data_collection_permissions: FIREFOX_DATA_COLLECTION_PERMISSIONS,
             },
-            gecko_android: { strict_min_version: FIREFOX_ANDROID_STRICT_MIN_VERSION },
           },
         }
       : {}),
