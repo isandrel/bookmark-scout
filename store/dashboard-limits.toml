@@ -1,7 +1,8 @@
 # Character limits of the store dashboard fields that are pasted from this folder by hand.
 # scripts/store-field-limits.test.ts checks every block against them, so a justification that
 # outgrows its field fails before it reaches the dashboard. Measured in the Chrome Web Store
-# Developer Dashboard on 2026-10-29 (its counters read "of 1000 characters entered").
+# Developer Dashboard on 2026-10-29 (its counters read "of 1000 characters entered"); the Firefox
+# Add-ons limits come from Extension Workshop.
 
 [chrome_web_store]
 # Privacy tab: "Single purpose description" and each "<permission> justification" field.
@@ -9,3 +10,8 @@ single_purpose = 1000
 permission_justification = 1000
 # Test instructions tab: "Additional instructions".
 test_instructions = 500
+
+[firefox_add_ons]
+# Describe Add-on page: "Summary", one per listing language ("### Firefox Add-ons summary" in each
+# store/listings/<locale>.md); Extension Workshop's "Create an appealing listing" gives 250.
+summary = 250
