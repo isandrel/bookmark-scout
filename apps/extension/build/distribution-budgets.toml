@@ -12,25 +12,26 @@
 # the same way after a change that removes a lot. Earlier limits and their reasons are in this
 # file's git history.
 #
-# Measured 2026-11-01 on main c4c8a1f7 (Bun 1.4.4, WXT 0.21.5), Chrome / Edge / Firefox: ZIP
-# 2,246,684 / 2,246,683 / 2,246,725 B; uncompressed 7,608,827 / 7,608,823 / 7,609,088 B. Largest
-# per category: javascript 4,192,740, css 92,550, fonts 138,180, locales 2,844,568, images
-# 309,981, other 31,069 (Firefox) B.
+# Measured 2026-11-01 with Ask AI on Pi Durable (Bun 1.4.4, WXT 0.21.5), Chrome: ZIP 2,390,945 B;
+# uncompressed 8,091,336 B; javascript 4,672,709, css 92,550, fonts 138,180, locales 2,846,779,
+# images 309,981, other 31,137 B (Edge and Firefox were within a few hundred bytes before; Pi
+# Durable is the same code in all three). The ZIP, uncompressed, and javascript limits were reset
+# for it; the others are unchanged.
 
 [targets.chrome]
-zip_bytes = 2_475_000
-raw_bytes = 8_375_000
+zip_bytes = 2_630_000
+raw_bytes = 8_900_000
 
 [targets.edge]
-zip_bytes = 2_475_000
-raw_bytes = 8_375_000
+zip_bytes = 2_630_000
+raw_bytes = 8_900_000
 
 [targets.firefox]
-zip_bytes = 2_475_000
-raw_bytes = 8_375_000
+zip_bytes = 2_630_000
+raw_bytes = 8_900_000
 
 [categories]
-javascript = 4_615_000
+javascript = 5_140_000
 css = 102_000
 fonts = 152_000
 locales = 3_130_000
