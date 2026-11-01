@@ -40,6 +40,11 @@ const COVER_SOURCE_KINDS = {
   unknown: 'page',
 } as const satisfies Record<StoredCoverSource, CoverKind>;
 
+/** Which kind of cover a stored one is: the page's own image or a picture of the tab. */
+export function coverKind(source: StoredCoverSource): CoverKind {
+  return COVER_SOURCE_KINDS[source];
+}
+
 const coverPreferenceConfig = readConfig(
   'bookmarks/cover-preferences',
   z.strictObject({

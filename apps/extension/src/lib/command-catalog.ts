@@ -28,18 +28,42 @@ import type { SupportedBrowser } from './supported-browsers';
 
 export type QuickSaveMode = 'local' | 'ai';
 
+/** What a command does: save the current page (with a quick save mode), or open a page. */
+type CommandSpec =
+  | { run: 'quickSave'; mode: QuickSaveMode; descriptionKey: string }
+  | { run: 'openManager'; descriptionKey: string };
+
 export const EXTENSION_COMMANDS = {
   'quick-save': {
+    run: 'quickSave',
     mode: 'local',
     descriptionKey: 'command_quickSave',
   },
   'ai-quick-save': {
+    run: 'quickSave',
     mode: 'ai',
     descriptionKey: 'command_aiQuickSave',
   },
-} as const satisfies Record<string, { mode: QuickSaveMode; descriptionKey: string }>;
+  // Opens the bookmark manager in a tab: the way in where the browser's own bookmarks page cannot
+  // be replaced (Firefox), and a shortcut to it everywhere.
+  'open-manager': {
+    run: 'openManager',
+    descriptionKey: 'command_openManager',
+  },
+} as const satisfies Record<string, CommandSpec>;
 
 export type ExtensionCommand = keyof typeof EXTENSION_COMMANDS;
+
+/** The commands that quick save the current page. */
+export type QuickSaveCommand = {
+  [Name in ExtensionCommand]: (typeof EXTENSION_COMMANDS)[Name] extends { run: 'quickSave' }
+    ? Name
+    : never;
+}[ExtensionCommand];
+
+export function isQuickSaveCommand(name: string): name is QuickSaveCommand {
+  return isExtensionCommand(name) && EXTENSION_COMMANDS[name].run === 'quickSave';
+}
 
 /** The browser's keys (`[browser]` in shortcuts.toml) the extension acts on. */
 export type BrowserKeyName = 'bookmarkPage' | 'bookmarkAllTabs';
@@ -69,22 +93,39 @@ export const BROWSER_KEPT_KEY_NAMES: Readonly<
   firefox: ['bookmarkPage', 'bookmarkAllTabs'],
 };
 
+/**
+ * The browser's own commands that open the extension's UI, by the browsers that have them,
+ * declared with no keys: the user gives them one on the browser's shortcut page. Mozilla's
+ * accessibility guide asks for a shortcut to the toolbar button and to the sidebar; the browser
+ * names these commands itself, so they take no description.
+ */
+export const BROWSER_UI_COMMANDS = {
+  _execute_action: ['chrome', 'edge', 'firefox'],
+  _execute_sidebar_action: ['firefox'],
+} as const satisfies Record<string, readonly SupportedBrowser[]>;
+
 export function isExtensionCommand(name: string): name is ExtensionCommand {
   return Object.hasOwn(EXTENSION_COMMANDS, name);
 }
 
-/** The manifest's `commands`, with the suggested keys from config and localized descriptions. */
+/**
+ * The manifest's `commands` for `browser`: the extension's own, with the suggested keys from
+ * config and localized descriptions, then the browser's UI commands it has, with no keys.
+ */
 export function getManifestCommands(
   suggestedKeys: Readonly<Record<string, string>>,
-): Record<string, { suggested_key: { default: string }; description: string }> {
-  return Object.fromEntries(
-    Object.entries(EXTENSION_COMMANDS).map(([name, command]) => {
-      const key = suggestedKeys[name];
-      if (!key) throw new Error(`config/ui/shortcuts.toml [commands] has no keys for "${name}"`);
-      return [
-        name,
-        { suggested_key: { default: key }, description: `__MSG_${command.descriptionKey}__` },
-      ];
-    }),
-  );
+  browser: SupportedBrowser,
+): Record<string, { suggested_key?: { default: string }; description?: string }> {
+  const own = Object.entries(EXTENSION_COMMANDS).map(([name, command]) => {
+    const key = suggestedKeys[name];
+    if (!key) throw new Error(`config/ui/shortcuts.toml [commands] has no keys for "${name}"`);
+    return [
+      name,
+      { suggested_key: { default: key }, description: `__MSG_${command.descriptionKey}__` },
+    ] as const;
+  });
+  const browserUi = Object.entries(BROWSER_UI_COMMANDS)
+    .filter(([, browsers]) => (browsers as readonly SupportedBrowser[]).includes(browser))
+    .map(([name]) => [name, {}] as const);
+  return Object.fromEntries([...own, ...browserUi]);
 }

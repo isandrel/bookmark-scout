@@ -6485,6 +6485,10 @@
         "message": "用 AI 快速保存当前页面",
         "description": "Keyboard shortcut name in the browser's shortcut settings"
     },
+    "command_openManager": {
+        "message": "打开书签管理器",
+        "description": "Keyboard shortcut name in the browser's shortcut settings"
+    },
     "quickSave_aiSaving": {
         "message": "AI 正在选择文件夹...",
         "description": "Quick save notification while the AI chooses a folder"
@@ -7680,6 +7684,10 @@
     "agentBridge_retry": {
         "message": "重试",
         "description": "Button: try to start the bridge program again now"
+    },
+    "agentApproval_waitingTitle": {
+        "message": "等待你批准的本地 AI 代理更改：$1 项",
+        "description": "Toolbar button title while local AI agent changes wait for approval; $1 is how many (the badge shows the same number)"
     },
     "agentApproval_title": {
         "message": "批准更改",
@@ -9698,6 +9706,26 @@
     "covers_storeLoading": {
         "message": "正在统计封面…",
         "description": "Settings: shown while the stored covers are counted"
+    },
+    "covers_choose": {
+        "message": "选择封面…",
+        "description": "Options > Page Details > Bookmark covers: button that opens the list of stored covers to choose from"
+    },
+    "covers_chooseDesc": {
+        "message": "逐个或批量选择要删除的封面。书签和标签保持不变，撤消可放回封面。",
+        "description": "Under the title of the Choose covers dialog"
+    },
+    "covers_kindPage": {
+        "message": "网页图片",
+        "description": "Choose covers tab: covers that are the page's own preview image"
+    },
+    "covers_kindScreenshot": {
+        "message": "标签页截图",
+        "description": "Choose covers tab: covers that are a picture of the tab"
+    },
+    "covers_deleteCount": {
+        "message": "删除 $1 个封面",
+        "description": "Choose covers dialog button; $1 is how many covers are set to Delete"
     },
     "covers_clear": {
         "message": "删除封面",

@@ -6465,6 +6465,10 @@
         "message": "Simpan cepat halaman ini dengan AI",
         "description": "Keyboard shortcut name in the browser's shortcut settings"
     },
+    "command_openManager": {
+        "message": "Buka pengelola bookmark",
+        "description": "Keyboard shortcut name in the browser's shortcut settings"
+    },
     "quickSave_aiSaving": {
         "message": "Memilih folder dengan AI...",
         "description": "Quick save notification while the AI chooses a folder"
@@ -7660,6 +7664,10 @@
     "agentBridge_retry": {
         "message": "Coba lagi",
         "description": "Button: try to start the bridge program again now"
+    },
+    "agentApproval_waitingTitle": {
+        "message": "Perubahan dari agen AI lokal yang menunggu persetujuan Anda: $1",
+        "description": "Toolbar button title while local AI agent changes wait for approval; $1 is how many (the badge shows the same number)"
     },
     "agentApproval_title": {
         "message": "Setujui perubahan",
@@ -9670,6 +9678,26 @@
     "covers_storeLoading": {
         "message": "Menghitung sampul…",
         "description": "Settings: shown while the stored covers are counted"
+    },
+    "covers_choose": {
+        "message": "Pilih sampul…",
+        "description": "Options > Page Details > Bookmark covers: button that opens the list of stored covers to choose from"
+    },
+    "covers_chooseDesc": {
+        "message": "Tandai sampul yang akan dihapus, satu per satu atau beberapa sekaligus. Bookmark dan tagnya tetap sama, dan Urungkan mengembalikan sampulnya.",
+        "description": "Under the title of the Choose covers dialog"
+    },
+    "covers_kindPage": {
+        "message": "Gambar halaman",
+        "description": "Choose covers tab: covers that are the page's own preview image"
+    },
+    "covers_kindScreenshot": {
+        "message": "Gambar tab",
+        "description": "Choose covers tab: covers that are a picture of the tab"
+    },
+    "covers_deleteCount": {
+        "message": "Hapus $1 sampul",
+        "description": "Choose covers dialog button; $1 is how many covers are set to Delete"
     },
     "covers_clear": {
         "message": "Hapus sampul",

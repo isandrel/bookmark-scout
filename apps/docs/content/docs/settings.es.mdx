@@ -154,7 +154,7 @@ Debajo, **Atajos de teclado** muestra las teclas que tiene cada atajo en tu nave
 Debajo de la tabla, tres listas organizan la ventana emergente y el panel lateral. Marca un elemento para mostrarlo y arrástralo por su asa para moverlo; el asa también es un botón cuyo menú mueve el elemento al principio, arriba, abajo o al final. **Restablecer valores predeterminados** devuelve el orden habitual de cada lista. Las listas solo se guardan en este dispositivo.
 
 - **Partes de la ventana emergente**: lo que aparece bajo el cuadro de búsqueda, de arriba abajo: la página actual, las tareas en segundo plano, el último guardado rápido, las carpetas recientes, las sugerencias de carpeta con IA, las coincidencias de carpetas, los marcadores, los avisos y los atajos de teclado. Los marcadores siempre se muestran; mueve las partes encima o debajo de ellos.
-- **Botones de la barra**: los botones junto al cuadro de búsqueda: **Desplegar todo** (mientras buscas), el administrador de marcadores, el tema y los botones de IA (cuando la IA está configurada).
+- **Botones de la barra**: los botones junto al cuadro de búsqueda: **Desplegar todo** (mientras buscas), el administrador de marcadores, el tema, los botones de IA (cuando la IA está configurada) y la configuración (desactivado hasta que lo actives).
 - **Contenido de la tarjeta de detalles**: lo que muestra la tarjeta, en orden: título, dirección, portada, etiquetas, resumen, carpeta y fecha de creación. Mientras el título, la dirección y la portada van primero, comparten la fila superior de la tarjeta.
 
 ### Notificaciones [#notifications]
@@ -316,7 +316,6 @@ Cada herramienta tiene un interruptor **Activar** (activado de forma predetermin
 
 | Herramienta | Ajustes y valores predeterminados |
 | --- | --- |
-| **Empaquetador de contexto para IA** | **Formato de salida** Markdown; **Incluir rutas de carpeta**, **Incluir fechas**, **Incluir etiquetas guardadas** e **Incluir resúmenes guardados** activados; **Máximo de elementos** <SettingDefault path="ai_tools.context_packer.max_items" />; **Profundidad máxima** <SettingDefault path="ai_tools.context_packer.max_depth" />; **Longitud del extracto** <SettingDefault path="ai_tools.context_packer.excerpt_length" /> |
 | **Etiquetado automático** | **Mínimo de etiquetas** <SettingDefault path="ai_tools.auto_tagging.min_tags" />; **Máximo de etiquetas** <SettingDefault path="ai_tools.auto_tagging.max_tags" />; **Estilo de etiquetas** kebab-case; **Modo de combinación** Añadir; **Quitar etiquetas duplicadas** activado; **Enviar etiquetas existentes** activado |
 | **Generador de resúmenes** | **Longitud del resumen** <SettingDefault path="ai_tools.summarizer.summary_length" />; **Incluir el dominio como pista** activado; **Modo de combinación** Reemplazar |
 | **Reorganización de carpetas con IA** | **Confianza mínima** 55 % (los movimientos por debajo se descartan); **Tamaño del lote** <SettingDefault path="ai_tools.reorganization.batch_size" /> marcadores por solicitud |
@@ -396,7 +395,7 @@ Debajo, **Índice de texto de páginas** indica cuántas páginas hay indexadas,
 | **Tamaño máximo de imagen** | <SettingDefault path="metadata_content.covers.max_image_kb" /> KB | No se descargan archivos de imagen más grandes |
 | **Almacenamiento de portadas** | <SettingDefault path="metadata_content.covers.max_cache_mb" /> MB | Espacio que pueden ocupar las portadas en este dispositivo; las más antiguas se quitan primero. Solo en este dispositivo. Las elegidas con **Usar esta vista como portada** se quitan al final |
 
-Debajo, **Portadas de marcadores** indica cuántas portadas hay y cuánto ocupan, y **Eliminar portadas** las elimina todas sin tocar marcadores, etiquetas ni el historial.
+Debajo, **Portadas de marcadores** indica cuántas portadas hay y cuánto ocupan, y **Eliminar portadas** las elimina todas sin tocar marcadores, etiquetas ni el historial. **Elegir portadas…** las muestra con una miniatura, por tipo (**Imagen de la página** o **Captura de la pestaña**): marca las que quieras borrar como **Eliminar**, una a una o con **Aplicar a la selección…**, y luego bórralas; **Deshacer** las devuelve.
 
 ## Seguridad [#security]
 
@@ -429,6 +428,10 @@ Debajo, **Portadas de marcadores** indica cuántas portadas hay y cuánto ocupan
 | **Partes de las copias nuevas** | Todo menos los ajustes de este equipo y las claves de los servicios de IA | Las partes que **Hacer copia de los ajustes** tiene seleccionadas al empezar; cada copia que guardas en este equipo pasa a ser la nueva selección. Las claves de los servicios de IA nunca están seleccionadas al principio |
 | **Proteger las copias nuevas con contraseña** | Desactivado | Si **Proteger esta copia con una contraseña** empieza marcado |
 | **Proteger las claves de API con contraseña** | Activado | Si una copia con las claves de los servicios de IA empieza con ellas protegidas por contraseña; desactivarlo en el cuadro de diálogo pide confirmación |
+
+| Herramienta | Ajustes y valores predeterminados |
+| --- | --- |
+| **Empaquetador de contexto para IA** | **Formato de salida** Markdown; **Incluir rutas de carpeta**, **Incluir fechas**, **Incluir etiquetas guardadas** e **Incluir resúmenes guardados** activados; **Máximo de elementos** <SettingDefault path="data.context_packer.max_items" />; **Profundidad máxima** <SettingDefault path="data.context_packer.max_depth" />; **Longitud del extracto** <SettingDefault path="data.context_packer.excerpt_length" /> |
 
 Consulta [Importar y exportar](/guides/import-export).
 

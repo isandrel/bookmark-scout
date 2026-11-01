@@ -322,11 +322,15 @@ test.describe('quick save where the page cannot show it', () => {
       folderId: reading.folderId,
     });
     expect(await readToast(page)).toBeNull();
-    const badge = await extensionWorker.evaluate(async () => {
+    const toolbar = await extensionWorker.evaluate(async () => {
       const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
-      return chrome.action.getBadgeText({ tabId: tab.id });
+      return {
+        badge: await chrome.action.getBadgeText({ tabId: tab.id }),
+        title: await chrome.action.getTitle({ tabId: tab.id }),
+      };
     });
-    expect(badge).toBe('✓');
+    // The button's title says what the badge means, for screen readers and on hover.
+    expect(toolbar).toEqual({ badge: '✓', title: 'Saved to Reading - Bookmark Scout' });
 
     const popup = await context.newPage();
     await openPopup(popup, extensionId);

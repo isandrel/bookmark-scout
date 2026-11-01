@@ -58,10 +58,10 @@ describe('popup sections', () => {
 });
 
 describe('popup toolbar buttons', () => {
-  it('default to today’s buttons in today’s order', () => {
-    expect(getPopupToolbarButtons(defaultSettings.popupToolbarButtons)).toEqual([
-      ...POPUP_TOOLBAR_BUTTONS,
-    ]);
+  it('default to today’s buttons in today’s order, the Settings button hidden', () => {
+    expect(getPopupToolbarButtons(defaultSettings.popupToolbarButtons)).toEqual(
+      POPUP_TOOLBAR_BUTTONS.filter((id) => id !== 'openSettings'),
+    );
   });
 
   it('hide the buttons the setting leaves out, the theme button included', () => {

@@ -81,6 +81,7 @@ toolbar_buttons = { default = [
   "expandAll",
   "openManager",
   "theme",
+  "!openSettings",
   "aiRecommend",
   "askAI",
   "serviceSwitcher",
