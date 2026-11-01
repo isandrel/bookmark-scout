@@ -359,19 +359,23 @@
 # top of the BM25 search ranking: feat/omnibox-search measured 4,123,970 B of JavaScript (Firefox)
 # and 2,828,519 B of locales, and uncompressed 7,522,851 / 7,522,847 / 7,523,034 B (Chrome / Edge /
 # Firefox).
+# Raised on 2026-10-31 (uncompressed 7,530,000 to 7,545,000, locales 2,835,000 to 2,845,000) for
+# Ask AI's kept chats (the past chats menu and its settings, with their copy in 12 languages):
+# feat/ask-ai-chat-history measured uncompressed 7,535,184 / 7,535,180 / 7,535,367 B (Chrome /
+# Edge / Firefox) and 2,837,083 B of locales.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
 zip_bytes = 2_225_000
-raw_bytes = 7_530_000
+raw_bytes = 7_545_000
 
 [targets.edge]
 zip_bytes = 2_225_000
-raw_bytes = 7_530_000
+raw_bytes = 7_545_000
 
 [targets.firefox]
 zip_bytes = 2_225_000
-raw_bytes = 7_530_000
+raw_bytes = 7_545_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
@@ -380,6 +384,6 @@ raw_bytes = 7_530_000
 javascript = 4_130_000
 css = 92_750
 fonts = 143_000
-locales = 2_835_000
+locales = 2_845_000
 images = 320_000
 other = 30_000
