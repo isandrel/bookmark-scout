@@ -108,6 +108,7 @@ describe('settings config layout', () => {
     shownIn.set('askAiWebSearch', 'ai.ask_ai');
     // Edited in their own Options panels.
     shownIn.set('askAiDisabledActions', 'ai.ask_ai');
+    shownIn.set('askAiDisabledSkills', 'ai.ask_ai');
     shownIn.set('agentBridgeDisabledActions', 'developers.agent_bridge');
     shownIn.set('managerMenuActions', 'behavior.manager_menus');
     shownIn.set('managerOrganizeMenu', 'behavior.manager_menus');

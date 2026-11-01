@@ -137,6 +137,11 @@ export const STORAGE_ITEMS = {
    * `INDEXED_DATABASES.askAiChat`); never synced or backed up, cleared with Keep Chats off.
    */
   askAiChats: { area: 'local', name: 'ai.chats', v: 2, backup: 'exclude' },
+  /**
+   * Local: the user's own Ask AI skills (`lib/ask-ai-skill-library.ts`), whose text may hold
+   * whatever the user wrote; too large for sync (`config/ai/skills.toml`), not backed up yet.
+   */
+  askAiSkills: { area: 'local', name: 'ai.skills', v: 1, backup: 'exclude' },
   /** Local: queries can reveal bookmark contents. */
   searchHistory: { area: 'local', name: 'search.history', v: 1, backup: 'exclude' },
   /** Local: filters can reveal bookmark contents and name folder ids local to this device. */

@@ -79,6 +79,8 @@ export type SettingsPanelId =
   /** Saving & Search > Right-Click Menu: which entries the menu shows, in order. */
   | 'contextMenuEntries'
   | 'askAiActions'
+  /** AI > Skills: the built-in skills and the user's own, each on or off, with an editor. */
+  | 'askAiSkills'
   | 'agentBridge'
   /** Maintenance: the smart rules, their own local item (src/lib/bookmark-rules-storage.ts). */
   | 'bookmarkRules'
@@ -675,6 +677,8 @@ type ShortcutBindingValue = z.infer<typeof shortcutBindingSchema>;
 
 /** A shortcut id of config/ui/shortcuts.toml: `manager.undo`. */
 const SHORTCUT_ID_PATTERN = /^[a-z]+\.[a-z_]+$/;
+/** An Agent Skill's name (agentskills.io): lowercase letters and digits, joined by single hyphens. */
+export const SKILL_NAME_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
 /**
  * The keys the user gave in-page shortcuts, by shortcut id (`src/lib/shortcut-remap.ts`), edited
@@ -1141,6 +1145,11 @@ const fields = {
   askAiKeepChats: switchField('ai.ask_ai.keep_chats', 'askAiKeepChats'),
   askAiChatsMax: numberField('ai.ask_ai.chats_max', 'askAiChatsMax'),
   askAiDisabledActions: idListField('ai.ask_ai.disabled_actions', 'askAiDisabledActions'),
+  askAiDisabledSkills: idListField(
+    'ai.ask_ai.disabled_skills',
+    'askAiDisabledSkills',
+    SKILL_NAME_PATTERN,
+  ),
   agentBridgeEnabled: switchField('developers.agent_bridge.enabled', 'agentBridgeEnabled'),
   agentBridgeWrites: switchField('developers.agent_bridge.writes', 'agentBridgeWrites'),
   agentBridgeRedactUrls: switchField(
@@ -2107,6 +2116,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         requires: 'aiEnabled',
       },
       { id: 'askAiActions', fields: [], panel: 'askAiActions', requires: 'aiEnabled' },
+      { id: 'askAiSkills', fields: [], panel: 'askAiSkills', requires: 'aiEnabled' },
       { id: 'activity', fields: [], panel: 'aiActivity' },
     ]),
     aiTools: category('settings_aiTools', 'settings_aiToolsDesc', [

@@ -6268,7 +6268,7 @@
         "description": "Options > AI > Ask AI: label"
     },
     "settings_askAiKeepChatsDesc": {
-        "message": "Ask AI のチャットをこの端末に保存します。Ask AI は最後のチャットを開き、「過去のチャット」から他のチャットを開き直せます。オフにすると、新しいチャットを始めるまで今のチャットだけを保存し、他は削除します。",
+        "message": "AI に質問のチャットをこの端末に保存します。AI に質問は最後のチャットを開き、「過去のチャット」から他のチャットを開き直せます。オフにすると、新しいチャットを始めるまで今のチャットだけを保存し、他は削除します。",
         "description": "Under its setting in Options > AI > Ask AI"
     },
     "settings_askAiChatsMax": {
@@ -6560,7 +6560,7 @@
         "description": "Prompt variable description"
     },
     "prompt_varSkills": {
-        "message": "Ask AI が読めるスキルとその読み方（スキルがなければ空）",
+        "message": "AI に質問が読めるスキルとその読み方（スキルがなければ空）",
         "description": "Prompt variable description"
     },
     "prompt_placeholders": {
@@ -7862,6 +7862,74 @@
     "settings_askAiDisabledActionsDesc": {
         "message": "AI にさせたくないことはオフにします。オフにした操作は AI に一切提示されません。変更プランの適用は必ず事前に確認されます。",
         "description": "Options > AI: description of the panel for choosing what Ask AI may do"
+    },
+    "settings_askAiDisabledSkills": {
+        "message": "スキル",
+        "description": "Options > AI: panel title for Ask AI skills"
+    },
+    "settings_askAiDisabledSkillsDesc": {
+        "message": "依頼に合うときだけ AI に質問が読む手順の指示です。オフにすると AI に質問はそのスキルを読みません。Agent Skills 形式（SKILL.md ファイル）で自分のスキルを追加することもできます。スキルは AI が読むテキストにすぎず、コードを実行することはありません。",
+        "description": "Options > AI > Skills: description"
+    },
+    "askAI_skillNew": {
+        "message": "新しいスキル",
+        "description": "Options > AI > Skills: button that opens the editor for a new skill"
+    },
+    "askAI_skillImportFiles": {
+        "message": "ファイルを読み込む",
+        "description": "Options > AI > Skills: button that imports a SKILL.md and its files"
+    },
+    "askAI_skillImportFolder": {
+        "message": "フォルダーを読み込む",
+        "description": "Options > AI > Skills: button that imports a skill folder"
+    },
+    "askAI_skillBuiltIn": {
+        "message": "組み込み",
+        "description": "Options > AI > Skills: badge of a skill that comes with the extension"
+    },
+    "askAI_skillYours": {
+        "message": "自分のスキル",
+        "description": "Options > AI > Skills: badge of a skill the user added"
+    },
+    "askAI_skillEditorTitle": {
+        "message": "スキル",
+        "description": "Options > AI > Skills: editor title, and the label of its text box"
+    },
+    "askAI_skillEditorDesc": {
+        "message": "スキルを SKILL.md ファイルとして書きます。--- の行の間に名前と使う場面の説明を書き、その後に手順を書きます。",
+        "description": "Options > AI > Skills: editor description"
+    },
+    "askAI_skillTemplate": {
+        "message": "---\nname: my-skill\ndescription: このスキルが何をするか、AI に質問がいつ使うべきか。\n---\n\n# 私のスキル\n\n1. 最初の手順。\n2. 次の手順。\n",
+        "description": "Options > AI > Skills: the text a new skill starts with; keep the --- lines, name: and description: as they are, and the name in lowercase letters and hyphens"
+    },
+    "askAI_skillInvalid": {
+        "message": "有効なスキルではありません:",
+        "description": "Options > AI > Skills: shown above the reasons a skill is not valid"
+    },
+    "askAI_skillNameTaken": {
+        "message": "「$1」という組み込みスキルがすでにあります。",
+        "description": "Options > AI > Skills: $1 is the skill name"
+    },
+    "askAI_skillTooMany": {
+        "message": "保存できるスキルは最大 $1 個です。",
+        "description": "Options > AI > Skills: $1 is the most skills"
+    },
+    "askAI_skillTooManyFiles": {
+        "message": "スキルには SKILL.md 以外に最大 $1 個のファイルを含められます。",
+        "description": "Options > AI > Skills: $1 is the most files"
+    },
+    "askAI_skillTooLarge": {
+        "message": "スキルに含められるのは最大 $1 文字です。",
+        "description": "Options > AI > Skills: $1 is the most characters"
+    },
+    "askAI_skillImported": {
+        "message": "スキルを読み込みました。",
+        "description": "Options > AI > Skills: toast after an import"
+    },
+    "askAI_skillDeleteConfirm": {
+        "message": "スキル「$1」を削除しますか？",
+        "description": "Options > AI > Skills: delete confirmation; $1 is the skill name"
     },
     "settings_agentBridge": {
         "message": "ローカル AI エージェント",

@@ -6046,7 +6046,7 @@
         "description": "Options > AI > Ask AI: label"
     },
     "settings_askAiKeepChatsDesc": {
-        "message": "Simpan obrolan Ask AI di perangkat ini: Ask AI membuka obrolan terakhir, dan Obrolan sebelumnya membuka yang lain. Nonaktif hanya menyimpan obrolan yang sedang dibuka, sampai Anda memulai yang baru, dan menghapus yang lain.",
+        "message": "Simpan obrolan Tanya AI di perangkat ini: Tanya AI membuka obrolan terakhir, dan Obrolan sebelumnya membuka yang lain. Nonaktif hanya menyimpan obrolan yang sedang dibuka, sampai Anda memulai yang baru, dan menghapus yang lain.",
         "description": "Under its setting in Options > AI > Ask AI"
     },
     "settings_askAiChatsMax": {
@@ -6338,7 +6338,7 @@
         "description": "Prompt variable description"
     },
     "prompt_varSkills": {
-        "message": "Skill yang dapat dibaca Ask AI dan cara membacanya (kosong jika tidak ada)",
+        "message": "Skill yang dapat dibaca Tanya AI dan cara membacanya (kosong jika tidak ada)",
         "description": "Prompt variable description"
     },
     "prompt_placeholders": {
@@ -7604,6 +7604,74 @@
     "settings_askAiDisabledActionsDesc": {
         "message": "Nonaktifkan apa yang tidak ingin Anda serahkan ke AI; tindakan itu sama sekali tidak ditawarkan kepadanya. Menerapkan rencana perubahan selalu meminta persetujuan Anda terlebih dahulu.",
         "description": "Options > AI: description of the panel for choosing what Ask AI may do"
+    },
+    "settings_askAiDisabledSkills": {
+        "message": "Skill",
+        "description": "Options > AI: panel title for Ask AI skills"
+    },
+    "settings_askAiDisabledSkillsDesc": {
+        "message": "Petunjuk langkah demi langkah yang hanya dibaca Tanya AI saat permintaan Anda cocok. Nonaktifkan salah satunya agar Tanya AI tidak membacanya, atau tambahkan milik Anda dalam format Agent Skills (file SKILL.md). Skill hanyalah teks untuk AI; skill tidak pernah menjalankan kode.",
+        "description": "Options > AI > Skills: description"
+    },
+    "askAI_skillNew": {
+        "message": "Skill baru",
+        "description": "Options > AI > Skills: button that opens the editor for a new skill"
+    },
+    "askAI_skillImportFiles": {
+        "message": "Impor file",
+        "description": "Options > AI > Skills: button that imports a SKILL.md and its files"
+    },
+    "askAI_skillImportFolder": {
+        "message": "Impor folder",
+        "description": "Options > AI > Skills: button that imports a skill folder"
+    },
+    "askAI_skillBuiltIn": {
+        "message": "Bawaan",
+        "description": "Options > AI > Skills: badge of a skill that comes with the extension"
+    },
+    "askAI_skillYours": {
+        "message": "Milik Anda",
+        "description": "Options > AI > Skills: badge of a skill the user added"
+    },
+    "askAI_skillEditorTitle": {
+        "message": "Skill",
+        "description": "Options > AI > Skills: editor title, and the label of its text box"
+    },
+    "askAI_skillEditorDesc": {
+        "message": "Tulis skill sebagai file SKILL.md: namanya dan deskripsi kapan digunakan di antara baris ---, lalu petunjuknya.",
+        "description": "Options > AI > Skills: editor description"
+    },
+    "askAI_skillTemplate": {
+        "message": "---\nname: skill-saya\ndescription: Apa yang dilakukan skill ini, dan kapan Tanya AI harus menggunakannya.\n---\n\n# Skill saya\n\n1. Langkah pertama.\n2. Langkah berikutnya.\n",
+        "description": "Options > AI > Skills: the text a new skill starts with; keep the --- lines, name: and description: as they are, and the name in lowercase letters and hyphens"
+    },
+    "askAI_skillInvalid": {
+        "message": "Ini bukan skill yang valid:",
+        "description": "Options > AI > Skills: shown above the reasons a skill is not valid"
+    },
+    "askAI_skillNameTaken": {
+        "message": "Sudah ada skill bawaan bernama “$1”.",
+        "description": "Options > AI > Skills: $1 is the skill name"
+    },
+    "askAI_skillTooMany": {
+        "message": "Anda dapat menyimpan paling banyak $1 skill.",
+        "description": "Options > AI > Skills: $1 is the most skills"
+    },
+    "askAI_skillTooManyFiles": {
+        "message": "Skill dapat memiliki paling banyak $1 file selain SKILL.md.",
+        "description": "Options > AI > Skills: $1 is the most files"
+    },
+    "askAI_skillTooLarge": {
+        "message": "Skill dapat berisi paling banyak $1 karakter.",
+        "description": "Options > AI > Skills: $1 is the most characters"
+    },
+    "askAI_skillImported": {
+        "message": "Skill diimpor.",
+        "description": "Options > AI > Skills: toast after an import"
+    },
+    "askAI_skillDeleteConfirm": {
+        "message": "Hapus skill “$1”?",
+        "description": "Options > AI > Skills: delete confirmation; $1 is the skill name"
     },
     "settings_agentBridge": {
         "message": "Agen AI lokal",

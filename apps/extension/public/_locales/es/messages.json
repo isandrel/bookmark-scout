@@ -6312,7 +6312,7 @@
         "description": "Options > AI > Ask AI: label"
     },
     "settings_askAiKeepChatsDesc": {
-        "message": "Guarda los chats de Ask AI en este dispositivo: Ask AI abre el último y Chats anteriores vuelve a abrir los demás. Desactivado guarda solo el chat en curso, hasta que empieces uno nuevo, y borra los demás.",
+        "message": "Guarda los chats de Preguntar a la IA en este dispositivo: Preguntar a la IA abre el último y Chats anteriores vuelve a abrir los demás. Desactivado guarda solo el chat en curso, hasta que empieces uno nuevo, y borra los demás.",
         "description": "Under its setting in Options > AI > Ask AI"
     },
     "settings_askAiChatsMax": {
@@ -6604,7 +6604,7 @@
         "description": "Prompt variable description"
     },
     "prompt_varSkills": {
-        "message": "Las habilidades que Ask AI puede leer y cómo leerlas (vacío si no hay ninguna)",
+        "message": "Las habilidades que Preguntar a la IA puede leer y cómo leerlas (vacío si no hay ninguna)",
         "description": "Prompt variable description"
     },
     "prompt_placeholders": {
@@ -7874,6 +7874,74 @@
     "settings_askAiDisabledActionsDesc": {
         "message": "Desactiva lo que no quieras que haga la IA; así no se le ofrece en absoluto. Aplicar un plan de cambios siempre te pide permiso primero.",
         "description": "Options > AI: description of the panel for choosing what Ask AI may do"
+    },
+    "settings_askAiDisabledSkills": {
+        "message": "Habilidades",
+        "description": "Options > AI: panel title for Ask AI skills"
+    },
+    "settings_askAiDisabledSkillsDesc": {
+        "message": "Instrucciones paso a paso que Preguntar a la IA solo lee cuando tu petición encaja con una. Desactiva una para que Preguntar a la IA no la lea, o añade las tuyas en formato Agent Skills (un archivo SKILL.md). Una habilidad es solo texto para la IA; nunca ejecuta código.",
+        "description": "Options > AI > Skills: description"
+    },
+    "askAI_skillNew": {
+        "message": "Nueva habilidad",
+        "description": "Options > AI > Skills: button that opens the editor for a new skill"
+    },
+    "askAI_skillImportFiles": {
+        "message": "Importar archivos",
+        "description": "Options > AI > Skills: button that imports a SKILL.md and its files"
+    },
+    "askAI_skillImportFolder": {
+        "message": "Importar carpeta",
+        "description": "Options > AI > Skills: button that imports a skill folder"
+    },
+    "askAI_skillBuiltIn": {
+        "message": "Integrada",
+        "description": "Options > AI > Skills: badge of a skill that comes with the extension"
+    },
+    "askAI_skillYours": {
+        "message": "Tuya",
+        "description": "Options > AI > Skills: badge of a skill the user added"
+    },
+    "askAI_skillEditorTitle": {
+        "message": "Habilidad",
+        "description": "Options > AI > Skills: editor title, and the label of its text box"
+    },
+    "askAI_skillEditorDesc": {
+        "message": "Escribe la habilidad como un archivo SKILL.md: su nombre y una descripción de cuándo usarla entre las líneas ---, y después las instrucciones.",
+        "description": "Options > AI > Skills: editor description"
+    },
+    "askAI_skillTemplate": {
+        "message": "---\nname: mi-habilidad\ndescription: Qué hace esta habilidad y cuándo debe usarla Preguntar a la IA.\n---\n\n# Mi habilidad\n\n1. El primer paso.\n2. El siguiente paso.\n",
+        "description": "Options > AI > Skills: the text a new skill starts with; keep the --- lines, name: and description: as they are, and the name in lowercase letters and hyphens"
+    },
+    "askAI_skillInvalid": {
+        "message": "Esta no es una habilidad válida:",
+        "description": "Options > AI > Skills: shown above the reasons a skill is not valid"
+    },
+    "askAI_skillNameTaken": {
+        "message": "Ya hay una habilidad integrada llamada «$1».",
+        "description": "Options > AI > Skills: $1 is the skill name"
+    },
+    "askAI_skillTooMany": {
+        "message": "Puedes guardar como máximo $1 habilidades.",
+        "description": "Options > AI > Skills: $1 is the most skills"
+    },
+    "askAI_skillTooManyFiles": {
+        "message": "Una habilidad puede tener como máximo $1 archivos además de SKILL.md.",
+        "description": "Options > AI > Skills: $1 is the most files"
+    },
+    "askAI_skillTooLarge": {
+        "message": "Una habilidad puede contener como máximo $1 caracteres.",
+        "description": "Options > AI > Skills: $1 is the most characters"
+    },
+    "askAI_skillImported": {
+        "message": "Habilidad importada.",
+        "description": "Options > AI > Skills: toast after an import"
+    },
+    "askAI_skillDeleteConfirm": {
+        "message": "¿Eliminar la habilidad «$1»?",
+        "description": "Options > AI > Skills: delete confirmation; $1 is the skill name"
     },
     "settings_agentBridge": {
         "message": "Agentes de IA locales",

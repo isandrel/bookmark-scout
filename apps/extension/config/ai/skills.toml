@@ -1,0 +1,10 @@
+# The user's own Ask AI skills (Options > AI > Skills), kept on this device only. Read by
+# src/lib/ask-ai-skill-library.ts. The built-in skills are src/assets/ask-ai-skills/.
+
+# Skills the user can add at most
+max_skills = { value = 30, min = 1, max = 200 }
+# Files one skill may hold besides its SKILL.md
+max_files = { value = 20, min = 0, max = 100 }
+# Characters one skill may hold in all, its SKILL.md and files together, so a few skills cannot
+# fill the device's storage
+max_skill_chars = { value = 100000, min = 1000, max = 1000000 }

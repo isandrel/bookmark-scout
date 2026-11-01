@@ -6312,7 +6312,7 @@
         "description": "Options > AI > Ask AI: label"
     },
     "settings_askAiKeepChatsDesc": {
-        "message": "Garder les discussions Ask AI sur cet appareil : Ask AI s’ouvre sur la dernière, et Discussions précédentes rouvre les autres. Désactivé, seule la discussion en cours est gardée, jusqu’à ce que vous en commenciez une nouvelle, et les autres sont supprimées.",
+        "message": "Garder les discussions Demander à l'IA sur cet appareil : Demander à l'IA s’ouvre sur la dernière, et Discussions précédentes rouvre les autres. Désactivé, seule la discussion en cours est gardée, jusqu’à ce que vous en commenciez une nouvelle, et les autres sont supprimées.",
         "description": "Under its setting in Options > AI > Ask AI"
     },
     "settings_askAiChatsMax": {
@@ -6604,7 +6604,7 @@
         "description": "Prompt variable description"
     },
     "prompt_varSkills": {
-        "message": "Les compétences qu’Ask AI peut lire et comment les lire (vide s’il n’y en a aucune)",
+        "message": "Les compétences qu’Demander à l'IA peut lire et comment les lire (vide s’il n’y en a aucune)",
         "description": "Prompt variable description"
     },
     "prompt_placeholders": {
@@ -7874,6 +7874,74 @@
     "settings_askAiDisabledActionsDesc": {
         "message": "Désactivez ce que l'IA ne doit pas faire : cela ne lui est alors plus proposé du tout. L'application d'un plan de modifications vous demande toujours d'abord votre accord.",
         "description": "Options > AI: description of the panel for choosing what Ask AI may do"
+    },
+    "settings_askAiDisabledSkills": {
+        "message": "Compétences",
+        "description": "Options > AI: panel title for Ask AI skills"
+    },
+    "settings_askAiDisabledSkillsDesc": {
+        "message": "Des instructions étape par étape qu’Demander à l'IA ne lit que lorsque votre demande y correspond. Désactivez-en une pour qu’Demander à l'IA ne la lise pas, ou ajoutez les vôtres au format Agent Skills (un fichier SKILL.md). Une compétence n’est que du texte pour l’IA ; elle n’exécute jamais de code.",
+        "description": "Options > AI > Skills: description"
+    },
+    "askAI_skillNew": {
+        "message": "Nouvelle compétence",
+        "description": "Options > AI > Skills: button that opens the editor for a new skill"
+    },
+    "askAI_skillImportFiles": {
+        "message": "Importer des fichiers",
+        "description": "Options > AI > Skills: button that imports a SKILL.md and its files"
+    },
+    "askAI_skillImportFolder": {
+        "message": "Importer un dossier",
+        "description": "Options > AI > Skills: button that imports a skill folder"
+    },
+    "askAI_skillBuiltIn": {
+        "message": "Intégrée",
+        "description": "Options > AI > Skills: badge of a skill that comes with the extension"
+    },
+    "askAI_skillYours": {
+        "message": "La vôtre",
+        "description": "Options > AI > Skills: badge of a skill the user added"
+    },
+    "askAI_skillEditorTitle": {
+        "message": "Compétence",
+        "description": "Options > AI > Skills: editor title, and the label of its text box"
+    },
+    "askAI_skillEditorDesc": {
+        "message": "Écrivez la compétence comme un fichier SKILL.md : son nom et une description de quand l’utiliser entre les lignes ---, puis les instructions.",
+        "description": "Options > AI > Skills: editor description"
+    },
+    "askAI_skillTemplate": {
+        "message": "---\nname: ma-competence\ndescription: Ce que fait cette compétence et quand Demander à l'IA doit l’utiliser.\n---\n\n# Ma compétence\n\n1. La première étape.\n2. L’étape suivante.\n",
+        "description": "Options > AI > Skills: the text a new skill starts with; keep the --- lines, name: and description: as they are, and the name in lowercase letters and hyphens"
+    },
+    "askAI_skillInvalid": {
+        "message": "Ce n’est pas une compétence valide :",
+        "description": "Options > AI > Skills: shown above the reasons a skill is not valid"
+    },
+    "askAI_skillNameTaken": {
+        "message": "Une compétence intégrée s’appelle déjà « $1 ».",
+        "description": "Options > AI > Skills: $1 is the skill name"
+    },
+    "askAI_skillTooMany": {
+        "message": "Vous pouvez garder au plus $1 compétences.",
+        "description": "Options > AI > Skills: $1 is the most skills"
+    },
+    "askAI_skillTooManyFiles": {
+        "message": "Une compétence peut avoir au plus $1 fichiers en plus de SKILL.md.",
+        "description": "Options > AI > Skills: $1 is the most files"
+    },
+    "askAI_skillTooLarge": {
+        "message": "Une compétence peut contenir au plus $1 caractères.",
+        "description": "Options > AI > Skills: $1 is the most characters"
+    },
+    "askAI_skillImported": {
+        "message": "Compétence importée.",
+        "description": "Options > AI > Skills: toast after an import"
+    },
+    "askAI_skillDeleteConfirm": {
+        "message": "Supprimer la compétence « $1 » ?",
+        "description": "Options > AI > Skills: delete confirmation; $1 is the skill name"
     },
     "settings_agentBridge": {
         "message": "Agents d'IA locaux",

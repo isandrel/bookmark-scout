@@ -44,3 +44,55 @@ describe('Ask AI skill catalog and tool', () => {
     expect(await skills.read({ name: 'no-such-skill' })).toMatchObject({ ok: false });
   });
 });
+
+const userSkill = (name: string, body = 'Do the thing.') => ({
+  name,
+  files: [
+    {
+      path: 'SKILL.md',
+      content: `---\nname: ${name}\ndescription: A skill of the user's own.\n---\n\n${body}\n`,
+    },
+  ],
+  updatedAt: 1,
+});
+
+describe("the user's own skills", () => {
+  it("leaves out the skills turned off, built-in or the user's own", async () => {
+    const skills = await createAskAISkills({
+      user: [userSkill('my-steps'), userSkill('other-steps')],
+      disabled: [folders[0], 'other-steps'],
+    });
+    const names = skills.list().map((skill) => skill.name);
+    expect(names).toContain('my-steps');
+    expect(names).not.toContain(folders[0]);
+    expect(names).not.toContain('other-steps');
+    expect(await skills.read({ name: 'my-steps' })).toMatchObject({ ok: true });
+  });
+
+  it('checks a SKILL.md and reads a picked folder relative to it', async () => {
+    const { checkSkillFiles, skillFilesFromUpload } = await import(
+      '@/services/ask-ai-skill-files.lazy'
+    );
+    expect(checkSkillFiles(userSkill('fine').files)).toMatchObject({ ok: true, name: 'fine' });
+    expect(checkSkillFiles([{ path: 'SKILL.md', content: 'no front matter' }])).toMatchObject({
+      ok: false,
+    });
+    expect(checkSkillFiles([{ path: 'notes.md', content: 'x' }])).toMatchObject({ ok: false });
+    const picked = [
+      Object.defineProperty(
+        new File([userSkill('folder-skill').files[0].content], 'SKILL.md'),
+        'webkitRelativePath',
+        {
+          value: 'folder-skill/SKILL.md',
+        },
+      ),
+      Object.defineProperty(new File(['Details'], 'more.md'), 'webkitRelativePath', {
+        value: 'folder-skill/references/more.md',
+      }),
+    ];
+    expect(await skillFilesFromUpload(picked)).toEqual([
+      { path: 'SKILL.md', content: userSkill('folder-skill').files[0].content },
+      { path: 'references/more.md', content: 'Details' },
+    ]);
+  });
+});

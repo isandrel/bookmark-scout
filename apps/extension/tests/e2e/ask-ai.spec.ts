@@ -657,3 +657,62 @@ test('[mocked provider contract] Ask AI finishes an answer after the popup close
   // The answer was requested once: reopening shows it, it does not ask again.
   expect(answered).toBe(1);
 });
+
+test('[mocked provider contract] Ask AI reads the skills chosen in Options, the user’s own included', async ({
+  context,
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await replaceSettings(extensionWorker, {
+    language: 'en',
+    aiEnabled: true,
+    aiAutoTriggerOnOpen: false,
+  });
+  await seedAskService(extensionWorker);
+  const requests = await stubAgentProvider(context);
+
+  const options = await context.newPage();
+  await options.goto(`chrome-extension://${extensionId}/options.html`);
+  await options.getByRole('tab', { name: 'AI', exact: true }).click();
+  const panel = options.getByTestId('ask-ai-skills');
+  await expect(panel.locator('[data-skill="organize-folder"]')).toContainText('Built-in');
+
+  // A skill that is not valid stays in the editor with the reason.
+  await panel.getByRole('button', { name: 'New skill' }).click();
+  const editor = options.getByTestId('ask-ai-skill-editor');
+  await editor.fill('Just some notes');
+  await options.getByRole('button', { name: 'Save' }).click();
+  await expect(options.getByRole('alert')).toContainText('This is not a valid skill:');
+  await editor.fill(
+    '---\nname: weekly-review\ndescription: Review the bookmarks saved this week.\n---\n\nList them by folder.\n',
+  );
+  await options.getByRole('button', { name: 'Save' }).click();
+  await expect(editor).toHaveCount(0);
+  await expect(panel.locator('[data-skill="weekly-review"]')).toContainText('Yours');
+
+  await panel.getByRole('checkbox', { name: /organize-folder/ }).click();
+  await expect
+    .poll(async () => (await readSettings(extensionWorker)).askAiDisabledSkills)
+    .toEqual(['organize-folder']);
+
+  await page.goto(`chrome-extension://${extensionId}/popup.html`);
+  await page.getByRole('button', { name: 'Ask AI about your bookmarks or this page' }).click();
+  const chat = page.getByTestId('ask-ai');
+  const box = chat.getByRole('textbox', { name: /Ask about your bookmarks/ });
+  await box.fill('Which Rust pages did I save?');
+  await box.press('Enter');
+  await expect(chat.getByTestId('ask-ai-tool')).toHaveText('Searched your bookmarks for “rust”');
+  const instructions = JSON.stringify(requests[0].messages[0]);
+  expect(instructions).toContain('weekly-review');
+  expect(instructions).toContain('clean-up-library');
+  expect(instructions).not.toContain('organize-folder');
+
+  // Deleting the skill takes it out of the list.
+  await panel
+    .locator('[data-skill="weekly-review"]')
+    .getByRole('button', { name: 'Delete' })
+    .click();
+  await options.getByRole('button', { name: 'Delete', exact: true }).last().click();
+  await expect(panel.locator('[data-skill="weekly-review"]')).toHaveCount(0);
+});

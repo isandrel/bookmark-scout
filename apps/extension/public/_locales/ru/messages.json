@@ -6844,7 +6844,7 @@
         "description": "Options > AI > Ask AI: label"
     },
     "settings_askAiKeepChatsDesc": {
-        "message": "Хранить чаты Ask AI на этом устройстве: Ask AI открывает последний, а «Прошлые чаты» открывают остальные. Если выключено, хранится только текущий чат, пока вы не начнёте новый, а остальные удаляются.",
+        "message": "Хранить чаты Спросить ИИ на этом устройстве: Спросить ИИ открывает последний, а «Прошлые чаты» открывают остальные. Если выключено, хранится только текущий чат, пока вы не начнёте новый, а остальные удаляются.",
         "description": "Under its setting in Options > AI > Ask AI"
     },
     "settings_askAiChatsMax": {
@@ -7136,7 +7136,7 @@
         "description": "Prompt variable description"
     },
     "prompt_varSkills": {
-        "message": "Навыки, которые может читать Ask AI, и как их читать (пусто, если их нет)",
+        "message": "Навыки, которые может читать Спросить ИИ, и как их читать (пусто, если их нет)",
         "description": "Prompt variable description"
     },
     "prompt_placeholders": {
@@ -8414,6 +8414,74 @@
     "settings_askAiDisabledActionsDesc": {
         "message": "Выключите то, что ИИ делать не должен; тогда это ему вообще не предлагается. Перед применением плана изменений всегда запрашивается ваше подтверждение.",
         "description": "Options > AI: description of the panel for choosing what Ask AI may do"
+    },
+    "settings_askAiDisabledSkills": {
+        "message": "Навыки",
+        "description": "Options > AI: panel title for Ask AI skills"
+    },
+    "settings_askAiDisabledSkillsDesc": {
+        "message": "Пошаговые инструкции, которые Спросить ИИ читает, только когда запрос им соответствует. Выключите навык, чтобы Спросить ИИ его не читал, или добавьте свои в формате Agent Skills (файл SKILL.md). Навык — это только текст для ИИ; он никогда не запускает код.",
+        "description": "Options > AI > Skills: description"
+    },
+    "askAI_skillNew": {
+        "message": "Новый навык",
+        "description": "Options > AI > Skills: button that opens the editor for a new skill"
+    },
+    "askAI_skillImportFiles": {
+        "message": "Импортировать файлы",
+        "description": "Options > AI > Skills: button that imports a SKILL.md and its files"
+    },
+    "askAI_skillImportFolder": {
+        "message": "Импортировать папку",
+        "description": "Options > AI > Skills: button that imports a skill folder"
+    },
+    "askAI_skillBuiltIn": {
+        "message": "Встроенный",
+        "description": "Options > AI > Skills: badge of a skill that comes with the extension"
+    },
+    "askAI_skillYours": {
+        "message": "Ваш",
+        "description": "Options > AI > Skills: badge of a skill the user added"
+    },
+    "askAI_skillEditorTitle": {
+        "message": "Навык",
+        "description": "Options > AI > Skills: editor title, and the label of its text box"
+    },
+    "askAI_skillEditorDesc": {
+        "message": "Напишите навык как файл SKILL.md: между строками --- его имя и описание, когда его использовать, затем инструкции.",
+        "description": "Options > AI > Skills: editor description"
+    },
+    "askAI_skillTemplate": {
+        "message": "---\nname: my-skill\ndescription: Что делает этот навык и когда Спросить ИИ должен его использовать.\n---\n\n# Мой навык\n\n1. Первый шаг.\n2. Следующий шаг.\n",
+        "description": "Options > AI > Skills: the text a new skill starts with; keep the --- lines, name: and description: as they are, and the name in lowercase letters and hyphens"
+    },
+    "askAI_skillInvalid": {
+        "message": "Это не корректный навык:",
+        "description": "Options > AI > Skills: shown above the reasons a skill is not valid"
+    },
+    "askAI_skillNameTaken": {
+        "message": "Встроенный навык «$1» уже есть.",
+        "description": "Options > AI > Skills: $1 is the skill name"
+    },
+    "askAI_skillTooMany": {
+        "message": "Можно хранить не больше $1 навыков.",
+        "description": "Options > AI > Skills: $1 is the most skills"
+    },
+    "askAI_skillTooManyFiles": {
+        "message": "В навыке может быть не больше $1 файлов, кроме SKILL.md.",
+        "description": "Options > AI > Skills: $1 is the most files"
+    },
+    "askAI_skillTooLarge": {
+        "message": "В навыке может быть не больше $1 символов.",
+        "description": "Options > AI > Skills: $1 is the most characters"
+    },
+    "askAI_skillImported": {
+        "message": "Навык импортирован.",
+        "description": "Options > AI > Skills: toast after an import"
+    },
+    "askAI_skillDeleteConfirm": {
+        "message": "Удалить навык «$1»?",
+        "description": "Options > AI > Skills: delete confirmation; $1 is the skill name"
     },
     "settings_agentBridge": {
         "message": "Локальные ИИ-агенты",
