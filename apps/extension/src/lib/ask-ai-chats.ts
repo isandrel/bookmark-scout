@@ -1,112 +1,61 @@
 /**
- * Ask AI's kept chats (Settings > AI > Ask AI > Keep Chats): on this device only, newest first, at
- * most the user's Chats Kept, each with at most `max_messages` messages. A chat is named by its
- * first question. A chat is kept while its answer is written too, and what was unfinished then is
- * settled: a change still waiting for approval is kept as declined, so reopening a chat never
- * offers to apply an old plan, and a tool step with no result yet (approved but not run included)
- * is left out, so reopening never sends it again.
+ * Ask AI's chat list: one entry per chat, newest first, at most the user's Chats Kept, with its
+ * name (the first question), when it last changed, and whether an answer is still running, so a
+ * restart picks that chat up. The conversations themselves are kept by Pi Durable, one IndexedDB
+ * database per chat (`services/ask-ai-host.lazy.ts`), so deleting a chat deletes all of it. The
+ * background writes the list; Chrome gives the AI host page no storage.
  */
-import type { UIMessage } from 'ai';
 import { z } from 'zod';
 import { boundedNumber } from '@/lib/config/bounded';
 
 const chatConfig = readConfig(
   'ai/chat-history',
-  z.strictObject({
-    title_chars: boundedNumber({ integer: true }),
-    max_messages: boundedNumber({ integer: true }),
-    save_interval_ms: boundedNumber({ integer: true }),
-  }),
+  z.strictObject({ title_chars: boundedNumber({ integer: true }) }),
 );
-
-/** How often a chat is kept while its answer is still being written. */
-export const CHAT_SAVE_INTERVAL_MS = chatConfig.save_interval_ms;
-
-/** Tool step states that have no result yet: kept, they would show as running forever. */
-const UNFINISHED_TOOL_STATES: ReadonlySet<string | undefined> = new Set([
-  'input-streaming',
-  'input-available',
-  'approval-responded',
-]);
 
 export type AskAIChat = {
   id: string;
   /** The first question, cut to `title_chars`. */
   title: string;
   updatedAt: number;
-  messages: UIMessage[];
+  /** An answer is running, or waits to pick up after a restart. */
+  running: boolean;
 };
-
-const messageSchema = z.looseObject({
-  id: z.string(),
-  role: z.enum(['system', 'user', 'assistant']),
-  parts: z.array(z.looseObject({ type: z.string() })),
-});
 
 const chatSchema = z.object({
   id: z.string().min(1),
   title: z.string(),
   updatedAt: z.number(),
-  messages: z.array(messageSchema),
+  running: z.boolean(),
 });
 
-/** Newest first; a malformed chat is dropped on its own. */
+/** Newest first; a malformed entry is dropped on its own. */
 export const askAiChatsValue = defineStoredValue<AskAIChat[]>(STORAGE_ITEMS.askAiChats, {
-  parse: (raw) => parseValidList(raw, chatSchema) as AskAIChat[],
+  parse: (raw) => parseValidList(raw, chatSchema),
   empty: [],
   isEmpty: (chats) => chats.length === 0,
 });
 
-/** The chat's first question, as its name in the list. */
-export function chatTitle(messages: readonly UIMessage[]): string {
-  const first = messages.find((message) => message.role === 'user');
-  const text = (first?.parts ?? [])
-    .flatMap((part) => (part.type === 'text' ? [part.text] : []))
-    .join(' ')
-    .replace(/\s+/gu, ' ')
-    .trim();
-  return truncateText(text, chatConfig.title_chars);
+/** A chat's name in the list, from its first question. */
+export function chatTitle(question: string): string {
+  return truncateText(question.replace(/\s+/gu, ' ').trim(), chatConfig.title_chars);
 }
 
 /**
- * `message` as it can be reopened: a tool call still waiting for the user's approval kept as
- * declined, a tool step with no result left out, and text still being written marked done.
+ * Records a chat, newest first, keeping at most `max`; returns the ids it dropped, whose
+ * conversations the host page deletes. A running chat is never dropped.
  */
-function settled(message: UIMessage): UIMessage {
-  return {
-    ...message,
-    parts: message.parts.flatMap<UIMessage['parts'][number]>((part) => {
-      if (!('state' in part)) return [part];
-      if (part.state === 'streaming') return [{ ...part, state: 'done' }];
-      if (part.state === 'approval-requested' && 'approval' in part) {
-        return [
-          { ...part, state: 'output-denied', approval: { ...part.approval, approved: false } },
-        ];
-      }
-      return UNFINISHED_TOOL_STATES.has(part.state) ? [] : [part];
-    }),
-  };
+export async function recordChat(chat: AskAIChat, max: number): Promise<string[]> {
+  let dropped: string[] = [];
+  await askAiChatsValue.update((chats) => {
+    const next = [chat, ...chats.filter((other) => other.id !== chat.id)];
+    const keep = next.filter((entry, index) => index < max || entry.running);
+    dropped = next.filter((entry) => !keep.includes(entry)).map((entry) => entry.id);
+    return keep;
+  });
+  return dropped;
 }
 
-/** Keeps `messages` as chat `id`, newest first, at most `max` chats. */
-export async function keepChat(id: string, messages: readonly UIMessage[], max: number) {
-  if (messages.length === 0) return;
-  const kept = messages.slice(-chatConfig.max_messages).map(settled);
-  const chat: AskAIChat = {
-    id,
-    title: chatTitle(messages),
-    updatedAt: Date.now(),
-    messages: kept,
-  };
-  await askAiChatsValue.update((chats) =>
-    [chat, ...chats.filter((other) => other.id !== id)].slice(0, max),
-  );
-}
-
-export function deleteChat(id: string): Promise<AskAIChat[]> {
+export function removeChat(id: string): Promise<AskAIChat[]> {
   return askAiChatsValue.update((chats) => chats.filter((chat) => chat.id !== id));
-}
-
-export function clearChats(): Promise<void> {
-  return askAiChatsValue.clear();
 }

@@ -547,17 +547,17 @@ test('[mocked provider contract] Ask AI keeps its chats: reopens the last one, l
   await box.press('Enter');
   await expect(chat.getByTestId('ask-ai-tool')).toBeVisible();
   await expect(chat.getByTestId('ask-ai-message').last()).toHaveAttribute('data-role', 'assistant');
-  // The finished chat is written once the answer ends; reopening before that write lands (a
-  // navigation cancels it) found no chat on a loaded CI runner.
+  // The chat list names the chat once its answer is done; the conversation itself is kept by the
+  // AI host page, so reopening shows it whenever the answer ended.
   await expect
     .poll(async () => {
-      const chats = await readStored<{ messages: unknown[] }[]>(
+      const chats = await readStored<{ title: string; running: boolean }[]>(
         extensionWorker,
         STORAGE_ITEMS.askAiChats,
       );
-      return chats?.[0]?.messages.length ?? 0;
+      return chats?.[0];
     })
-    .toBeGreaterThanOrEqual(2);
+    .toMatchObject({ title: 'Which Rust pages did I save?', running: false });
 
   // Closing the popup ends nothing: Ask AI opens on the same chat.
   chat = await openAskAI();

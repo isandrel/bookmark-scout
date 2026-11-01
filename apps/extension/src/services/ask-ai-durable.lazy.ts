@@ -23,18 +23,18 @@ import {
   type JsonObject,
   type Storage,
   section,
+  type ToolRegistration,
 } from '@earendil-works/pi-durable';
 import type { SkillRegistry } from 'agent-skills-ts-sdk';
 import type { LanguageModel, ToolSet } from 'ai';
 import { z } from 'zod';
+import { ASK_AI_DECISION_ENTRY, ASK_AI_OUTCOME_ENTRY } from '@/lib/ask-ai-ui-messages';
 import { boundedNumber } from '@/lib/config/bounded';
 import { createAISdkPiProvider, PROVIDER_TOOL_DIAGNOSTIC } from './ai-sdk-pi-provider.lazy';
 
 export const durableConfig = readConfig(
   'ai/durable',
   z.strictObject({
-    database: z.string().min(1),
-    lock: z.string().min(1),
     context_window: boundedNumber({ integer: true }),
     max_output_tokens: boundedNumber({ integer: true }),
     step_overrun: boundedNumber({ integer: true }),
@@ -48,9 +48,6 @@ export const durableConfig = readConfig(
 const PROVIDER_ID = 'ask-ai';
 const MODEL_ID = 'default';
 const EXTENSION_NAME = 'ask-ai';
-
-/** The entry kind of the user's answer to a call that waited for approval. */
-export const ASK_AI_DECISION_ENTRY = 'askai.decision';
 
 /** What a call that waits for the user's approval records in its result's details. */
 export type PendingApproval = {
@@ -75,6 +72,8 @@ export type AskAIDurableDeps = {
   setup: () => Promise<AskAISetup>;
   /** The default AI service's model, with the request transport this page must use. */
   languageModel: () => Promise<LanguageModel>;
+  /** An answer's error as the chat shows it, in the user's language. */
+  describeError?: (error: unknown) => string;
   /** Tools the provider runs itself (web search), when they are on. */
   providerTools?: () => Promise<ToolSet>;
   /** Runs an action in the background, with what the conversation so far allows. */
@@ -176,6 +175,7 @@ export class AskAIDurable {
     private readonly deps: AskAIDurableDeps,
     /** The cancellation context every call of this service runs in. */
     readonly context: Context,
+    private readonly tools: readonly ToolRegistration[],
   ) {}
 
   static async open(deps: AskAIDurableDeps): Promise<AskAIDurable> {
@@ -197,124 +197,122 @@ export class AskAIDurable {
           },
         ],
         languageModel: () => deps.languageModel(),
+        ...(deps.describeError ? { describeError: deps.describeError } : {}),
         ...(deps.providerTools ? { providerTools: deps.providerTools } : {}),
       }),
     );
     const registry = createRegistry();
-    registry.install(
-      defineExtension({
-        name: EXTENSION_NAME,
-        sections: [
-          section('ask_ai', async () => (await setup()).system, { tag: false }),
-          ...(deps.skills
-            ? [
-                section(
-                  'skills',
-                  async () => {
-                    const skills = await deps.skills?.();
-                    return skills ? askAISkillCatalogText(skills) : undefined;
-                  },
-                  { tag: false },
-                ),
-              ]
-            : []),
-        ],
-        tools: [
-          ...agentActionChoices('askAI').map((name) => {
-            const { agent, input, risk } = getAction(name);
-            return defineTool({
-              name,
-              description: agent?.description ?? name,
-              parameters: (input ? z.toJSONSchema(input) : { type: 'object' }) as TSchema,
-              // Reads run again after a restart; a change never runs twice.
-              replay: risk === 'read' ? 'safe' : 'unsafe',
-              execute: async (args, api, callContext) => {
-                const conversation = await service?.harness.conversation(
-                  api.conversationId,
-                  callContext,
-                );
-                const messages = conversation
-                  ? await contextMessages(conversation, callContext)
-                  : [];
-                const current = await setup();
-                const rounds = roundsSinceInput(messages);
-                if (!current.tools.includes(name)) {
-                  return {
-                    output: [{ type: 'text', text: `The ${name} tool is turned off now.` }],
-                    isError: true,
-                  };
-                }
-                if (rounds > current.maxSteps + durableConfig.step_overrun) {
-                  return {
-                    output: [{ type: 'text', text: 'Step limit reached.' }],
-                    isError: true,
-                    control: { terminate: true },
-                  };
-                }
-                if (rounds > current.maxSteps) {
-                  return {
-                    output: [
-                      {
-                        type: 'text',
-                        text: 'The step limit is reached: do not call more tools, answer now with what you have.',
-                      },
-                    ],
-                    isError: true,
-                  };
-                }
-                const allowed = readDurableConversation(messages);
-                const need = actionApproval(name, allowed);
-                if (need !== 'none') {
-                  const pending: PendingApproval = {
-                    approval: 'requested',
-                    reason: need,
-                    tool: name,
-                    args: args as JsonObject,
-                  };
-                  return {
-                    output: [
-                      {
-                        type: 'text',
-                        text: 'This call waits for the user to approve or decline it. Stop here; their answer comes as a new message.',
-                      },
-                    ],
-                    details: pending,
-                    control: { terminate: true },
-                  };
-                }
-                const result = await deps.callAction(name, args, allowed);
+    const extension = defineExtension({
+      name: EXTENSION_NAME,
+      sections: [
+        section('ask_ai', async () => (await setup()).system, { tag: false }),
+        ...(deps.skills
+          ? [
+              section(
+                'skills',
+                async () => {
+                  const skills = await deps.skills?.();
+                  return skills ? askAISkillCatalogText(skills) : undefined;
+                },
+                { tag: false },
+              ),
+            ]
+          : []),
+      ],
+      tools: [
+        ...agentActionChoices('askAI').map((name) => {
+          const { agent, input, risk } = getAction(name);
+          return defineTool({
+            name,
+            description: agent?.description ?? name,
+            parameters: (input ? z.toJSONSchema(input) : { type: 'object' }) as TSchema,
+            // Reads run again after a restart; a change never runs twice.
+            replay: risk === 'read' ? 'safe' : 'unsafe',
+            execute: async (args, api, callContext) => {
+              const conversation = await service?.harness.conversation(
+                api.conversationId,
+                callContext,
+              );
+              const messages = conversation ? await contextMessages(conversation, callContext) : [];
+              const current = await setup();
+              const rounds = roundsSinceInput(messages);
+              if (!current.tools.includes(name)) {
                 return {
-                  output: [{ type: 'text', text: resultText(result) }],
-                  isError: isActionError(result),
+                  output: [{ type: 'text', text: `The ${name} tool is turned off now.` }],
+                  isError: true,
                 };
-              },
-            });
-          }),
-          ...(deps.skills
-            ? [
-                defineTool({
-                  name: ASK_AI_SKILL_TOOL,
-                  description: 'Read a skill, or one of its files.',
-                  parameters: {
-                    type: 'object',
-                    properties: { name: { type: 'string' }, resource: { type: 'string' } },
-                    required: ['name'],
-                    additionalProperties: false,
-                  } as unknown as TSchema,
-                  replay: 'safe',
-                  execute: async (args) => {
-                    const skills = await deps.skills?.();
-                    const result = skills
-                      ? await skills.read(args as { name: string; resource?: string })
-                      : { ok: false, error: 'No skills' };
-                    return { output: [{ type: 'text', text: resultText(result) }] };
-                  },
-                }),
-              ]
-            : []),
-        ],
-      }),
-    );
+              }
+              if (rounds > current.maxSteps + durableConfig.step_overrun) {
+                return {
+                  output: [{ type: 'text', text: 'Step limit reached.' }],
+                  isError: true,
+                  control: { terminate: true },
+                };
+              }
+              if (rounds > current.maxSteps) {
+                return {
+                  output: [
+                    {
+                      type: 'text',
+                      text: 'The step limit is reached: do not call more tools, answer now with what you have.',
+                    },
+                  ],
+                  isError: true,
+                };
+              }
+              const allowed = readDurableConversation(messages);
+              const need = actionApproval(name, allowed);
+              if (need !== 'none') {
+                const pending: PendingApproval = {
+                  approval: 'requested',
+                  reason: need,
+                  tool: name,
+                  args: args as JsonObject,
+                };
+                return {
+                  output: [
+                    {
+                      type: 'text',
+                      text: 'This call waits for the user to approve or decline it. Stop here; their answer comes as a new message.',
+                    },
+                  ],
+                  details: pending,
+                  control: { terminate: true },
+                };
+              }
+              const result = await deps.callAction(name, args, allowed);
+              return {
+                output: [{ type: 'text', text: resultText(result) }],
+                isError: isActionError(result),
+              };
+            },
+          });
+        }),
+        ...(deps.skills
+          ? [
+              defineTool({
+                name: ASK_AI_SKILL_TOOL,
+                description: 'Read a skill, or one of its files.',
+                parameters: {
+                  type: 'object',
+                  properties: { name: { type: 'string' }, resource: { type: 'string' } },
+                  required: ['name'],
+                  additionalProperties: false,
+                } as unknown as TSchema,
+                replay: 'safe',
+                execute: async (args) => {
+                  const skills = await deps.skills?.();
+                  const result = skills
+                    ? await skills.read(args as { name: string; resource?: string })
+                    : { ok: false, error: 'No skills' };
+                  return { output: [{ type: 'text', text: resultText(result) }] };
+                },
+              }),
+            ]
+          : []),
+      ],
+    });
+    registry.install(extension);
     const harness = await Harness.open(
       deps.storage,
       {
@@ -335,7 +333,7 @@ export class AskAIDurable {
       },
       context,
     );
-    service = new AskAIDurable(harness, deps, context);
+    service = new AskAIDurable(harness, deps, context, extension.tools ?? []);
     return service;
   }
 
@@ -348,6 +346,13 @@ export class AskAIDurable {
   /** Runs whatever a stopped worker or browser left unfinished. */
   resume(): void {
     this.harness.resume();
+  }
+
+  /** The storage's own conversation: one chat per database. */
+  async root(): Promise<Conversation> {
+    return this.harness.root(this.context, {
+      agent: { model: { provider: PROVIDER_ID, modelId: MODEL_ID } },
+    });
   }
 
   /** A new conversation for a new chat. */
@@ -365,9 +370,22 @@ export class AskAIDurable {
     return this.harness.conversation(id as Conversation['id'], this.context);
   }
 
+  /**
+   * Reads the setup again and offers the chat only the actions turned on now (and the skills),
+   * so a model never sees a tool it may not call.
+   */
+  private async prepare(chat: Conversation): Promise<void> {
+    this.setupCache = await this.deps.setup();
+    const enabled = new Set([...this.setupCache.tools, ASK_AI_SKILL_TOOL]);
+    await chat.configure(
+      { tools: this.tools.filter((registration) => enabled.has(registration.name)) },
+      this.context,
+    );
+  }
+
   /** Sends the user's message; the same `requestId` again finds the same submission. */
   async send(chat: Conversation, text: string, requestId: string) {
-    this.setupCache = await this.deps.setup();
+    await this.prepare(chat);
     return chat.submit(
       { type: 'input', content: text, requestId, whenBusy: 'followUp' },
       this.context,
@@ -395,18 +413,30 @@ export class AskAIDurable {
       },
       this.context,
     );
-    this.setupCache = await this.deps.setup();
+    await this.prepare(chat);
     const { tool, args } = pending.approval;
     let text: string;
+    let result: unknown;
     if (approved) {
       const messages = await contextMessages(chat, this.context);
-      const result = await this.deps.callAction(tool, args, readDurableConversation(messages));
+      result = await this.deps.callAction(tool, args, readDurableConversation(messages));
       text = `The user approved the ${tool} call ${callId}. Its result: ${resultText(result)}`;
     } else {
       text = `The user declined the ${tool} call ${callId}; it did not run.`;
     }
+    const outcome = {
+      callId,
+      approved,
+      ...(approved ? { result: JSON.parse(resultText(result)) as JsonObject[string] } : {}),
+    };
     const submission = await chat.submit(
-      { type: 'input', content: text, requestId: `outcome:${callId}`, whenBusy: 'followUp' },
+      {
+        type: 'input',
+        content: text,
+        entry: { kind: ASK_AI_OUTCOME_ENTRY, data: outcome },
+        requestId: `outcome:${callId}`,
+        whenBusy: 'followUp',
+      },
       this.context,
     );
     return { ok: true as const, submission };

@@ -25,6 +25,11 @@ let firefoxFrame: HTMLIFrameElement | undefined;
 let hostReady: Promise<void> | undefined;
 /** The page holds a warm built-in session, so it stays open until it reports itself idle. */
 let warmHost = false;
+/** What keeps the page open between calls besides a warm session, such as Ask AI's chats. */
+const holders = new Set<string>();
+
+/** Whether nothing needs the page any more. */
+const hostUnused = () => activeCalls.size === 0 && !warmHost && holders.size === 0;
 
 function hostUrl(): string {
   return browser.runtime.getURL(AI_HOST_PATH);
@@ -56,6 +61,47 @@ async function openHost(): Promise<void> {
   document.body.append(frame);
   firefoxFrame = frame;
   await loaded;
+}
+
+/** Opens the page, once, for every caller that needs it now. */
+function ensureHost(): Promise<void> {
+  hostReady ??= openHost().catch((error: unknown) => {
+    hostReady = undefined;
+    throw error;
+  });
+  return hostReady;
+}
+
+/**
+ * Opens the AI host page and keeps it open for `holder` until `releaseAIHost`, between calls too:
+ * Ask AI's chats run there.
+ */
+export async function holdAIHost(holder: string): Promise<void> {
+  holders.add(holder);
+  await ensureHost();
+}
+
+/** Lets the AI host page close once nothing else needs it. */
+export async function releaseAIHost(holder: string): Promise<void> {
+  holders.delete(holder);
+  if (hostUnused()) await closeHost();
+}
+
+/**
+ * Lets the AI host page send provider requests for `call` under `token` until the returned
+ * function is called; each request is logged under the call's service and source.
+ */
+export function registerAIHostCall(token: string, call: Required<ActiveCall>): () => void {
+  activeCalls.set(token, call);
+  return () => {
+    activeCalls.delete(token);
+  };
+}
+
+/** The logging fetch for the AI call `token` names, or undefined when none is in progress. */
+export function aiHostCallFetch(token: string): typeof fetch | undefined {
+  const call = activeCalls.get(token);
+  return call?.source ? createLoggingFetch({ ...call, source: call.source }) : undefined;
 }
 
 async function closeHost(): Promise<void> {
@@ -142,11 +188,7 @@ export async function withAIHost<T>(
     ...(source ? { source } : {}),
   });
   try {
-    hostReady ??= openHost().catch((error: unknown) => {
-      hostReady = undefined;
-      throw error;
-    });
-    await hostReady;
+    await ensureHost();
     return await work({
       readPage: async (url) => {
         // The host reads public http and https pages only.
@@ -207,7 +249,7 @@ export async function withAIHost<T>(
   } finally {
     activeCalls.delete(token);
     if (keepOpen) warmHost = true;
-    else if (activeCalls.size === 0 && !warmHost) await closeHost();
+    else if (hostUnused()) await closeHost();
   }
 }
 
@@ -222,7 +264,7 @@ export async function closeIdleAIHost(
   if (!isPlainObject(message) || message.type !== QUICK_SAVE_MESSAGE.hostIdle) return;
   if (!isFromAIHost(sender)) return;
   warmHost = false;
-  if (activeCalls.size === 0) await closeHost();
+  if (hostUnused()) await closeHost();
 }
 
 /**
@@ -250,7 +292,7 @@ export async function recordAIHostActivity(
   });
 }
 
-function isFromAIHost(sender: Browser.runtime.MessageSender): boolean {
+export function isFromAIHost(sender: Browser.runtime.MessageSender): boolean {
   return sender.id === browser.runtime.id && !sender.tab && sender.url === hostUrl();
 }
 

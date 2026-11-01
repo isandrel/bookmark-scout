@@ -33,6 +33,7 @@ import {
   type ToolSet,
   tool,
 } from 'ai';
+import { SOURCES_DIAGNOSTIC } from '@/lib/ask-ai-ui-messages';
 
 /** The diagnostic an answer carries for each tool the provider ran itself, such as its web search. */
 export const PROVIDER_TOOL_DIAGNOSTIC = 'provider_tool';
@@ -56,6 +57,8 @@ export type AISdkPiProviderOptions = {
   models: readonly AISdkPiModel[];
   /** The AI SDK model for a model id, built per call so a changed service applies at once. */
   languageModel: (modelId: string) => LanguageModel | Promise<LanguageModel>;
+  /** A failed request's message as the user should read it; the raw error message without it. */
+  describeError?: (error: unknown) => string;
   /**
    * Tools the provider runs itself, such as its web search: offered on every call, never handed
    * to Pi Durable as calls to run.
@@ -193,6 +196,7 @@ function streamWith(options: AISdkPiProviderOptions) {
     };
     void (async () => {
       const blocks = new Map<string, number>();
+      const sources: { url: string; title?: string }[] = [];
       stream.push({ type: 'start', partial });
       try {
         const request = toAISdkRequest(context);
@@ -291,6 +295,11 @@ function streamWith(options: AISdkPiProviderOptions) {
                 ? 'toolUse'
                 : (FINISH_REASONS[part.finishReason] ?? 'stop');
               break;
+            case 'source':
+              if (part.sourceType === 'url') {
+                sources.push({ url: part.url, ...(part.title ? { title: part.title } : {}) });
+              }
+              break;
             case 'error':
               throw part.error;
             case 'abort':
@@ -298,6 +307,12 @@ function streamWith(options: AISdkPiProviderOptions) {
             default:
               break;
           }
+        }
+        if (sources.length > 0) {
+          partial.diagnostics = [
+            ...(partial.diagnostics ?? []),
+            { type: SOURCES_DIAGNOSTIC, timestamp: Date.now(), details: { sources } },
+          ];
         }
         const reason = partial.stopReason;
         if (reason !== 'stop' && reason !== 'length' && reason !== 'toolUse') {
@@ -311,7 +326,9 @@ function streamWith(options: AISdkPiProviderOptions) {
       } catch (error) {
         const reason = streamOptions.signal?.aborted ? 'aborted' : 'error';
         partial.stopReason = reason;
-        partial.errorMessage = error instanceof Error ? error.message : String(error);
+        partial.errorMessage =
+          options.describeError?.(error) ??
+          (error instanceof Error ? error.message : String(error));
         stream.push({ type: 'error', reason, error: partial });
       }
     })();

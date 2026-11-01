@@ -55,6 +55,8 @@ export default defineBackground(() => {
   // Access for local AI agents, while the user has it on (Options > For developers).
   registerAgentApprovals();
   registerAgentBridge();
+  // Ask AI: its chats run in the AI host page; the background sets up answers and runs calls.
+  registerAskAI();
 
   // Long tools that keep running when their page closes; a command or the alarm wakes them.
   registerJobs();

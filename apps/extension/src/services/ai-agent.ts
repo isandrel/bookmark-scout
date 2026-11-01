@@ -39,30 +39,3 @@ export async function createAskAIToolContext(settings: Settings): Promise<Action
       : {}),
   };
 }
-
-/**
- * A new agent for the current default service and settings; built per message, so switching
- * services or settings (such as Ask AI's web search) applies to the next message.
- */
-export async function createAskAIAgent() {
-  const appSettings = await getSettings();
-  const settings = await getActiveAISettings(appSettings.aiEnabled, 'askAI');
-  const [{ buildAskAIAgent }, skillKit] = await Promise.all([
-    import('./ai-agent.lazy'),
-    import('./ask-ai-skills.lazy'),
-  ]);
-  const skills = await skillKit.createAskAISkills();
-  const { system } = await buildPrompt('ask_ai', appSettings, {
-    data: { skills: skillKit.askAISkillCatalog(skills) },
-  });
-
-  return buildAskAIAgent({
-    settings,
-    instructions: system,
-    toolContext: await createAskAIToolContext(appSettings),
-    webSearch: appSettings.askAiWebSearch,
-    maxSteps: appSettings.askAiMaxSteps,
-    webSearchMaxUses: ASK_AI_CONFIG.web_search_max_uses,
-    extraTools: skillKit.createSkillToolSet(skills),
-  });
-}
