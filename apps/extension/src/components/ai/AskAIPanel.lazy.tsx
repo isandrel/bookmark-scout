@@ -235,21 +235,38 @@ export function AskAIChat({ onClose }: AskAIPanelProps) {
   useEffect(() => {
     if (!keepChatsLoading && !keepChats) void clearChats();
   }, [keepChats, keepChatsLoading]);
-  // Keeps the chat once an answer is finished (or failed), never while it is still being written,
-  // and never in a private window.
+  // Keeps the chat, never in a private window: at once when an answer is finished (or failed), and
+  // at most every `save_interval_ms` while it is written, so closing the popup mid-answer loses at
+  // most that much. The popup closing keeps what is waiting, though the browser may end the page
+  // before the write lands.
+  const latestChat = useRef({ chatId, messages, chatsMax });
+  const pendingKeep = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
-    if (
-      !keepChats ||
-      inPrivateWindow() ||
-      !resumed.current ||
-      (status !== 'ready' && status !== 'error')
-    )
-      return;
-    if (messages.length === 0) return;
-    void keepChat(chatId, messages, chatsMax).catch((error) => {
-      aiLogger.error({ error }, 'Failed to keep the Ask AI chat');
-    });
+    latestChat.current = { chatId, messages, chatsMax };
+  });
+  useEffect(() => {
+    if (!keepChats || inPrivateWindow() || !resumed.current || messages.length === 0) return;
+    const keep = () => {
+      if (pendingKeep.current) clearTimeout(pendingKeep.current);
+      pendingKeep.current = null;
+      const latest = latestChat.current;
+      void keepChat(latest.chatId, latest.messages, latest.chatsMax).catch((error) => {
+        aiLogger.error({ error }, 'Failed to keep the Ask AI chat');
+      });
+    };
+    if (status === 'ready' || status === 'error') keep();
+    else pendingKeep.current ??= setTimeout(keep, CHAT_SAVE_INTERVAL_MS);
   }, [chatId, chatsMax, keepChats, messages, status]);
+  useEffect(
+    () => () => {
+      if (!pendingKeep.current) return;
+      clearTimeout(pendingKeep.current);
+      pendingKeep.current = null;
+      const latest = latestChat.current;
+      void keepChat(latest.chatId, latest.messages, latest.chatsMax).catch(() => undefined);
+    },
+    [],
+  );
 
   const openChat = (id: string, kept: readonly UIMessage[]) => {
     stop();
