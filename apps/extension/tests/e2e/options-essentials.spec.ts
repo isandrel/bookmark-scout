@@ -100,8 +100,16 @@ test('a tab opens at its start, whether the tab left behind was scrolled or not'
 }) => {
   await page.setViewportSize({ width: 1280, height: 600 });
   await page.goto(`chrome-extension://${extensionId}/options.html?category=behavior`);
-  await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight }));
-  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+  // Scrolled again on each poll: the tab's settings render after load, and a scroll before
+  // they did found a page no taller than the window (Edge CI, November 2026).
+  await expect
+    .poll(() =>
+      page.evaluate(() => {
+        window.scrollTo({ top: document.documentElement.scrollHeight });
+        return window.scrollY;
+      }),
+    )
+    .toBeGreaterThan(0);
 
   // Another long tab used to open midway, where the last one was scrolled to.
   await page.getByRole('tab', { name: 'Appearance', exact: true }).click();
