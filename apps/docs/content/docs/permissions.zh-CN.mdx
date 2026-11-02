@@ -49,7 +49,7 @@ description: Bookmark Scout 请求的每项浏览器权限、需要它的原因�
 | `contextMenus` | Chrome、Edge | 你在[设置](/settings#context-menu)中开启**右键菜单**时。此项默认关闭，Chrome 授予此权限时不会弹出提示 |
 | `favicon` | Chrome、Edge | 你点击**刷新网站图标**卡片上的**显示浏览器图标**，或在[设置](/settings#appearance)中开启**使用浏览器的图标缓存**以显示浏览器已保存的图标时。请求前会先显示简短说明 |
 | 数据共享同意 | Firefox | 每项功能只请求它所发送的数据：**AI 功能**请求你的 API 密钥、书签以及当前网页的标题和网址；**读取网页内容**请求网页文本；**验证服务**请求你的 API 密钥。请求前会先显示简短说明，告知数据会发送给你的 AI 服务商，而不是 Bookmark Scout |
-| `nativeMessaging` | 全部 | 你在[设置](/settings#agent-bridge)中开启**允许本地 AI 智能体**时，让扩展可以与你电脑上的 bookmark-scout-mcp 程序通信。会先显示简短说明；在 Firefox 中，同一提示还会请你同意与该程序共享书签数据在[设置](/settings#ask-ai-local-skills)中开启**这台电脑上的技能**时也会请求此权限，让询问 AI 可以读取该程序从你的文件夹中读到的技能。 |
+| `nativeMessaging` | 全部 | 你在[设置](/settings#agent-bridge)中开启**允许本地 AI 智能体**时，让扩展可以与你电脑上的 bookmark-scout-mcp 程序通信。会先显示简短说明；在 Firefox 中，同一提示还会请你同意与该程序共享书签数据。在[设置](/settings#ask-ai-local-skills)中开启**这台电脑上的技能**时也会请求此权限，让询问 AI 可以读取该程序从你的文件夹中读到的技能。 |
 
 如果你拒绝，该功能会保持关闭，也不会发送任何内容。如果你之后在浏览器的扩展程序设置中撤回某项权限，相应功能会关闭；再次开启时会重新请求权限。
 

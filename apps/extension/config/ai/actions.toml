@@ -23,6 +23,34 @@ summary_chars = 300
 max_page_chars = 20000
 # Steps one runBatch call may hold; a batch is one approval and one undo step
 max_batch_steps = 20
+# Settings one getSettings call returns per page at most
+max_settings = 100
+# Settings one changeSettings call may change at once
+max_setting_changes = 20
+# Settings agents may read but never change (src/services/settings-actions.ts): what AI and local
+# agents may do and see, and what leaves the device or the browser. The switches that need a browser
+# permission (SETTING_PERMISSIONS in src/lib/settings-schema.ts) are guarded too, without being
+# listed. The user changes all of them in Options.
+guarded_settings = [
+  "aiEnabled",
+  "aiReadPageContent",
+  "readPageSkipPrivateHosts",
+  "aiActivityRecording",
+  "askAiWebSearch",
+  "askAiDisabledActions",
+  "askAiDisabledSkills",
+  "askAiLocalSkills",
+  "askAiLocalSkillFolders",
+  "agentBridgeEnabled",
+  "agentBridgeWrites",
+  "agentBridgeRedactUrls",
+  "agentBridgeDisabledActions",
+  "backupExportCategories",
+  "backupEncryptByDefault",
+  "backupEncryptSecrets",
+  "coversBrowseCapturePrivate",
+  "historyRecordOutsideChanges",
+]
 # Characters one tool result may take as JSON; a larger one asks the agent to narrow it
 max_result_chars = 60000
 # Changes one proposeChanges plan may hold

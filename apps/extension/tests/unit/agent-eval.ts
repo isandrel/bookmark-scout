@@ -10,7 +10,7 @@
 import { MemoryStorage } from '@earendil-works/pi-durable';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import type { ActionContext } from '@/services/action-kit';
-import { agentActionIds, runAction } from '@/services/actions';
+import { agentActionIds, checkActionCall, runAction } from '@/services/actions';
 import { AskAIDurable, pendingApprovals } from '@/services/ask-ai-durable.lazy';
 import type { BookmarkTreeNode } from '@/types';
 import {
@@ -125,6 +125,8 @@ export async function runScriptedAgent(
     languageModel: async () => model,
     callAction: (name, args, conversation) =>
       runAction(name, args, { ...toolContext, conversation }),
+    checkAction: (name, args, conversation) =>
+      checkActionCall(name, args, { ...toolContext, conversation }),
   });
   const approvals: SeenApproval[] = [];
   try {

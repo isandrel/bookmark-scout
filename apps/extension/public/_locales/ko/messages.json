@@ -6451,6 +6451,14 @@
         "message": "$1단계를 실행했습니다",
         "description": "Ask AI step: the agent ran several actions as one request; $1 is how many"
     },
+    "askAI_toolGetSettings": {
+        "message": "설정을 읽었습니다",
+        "description": "Ask AI step: the agent read the settings"
+    },
+    "askAI_toolChangeSettings": {
+        "message": "설정 $1개를 변경했습니다",
+        "description": "Ask AI step: the agent changed settings; $1 is how many"
+    },
     "askAI_toolPropose": {
         "message": "승인할 변경 사항을 준비함",
         "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
@@ -6510,6 +6518,10 @@
     "askAI_approvalSave": {
         "message": "\"$1\"을(를) $2에 저장",
         "description": "Ask AI approval line: saving a page as a bookmark. $1 is the page title or URL, $2 the folder path."
+    },
+    "askAI_approvalSetting": {
+        "message": "“$1”을(를) $2(으)로 설정",
+        "description": "Approval line for a settings change: $1 is the setting name, $2 its new value"
     },
     "askAI_approvalUndo": {
         "message": "이전 변경 되돌리기",
@@ -7498,6 +7510,14 @@
     "actionName_runBatch": {
         "message": "여러 단계를 한 번에 실행",
         "description": "Name of the bookmark action that runs several actions as one request, approved once and undone as one step"
+    },
+    "actionName_getSettings": {
+        "message": "설정 읽기",
+        "description": "Name of the action that reads Bookmark Scout settings"
+    },
+    "actionName_changeSettings": {
+        "message": "설정 변경",
+        "description": "Name of the action that changes Bookmark Scout settings"
     },
     "actionName_proposeChanges": {
         "message": "승인할 변경 제안",

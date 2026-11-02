@@ -79,12 +79,13 @@ export async function askAISetup(chatId: string): Promise<AskAIHostSetup> {
 async function callAction(message: unknown): Promise<unknown> {
   const parsed = askAICallActionSchema.safeParse(message);
   if (!parsed.success) return actionError('invalid_input', 'Malformed action call');
-  const { name, args, untrustedContentSeen, knownUrls } = parsed.data;
-  const context = await askAIContext(await getSettings());
-  return runAction(name, args, {
-    ...context,
+  const { name, args, untrustedContentSeen, knownUrls, checkOnly } = parsed.data;
+  const context = {
+    ...(await askAIContext(await getSettings())),
     conversation: { untrustedContentSeen, knownUrls: new Set(knownUrls) },
-  });
+  };
+  if (checkOnly) return (await checkActionCall(name, args, context)) ?? null;
+  return runAction(name, args, context);
 }
 
 /** Asks the host page to delete chats the list dropped; the page is open, since it reported them. */

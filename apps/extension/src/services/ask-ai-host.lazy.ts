@@ -154,6 +154,16 @@ function openChat(chatId: string, ephemeral: boolean): Promise<OpenChat> {
           untrustedContentSeen: conversation.untrustedContentSeen,
           knownUrls: [...conversation.knownUrls],
         }),
+      checkAction: (name, args, conversation) =>
+        send({
+          type: ASK_AI_MESSAGE.callAction,
+          chatId,
+          name,
+          args,
+          untrustedContentSeen: conversation.untrustedContentSeen,
+          knownUrls: [...conversation.knownUrls],
+          checkOnly: true,
+        }),
       skills: async () => createAskAISkills((open?.setup ?? (await currentSetup())).skills),
       describeError: describeAIErrorWithDetail,
     });
