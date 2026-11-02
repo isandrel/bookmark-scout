@@ -29,7 +29,7 @@ test('an update copies lists kept together, or on this device, into an item each
   const settings = { language: 'en', privacyScannerSensitiveParams: ['e2e_secret'] };
   const oldLists = {
     urlCleanerRemoveParams: ['utm_e2e', 'ref_e2e'],
-    askAiDisabledActions: ['checkLinks'],
+    urlCleanerPreserveParams: ['checkLinks'],
   };
   await writeStoredItems(extensionWorker, [
     [STORAGE_ITEMS.settings, settings],
@@ -55,9 +55,9 @@ test('an update copies lists kept together, or on this device, into an item each
     .poll(listKeys)
     .toEqual(
       [
-        'askAiDisabledActions',
         'managerOrganizeMenu',
         'privacyScannerSensitiveParams',
+        'urlCleanerPreserveParams',
         'urlCleanerRemoveParams',
       ].map((key) => storageAreaKey(STORAGE_ITEMS.settingsList, key)),
     );
@@ -68,7 +68,7 @@ test('an update copies lists kept together, or on this device, into an item each
   expect(await readStored(extensionWorker, STORAGE_ITEMS.deviceSettings)).toBeUndefined();
   expect(await readSettings(extensionWorker)).toMatchObject({
     urlCleanerRemoveParams: ['utm_e2e', 'ref_e2e'],
-    askAiDisabledActions: ['checkLinks'],
+    urlCleanerPreserveParams: ['checkLinks'],
     managerOrganizeMenu: ['addFolder', 'sortByName'],
   });
 
@@ -111,7 +111,7 @@ test('an update copies lists kept together, or on this device, into an item each
   await expect(params.locator('[data-slot="list-chip"]')).toHaveText(['utm_e2e']);
   expect(await readSettings(extensionWorker)).toMatchObject({
     urlCleanerRemoveParams: ['utm_e2e'],
-    askAiDisabledActions: ['checkLinks'],
+    urlCleanerPreserveParams: ['checkLinks'],
     privacyScannerSensitiveParams: ['e2e_secret'],
     managerOrganizeMenu: ['addFolder', 'sortByName'],
   });

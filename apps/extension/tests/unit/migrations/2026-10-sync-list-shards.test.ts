@@ -32,7 +32,7 @@ const OLD_ITEM = syncListShards.legacy!.item;
 const OLD_LISTS = {
   urlCleanerRemoveParams: ['utm_*'],
   managerMenuActions: ['edit'],
-  askAiDisabledActions: ['deleteBookmarks'],
+  urlCleanerPreserveParams: ['deleteBookmarks'],
   // Not valid: dropped alone.
   deadLinksSuccessStatuses: ['not a status'],
   // Not a setting this release knows.
@@ -42,7 +42,7 @@ const OLD_LISTS = {
 /** The lists 0.3.4 kept in the settings item, with a scalar setting. */
 const SETTINGS_0_3_4 = {
   theme: 'dark',
-  askAiDisabledActions: ['checkLinks'],
+  urlCleanerPreserveParams: ['checkLinks'],
   privacyScannerSensitiveParams: ['secret'],
 };
 
@@ -93,7 +93,7 @@ describe('each list setting in its own item', () => {
       theme: 'dark',
       urlCleanerRemoveParams: ['utm_*'],
       // The shared lists item wins over the settings item.
-      askAiDisabledActions: ['deleteBookmarks'],
+      urlCleanerPreserveParams: ['deleteBookmarks'],
       privacyScannerSensitiveParams: ['secret'],
       managerOrganizeMenu: ['addFolder', 'sortByName'],
       deadLinksSuccessStatuses: defaultSettings.deadLinksSuccessStatuses,
@@ -113,7 +113,7 @@ describe('each list setting in its own item', () => {
       urlCleanerRemoveParams: ['utm_*'],
       // With no marks, in the form menus are stored in now: the rest of 0.3.4's menu hidden.
       managerMenuActions: ['-edit', ...HIDDEN_BESIDE_EDIT],
-      askAiDisabledActions: ['deleteBookmarks'],
+      urlCleanerPreserveParams: ['deleteBookmarks'],
       privacyScannerSensitiveParams: ['secret'],
       managerOrganizeMenu: ['addFolder', 'sortByName'],
       managerEmptySpaceMenu: ['paste'],
@@ -153,7 +153,7 @@ describe('each list setting in its own item', () => {
     });
     expect(await readStoredData(STORAGE_ITEMS.settings)).toEqual({
       theme: 'light',
-      askAiDisabledActions: ['checkLinks'],
+      urlCleanerPreserveParams: ['checkLinks'],
       urlCleanerRemoveParams: ['ref'],
     });
     expect((await listItems()).urlCleanerRemoveParams).toEqual(['ref']);
@@ -188,7 +188,7 @@ describe('each list setting in its own item', () => {
     await runStorageMigrations();
     expect(await getSettings()).toMatchObject({
       theme: defaultSettings.theme,
-      askAiDisabledActions: defaultSettings.askAiDisabledActions,
+      urlCleanerPreserveParams: defaultSettings.urlCleanerPreserveParams,
       privacyScannerSensitiveParams: defaultSettings.privacyScannerSensitiveParams,
     });
   });
@@ -215,7 +215,7 @@ describe('each list setting in its own item', () => {
     await runStorageMigrations();
     expect(await getSettings()).toMatchObject({
       theme: 'dark',
-      askAiDisabledActions: ['checkLinks'],
+      urlCleanerPreserveParams: ['checkLinks'],
       privacyScannerSensitiveParams: ['secret'],
       urlCleanerRemoveParams: ['ref'],
       managerMenuActions: ['-edit', ...HIDDEN_BESIDE_EDIT],
@@ -231,18 +231,18 @@ describe('each list setting in its own item', () => {
   });
 
   it('puts back no 0.3.4 copy of a list changed since Reset All that the undo leaves as it is', async () => {
-    await seedStored(STORAGE_ITEMS.settings, { askAiDisabledActions: ['checkLinks'] });
+    await seedStored(STORAGE_ITEMS.settings, { urlCleanerPreserveParams: ['checkLinks'] });
     await runStorageMigrations();
     // A device still on 0.3.4 then changed a list this device has at its default.
     await seedStored(STORAGE_ITEMS.settings, {
-      askAiDisabledActions: ['checkLinks'],
+      urlCleanerPreserveParams: ['checkLinks'],
       urlCleanerRemoveParams: ['from-0.3.4'],
     });
     const reset = await resetSettings();
     await saveSettings({ urlCleanerRemoveParams: ['since'] });
     await undoResetSettings(reset);
     expect(await readStoredData(STORAGE_ITEMS.settings)).toEqual({
-      askAiDisabledActions: ['checkLinks'],
+      urlCleanerPreserveParams: ['checkLinks'],
     });
     expect((await getSettings()).urlCleanerRemoveParams).toEqual(['since']);
   });
@@ -252,13 +252,13 @@ describe('each list setting in its own item', () => {
       'replace',
       // Only the list the file does not have.
       1,
-      { askAiDisabledActions: ['checkLinks'], privacyScannerSensitiveParams: ['secret'] },
+      { urlCleanerPreserveParams: ['checkLinks'], privacyScannerSensitiveParams: ['secret'] },
     ],
     [
       'merge',
       0,
       {
-        askAiDisabledActions: ['checkLinks'],
+        urlCleanerPreserveParams: ['checkLinks'],
         privacyScannerSensitiveParams: ['secret'],
         urlCleanerRemoveParams: ['ref'],
       },
@@ -274,7 +274,7 @@ describe('each list setting in its own item', () => {
       const { json } = await makeBackupFile({ categories: ['settings'], protection: 'none' });
       await saveSettings({
         theme: 'light',
-        askAiDisabledActions: ['deleteBookmarks'],
+        urlCleanerPreserveParams: ['deleteBookmarks'],
         privacyScannerSensitiveParams: defaultSettings.privacyScannerSensitiveParams,
         urlCleanerRemoveParams: ['ref'],
       });
@@ -300,12 +300,12 @@ describe('each list setting in its own item', () => {
   it('gives no 0.3.4 copies to a user who had none when settings are restored', async () => {
     stubManifestVersion();
     installFakeBookmarks([]);
-    await saveSettings({ theme: 'dark', askAiDisabledActions: ['checkLinks'] });
+    await saveSettings({ theme: 'dark', urlCleanerPreserveParams: ['checkLinks'] });
     const { json } = await makeBackupFile({ categories: ['settings'], protection: 'none' });
-    await saveSettings({ theme: 'light', askAiDisabledActions: ['deleteBookmarks'] });
+    await saveSettings({ theme: 'light', urlCleanerPreserveParams: ['deleteBookmarks'] });
     await restoreParts(json, { settings: 'replace' });
     expect(await readStoredData(STORAGE_ITEMS.settings)).toEqual({ theme: 'dark' });
-    expect((await listItems()).askAiDisabledActions).toEqual(['checkLinks']);
+    expect((await listItems()).urlCleanerPreserveParams).toEqual(['checkLinks']);
   });
 
   it('saves the settings item without 0.3.4 lists, once, when they no longer fit beside it', async () => {
@@ -318,7 +318,7 @@ describe('each list setting in its own item', () => {
       .spyOn(fakeBrowser.storage.sync, 'set')
       .mockImplementation(async (items: Record<string, unknown>) => {
         const data = (items[settingsKey] as { data?: Record<string, unknown> } | undefined)?.data;
-        if (data && 'askAiDisabledActions' in data) {
+        if (data && 'urlCleanerPreserveParams' in data) {
           throw new Error('QUOTA_BYTES_PER_ITEM quota exceeded');
         }
         return set(items);
@@ -341,7 +341,6 @@ describe('each list setting in its own item', () => {
     // The lists already have their own items, so nothing the user set is lost.
     expect(await getSettings()).toMatchObject({
       theme: 'light',
-      askAiDisabledActions: ['deleteBookmarks'],
       privacyScannerSensitiveParams: ['secret'],
       urlCleanerPreserveParams: ['id'],
       quickSaveFixedFolder: '9',
@@ -390,7 +389,6 @@ describe('each list setting in its own item', () => {
     await seedEarlierReleases();
     await Promise.all([runStorageMigrations(), runStorageMigrations(), getSettings()]);
     expect(Object.keys(await listItems()).sort()).toEqual([
-      'askAiDisabledActions',
       'managerEmptySpaceMenu',
       'managerMenuActions',
       'managerOrganizeMenu',
@@ -398,6 +396,7 @@ describe('each list setting in its own item', () => {
       'popupBookmarkMenu',
       'popupFolderMenu',
       'privacyScannerSensitiveParams',
+      'urlCleanerPreserveParams',
       'urlCleanerRemoveParams',
     ]);
   });
@@ -441,7 +440,7 @@ describe('each list setting in its own item', () => {
     expect(await getSettings()).toMatchObject({
       theme: 'dark',
       urlCleanerRemoveParams: ['utm_*'],
-      askAiDisabledActions: ['deleteBookmarks'],
+      urlCleanerPreserveParams: ['deleteBookmarks'],
       privacyScannerSensitiveParams: ['secret'],
       popupBookmarkMenu: ['delete'],
       deadLinksSuccessStatuses: defaultSettings.deadLinksSuccessStatuses,

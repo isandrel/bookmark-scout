@@ -6515,6 +6515,18 @@
         "message": "Ha cercato valori privati",
         "description": "Ask AI step: the agent scanned bookmarks for private values"
     },
+    "askAI_toolListRules": {
+        "message": "Ha elencato le regole intelligenti",
+        "description": "Ask AI step: the agent listed the Smart Rules"
+    },
+    "askAI_toolSaveRule": {
+        "message": "Ha salvato la regola intelligente «$1»",
+        "description": "Ask AI step: the agent saved a Smart Rule; $1 is its name"
+    },
+    "askAI_toolDeleteRule": {
+        "message": "Ha eliminato una regola intelligente",
+        "description": "Ask AI step: the agent deleted a Smart Rule"
+    },
     "askAI_toolPropose": {
         "message": "Ho preparato le modifiche da approvare",
         "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
@@ -6590,6 +6602,26 @@
     "askAI_approvalStartTool": {
         "message": "Esegui $1 su $2",
         "description": "Approval line: $1 is the tool name, $2 the folder or all bookmarks"
+    },
+    "askAI_approvalRule": {
+        "message": "Salva la regola intelligente «$1», che cerca $2",
+        "description": "Approval line: $1 is the rule's name, $2 its search"
+    },
+    "askAI_approvalRuleTags": {
+        "message": "Aggiungi i tag $1",
+        "description": "Approval line: $1 is the tags the rule adds"
+    },
+    "askAI_approvalRuleMove": {
+        "message": "Spostali in $1",
+        "description": "Approval line: $1 is the folder the rule moves bookmarks to"
+    },
+    "askAI_approvalDeleteRule": {
+        "message": "Elimina la regola intelligente «$1»",
+        "description": "Approval line: $1 is the deleted rule's name"
+    },
+    "askAI_ruleMissing": {
+        "message": "Quella regola intelligente non esiste più.",
+        "description": "Approval: the Smart Rule the agent names no longer exists"
     },
     "askAI_allBookmarks": {
         "message": "tutti i segnalibri",
@@ -7646,6 +7678,18 @@
     "actionName_scanPrivacy": {
         "message": "Cerca valori privati",
         "description": "Name of the action that runs the Privacy Scanner"
+    },
+    "actionName_listRules": {
+        "message": "Elenca le regole intelligenti",
+        "description": "Name of the action that lists Smart Rules"
+    },
+    "actionName_saveRule": {
+        "message": "Salva una regola intelligente",
+        "description": "Name of the action that saves a Smart Rule"
+    },
+    "actionName_deleteRule": {
+        "message": "Elimina una regola intelligente",
+        "description": "Name of the action that deletes a Smart Rule"
     },
     "actionName_proposeChanges": {
         "message": "Proporre modifiche da approvare",
