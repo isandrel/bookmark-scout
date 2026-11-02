@@ -34,16 +34,12 @@ function savedSearchError(error: SavedSearchError): ActionError {
   }
 }
 
-// Read when first used: the saved search modules load after this one when the storage they
-// share loads the action menus first.
-const savedSearchQuery = z.lazy(() => savedSearchQuerySchema);
-
 const savedSearchOutput = z.object({
   id: z.string(),
   name: z.string(),
   search: z.string().optional().describe(agentText('saved_search_view.search')),
   folder: z.string().optional().describe(agentText('saved_search_view.folder')),
-  query: savedSearchQuery.describe(agentText('saved_search_view.query')),
+  query: savedSearchQuerySchema.describe(agentText('saved_search_view.query')),
 });
 
 /** A saved search as agents see it: its search text and folder by path, and the whole query. */
@@ -74,10 +70,15 @@ const listSavedSearches = defineAction({
 });
 
 const saveSearchInput = z.object({
-  name: z.string().trim().min(1).describe(agentText('save_search.name')),
+  name: z
+    .string()
+    .trim()
+    .min(1)
+    .max(SAVED_SEARCH_NAME_MAX_LENGTH)
+    .describe(agentText('save_search.name')),
   search: z.string().trim().min(1).optional().describe(agentText('save_search.search')),
   folder: z.string().min(1).optional().describe(agentText('save_search.folder')),
-  query: savedSearchQuery.optional().describe(agentText('save_search.query')),
+  query: savedSearchQuerySchema.optional().describe(agentText('save_search.query')),
 });
 
 /** The query a save keeps: the one given, or one made of the search text and folder. */
