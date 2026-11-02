@@ -15,6 +15,11 @@ export const ASK_AI_PORT = 'ask-ai-chat';
 export const ASK_AI_MESSAGE = {
   /** A chat UI asks the background to open the AI host page and keep it open. */
   open: 'ask-ai/open',
+  /**
+   * An open chat UI says it is still there, which resets the idle timer of Firefox's event page,
+   * so the AI host frame in it keeps answering (`chatKeepAliveMs` of the browser profile).
+   */
+  keepAlive: 'ask-ai/keep-alive',
   /** The host page asks the background for an answer's setup. */
   setup: 'ask-ai/setup',
   /** The host page asks the background to run one action call. */

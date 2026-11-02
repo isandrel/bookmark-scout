@@ -50,6 +50,17 @@ describe('browser profiles', () => {
     });
   });
 
+  it('keep an open Ask AI chat waking Firefox’s event page before it goes idle', () => {
+    // Firefox's default `extensions.background.idle.timeout`.
+    const firefoxIdleMs = 30_000;
+    const keepAlive = browserProfile('firefox').chatKeepAliveMs;
+    expect(keepAlive).not.toBeNull();
+    expect(keepAlive ?? Infinity).toBeLessThan(firefoxIdleMs);
+    // Chrome's and Edge's AI host is an offscreen document, which outlives the worker.
+    expect(browserProfile('chrome').chatKeepAliveMs).toBeNull();
+    expect(browserProfile('edge').chatKeepAliveMs).toBeNull();
+  });
+
   it('are the only place that reads which browser the build is for', () => {
     // A capability belongs in config/browsers/profiles.toml, not in a check of the browser's name.
     const offenders = sourceFiles().filter((file) => {
