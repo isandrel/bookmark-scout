@@ -1,13 +1,13 @@
 /**
  * The backup file converter from format 1 to format 2
- * (`src/lib/storage/migrations/2026-10-backup-parts.ts`), reached through `upgradeBackupFile`.
+ * (`src/lib/storage/migrations/backup-2026-10-parts.ts`), reached through `upgradeBackupFile`.
  * Unlike a storage migration it is never removed: old files are restored for years.
  */
 import { beforeEach, describe, expect, it } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { setLanguage } from '@/hooks/use-i18n';
 import { saveSettings } from '@/lib/settings-storage';
-import { backupParts } from '@/lib/storage/migrations/2026-10-backup-parts';
+import { backupParts } from '@/lib/storage/migrations/backup-2026-10-parts';
 import { BACKUP_FILE_CONVERTERS, upgradeBackupFile } from '@/lib/storage/migrations/backup-files';
 import { STORAGE_ITEMS, storageKey } from '@/lib/storage/registry';
 

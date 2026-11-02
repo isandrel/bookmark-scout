@@ -7,12 +7,16 @@
  * `upgradeBackupItems`), and settings read through them
  * on a device where they have not run yet, so a user never sees a moved setting reset meanwhile.
  *
- * Each migration is one module in this folder that owns everything about the old layout: the old
- * item's key and shape, and where its values go. No other file names an old key
- * (`tests/unit/migrations/index.test.ts` checks `src`). Removing a migration once every device
- * has run it is deleting its module, its line in `MIGRATIONS`, and its tests; the install and
- * update cleanup then removes the old item it kept, and the next settings save drops the old keys
- * it kept in the settings item (`keepsInSettingsItem`).
+ * Each migration is one standalone module in this folder, `<yyyy-mm>-<name>.ts`, exporting
+ * `migration`: everything about the old layout (the old item's key and shape, and where its values
+ * go) and nothing else. Its table in `config/data/migrations.toml` turns it on or off and says when
+ * it came and when it goes; the registry finds the modules itself (`import.meta.glob`) and fails
+ * on a module without a table or a table without a module. No other file names an old key
+ * (`tests/unit/migrations/index.test.ts` checks `src`). Adding or removing one is
+ * `.agents/skills/extension-stored-data/scripts/migration.ts add <name>` or `remove <id>`: its
+ * module, its table, and its test. Once it is gone the install and update cleanup removes the old
+ * item it kept, and the next settings save drops the old keys it kept in the settings item
+ * (`keepsInSettingsItem`).
  *
  * Rules for a migration:
  * - It never writes or removes the old item, so a device still on an earlier release keeps
@@ -27,6 +31,8 @@
  * WXT's `storage.defineItem` has versions and migrations too, but they run per item, on update
  * only, and cannot move a value into another item; this registry is the one mechanism here.
  */
+
+import { z } from 'zod';
 import {
   getSettingScope,
   type SettingScope,
@@ -35,8 +41,6 @@ import {
 } from '@/lib/settings-schema';
 import { STORAGE_ITEMS, type StorageAreaName, type StorageKey, storageKey } from '../registry';
 import type { StoredValue } from '../stored-value';
-import { contextMenuRecentMax } from './2026-10-context-menu-recent-max';
-import { syncListShards } from './2026-10-sync-list-shards';
 
 /** Stored settings that differ from the default, by key, as one settings item holds them. */
 export type StoredOverrides = Record<string, unknown>;
@@ -94,8 +98,70 @@ export type StorageMigration = {
   keepsAtDefault?(key: keyof Settings, settingsItem: StoredOverrides): boolean;
 };
 
-/** Every migration, oldest first; the background runs them in this order. */
-export const MIGRATIONS: readonly StorageMigration[] = [syncListShards, contextMenuRecentMax];
+/** What a migration's module holds: its logic. Its id, and when it came and goes, are config. */
+export type MigrationModule = Omit<StorageMigration, 'id' | 'addedIn' | 'removeAfter'>;
+
+const version = z.string().regex(/^\d+\.\d+\.\d+$/);
+
+const migrationsConfig = readConfig(
+  'data/migrations',
+  z.strictObject({
+    // Read by the add script only (`migration.ts add`): how long a new migration is kept.
+    defaults: z.strictObject({ keep_minor_releases: z.number().int().positive() }),
+    migrations: z.record(
+      z.string().regex(/^\d{4}-\d{2}-[a-z0-9]+(-[a-z0-9]+)*$/),
+      z.strictObject({ enabled: z.boolean(), added_in: version, remove_after: version }),
+    ),
+  }),
+);
+
+/**
+ * Every storage migration module in this folder, by file: `./<yyyy-mm>-<name>.ts`. The pattern is
+ * `20*` because the glob takes no character classes; backup converters are named `backup-*`.
+ */
+const MODULES = import.meta.glob<{ migration: MigrationModule }>('./20*.ts', {
+  eager: true,
+});
+
+/**
+ * The migrations config turns on, each its module with its id and versions, oldest first. A module
+ * without a table, or a table without a module, is an error, so neither can be left behind.
+ */
+export function loadMigrations(
+  modules: Readonly<Record<string, { migration: MigrationModule }>> = MODULES,
+  config: typeof migrationsConfig = migrationsConfig,
+): StorageMigration[] {
+  const byId = new Map(
+    Object.entries(modules).map(([file, module]) => [
+      file.replace(/^\.\/|\.ts$/g, ''),
+      module.migration,
+    ]),
+  );
+  for (const id of byId.keys()) {
+    if (!(id in config.migrations)) {
+      throw new Error(`Storage migration ${id} has no table in config/data/migrations.toml`);
+    }
+  }
+  return Object.entries(config.migrations)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .flatMap(([id, entry]) => {
+      const module = byId.get(id);
+      if (!module) throw new Error(`config/data/migrations.toml names ${id}, which has no module`);
+      return entry.enabled
+        ? [{ ...module, id, addedIn: entry.added_in, removeAfter: entry.remove_after }]
+        : [];
+    });
+}
+
+/** Every migration that is on, oldest first; the background runs them in this order. */
+export const MIGRATIONS: readonly StorageMigration[] = loadMigrations();
+
+/** The migration `id`, as registered; for its tests. */
+export function getMigration(id: string): StorageMigration {
+  const migration = MIGRATIONS.find((entry) => entry.id === id);
+  if (!migration) throw new Error(`No storage migration ${id} is on`);
+  return migration;
+}
 
 /** The ids of the migrations that have run on this device. */
 export const completedMigrationsValue = defineStoredValue<string[]>(

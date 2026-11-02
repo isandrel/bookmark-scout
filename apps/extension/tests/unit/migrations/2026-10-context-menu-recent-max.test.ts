@@ -13,11 +13,11 @@ import {
   saveSettings,
   undoResetSettings,
 } from '@/lib/settings-storage';
-import { upgradeBackupItems } from '@/lib/storage/migrations';
-import { contextMenuRecentMax } from '@/lib/storage/migrations/2026-10-context-menu-recent-max';
+import { getMigration, upgradeBackupItems } from '@/lib/storage/migrations';
 import { storageKey } from '@/lib/storage/registry';
 import { readStoredData, STORAGE_ITEMS, seedStored } from '../storage-helpers';
 
+const contextMenuRecentMax = getMigration('2026-10-context-menu-recent-max');
 const completed = () => readStoredData(STORAGE_ITEMS.storageMigrations);
 const menuDefault = defaultSettings.contextMenuRecentMax;
 // A count 0.3.4 users could choose that is not the default.
