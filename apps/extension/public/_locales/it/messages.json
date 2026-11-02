@@ -6479,6 +6479,30 @@
         "message": "Ha impostato tag e riepilogo",
         "description": "Ask AI step: the agent set a bookmark's tags or summary"
     },
+    "askAI_toolStartTool": {
+        "message": "Ha avviato $1",
+        "description": "Ask AI step: the agent started a tool; $1 is the tool name"
+    },
+    "askAI_toolListBackgroundJobs": {
+        "message": "Ha elencato le attività in background",
+        "description": "Ask AI step: the agent listed the background jobs"
+    },
+    "askAI_toolGetJobResults": {
+        "message": "Ha letto i risultati di un’attività",
+        "description": "Ask AI step: the agent read a job's results"
+    },
+    "askAI_toolPauseJob": {
+        "message": "Ha messo in pausa un’attività",
+        "description": "Ask AI step: the agent paused a job"
+    },
+    "askAI_toolResumeJob": {
+        "message": "Ha ripreso un’attività",
+        "description": "Ask AI step: the agent resumed a job"
+    },
+    "askAI_toolCancelJob": {
+        "message": "Ha annullato un’attività",
+        "description": "Ask AI step: the agent cancelled a job"
+    },
     "askAI_toolPropose": {
         "message": "Ho preparato le modifiche da approvare",
         "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
@@ -6550,6 +6574,14 @@
     "askAI_approvalTagsRemove": {
         "message": "Rimuovi $1 da $2 segnalibri",
         "description": "Approval line: $1 is the tags removed, $2 how many bookmarks"
+    },
+    "askAI_approvalStartTool": {
+        "message": "Esegui $1 su $2",
+        "description": "Approval line: $1 is the tool name, $2 the folder or all bookmarks"
+    },
+    "askAI_allBookmarks": {
+        "message": "tutti i segnalibri",
+        "description": "Approval: where a tool runs when no folder is named"
     },
     "askAI_approvalUndo": {
         "message": "Annulla una modifica fatta in precedenza",
@@ -7562,6 +7594,30 @@
     "actionName_setBookmarkDetails": {
         "message": "Imposta tag e riepilogo",
         "description": "Name of the action that sets one bookmark's tags and summary"
+    },
+    "actionName_startTool": {
+        "message": "Avvia uno strumento",
+        "description": "Name of the action that starts a Tools sidebar tool as a background job"
+    },
+    "actionName_listBackgroundJobs": {
+        "message": "Elenca le attività in background",
+        "description": "Name of the action that lists background jobs"
+    },
+    "actionName_getJobResults": {
+        "message": "Leggi i risultati di un’attività",
+        "description": "Name of the action that reads a background job's results"
+    },
+    "actionName_pauseJob": {
+        "message": "Metti in pausa un’attività",
+        "description": "Name of the action that pauses a background job"
+    },
+    "actionName_resumeJob": {
+        "message": "Riprendi un’attività",
+        "description": "Name of the action that resumes a background job"
+    },
+    "actionName_cancelJob": {
+        "message": "Annulla un’attività",
+        "description": "Name of the action that cancels a background job"
     },
     "actionName_proposeChanges": {
         "message": "Proporre modifiche da approvare",

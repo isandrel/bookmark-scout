@@ -134,6 +134,7 @@ export const ACTIONS = {
   ...CHAT_ACTIONS,
   ...SETTINGS_ACTIONS,
   ...METADATA_ACTIONS,
+  ...JOB_ACTIONS,
   runBatch,
 };
 

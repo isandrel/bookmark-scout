@@ -104,6 +104,7 @@ export async function createAgentBridgeContext(
     client: { kind: 'external', name: client.name },
     settings,
     activeTab: activeTabPage,
+    jobCommand: runJobCommand,
     ...(readPages ? { readPage: readPageForAgents(settings) } : {}),
   };
 }

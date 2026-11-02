@@ -6435,6 +6435,30 @@
         "message": "タグと要約を設定しました",
         "description": "Ask AI step: the agent set a bookmark's tags or summary"
     },
+    "askAI_toolStartTool": {
+        "message": "$1 を開始しました",
+        "description": "Ask AI step: the agent started a tool; $1 is the tool name"
+    },
+    "askAI_toolListBackgroundJobs": {
+        "message": "バックグラウンドのタスクを一覧表示しました",
+        "description": "Ask AI step: the agent listed the background jobs"
+    },
+    "askAI_toolGetJobResults": {
+        "message": "タスクの結果を読みました",
+        "description": "Ask AI step: the agent read a job's results"
+    },
+    "askAI_toolPauseJob": {
+        "message": "タスクを一時停止しました",
+        "description": "Ask AI step: the agent paused a job"
+    },
+    "askAI_toolResumeJob": {
+        "message": "タスクを再開しました",
+        "description": "Ask AI step: the agent resumed a job"
+    },
+    "askAI_toolCancelJob": {
+        "message": "タスクをキャンセルしました",
+        "description": "Ask AI step: the agent cancelled a job"
+    },
     "askAI_toolPropose": {
         "message": "承認用の変更を用意しました",
         "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
@@ -6506,6 +6530,14 @@
     "askAI_approvalTagsRemove": {
         "message": "$2 件のブックマークから $1 を削除",
         "description": "Approval line: $1 is the tags removed, $2 how many bookmarks"
+    },
+    "askAI_approvalStartTool": {
+        "message": "$2 で $1 を実行",
+        "description": "Approval line: $1 is the tool name, $2 the folder or all bookmarks"
+    },
+    "askAI_allBookmarks": {
+        "message": "すべてのブックマーク",
+        "description": "Approval: where a tool runs when no folder is named"
     },
     "askAI_approvalUndo": {
         "message": "以前の変更を元に戻す",
@@ -7550,6 +7582,30 @@
     "actionName_setBookmarkDetails": {
         "message": "タグと要約を設定",
         "description": "Name of the action that sets one bookmark's tags and summary"
+    },
+    "actionName_startTool": {
+        "message": "ツールを開始",
+        "description": "Name of the action that starts a Tools sidebar tool as a background job"
+    },
+    "actionName_listBackgroundJobs": {
+        "message": "バックグラウンドのタスクを一覧表示",
+        "description": "Name of the action that lists background jobs"
+    },
+    "actionName_getJobResults": {
+        "message": "タスクの結果を読む",
+        "description": "Name of the action that reads a background job's results"
+    },
+    "actionName_pauseJob": {
+        "message": "タスクを一時停止",
+        "description": "Name of the action that pauses a background job"
+    },
+    "actionName_resumeJob": {
+        "message": "タスクを再開",
+        "description": "Name of the action that resumes a background job"
+    },
+    "actionName_cancelJob": {
+        "message": "タスクをキャンセル",
+        "description": "Name of the action that cancels a background job"
     },
     "actionName_proposeChanges": {
         "message": "承認用の変更を提案",
