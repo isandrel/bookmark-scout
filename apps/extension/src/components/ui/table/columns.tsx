@@ -127,18 +127,6 @@ function includesQuery(value: unknown, ...texts: (string | undefined)[]) {
   return !query || texts.some((text) => text?.toLowerCase().includes(query));
 }
 
-/**
- * The search box's filter on the Title column: what was typed, and what the search query language
- * (`use-search-matches.ts`) found for it, matched by row id.
- */
-export type TitleSearchFilter = { text: string; matches: SearchMatches };
-
-/** The text of the Title column's filter, which saved searches also set as plain text. */
-export function titleSearchText(value: unknown): string {
-  if (typeof value === 'string') return value;
-  return (value as Partial<TitleSearchFilter> | undefined)?.text ?? '';
-}
-
 function matchesTitleSearch(rowId: string, value: unknown): boolean {
   const matches = (value as Partial<TitleSearchFilter> | undefined)?.matches;
   if (matches === undefined || matches === 'all') return true;

@@ -6639,6 +6639,34 @@
         "message": "Cette règle intelligente n'existe plus.",
         "description": "Approval: the Smart Rule the agent names no longer exists"
     },
+    "askAI_toolListSavedSearches": {
+        "message": "Recherches enregistrées listées",
+        "description": "Ask AI step: the agent listed the saved searches"
+    },
+    "askAI_toolSaveSearch": {
+        "message": "Recherche « $1 » enregistrée",
+        "description": "Ask AI step: the agent saved a search; $1 is its name"
+    },
+    "askAI_toolRenameSearch": {
+        "message": "Recherche enregistrée renommée en « $1 »",
+        "description": "Ask AI step: the agent renamed a saved search; $1 is the new name"
+    },
+    "askAI_toolDeleteSearch": {
+        "message": "Recherche enregistrée supprimée",
+        "description": "Ask AI step: the agent deleted a saved search"
+    },
+    "askAI_approvalSaveSearch": {
+        "message": "Enregistrer la recherche « $1 » : $2",
+        "description": "Approval line: $1 is the saved search name, $2 its search text or folder"
+    },
+    "askAI_approvalDeleteSearch": {
+        "message": "Supprimer la recherche enregistrée « $1 »",
+        "description": "Approval line: $1 is the deleted saved search's name"
+    },
+    "askAI_savedSearchMissing": {
+        "message": "Cette recherche enregistrée n’existe plus.",
+        "description": "Approval: the saved search the agent names no longer exists"
+    },
     "askAI_allBookmarks": {
         "message": "tous les favoris",
         "description": "Approval: where a tool runs when no folder is named"
@@ -7710,6 +7738,22 @@
     "actionName_deleteRule": {
         "message": "Supprimer une règle intelligente",
         "description": "Name of the action that deletes a Smart Rule"
+    },
+    "actionName_listSavedSearches": {
+        "message": "Lister les recherches enregistrées",
+        "description": "Name of the action that lists saved searches"
+    },
+    "actionName_saveSearch": {
+        "message": "Enregistrer une recherche",
+        "description": "Name of the action that saves a search"
+    },
+    "actionName_renameSearch": {
+        "message": "Renommer une recherche enregistrée",
+        "description": "Name of the action that renames a saved search"
+    },
+    "actionName_deleteSearch": {
+        "message": "Supprimer une recherche enregistrée",
+        "description": "Name of the action that deletes a saved search"
     },
     "actionName_exportBookmarkFile": {
         "message": "Exporter des favoris",

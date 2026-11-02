@@ -6639,6 +6639,34 @@
         "message": "Esa regla inteligente ya no existe.",
         "description": "Approval: the Smart Rule the agent names no longer exists"
     },
+    "askAI_toolListSavedSearches": {
+        "message": "Listó las búsquedas guardadas",
+        "description": "Ask AI step: the agent listed the saved searches"
+    },
+    "askAI_toolSaveSearch": {
+        "message": "Guardó la búsqueda «$1»",
+        "description": "Ask AI step: the agent saved a search; $1 is its name"
+    },
+    "askAI_toolRenameSearch": {
+        "message": "Cambió el nombre de una búsqueda guardada a «$1»",
+        "description": "Ask AI step: the agent renamed a saved search; $1 is the new name"
+    },
+    "askAI_toolDeleteSearch": {
+        "message": "Eliminó una búsqueda guardada",
+        "description": "Ask AI step: the agent deleted a saved search"
+    },
+    "askAI_approvalSaveSearch": {
+        "message": "Guardar la búsqueda «$1»: $2",
+        "description": "Approval line: $1 is the saved search name, $2 its search text or folder"
+    },
+    "askAI_approvalDeleteSearch": {
+        "message": "Eliminar la búsqueda guardada «$1»",
+        "description": "Approval line: $1 is the deleted saved search's name"
+    },
+    "askAI_savedSearchMissing": {
+        "message": "Esa búsqueda guardada ya no existe.",
+        "description": "Approval: the saved search the agent names no longer exists"
+    },
     "askAI_allBookmarks": {
         "message": "todos los marcadores",
         "description": "Approval: where a tool runs when no folder is named"
@@ -7710,6 +7738,22 @@
     "actionName_deleteRule": {
         "message": "Eliminar una regla inteligente",
         "description": "Name of the action that deletes a Smart Rule"
+    },
+    "actionName_listSavedSearches": {
+        "message": "Listar búsquedas guardadas",
+        "description": "Name of the action that lists saved searches"
+    },
+    "actionName_saveSearch": {
+        "message": "Guardar una búsqueda",
+        "description": "Name of the action that saves a search"
+    },
+    "actionName_renameSearch": {
+        "message": "Cambiar el nombre de una búsqueda guardada",
+        "description": "Name of the action that renames a saved search"
+    },
+    "actionName_deleteSearch": {
+        "message": "Eliminar una búsqueda guardada",
+        "description": "Name of the action that deletes a saved search"
     },
     "actionName_exportBookmarkFile": {
         "message": "Exportar marcadores",

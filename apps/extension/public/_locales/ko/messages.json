@@ -6631,6 +6631,34 @@
         "message": "그 스마트 규칙은 더 이상 없습니다.",
         "description": "Approval: the Smart Rule the agent names no longer exists"
     },
+    "askAI_toolListSavedSearches": {
+        "message": "저장된 검색을 나열했습니다",
+        "description": "Ask AI step: the agent listed the saved searches"
+    },
+    "askAI_toolSaveSearch": {
+        "message": "검색 “$1”을(를) 저장했습니다",
+        "description": "Ask AI step: the agent saved a search; $1 is its name"
+    },
+    "askAI_toolRenameSearch": {
+        "message": "저장된 검색의 이름을 “$1”(으)로 바꿨습니다",
+        "description": "Ask AI step: the agent renamed a saved search; $1 is the new name"
+    },
+    "askAI_toolDeleteSearch": {
+        "message": "저장된 검색을 삭제했습니다",
+        "description": "Ask AI step: the agent deleted a saved search"
+    },
+    "askAI_approvalSaveSearch": {
+        "message": "검색 “$1” 저장: $2",
+        "description": "Approval line: $1 is the saved search name, $2 its search text or folder"
+    },
+    "askAI_approvalDeleteSearch": {
+        "message": "저장된 검색 “$1” 삭제",
+        "description": "Approval line: $1 is the deleted saved search's name"
+    },
+    "askAI_savedSearchMissing": {
+        "message": "해당 저장된 검색이 더 이상 없습니다.",
+        "description": "Approval: the saved search the agent names no longer exists"
+    },
     "askAI_allBookmarks": {
         "message": "모든 북마크",
         "description": "Approval: where a tool runs when no folder is named"
@@ -7698,6 +7726,22 @@
     "actionName_deleteRule": {
         "message": "스마트 규칙 삭제",
         "description": "Name of the action that deletes a Smart Rule"
+    },
+    "actionName_listSavedSearches": {
+        "message": "저장된 검색 나열",
+        "description": "Name of the action that lists saved searches"
+    },
+    "actionName_saveSearch": {
+        "message": "검색 저장",
+        "description": "Name of the action that saves a search"
+    },
+    "actionName_renameSearch": {
+        "message": "저장된 검색 이름 바꾸기",
+        "description": "Name of the action that renames a saved search"
+    },
+    "actionName_deleteSearch": {
+        "message": "저장된 검색 삭제",
+        "description": "Name of the action that deletes a saved search"
     },
     "actionName_exportBookmarkFile": {
         "message": "북마크 내보내기",

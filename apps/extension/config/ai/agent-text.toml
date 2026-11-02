@@ -113,6 +113,29 @@ agent_description = "Delete one of the user's Smart Rules, by its id from listRu
 id = "The rule id"
 deleted = "The rule that was deleted"
 
+[saved_search_view]
+id = "The saved search, by its id from listSavedSearches"
+search = "The text of its search box, in the same words and operators as searchBookmarks"
+folder = "The folder it is limited to, by path"
+query = "The whole stored query: filters, sort, and folder scope, as the bookmark manager keeps it"
+
+[list_saved_searches]
+agent_description = "List the saved searches of the bookmark manager, in the user's order: each one's name, search, folder, and whole query. A saved search keeps a query, never bookmarks."
+
+[save_search]
+agent_description = "Save a search under a name, for the user to open from the bookmark manager's Saved searches menu: search text (the same words and operators as searchBookmarks), a folder to limit it to, or both. Names are unique, ignoring case. Bookmarks are not touched."
+name = "Its name, unique ignoring case"
+search = "The search text"
+folder = "A folder (ref or full path) to limit the search to"
+query = "A whole query as listSavedSearches returns it, instead of search and folder"
+
+[rename_search]
+agent_description = "Rename one of the saved searches, by its id from listSavedSearches."
+
+[delete_search]
+agent_description = "Delete one of the saved searches, by its id from listSavedSearches. Bookmarks are not touched."
+deleted = "The saved search that was deleted"
+
 [export_bookmarks]
 agent_description = "Export all bookmarks or a folder as text, in one of the export formats (html, json, markdown, csv), with the user's export settings. JSON keeps tags and summaries. A large library may be too large to send; export a folder then."
 format = "The export format"
