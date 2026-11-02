@@ -10313,6 +10313,10 @@
         "message": "Aturan tidak dapat disimpan.",
         "description": "Rule editor error: storage failed"
     },
+    "rules_errorDeleteFailed": {
+        "message": "Aturan tidak dapat dihapus.",
+        "description": "Error when deleting a smart rule fails"
+    },
     "rules_errorLimit": {
         "message": "Anda memiliki $1 aturan, jumlah terbanyak yang dapat disimpan. Hapus satu untuk menambahkan yang lain.",
         "description": "Rule editor and rules list error: the list already holds the most rules allowed; $1 is that number"

@@ -10757,6 +10757,10 @@
         "message": "The rule could not be saved.",
         "description": "Rule editor error: storage failed"
     },
+    "rules_errorDeleteFailed": {
+        "message": "The rule could not be deleted.",
+        "description": "Error when deleting a smart rule fails"
+    },
     "rules_errorLimit": {
         "message": "You have $1 rules, the most you can keep. Delete one to add another.",
         "description": "Rule editor and rules list error: the list already holds the most rules allowed; $1 is that number"

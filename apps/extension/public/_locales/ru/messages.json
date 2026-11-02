@@ -11645,6 +11645,10 @@
         "message": "Не удалось сохранить правило.",
         "description": "Rule editor error: storage failed"
     },
+    "rules_errorDeleteFailed": {
+        "message": "Не удалось удалить правило.",
+        "description": "Error when deleting a smart rule fails"
+    },
     "rules_errorLimit": {
         "message": "У вас $1 правил — это максимум. Удалите одно, чтобы добавить новое.",
         "description": "Rule editor and rules list error: the list already holds the most rules allowed; $1 is that number"
