@@ -14,19 +14,6 @@ const tagInput = z.string().trim().min(1).max(actionLimits.max_tag_chars);
 const tagList = (description: string) =>
   z.array(tagInput).max(actionLimits.max_tags_per_call).describe(description);
 
-/** The bookmarks `refs` name, or an error naming the first that is not a bookmark. */
-function bookmarksOf(library: ActionLibrary, refs: readonly string[]): string[] | ActionError {
-  const ids: string[] = [];
-  for (const ref of refs) {
-    const parsed = parseActionRef(ref);
-    if (parsed?.kind !== 'bookmark' || !library.bookmarkById.has(parsed.id)) {
-      return refProblem(library, ref, ['bookmark']);
-    }
-    ids.push(parsed.id);
-  }
-  return ids;
-}
-
 /** `tags` without those `remove` names and with `add`, each once, ignoring case. */
 function editedTags(tags: readonly string[], add: readonly string[], remove: readonly string[]) {
   const removed = new Set(remove.map(tagKey));
@@ -117,11 +104,11 @@ const editTags = defineAction({
     ],
   },
   async precheck(input) {
-    const ids = bookmarksOf(await loadActionLibrary(), input.refs);
+    const ids = resolveActionBookmarks(await loadActionLibrary(), input.refs);
     return isActionError(ids) ? ids : undefined;
   },
   async execute(input) {
-    const ids = bookmarksOf(await loadActionLibrary(), input.refs);
+    const ids = resolveActionBookmarks(await loadActionLibrary(), input.refs);
     if (isActionError(ids)) return ids;
     const stored = await bookmarkMetadataValue.get();
     const items = ids.map((id) => {
@@ -168,11 +155,11 @@ const setBookmarkDetails = defineAction({
   }),
   describe: () => t('askAI_toolSetDetails'),
   async precheck(input) {
-    const ids = bookmarksOf(await loadActionLibrary(), [input.ref]);
+    const ids = resolveActionBookmarks(await loadActionLibrary(), [input.ref]);
     return isActionError(ids) ? ids : undefined;
   },
   async execute(input) {
-    const ids = bookmarksOf(await loadActionLibrary(), [input.ref]);
+    const ids = resolveActionBookmarks(await loadActionLibrary(), [input.ref]);
     if (isActionError(ids)) return ids;
     const [id] = ids;
     const before = (await bookmarkMetadataValue.get())[id] ?? {};

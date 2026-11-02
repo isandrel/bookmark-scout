@@ -140,7 +140,7 @@ describe('the ui client', () => {
       await run(
         'moveBookmarks',
         { refs: ['b:b1'], to: 'Work' },
-        { client: { kind: 'ui' }, settings },
+        { client: { kind: 'ui', page: 'manager' }, settings },
       ),
     ).not.toHaveProperty('error');
     expect(bookmarks.get('b1')?.parentId).toBe('work');

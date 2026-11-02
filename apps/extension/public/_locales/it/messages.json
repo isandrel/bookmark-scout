@@ -6503,6 +6503,10 @@
         "message": "Ha annullato un’attività",
         "description": "Ask AI step: the agent cancelled a job"
     },
+    "askAI_toolDeleteJob": {
+        "message": "Ha eliminato un’attività",
+        "description": "Ask AI step: the agent deleted a finished job"
+    },
     "askAI_toolChangeUrl": {
         "message": "Ha cambiato un indirizzo",
         "description": "Ask AI step: a bookmark's address was changed"
@@ -7678,6 +7682,10 @@
     "actionName_cancelJob": {
         "message": "Annulla un’attività",
         "description": "Name of the action that cancels a background job"
+    },
+    "actionName_deleteJob": {
+        "message": "Elimina un’attività",
+        "description": "Name of the action that deletes a finished background job"
     },
     "actionName_changeUrl": {
         "message": "Cambia un indirizzo",

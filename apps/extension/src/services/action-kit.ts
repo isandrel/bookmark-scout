@@ -45,10 +45,16 @@ export const actionLimits = readConfig(
 
 /**
  * Who is calling an action: Ask AI, a local agent through the MCP bridge (by the name it gave), or
- * the user in Bookmark Scout's own pages (`ui`), which runs any action with input and needs no
- * agent approval: the user asked for it.
+ * the user in Bookmark Scout's own pages (`ui`, with the page they used), which runs any action
+ * with input and needs no agent approval: the user asked for it.
  */
-export type ActionClient = { kind: 'askAI' } | { kind: 'external'; name: string } | { kind: 'ui' };
+export type ActionClient =
+  | { kind: 'askAI' }
+  | { kind: 'external'; name: string }
+  | { kind: 'ui'; page: ActionUIPage };
+
+/** The Bookmark Scout pages a user's own call comes from: every job source but an agent. */
+export type ActionUIPage = Exclude<(typeof JOB_SOURCES)[number], 'agent'>;
 
 /** The kinds of AI agent, which settings let the user limit. */
 export type AgentKind = Exclude<ActionClient['kind'], 'ui'>;
@@ -328,6 +334,22 @@ const REF_KIND_NAMES: Record<ActionRefKind, { name: string; ref: (id: string) =>
   bookmark: { name: 'bookmark', ref: toBookmarkRef },
   folder: { name: 'folder', ref: toFolderRef },
 };
+
+/** The bookmarks `refs` name, or an error naming the first that is not a bookmark. */
+export function resolveActionBookmarks(
+  library: ActionLibrary,
+  refs: readonly string[],
+): string[] | ActionError {
+  const ids: string[] = [];
+  for (const ref of refs) {
+    const parsed = parseActionRef(ref);
+    if (parsed?.kind !== 'bookmark' || !library.bookmarkById.has(parsed.id)) {
+      return refProblem(library, ref, ['bookmark']);
+    }
+    ids.push(parsed.id);
+  }
+  return ids;
+}
 
 /**
  * Why `ref` names nothing of the kinds `wanted`, said so an agent can fix the call: a bare id or

@@ -6503,6 +6503,10 @@
         "message": "Cancelled a job",
         "description": "Ask AI step: the agent cancelled a job"
     },
+    "askAI_toolDeleteJob": {
+        "message": "Deleted a job",
+        "description": "Ask AI step: the agent deleted a finished job"
+    },
     "askAI_toolChangeUrl": {
         "message": "Changed an address",
         "description": "Ask AI step: a bookmark's address was changed"
@@ -7678,6 +7682,10 @@
     "actionName_cancelJob": {
         "message": "Cancel a job",
         "description": "Name of the action that cancels a background job"
+    },
+    "actionName_deleteJob": {
+        "message": "Delete a job",
+        "description": "Name of the action that deletes a finished background job"
     },
     "actionName_changeUrl": {
         "message": "Change an address",

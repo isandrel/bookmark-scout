@@ -6459,6 +6459,10 @@
         "message": "タスクをキャンセルしました",
         "description": "Ask AI step: the agent cancelled a job"
     },
+    "askAI_toolDeleteJob": {
+        "message": "タスクを削除しました",
+        "description": "Ask AI step: the agent deleted a finished job"
+    },
     "askAI_toolChangeUrl": {
         "message": "アドレスを変更しました",
         "description": "Ask AI step: a bookmark's address was changed"
@@ -7666,6 +7670,10 @@
     "actionName_cancelJob": {
         "message": "タスクをキャンセル",
         "description": "Name of the action that cancels a background job"
+    },
+    "actionName_deleteJob": {
+        "message": "タスクを削除",
+        "description": "Name of the action that deletes a finished background job"
     },
     "actionName_changeUrl": {
         "message": "アドレスを変更",

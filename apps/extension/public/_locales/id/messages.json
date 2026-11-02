@@ -6237,6 +6237,10 @@
         "message": "Membatalkan tugas",
         "description": "Ask AI step: the agent cancelled a job"
     },
+    "askAI_toolDeleteJob": {
+        "message": "Menghapus tugas",
+        "description": "Ask AI step: the agent deleted a finished job"
+    },
     "askAI_toolChangeUrl": {
         "message": "Mengubah alamat",
         "description": "Ask AI step: a bookmark's address was changed"
@@ -7408,6 +7412,10 @@
     "actionName_cancelJob": {
         "message": "Batalkan tugas",
         "description": "Name of the action that cancels a background job"
+    },
+    "actionName_deleteJob": {
+        "message": "Hapus tugas",
+        "description": "Name of the action that deletes a finished background job"
     },
     "actionName_changeUrl": {
         "message": "Ubah alamat",
