@@ -61,5 +61,14 @@ export function useSetting<K extends keyof Settings>(
   useEffect(() => {
     if (caughtUp) setSaving(undefined);
   }, [caughtUp]);
+  // A page closed or reloaded while a save is running would drop it, though the page already showed
+  // the new value; the background saves it instead, as Options does for its fields.
+  const unsaved = saving && !saving.done ? saving.value : undefined;
+  useEffect(() => {
+    if (unsaved === undefined) return;
+    const flush = () => saveSettingsFromClosingPage({ [key]: unsaved } as Partial<Settings>);
+    window.addEventListener('pagehide', flush);
+    return () => window.removeEventListener('pagehide', flush);
+  }, [key, unsaved]);
   return { value: saving && !caughtUp ? saving.value : value, isLoading, setValue };
 }
