@@ -33,7 +33,7 @@ async function add(name: string) {
   const now = new Date();
   const id = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${name}`;
   if (existsSync(moduleOf(id))) fail(`${id} exists already.`);
-  const config = Bun.TOML.parse(await Bun.file(configPath).text()) as {
+  const config = parse(await Bun.file(configPath).text()) as {
     defaults: { keep_minor_releases: number };
   };
   const version = (
