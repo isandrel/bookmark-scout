@@ -6221,6 +6221,18 @@
         "message": "已更改 $1 项设置",
         "description": "Ask AI step: the agent changed settings; $1 is how many"
     },
+    "askAI_toolListTags": {
+        "message": "已列出标签",
+        "description": "Ask AI step: the agent listed the tags"
+    },
+    "askAI_toolEditTags": {
+        "message": "已更改 $1 个书签的标签",
+        "description": "Ask AI step: the agent changed tags; $1 is how many bookmarks"
+    },
+    "askAI_toolSetDetails": {
+        "message": "已设置标签和摘要",
+        "description": "Ask AI step: the agent set a bookmark's tags or summary"
+    },
     "askAI_toolPropose": {
         "message": "准备了待你批准的更改",
         "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
@@ -6284,6 +6296,14 @@
     "askAI_approvalSetting": {
         "message": "将“$1”设为 $2",
         "description": "Approval line for a settings change: $1 is the setting name, $2 its new value"
+    },
+    "askAI_approvalTagsAdd": {
+        "message": "为 $2 个书签添加 $1",
+        "description": "Approval line: $1 is the tags added, $2 how many bookmarks"
+    },
+    "askAI_approvalTagsRemove": {
+        "message": "从 $2 个书签移除 $1",
+        "description": "Approval line: $1 is the tags removed, $2 how many bookmarks"
     },
     "askAI_approvalUndo": {
         "message": "撤消之前的一项更改",
@@ -7280,6 +7300,18 @@
     "actionName_changeSettings": {
         "message": "更改设置",
         "description": "Name of the action that changes Bookmark Scout settings"
+    },
+    "actionName_listTags": {
+        "message": "列出标签",
+        "description": "Name of the action that lists the saved tags"
+    },
+    "actionName_editTags": {
+        "message": "添加或移除标签",
+        "description": "Name of the action that adds and removes tags on bookmarks"
+    },
+    "actionName_setBookmarkDetails": {
+        "message": "设置标签和摘要",
+        "description": "Name of the action that sets one bookmark's tags and summary"
     },
     "actionName_proposeChanges": {
         "message": "提出待批准的更改",

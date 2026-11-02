@@ -93,6 +93,23 @@ results = "Each step run and its result, in order"
 failed_at = "The index of the step that failed; later steps did not run"
 change = "The change id for undoChange, when a step changed bookmarks"
 
+[list_tags]
+agent_description = "List the tags saved on bookmarks, most used first, with how many bookmarks have each. Filter by a word in the tag."
+query = "A word the tags must contain"
+
+[edit_tags]
+agent_description = "Add tags to and remove tags from bookmarks, by bookmark refs (b:<id>). Other tags stay. Returns each bookmark's tags before and after; tags are not in the undo history, so to undo, set them back with setBookmarkDetails."
+refs = "Bookmark refs, b:<id>"
+add = "Tags to add"
+remove = "Tags to remove, ignoring case"
+items = "Each bookmark's tags before and after"
+
+[set_bookmark_details]
+agent_description = "Set one bookmark's saved tags (replacing them) and its summary. Pass tags, a summary, or both; an empty summary removes it. Returns what it replaced."
+ref = "A bookmark ref, b:<id>"
+tags = "The bookmark's tags, replacing the saved ones"
+summary = "The bookmark's summary, in the user's language"
+
 [list_settings]
 agent_description = "Read Bookmark Scout's settings: each key, its label in the user's language, its value, where it is stored, whether you may change it, and its choices when it has a fixed set. Filter by keys or a word in the key or label."
 keys = "Only these setting keys"

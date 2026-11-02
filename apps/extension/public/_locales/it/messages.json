@@ -6467,6 +6467,18 @@
         "message": "Ha modificato $1 impostazioni",
         "description": "Ask AI step: the agent changed settings; $1 is how many"
     },
+    "askAI_toolListTags": {
+        "message": "Ha elencato i tag",
+        "description": "Ask AI step: the agent listed the tags"
+    },
+    "askAI_toolEditTags": {
+        "message": "Ha modificato i tag di $1 segnalibri",
+        "description": "Ask AI step: the agent changed tags; $1 is how many bookmarks"
+    },
+    "askAI_toolSetDetails": {
+        "message": "Ha impostato tag e riepilogo",
+        "description": "Ask AI step: the agent set a bookmark's tags or summary"
+    },
     "askAI_toolPropose": {
         "message": "Ho preparato le modifiche da approvare",
         "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
@@ -6530,6 +6542,14 @@
     "askAI_approvalSetting": {
         "message": "Imposta «$1» su $2",
         "description": "Approval line for a settings change: $1 is the setting name, $2 its new value"
+    },
+    "askAI_approvalTagsAdd": {
+        "message": "Aggiungi $1 a $2 segnalibri",
+        "description": "Approval line: $1 is the tags added, $2 how many bookmarks"
+    },
+    "askAI_approvalTagsRemove": {
+        "message": "Rimuovi $1 da $2 segnalibri",
+        "description": "Approval line: $1 is the tags removed, $2 how many bookmarks"
     },
     "askAI_approvalUndo": {
         "message": "Annulla una modifica fatta in precedenza",
@@ -7530,6 +7550,18 @@
     "actionName_changeSettings": {
         "message": "Modifica le impostazioni",
         "description": "Name of the action that changes Bookmark Scout settings"
+    },
+    "actionName_listTags": {
+        "message": "Elenca i tag",
+        "description": "Name of the action that lists the saved tags"
+    },
+    "actionName_editTags": {
+        "message": "Aggiungi o rimuovi tag",
+        "description": "Name of the action that adds and removes tags on bookmarks"
+    },
+    "actionName_setBookmarkDetails": {
+        "message": "Imposta tag e riepilogo",
+        "description": "Name of the action that sets one bookmark's tags and summary"
     },
     "actionName_proposeChanges": {
         "message": "Proporre modifiche da approvare",

@@ -6467,6 +6467,18 @@
         "message": "Cambió $1 ajustes",
         "description": "Ask AI step: the agent changed settings; $1 is how many"
     },
+    "askAI_toolListTags": {
+        "message": "Mostró las etiquetas",
+        "description": "Ask AI step: the agent listed the tags"
+    },
+    "askAI_toolEditTags": {
+        "message": "Cambió etiquetas en $1 marcadores",
+        "description": "Ask AI step: the agent changed tags; $1 is how many bookmarks"
+    },
+    "askAI_toolSetDetails": {
+        "message": "Fijó etiquetas y resumen",
+        "description": "Ask AI step: the agent set a bookmark's tags or summary"
+    },
     "askAI_toolPropose": {
         "message": "Ha preparado cambios para que los apruebes",
         "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
@@ -6530,6 +6542,14 @@
     "askAI_approvalSetting": {
         "message": "Poner «$1» en $2",
         "description": "Approval line for a settings change: $1 is the setting name, $2 its new value"
+    },
+    "askAI_approvalTagsAdd": {
+        "message": "Añadir $1 a $2 marcadores",
+        "description": "Approval line: $1 is the tags added, $2 how many bookmarks"
+    },
+    "askAI_approvalTagsRemove": {
+        "message": "Quitar $1 de $2 marcadores",
+        "description": "Approval line: $1 is the tags removed, $2 how many bookmarks"
     },
     "askAI_approvalUndo": {
         "message": "Deshacer un cambio anterior",
@@ -7530,6 +7550,18 @@
     "actionName_changeSettings": {
         "message": "Cambiar ajustes",
         "description": "Name of the action that changes Bookmark Scout settings"
+    },
+    "actionName_listTags": {
+        "message": "Ver etiquetas",
+        "description": "Name of the action that lists the saved tags"
+    },
+    "actionName_editTags": {
+        "message": "Añadir o quitar etiquetas",
+        "description": "Name of the action that adds and removes tags on bookmarks"
+    },
+    "actionName_setBookmarkDetails": {
+        "message": "Fijar etiquetas y resumen",
+        "description": "Name of the action that sets one bookmark's tags and summary"
     },
     "actionName_proposeChanges": {
         "message": "Proponer cambios para aprobar",
