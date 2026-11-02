@@ -11,16 +11,18 @@
 # next PR in the queue once main was merged into it (October 2026). Earlier limits and their
 # reasons are in this file's git history.
 #
-# Measured 2026-11-01 on main c4c8a1f7 (Chrome build): background 528, popup and side panel
-# 1,144, options 1,355, bookmarks manager 1,596, quick save notification 12, agent approval 792,
-# AI host 456, welcome 677.
+# Measured 2026-11-02 with the saved search actions on main 237ff13f (Chrome build): background
+# 591, popup and side panel 1,158, options 1,417, bookmarks manager 1,635, quick save notification
+# 12, agent approval 866, AI host 471, welcome 691. The background grew with the actions registry
+# (every feature as an action, which the MCP bridge runs in the service worker); agent approval
+# grew with the actions' approval previews. Both limits were reset to about 10% above.
 [eager_kib]
-"background.js" = 590
+"background.js" = 650
 "popup.html" = 1260
 "sidepanel.html" = 1260
 "options.html" = 1500
 "bookmarks.html" = 1760
 "quick-save-toast.js" = 15
-"agent-approval.html" = 880
+"agent-approval.html" = 950
 "ai-host.html" = 510
 "welcome.html" = 750
