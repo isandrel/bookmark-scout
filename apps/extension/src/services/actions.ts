@@ -15,9 +15,116 @@
  *
  * `runAction` is the only way a call runs: it checks the input, the permission, and whether the
  * action can run here; it never throws (an action that cannot act answers with an `ActionError`
- * the caller can read and act on); and it refuses a result too large to send.
+ * the caller can read and act on); and it refuses a result too large to send. The user's own
+ * pages call it too, as the `ui` client, so a feature is one action for people and agents alike.
+ *
+ * `runBatch` is the one aggregate: several calls as one request, one approval, one undo step. It
+ * lives here, not in a table, because it runs other entries of this registry.
  */
 import { z } from 'zod';
+
+type BatchStep = { action: string; input?: Record<string, unknown> };
+
+const batchInput = z.object({
+  steps: z
+    .array(
+      z.object({
+        action: z.string().min(1).describe(agentText('run_batch.step_action')),
+        input: z
+          .record(z.string(), z.unknown())
+          .optional()
+          .describe(agentText('run_batch.step_input')),
+      }),
+    )
+    .min(1)
+    .max(actionLimits.max_batch_steps)
+    .describe(agentText('run_batch.steps')),
+});
+
+const runBatch = defineAction({
+  risk: 'write',
+  batch: false,
+  labelKey: 'actionName_runBatch',
+  targets: ['library'],
+  agent: { description: agentText('run_batch.agent_description') },
+  input: batchInput,
+  output: z.object({
+    results: z
+      .array(z.object({ action: z.string(), result: z.unknown() }))
+      .describe(agentText('run_batch.results')),
+    failedAt: z.number().int().optional().describe(agentText('run_batch.failed_at')),
+    change: z.string().optional().describe(agentText('run_batch.change')),
+  }),
+  describe: (input) => t('askAI_toolBatch', formatCount(input.steps?.length ?? 0)),
+  approvalPreview: {
+    lines: (input) =>
+      (Array.isArray(input.steps) ? input.steps : []).map(
+        (step: BatchStep) => describeActionCall(step.action, step.input ?? {}) ?? step.action,
+      ),
+  },
+  precheck: (input, context) => checkBatch(input.steps, context),
+  async execute(input, context) {
+    const refused = await checkBatch(input.steps, context);
+    if (refused) return refused;
+    const results: { action: string; result: unknown }[] = [];
+    let failedAt: number | undefined;
+    const run = async (writer?: BookmarkWriter) => {
+      for (const [index, step] of input.steps.entries()) {
+        const result = await runAction(step.action, step.input ?? {}, {
+          ...context,
+          ...(writer ? { writer } : {}),
+        });
+        results.push({ action: step.action, result });
+        if (isActionError(result)) {
+          failedAt = index;
+          return;
+        }
+      }
+    };
+    const changes = input.steps.some(
+      (step) => isActionId(step.action) && getAction(step.action).risk !== 'read',
+    );
+    if (!changes) {
+      await run();
+      return { results, ...(failedAt === undefined ? {} : { failedAt }) };
+    }
+    // Every change of the batch is one undo step, as a plan's are.
+    const { recorded } = await recordBookmarkWrites(
+      { action: 'change', count: input.steps.length },
+      (writer) => run(context.writer ?? writer),
+    );
+    return {
+      results,
+      ...(failedAt === undefined ? {} : { failedAt }),
+      ...(recorded?.stored ? { change: recorded.entry.id } : {}),
+    };
+  },
+});
+
+/** Why a batch would be refused before any step runs: an unknown step, one that cannot be a step, or one this caller may not run. */
+async function checkBatch(
+  steps: readonly BatchStep[],
+  context: ActionContext,
+): Promise<ActionError | undefined> {
+  for (const [index, step] of steps.entries()) {
+    if (isActionId(step.action) && getAction(step.action).batch === false) {
+      return actionError(
+        'not_allowed',
+        `Step ${index + 1}: ${step.action} cannot be part of a batch.`,
+        {
+          hint: 'Call it on its own.',
+        },
+      );
+    }
+    const problem = await checkActionCall(step.action, step.input ?? {}, context);
+    if (problem) {
+      return {
+        error: { ...problem.error, message: `Step ${index + 1}: ${problem.error.message}` },
+      };
+    }
+  }
+  return undefined;
+}
 
 export const ACTIONS = {
   ...READ_ACTIONS,
@@ -25,6 +132,7 @@ export const ACTIONS = {
   ...WRITE_ACTIONS,
   ...PLAN_ACTIONS,
   ...CHAT_ACTIONS,
+  runBatch,
 };
 
 export type ActionId = keyof typeof ACTIONS;
@@ -49,13 +157,13 @@ export function changesBookmarks(id: ActionId): boolean {
 }
 
 /** Whether this kind of agent is offered the action at all: it has an agent exposure for it. */
-function offeredTo(id: ActionId, kind: ActionClient['kind']): boolean {
+function offeredTo(id: ActionId, kind: AgentKind): boolean {
   const { agent } = getAction(id);
   return Boolean(agent && (!agent.only || agent.only === kind));
 }
 
 /** The actions the user can turn on or off for this kind of agent (Options > AI for Ask AI, Options > For developers for local agents). */
-export function agentActionChoices(kind: ActionClient['kind']): ActionId[] {
+export function agentActionChoices(kind: AgentKind): ActionId[] {
   return ACTION_IDS.filter((id) => offeredTo(id, kind));
 }
 
@@ -63,11 +171,13 @@ export function agentActionChoices(kind: ActionClient['kind']): ActionId[] {
 const DISABLED_ACTIONS = {
   askAI: 'askAiDisabledActions',
   external: 'agentBridgeDisabledActions',
-} as const satisfies Record<ActionClient['kind'], keyof Settings>;
+} as const satisfies Record<AgentKind, keyof Settings>;
 
 /** Why the agent making the call may not use this action, or nothing. */
 function refusedFor(id: ActionId, context: ActionContext): string | undefined {
   const { kind } = context.client;
+  // The user in Bookmark Scout's own pages may run any action; the agent settings limit agents.
+  if (kind === 'ui') return undefined;
   if (!offeredTo(id, kind)) return `${id} is not offered to this agent.`;
   // Local agents change bookmarks only once the user allows it; each change still asks first.
   if (kind === 'external' && changesBookmarks(id) && !context.settings.agentBridgeWrites) {
@@ -170,10 +280,12 @@ export async function runAction(
     result = actionError('failed', getErrorMessage(error));
   }
   // Every change, and every call a local agent makes, is in the AI activity log when it is on.
-  if (action.risk !== 'read' || context.client.kind !== 'askAI') {
+  // The user's own calls are not AI activity.
+  const { client } = context;
+  if (client.kind !== 'ui' && (action.risk !== 'read' || client.kind !== 'askAI')) {
     void recordActionActivity({
-      source: context.client.kind === 'askAI' ? 'askAI' : 'agentBridge',
-      ...(context.client.kind === 'external' ? { client: context.client.name } : {}),
+      source: client.kind === 'askAI' ? 'askAI' : 'agentBridge',
+      ...(client.kind === 'external' ? { client: client.name } : {}),
       action: id,
       input: parsed.data,
       result,
@@ -209,13 +321,33 @@ export function describeActionCall(id: string, input: unknown): string | undefin
  */
 export function actionApproval(
   id: string,
+  input: unknown,
   { untrustedContentSeen }: { untrustedContentSeen: boolean },
 ): 'none' | 'always' | 'untrusted' {
   if (!isActionId(id)) return 'none';
-  const { risk } = getAction(id);
+  const risk = callRisk(id, input);
   if (risk === 'destructive') return 'always';
   if (risk === 'write') return untrustedContentSeen ? 'untrusted' : 'none';
   return 'none';
+}
+
+const RISK_ORDER: readonly ActionRisk[] = ['read', 'write', 'destructive'];
+
+/**
+ * How much one call can change: its action's risk, or for `runBatch` the highest risk of its
+ * steps, so a batch of lookups needs no approval and one with a deletion always does.
+ */
+export function callRisk(id: ActionId, input: unknown): ActionRisk {
+  if (id !== 'runBatch') return getAction(id).risk;
+  const parsed = batchInput.safeParse(input);
+  if (!parsed.success) return getAction(id).risk;
+  const risks = parsed.data.steps.map((step) =>
+    isActionId(step.action) ? callRisk(step.action, step.input ?? {}) : 'read',
+  );
+  return risks.reduce<ActionRisk>(
+    (highest, risk) => (RISK_ORDER.indexOf(risk) > RISK_ORDER.indexOf(highest) ? risk : highest),
+    'read',
+  );
 }
 
 /** Actions whose results carry text nobody reviewed (`agent.untrusted`). */

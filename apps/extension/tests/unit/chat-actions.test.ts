@@ -111,7 +111,7 @@ describe('suggestActions', () => {
       dropped: [],
     });
     expect(bookmarks.writes).toEqual([]);
-    expect(actionApproval('suggestActions', { untrustedContentSeen: true })).toBe('none');
+    expect(actionApproval('suggestActions', {}, { untrustedContentSeen: true })).toBe('none');
   });
 
   it('drops buttons that point nowhere or at a managed folder, instead of guessing', async () => {
@@ -290,7 +290,7 @@ describe('suggestActions save provenance', () => {
     expect((await suggest(save, { conversation: undefined })).suggestions).toEqual([
       expect.objectContaining({ approval: 'untrusted' }),
     ]);
-    expect(actionApproval('saveBookmark', { untrustedContentSeen: true })).toBe('untrusted');
+    expect(actionApproval('saveBookmark', {}, { untrustedContentSeen: true })).toBe('untrusted');
   });
 
   it('finds URLs in a message without the punctuation around them', () => {

@@ -352,6 +352,7 @@ function changeGone(change: string): ActionError {
 
 const undoChange = defineAction({
   risk: 'write',
+  batch: false,
   labelKey: 'actionName_undoChange',
   targets: ['library'],
   agent: {

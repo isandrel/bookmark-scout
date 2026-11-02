@@ -6411,6 +6411,10 @@
         "message": "変更を元に戻しました",
         "description": "Ask AI step: the agent undid one of its changes"
     },
+    "askAI_toolBatch": {
+        "message": "$1 個の手順を実行しました",
+        "description": "Ask AI step: the agent ran several actions as one request; $1 is how many"
+    },
     "askAI_toolPropose": {
         "message": "承認用の変更を用意しました",
         "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
@@ -7490,6 +7494,10 @@
     "actionName_undoChange": {
         "message": "自分の変更を元に戻す",
         "description": "Name of the bookmark action that undoes a change the AI made"
+    },
+    "actionName_runBatch": {
+        "message": "複数の手順をまとめて実行",
+        "description": "Name of the bookmark action that runs several actions as one request, approved once and undone as one step"
     },
     "actionName_proposeChanges": {
         "message": "承認用の変更を提案",

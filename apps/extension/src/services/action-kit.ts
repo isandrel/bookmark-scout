@@ -25,6 +25,7 @@ export const actionLimits = readConfig(
     summary_chars: z.number().int().positive(),
     max_page_chars: z.number().int().positive(),
     max_result_chars: z.number().int().positive(),
+    max_batch_steps: z.number().int().positive(),
     max_plan_operations: z.number().int().positive(),
     max_plans: z.number().int().positive(),
     plan_ttl_minutes: z.number().positive(),
@@ -34,8 +35,15 @@ export const actionLimits = readConfig(
   }),
 );
 
-/** Who is calling a tool: Ask AI, or a local agent through the MCP bridge, by the name it gave. */
-export type ActionClient = { kind: 'askAI' } | { kind: 'external'; name: string };
+/**
+ * Who is calling an action: Ask AI, a local agent through the MCP bridge (by the name it gave), or
+ * the user in Bookmark Scout's own pages (`ui`), which runs any action with input and needs no
+ * agent approval: the user asked for it.
+ */
+export type ActionClient = { kind: 'askAI' } | { kind: 'external'; name: string } | { kind: 'ui' };
+
+/** The kinds of AI agent, which settings let the user limit. */
+export type AgentKind = Exclude<ActionClient['kind'], 'ui'>;
 
 export type ActionPage = { title: string; url: string };
 
@@ -131,7 +139,7 @@ export type ActionAgentExposure = {
    */
   partOfChanges?: boolean;
   /** Offered to this kind of agent only, such as chat buttons, which only Ask AI can show. */
-  only?: ActionClient['kind'];
+  only?: AgentKind;
 };
 
 /** The icon an action shows in menus, by name; the menus map names to components. */
@@ -226,6 +234,11 @@ export type ActionDefinition<Input = unknown, Output = unknown> = {
    * library now, and says what the user approves and what the items must still be when applied.
    */
   plan?: (input: Input, library: ActionLibrary) => PlannedChange | ActionError;
+  /**
+   * False for an action that cannot be a step of `runBatch`: one that keeps its own undo step or
+   * approval (applying a plan, undoing a change), or a batch itself.
+   */
+  batch?: false;
 } & (ActionCall<Input, Output> | { [Key in keyof ActionCall<Input, Output>]?: never });
 
 /** One line of a plan as the approval shows it; titles and paths, never the model's words. */

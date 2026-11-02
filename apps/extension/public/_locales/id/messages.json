@@ -6189,6 +6189,10 @@
         "message": "Mengurungkan perubahan",
         "description": "Ask AI step: the agent undid one of its changes"
     },
+    "askAI_toolBatch": {
+        "message": "Menjalankan $1 langkah",
+        "description": "Ask AI step: the agent ran several actions as one request; $1 is how many"
+    },
     "askAI_toolPropose": {
         "message": "Menyiapkan perubahan untuk Anda setujui",
         "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
@@ -7232,6 +7236,10 @@
     "actionName_undoChange": {
         "message": "Urungkan perubahannya",
         "description": "Name of the bookmark action that undoes a change the AI made"
+    },
+    "actionName_runBatch": {
+        "message": "Jalankan beberapa langkah sekaligus",
+        "description": "Name of the bookmark action that runs several actions as one request, approved once and undone as one step"
     },
     "actionName_proposeChanges": {
         "message": "Usulkan perubahan untuk disetujui",

@@ -6455,6 +6455,10 @@
         "message": "Ho annullato una modifica",
         "description": "Ask AI step: the agent undid one of its changes"
     },
+    "askAI_toolBatch": {
+        "message": "Eseguiti $1 passaggi",
+        "description": "Ask AI step: the agent ran several actions as one request; $1 is how many"
+    },
     "askAI_toolPropose": {
         "message": "Ho preparato le modifiche da approvare",
         "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
@@ -7502,6 +7506,10 @@
     "actionName_undoChange": {
         "message": "Annullare le proprie modifiche",
         "description": "Name of the bookmark action that undoes a change the AI made"
+    },
+    "actionName_runBatch": {
+        "message": "Esegui più passaggi insieme",
+        "description": "Name of the bookmark action that runs several actions as one request, approved once and undone as one step"
     },
     "actionName_proposeChanges": {
         "message": "Proporre modifiche da approvare",
