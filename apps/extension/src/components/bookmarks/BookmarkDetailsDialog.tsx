@@ -102,11 +102,19 @@ function BookmarkDetailsContent({
     try {
       // A tag still being typed is saved too.
       const typed = addTokens(tags, parseBookmarkTags(tagDraft), { keyOf: tagKey });
-      await saveBookmarkMetadata(bookmark.id, { tags: typed, summary });
-      const stored = await getStoredBookmarkMetadata([bookmark.id]);
-      setTags(stored[bookmark.id]?.tags ?? []);
+      const saved = await runUIAction('setBookmarkDetails', {
+        ref: toBookmarkRef(bookmark.id),
+        tags: typed,
+        summary,
+      });
+      if (isActionError(saved)) throw new Error(saved.error.message);
+      const { tags: savedTags, summary: savedSummary } = saved as {
+        tags: string[];
+        summary: string;
+      };
+      setTags(savedTags);
       setTagDraft('');
-      setSummary(stored[bookmark.id]?.summary ?? '');
+      setSummary(savedSummary);
       setMetadataStatus(t('bookmarks_metadataSaved'));
     } catch {
       setMetadataStatus(t('bookmarks_metadataSaveFailed'));

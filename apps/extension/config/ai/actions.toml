@@ -23,6 +23,14 @@ summary_chars = 300
 max_page_chars = 20000
 # Steps one runBatch call may hold; a batch is one approval and one undo step
 max_batch_steps = 20
+# Tags one listTags call returns per page at most
+max_tags = 100
+# Characters of one tag an action may write
+max_tag_chars = 100
+# Tags one editTags or setBookmarkDetails call may name
+max_tags_per_call = 100
+# Characters of a summary an action may write; above any summary the Content Summarizer writes
+max_summary_chars = 10000
 # Settings one listSettings call returns per page at most
 max_settings = 100
 # Settings one changeSettings call may change at once

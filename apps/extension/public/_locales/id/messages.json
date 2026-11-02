@@ -6201,6 +6201,18 @@
         "message": "Mengubah $1 setelan",
         "description": "Ask AI step: the agent changed settings; $1 is how many"
     },
+    "askAI_toolListTags": {
+        "message": "Menampilkan daftar tag",
+        "description": "Ask AI step: the agent listed the tags"
+    },
+    "askAI_toolEditTags": {
+        "message": "Mengubah tag pada $1 bookmark",
+        "description": "Ask AI step: the agent changed tags; $1 is how many bookmarks"
+    },
+    "askAI_toolSetDetails": {
+        "message": "Mengatur tag dan ringkasan",
+        "description": "Ask AI step: the agent set a bookmark's tags or summary"
+    },
     "askAI_toolPropose": {
         "message": "Menyiapkan perubahan untuk Anda setujui",
         "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
@@ -6264,6 +6276,14 @@
     "askAI_approvalSetting": {
         "message": "Atur “$1” ke $2",
         "description": "Approval line for a settings change: $1 is the setting name, $2 its new value"
+    },
+    "askAI_approvalTagsAdd": {
+        "message": "Tambahkan $1 ke $2 bookmark",
+        "description": "Approval line: $1 is the tags added, $2 how many bookmarks"
+    },
+    "askAI_approvalTagsRemove": {
+        "message": "Hapus $1 dari $2 bookmark",
+        "description": "Approval line: $1 is the tags removed, $2 how many bookmarks"
     },
     "askAI_approvalUndo": {
         "message": "Urungkan perubahan yang dibuat sebelumnya",
@@ -7260,6 +7280,18 @@
     "actionName_changeSettings": {
         "message": "Ubah setelan",
         "description": "Name of the action that changes Bookmark Scout settings"
+    },
+    "actionName_listTags": {
+        "message": "Daftar tag",
+        "description": "Name of the action that lists the saved tags"
+    },
+    "actionName_editTags": {
+        "message": "Tambah atau hapus tag",
+        "description": "Name of the action that adds and removes tags on bookmarks"
+    },
+    "actionName_setBookmarkDetails": {
+        "message": "Atur tag dan ringkasan",
+        "description": "Name of the action that sets one bookmark's tags and summary"
     },
     "actionName_proposeChanges": {
         "message": "Usulkan perubahan untuk disetujui",

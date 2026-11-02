@@ -6423,6 +6423,18 @@
         "message": "$1 件の設定を変更しました",
         "description": "Ask AI step: the agent changed settings; $1 is how many"
     },
+    "askAI_toolListTags": {
+        "message": "タグを一覧表示しました",
+        "description": "Ask AI step: the agent listed the tags"
+    },
+    "askAI_toolEditTags": {
+        "message": "$1 件のブックマークのタグを変更しました",
+        "description": "Ask AI step: the agent changed tags; $1 is how many bookmarks"
+    },
+    "askAI_toolSetDetails": {
+        "message": "タグと要約を設定しました",
+        "description": "Ask AI step: the agent set a bookmark's tags or summary"
+    },
     "askAI_toolPropose": {
         "message": "承認用の変更を用意しました",
         "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
@@ -6486,6 +6498,14 @@
     "askAI_approvalSetting": {
         "message": "「$1」を $2 にする",
         "description": "Approval line for a settings change: $1 is the setting name, $2 its new value"
+    },
+    "askAI_approvalTagsAdd": {
+        "message": "$2 件のブックマークに $1 を追加",
+        "description": "Approval line: $1 is the tags added, $2 how many bookmarks"
+    },
+    "askAI_approvalTagsRemove": {
+        "message": "$2 件のブックマークから $1 を削除",
+        "description": "Approval line: $1 is the tags removed, $2 how many bookmarks"
     },
     "askAI_approvalUndo": {
         "message": "以前の変更を元に戻す",
@@ -7518,6 +7538,18 @@
     "actionName_changeSettings": {
         "message": "設定を変更",
         "description": "Name of the action that changes Bookmark Scout settings"
+    },
+    "actionName_listTags": {
+        "message": "タグを一覧表示",
+        "description": "Name of the action that lists the saved tags"
+    },
+    "actionName_editTags": {
+        "message": "タグを追加・削除",
+        "description": "Name of the action that adds and removes tags on bookmarks"
+    },
+    "actionName_setBookmarkDetails": {
+        "message": "タグと要約を設定",
+        "description": "Name of the action that sets one bookmark's tags and summary"
     },
     "actionName_proposeChanges": {
         "message": "承認用の変更を提案",

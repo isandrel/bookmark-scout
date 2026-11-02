@@ -133,6 +133,7 @@ export const ACTIONS = {
   ...PLAN_ACTIONS,
   ...CHAT_ACTIONS,
   ...SETTINGS_ACTIONS,
+  ...METADATA_ACTIONS,
   runBatch,
 };
 
@@ -301,6 +302,15 @@ export async function runAction(
     });
   }
   return result;
+}
+
+/** Runs an action for the user in Bookmark Scout's own pages: the `ui` client, never throwing. */
+export async function runUIAction(id: ActionId, input: unknown): Promise<unknown> {
+  return runAction(id, input, {
+    client: { kind: 'ui' },
+    settings: await getSettings(),
+    activeTab: activeTabPage,
+  });
 }
 
 /** What the approval of a call shows beyond its `describe` line, or undefined (`approvalPreview`). */
