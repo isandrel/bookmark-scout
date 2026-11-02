@@ -22,13 +22,31 @@ const TYPESCRIPT_MAJOR: Record<string, number> = {
 
 const root = join(import.meta.dir, "..");
 
+/** The root `package.json`'s catalogs, by name; the default one is `""`. */
+const catalogs = (() => {
+  const { workspaces } = JSON.parse(readFileSync(join(root, "package.json"), "utf8")) as {
+    workspaces: {
+      catalog?: Record<string, string>;
+      catalogs?: Record<string, Record<string, string>>;
+    };
+  };
+  return { "": workspaces.catalog ?? {}, ...workspaces.catalogs } as Record<
+    string,
+    Record<string, string>
+  >;
+})();
+
+/** A version range, with a `catalog:<name>` reference resolved through the root catalogs. */
+const resolveRange = (name: string, range: string) =>
+  range.startsWith("catalog:") ? (catalogs[range.slice("catalog:".length)]?.[name] ?? "") : range;
+
 describe("TypeScript versions", () => {
   for (const [workspace, major] of Object.entries(TYPESCRIPT_MAJOR)) {
     it(`${workspace} uses TypeScript ${major}`, () => {
       const pkg = JSON.parse(readFileSync(join(root, workspace, "package.json"), "utf8")) as {
         devDependencies?: Record<string, string>;
       };
-      const range = pkg.devDependencies?.typescript ?? "";
+      const range = resolveRange("typescript", pkg.devDependencies?.typescript ?? "");
       expect(Number(/\d+/.exec(range)?.[0])).toBe(major);
     });
   }
