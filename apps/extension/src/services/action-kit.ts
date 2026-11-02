@@ -257,7 +257,7 @@ export type ActionDefinition<Input = unknown, Output = unknown> = {
 
 /** One line of a plan as the approval shows it; titles and paths, never the model's words. */
 export type PlannedChangePreview = {
-  kind: 'move' | 'rename' | 'delete' | 'createFolder';
+  kind: 'move' | 'rename' | 'changeUrl' | 'delete' | 'createFolder';
   title: string;
   /** The folder it is in now, for a move or deletion. */
   from?: string;

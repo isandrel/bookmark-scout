@@ -6,6 +6,9 @@
 [chars]
 # A title an agent gives when it saves a page, renames an item, or creates a folder.
 bookmark_title = 500
+# A bookmark address an agent gives when it changes one (Chrome keeps addresses of up to 2 MB, but
+# a cleaned address is about as long as the one it replaces).
+bookmark_url = 8192
 # The one-sentence summary of an agent's plan.
 plan_summary = 200
 # A folder id stored in a setting.

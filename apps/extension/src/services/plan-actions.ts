@@ -13,7 +13,13 @@
 import { z } from 'zod';
 
 const plannedOperationSchema = z.object({
-  action: z.enum(['moveBookmarks', 'renameBookmark', 'deleteBookmarks', 'createFolder']),
+  action: z.enum([
+    'moveBookmarks',
+    'renameBookmark',
+    'changeUrl',
+    'deleteBookmarks',
+    'createFolder',
+  ]),
   input: z.record(z.string(), z.unknown()),
 });
 
@@ -26,7 +32,7 @@ const planSchema = z.object({
   operations: z.array(plannedOperationSchema).min(1),
   preview: z.array(
     z.object({
-      kind: z.enum(['move', 'rename', 'delete', 'createFolder']),
+      kind: z.enum(['move', 'rename', 'changeUrl', 'delete', 'createFolder']),
       title: z.string(),
       from: z.string().optional(),
       to: z.string().optional(),
@@ -81,6 +87,7 @@ const PLANNABLE = PLANNABLE_ACTIONS as Record<
 const operationInput = z.discriminatedUnion('action', [
   z.object({ action: z.literal('moveBookmarks'), input: PLANNABLE_ACTIONS.moveBookmarks.input }),
   z.object({ action: z.literal('renameBookmark'), input: PLANNABLE_ACTIONS.renameBookmark.input }),
+  z.object({ action: z.literal('changeUrl'), input: PLANNABLE_ACTIONS.changeUrl.input }),
   z.object({
     action: z.literal('deleteBookmarks'),
     input: PLANNABLE_ACTIONS.deleteBookmarks.input,
@@ -126,7 +133,7 @@ function withoutRepeats(
     } else if (change.action === 'deleteBookmarks') {
       const refs = change.input.refs.filter((ref) => firstTime(change.action, ref));
       if (refs.length > 0) kept.push({ ...change, input: { ...change.input, refs } });
-    } else if (change.action === 'renameBookmark') {
+    } else if (change.action === 'renameBookmark' || change.action === 'changeUrl') {
       if (firstTime(change.action, change.input.ref)) kept.push(change);
     } else if (
       firstTime(change.action, `${folderKey(change.input.parent)}\n${change.input.title}`)
@@ -260,6 +267,7 @@ const PLAN_HISTORY_LABELS: Record<
 > = {
   moveBookmarks: { one: 'move', many: 'move' },
   renameBookmark: { one: 'edit', many: 'change' },
+  changeUrl: { one: 'edit', many: 'change' },
   deleteBookmarks: { one: 'delete', many: 'delete' },
   createFolder: { one: 'add', many: 'add' },
 };
@@ -289,6 +297,7 @@ type PlanLine = ActionPlan['preview'][number];
 const PLAN_LINES: Record<PlanLine['kind'], (line: PlanLine) => string> = {
   move: (line) => t('askAI_planMove', [quoted(line.title), line.from ?? '', line.to ?? '']),
   rename: (line) => t('askAI_planRename', [quoted(line.title), line.to ?? '']),
+  changeUrl: (line) => t('askAI_planChangeUrl', [quoted(line.title), line.to ?? '']),
   delete: (line) =>
     line.contains
       ? t('askAI_planDeleteFolder', [quoted(line.title), line.from ?? '', String(line.contains)])
