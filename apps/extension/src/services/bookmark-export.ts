@@ -320,6 +320,28 @@ export function getFormatName(format: ExportFormat): string {
 // Export Functions
 // ============================================================================
 
+/** The export options the settings choose, with the tags and summaries a JSON export carries. */
+export function exportOptionsFor(
+  settings: Pick<
+    Settings,
+    | 'exportIncludeDates'
+    | 'exportIncludeUrls'
+    | 'exportJsonIndentSize'
+    | 'exportHtmlIndentSpaces'
+    | 'exportMarkdownIndentSpaces'
+  >,
+  metadata?: StoredBookmarkMetadataById,
+): ExportOptions {
+  return {
+    includeDates: settings.exportIncludeDates,
+    includeUrls: settings.exportIncludeUrls,
+    jsonIndentSize: settings.exportJsonIndentSize,
+    htmlIndentSpaces: settings.exportHtmlIndentSpaces,
+    markdownIndentSpaces: settings.exportMarkdownIndentSpaces,
+    ...(metadata ? { metadata } : {}),
+  };
+}
+
 /**
  * Export bookmarks to a string in the specified format
  */

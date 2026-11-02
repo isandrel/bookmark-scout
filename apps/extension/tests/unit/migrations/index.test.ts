@@ -1,13 +1,14 @@
 /**
  * The storage migrations registry (`src/lib/storage/migrations/index.ts`): what holds for every
- * migration, so removing one is deleting its module, its line in `MIGRATIONS`, and its tests.
+ * migration, so adding or removing one is its module, its table in `config/data/migrations.toml`,
+ * and its test (`.agents/skills/extension-stored-data/scripts/migration.ts`).
  */
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { removeUnregisteredKeys } from '@/lib/storage/cleanup';
-import { MIGRATIONS } from '@/lib/storage/migrations';
+import { loadMigrations, MIGRATIONS, type MigrationModule } from '@/lib/storage/migrations';
 import { STORAGE_ITEMS, type StorageItem, storageAreaKey } from '@/lib/storage/registry';
 import { toStoredEnvelope } from '@/lib/storage/stored-value';
 import { appRoot } from '../../config-files';
@@ -64,11 +65,39 @@ describe('storage migrations', () => {
       ({ removeAfter }) => compareVersions(packageVersion, removeAfter) >= 0,
     ).map(
       ({ id, removeAfter }) =>
-        `${id} (removeAfter ${removeAfter}): delete src/lib/storage/migrations/${id}.ts, its line ` +
-        `in MIGRATIONS, and tests/unit/migrations/${id}.test.ts, or move removeAfter on while the ` +
-        'store dashboards still show installs from before it',
+        `${id} (remove_after ${removeAfter}): run .agents/skills/extension-stored-data/scripts/` +
+        `migration.ts remove ${id}, or move remove_after on in config/data/migrations.toml while ` +
+        'the store dashboards still show installs from before it',
     );
     expect(due, `package version ${packageVersion}`).toEqual([]);
+  });
+
+  it('loads each module its table turns on, and fails on a module or a table left without the other', () => {
+    const module: MigrationModule = { description: 'Test', recover: () => ({ found: {} }) };
+    const entry = { enabled: true, added_in: '0.1.0', remove_after: '0.2.0' };
+    const defaults = { keep_minor_releases: 2 };
+    const modules = {
+      './2026-01-b.ts': { migration: module },
+      './2026-01-a.ts': { migration: module },
+    };
+    expect(
+      loadMigrations(modules, {
+        defaults,
+        migrations: { '2026-01-b': entry, '2026-01-a': entry },
+      }).map(({ id }) => id),
+    ).toEqual(['2026-01-a', '2026-01-b']);
+    expect(
+      loadMigrations(modules, {
+        defaults,
+        migrations: { '2026-01-a': entry, '2026-01-b': { ...entry, enabled: false } },
+      }),
+    ).toEqual([{ ...module, id: '2026-01-a', addedIn: '0.1.0', removeAfter: '0.2.0' }]);
+    expect(() => loadMigrations(modules, { defaults, migrations: { '2026-01-a': entry } })).toThrow(
+      /2026-01-b has no table/,
+    );
+    expect(() => loadMigrations({}, { defaults, migrations: { '2026-01-a': entry } })).toThrow(
+      /names 2026-01-a, which has no module/,
+    );
   });
 
   it('reads only old items the registry no longer lists, and names them nowhere else in src', () => {

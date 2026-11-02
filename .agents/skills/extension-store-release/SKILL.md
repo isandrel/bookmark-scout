@@ -43,6 +43,7 @@ Summarize the JSON with a short script; the table output truncates columns. Targ
 ## Release
 
 - Prepare a release only when the maintainer explicitly asks for one: no version bump, no release section in `CHANGELOG.md`, no release PR, and no tag otherwise. "Continue" or "finish the tasks" is not a release request; an agent that read it as one had to back out a version bump. Changes go under Unreleased until then.
+- Before the version bump, ask the maintainer about backward compatibility. List what changed in stored data and settings since the last release tag (`git diff <last tag> -- apps/extension/src/lib/storage apps/extension/src/lib/settings-schema.ts apps/extension/config/settings`, and `MOVED_SETTINGS` and `RETIRED_SETTINGS` in `apps/extension/tests/unit/retired-settings.ts`), say what store users would lose, and ask whether to carry it over. Features are built without backward compatibility, so this is where it is decided; for each yes, add a migration (`extension-stored-data`, Migrations). The same release removes the migrations whose `remove_after` it reaches.
 - A release bumps `version` in the root `package.json` and `apps/extension/package.json` and moves the Unreleased entries into a version section of `CHANGELOG.md`, landed as a normal PR.
 - Tag `vX.Y.Z` only when the maintainer explicitly asks for a release. Before pushing the tag, confirm:
   - `main` is clean and synced: `git status --short --branch`
