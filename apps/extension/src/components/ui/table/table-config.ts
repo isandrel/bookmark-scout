@@ -10,13 +10,18 @@ import { boundedNumber } from '@/lib/config/bounded';
 const pixels = z.number().int().positive();
 
 const columnLayoutSchema = z.union([
-  z.strictObject({ fixed: pixels, hide_below_width: pixels.optional() }),
+  z.strictObject({
+    fixed: pixels,
+    hide_below_width: pixels.optional(),
+    sortable: z.boolean().optional(),
+  }),
   z
     .strictObject({
       size: pixels,
       min_size: pixels,
       fill: z.number().positive().optional(),
       hide_below_width: pixels.optional(),
+      sortable: z.boolean().optional(),
     })
     .refine((layout) => layout.min_size <= layout.size, 'min_size must not exceed size'),
 ]);
@@ -137,6 +142,17 @@ export const COVER_THUMBNAIL_SIZE_PX = {
 
 /** Column ids that have a layout in the config. */
 export const CONFIGURED_COLUMN_IDS: readonly string[] = Object.keys(managerTableConfig.columns);
+
+/**
+ * The columns the table can be sorted by (`sortable` in config), which saved searches and table
+ * views may keep; read without the column definitions, so code outside the manager can check a
+ * stored sort.
+ */
+export const SORTABLE_COLUMN_IDS: ReadonlySet<string> = new Set(
+  Object.entries(managerTableConfig.columns)
+    .filter(([, layout]) => layout.sortable)
+    .map(([id]) => id),
+);
 
 /** A column's width and narrow-table behavior, for its registry entry in `columns.tsx`. */
 export function getManagerColumnLayout(columnId: string): {

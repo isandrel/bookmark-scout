@@ -87,12 +87,6 @@ export type SavedSearchQuery = {
   folderId?: string | null;
 };
 
-const SORTABLE_COLUMN_IDS = new Set(
-  BOOKMARK_COLUMNS.filter(
-    (column) => !column.internal && column.accessor && column.enableSorting !== false,
-  ).map((column) => column.id),
-);
-
 type FilterCodec = {
   /** Table filter value to its stored form, or undefined when it does not filter. */
   toStored: (value: unknown) => unknown;
