@@ -14,4 +14,4 @@ writes = false
 redact_urls = true
 # Actions local agents may not use, as action ids; empty lets them use all they are offered.
 # Edited in Options > For developers.
-disabled_actions = { default = [], max_items = 40, max_length = 20 }
+disabled_actions = { default = [], max_items = 60, max_length = 20 }

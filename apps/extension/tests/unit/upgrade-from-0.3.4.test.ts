@@ -51,7 +51,7 @@ import { isRegisteredKey, STORAGE_ITEMS, type StorageItem } from '@/lib/storage/
 import { ACTION_MENUS, customizeMenu } from '@/services/action-menus';
 import { ACTIONS } from '@/services/actions';
 import { providerRequiresApiKey } from '@/services/ai-models';
-import { RETIRED_SETTINGS } from './retired-settings';
+import { MOVED_SETTINGS, RETIRED_SETTINGS, withoutMoved } from './retired-settings';
 
 /** `STORAGE_ITEMS` as 0.3.4 shipped it (area, name, shape version, collection). */
 const ITEMS_0_3_4 = {
@@ -462,7 +462,9 @@ describe('updating from 0.3.4', () => {
       }
       expect(key in defaultSettings, key).toBe(true);
       const scope = getSettingScope(key as keyof Settings);
-      if (device.has(key)) {
+      if (key in MOVED_SETTINGS) {
+        expect(scope, key).toBe(MOVED_SETTINGS[key].scope);
+      } else if (device.has(key)) {
         expect(scope, key).toBe('device');
       } else if (scope === 'lists') {
         // 0.3.4 kept its lists in the settings item: a migration must carry them over and keep
@@ -545,7 +547,7 @@ describe('updating from 0.3.4', () => {
       await run();
       const settings = await getSettings();
       const { managerMenuActions: _menu, ...synced } = SYNCED_OVERRIDES_0_3_4;
-      expect(settings).toMatchObject({ ...synced, ...DEVICE_OVERRIDES_0_3_4 });
+      expect(settings).toMatchObject(withoutMoved({ ...synced, ...DEVICE_OVERRIDES_0_3_4 }));
       // The item menu in the form menus are stored in now, the rest of 0.3.4's menu hidden.
       expect(settings.managerMenuActions).toEqual(ITEM_MENU_MARKED);
       // 0.3.4's one count for the popup and the right-click menu, now the menu's own.
@@ -561,7 +563,7 @@ describe('updating from 0.3.4', () => {
     await update();
     const lists = Object.fromEntries(
       Object.keys(LISTS_0_3_4)
-        .filter((key) => key in SYNCED_OVERRIDES_0_3_4)
+        .filter((key) => key in SYNCED_OVERRIDES_0_3_4 && !(key in MOVED_SETTINGS))
         .map((key) => [key, SYNCED_OVERRIDES_0_3_4[key as keyof typeof SYNCED_OVERRIDES_0_3_4]]),
     );
     await expect

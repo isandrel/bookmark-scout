@@ -6269,6 +6269,18 @@
         "message": "已掃描隱私資訊",
         "description": "Ask AI step: the agent scanned bookmarks for private values"
     },
+    "askAI_toolListRules": {
+        "message": "已列出智慧規則",
+        "description": "Ask AI step: the agent listed the Smart Rules"
+    },
+    "askAI_toolSaveRule": {
+        "message": "已儲存智慧規則「$1」",
+        "description": "Ask AI step: the agent saved a Smart Rule; $1 is its name"
+    },
+    "askAI_toolDeleteRule": {
+        "message": "已刪除智慧規則",
+        "description": "Ask AI step: the agent deleted a Smart Rule"
+    },
     "askAI_toolPropose": {
         "message": "已準備待你核准的變更",
         "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
@@ -6344,6 +6356,26 @@
     "askAI_approvalStartTool": {
         "message": "在 $2 上執行 $1",
         "description": "Approval line: $1 is the tool name, $2 the folder or all bookmarks"
+    },
+    "askAI_approvalRule": {
+        "message": "儲存智慧規則「$1」，搜尋：$2",
+        "description": "Approval line: $1 is the rule's name, $2 its search"
+    },
+    "askAI_approvalRuleTags": {
+        "message": "新增標籤 $1",
+        "description": "Approval line: $1 is the tags the rule adds"
+    },
+    "askAI_approvalRuleMove": {
+        "message": "移至 $1",
+        "description": "Approval line: $1 is the folder the rule moves bookmarks to"
+    },
+    "askAI_approvalDeleteRule": {
+        "message": "刪除智慧規則「$1」",
+        "description": "Approval line: $1 is the deleted rule's name"
+    },
+    "askAI_ruleMissing": {
+        "message": "該智慧規則已不存在。",
+        "description": "Approval: the Smart Rule the agent names no longer exists"
     },
     "askAI_allBookmarks": {
         "message": "所有書籤",
@@ -7396,6 +7428,18 @@
     "actionName_scanPrivacy": {
         "message": "掃描隱私資訊",
         "description": "Name of the action that runs the Privacy Scanner"
+    },
+    "actionName_listRules": {
+        "message": "列出智慧規則",
+        "description": "Name of the action that lists Smart Rules"
+    },
+    "actionName_saveRule": {
+        "message": "儲存智慧規則",
+        "description": "Name of the action that saves a Smart Rule"
+    },
+    "actionName_deleteRule": {
+        "message": "刪除智慧規則",
+        "description": "Name of the action that deletes a Smart Rule"
     },
     "actionName_proposeChanges": {
         "message": "提出待核准的變更",
