@@ -10641,6 +10641,10 @@
         "message": "ルールを保存できませんでした。",
         "description": "Rule editor error: storage failed"
     },
+    "rules_errorDeleteFailed": {
+        "message": "ルールを削除できませんでした。",
+        "description": "Error when deleting a smart rule fails"
+    },
     "rules_errorLimit": {
         "message": "ルールは $1 件あり、これ以上は保存できません。追加するには、いずれかを削除してください。",
         "description": "Rule editor and rules list error: the list already holds the most rules allowed; $1 is that number"

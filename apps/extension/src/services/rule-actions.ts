@@ -7,13 +7,19 @@
  */
 import { z } from 'zod';
 
-const ruleView = (rule: BookmarkRule) => ({
+/**
+ * A rule as agents see it. Its folder is named by the path agents pass back (`/` between folder
+ * names); the stored path is Options' display path, used only for a folder that is gone.
+ */
+const ruleView = (rule: BookmarkRule, library: ActionLibrary) => ({
   id: rule.id,
   name: rule.name,
   enabled: rule.enabled,
   query: rule.query,
   addTags: rule.addTags,
-  ...(rule.moveTo ? { moveTo: rule.moveTo.path } : {}),
+  ...(rule.moveTo
+    ? { moveTo: library.folderById.get(rule.moveTo.folderId)?.path ?? rule.moveTo.path }
+    : {}),
   ...(rule.autoMove ? { autoMove: true } : {}),
 });
 
@@ -40,7 +46,8 @@ const listRules = defineAction({
   output: z.object({ rules: z.array(ruleOutput) }),
   describe: () => t('askAI_toolListRules'),
   async execute() {
-    return { rules: (await bookmarkRulesValue.get()).map(ruleView) };
+    const [rules, library] = await Promise.all([bookmarkRulesValue.get(), loadActionLibrary()]);
+    return { rules: rules.map((rule) => ruleView(rule, library)) };
   },
 });
 
@@ -55,21 +62,45 @@ const saveRuleInput = z.object({
     .describe(agentText('save_rule.add_tags')),
   moveTo: z.string().min(1).optional().describe(agentText('save_rule.move_to')),
   enabled: z.boolean().default(true),
+  autoMove: z.boolean().optional().describe(agentText('save_rule.auto_move')),
 });
 
 type SaveRuleInput = z.infer<typeof saveRuleInput>;
 
-/** The rule a save would store, or why it cannot: a rule it names that is gone, a folder, a check. */
-async function ruleToSave(input: SaveRuleInput): Promise<BookmarkRule | ActionError> {
+const autoMoveRefused = actionError(
+  'not_allowed',
+  'Only the user turns on moving new bookmarks without a review, in Options.',
+  { hint: 'Leave autoMove out; the rule still moves what a reviewed run approves.' },
+);
+
+/**
+ * The rule a save would store, or why it cannot: a rule it names that is gone, a folder, a check.
+ * The user sets `autoMove` in Options (the `ui` client); an agent's save keeps it as the user
+ * set it, for the same folder only.
+ */
+async function ruleToSave(
+  input: SaveRuleInput,
+  client: ActionClient,
+): Promise<BookmarkRule | ActionError> {
+  const byUser = client.kind === 'ui';
+  if (input.autoMove && !byUser) return autoMoveRefused;
   const existing = input.id
     ? (await bookmarkRulesValue.get()).find((rule) => rule.id === input.id)
     : undefined;
   if (input.id && !existing) return ruleNotFound;
   let moveTo: BookmarkRule['moveTo'];
   if (input.moveTo) {
-    const folder = resolveActionFolder(await loadActionLibrary(), input.moveTo);
+    const library = await loadActionLibrary();
+    const folder = resolveActionFolder(library, input.moveTo);
     if (isActionError(folder)) return folder;
-    moveTo = { folderId: folder.node.id, path: folder.path };
+    // The path as Options shows and checks it, the same for a rule saved there.
+    const path = ruleFolderPath(library.tree, folder.node.id);
+    if (path === undefined) {
+      return actionError('not_allowed', `${folder.path} cannot hold new bookmarks.`, {
+        hint: 'Choose a folder you can add bookmarks to.',
+      });
+    }
+    moveTo = { folderId: folder.node.id, path };
   }
   const parsed = bookmarkRuleSchema.safeParse({
     id: existing?.id ?? createBookmarkRuleId(),
@@ -79,8 +110,11 @@ async function ruleToSave(input: SaveRuleInput): Promise<BookmarkRule | ActionEr
     syntaxVersion: SEARCH_SYNTAX_VERSION,
     addTags: input.addTags,
     ...(moveTo ? { moveTo } : {}),
-    // Moving new bookmarks without a review stays as the user set it, for the same folder only.
-    ...(existing?.autoMove && moveTo?.folderId === existing.moveTo?.folderId
+    ...((
+      byUser
+        ? input.autoMove && moveTo
+        : existing?.autoMove && moveTo?.folderId === existing.moveTo?.folderId
+    )
       ? { autoMove: true }
       : {}),
   });
@@ -104,12 +138,12 @@ const saveRule = defineAction({
       ...(input.moveTo ? [t('askAI_approvalRuleMove', input.moveTo)] : []),
     ],
   },
-  async precheck(input) {
-    const rule = await ruleToSave(input);
+  async precheck(input, context) {
+    const rule = await ruleToSave(input, context.client);
     return isActionError(rule) ? rule : undefined;
   },
-  async execute(input) {
-    const rule = await ruleToSave(input);
+  async execute(input, context) {
+    const rule = await ruleToSave(input, context.client);
     if (isActionError(rule)) return rule;
     try {
       await saveBookmarkRule(rule);
@@ -121,7 +155,7 @@ const saveRule = defineAction({
       }
       throw error;
     }
-    return ruleView(rule);
+    return ruleView(rule, await loadActionLibrary());
   },
 });
 
@@ -153,7 +187,7 @@ const deleteRule = defineAction({
     const rule = (await bookmarkRulesValue.get()).find((entry) => entry.id === input.id);
     if (!rule) return ruleNotFound;
     await deleteBookmarkRule(input.id);
-    return ruleView(rule);
+    return ruleView(rule, await loadActionLibrary());
   },
 });
 
