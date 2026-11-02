@@ -242,12 +242,12 @@ describe('approval rules', () => {
   it('always asks before applying a plan, and before any write once untrusted text was read', () => {
     const clean = { untrustedContentSeen: false };
     const tainted = { untrustedContentSeen: true };
-    expect(actionApproval('applyChanges', clean)).toBe('always');
-    expect(actionApproval('saveBookmark', clean)).toBe('none');
-    expect(actionApproval('saveBookmark', tainted)).toBe('untrusted');
-    expect(actionApproval('undoChange', tainted)).toBe('untrusted');
-    expect(actionApproval('proposeChanges', tainted)).toBe('none');
-    expect(actionApproval('searchBookmarks', tainted)).toBe('none');
+    expect(actionApproval('applyChanges', {}, clean)).toBe('always');
+    expect(actionApproval('saveBookmark', {}, clean)).toBe('none');
+    expect(actionApproval('saveBookmark', {}, tainted)).toBe('untrusted');
+    expect(actionApproval('undoChange', {}, tainted)).toBe('untrusted');
+    expect(actionApproval('proposeChanges', {}, tainted)).toBe('none');
+    expect(actionApproval('searchBookmarks', {}, tainted)).toBe('none');
   });
 
   it('sees page text and web search results in the conversation as untrusted', () => {

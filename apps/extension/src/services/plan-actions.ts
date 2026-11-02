@@ -54,7 +54,7 @@ export const actionPlansValue = defineStoredValue<ActionPlan[]>(STORAGE_ITEMS.ac
 const PLAN_TTL_MS = actionLimits.plan_ttl_minutes * MS_PER_MINUTE;
 
 function clientName(client: ActionClient): string {
-  return client.kind === 'askAI' ? 'askAI' : client.name;
+  return client.kind === 'external' ? client.name : client.kind;
 }
 
 function isLive(plan: ActionPlan, now: number): boolean {
@@ -303,6 +303,7 @@ export function describePlanPreview(plan: ActionPlan): string[] {
 
 const applyChanges = defineAction({
   risk: 'destructive',
+  batch: false,
   labelKey: 'actionName_applyChanges',
   targets: ['bookmark', 'folder'],
   agent: {

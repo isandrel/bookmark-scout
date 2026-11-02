@@ -158,9 +158,13 @@ async function resolveSuggestion(
       const folder = resolveActionFolder(library, suggestion.folder);
       if (isActionError(folder)) return folder.error.message;
       if (folder.node.unmodifiable) return `${folder.path} is managed by the browser.`;
-      const approval = actionApproval('saveBookmark', {
-        untrustedContentSeen: context.conversation?.untrustedContentSeen ?? true,
-      });
+      const approval = actionApproval(
+        'saveBookmark',
+        {},
+        {
+          untrustedContentSeen: context.conversation?.untrustedContentSeen ?? true,
+        },
+      );
       return {
         kind: 'save',
         url: page.url,
