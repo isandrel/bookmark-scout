@@ -7059,6 +7059,14 @@
         "message": "Удалено умное правило",
         "description": "Ask AI step: the agent deleted a Smart Rule"
     },
+    "askAI_toolExportBookmarkFile": {
+        "message": "Закладки экспортированы",
+        "description": "Ask AI step: the agent exported bookmarks"
+    },
+    "askAI_toolImportBookmarkFile": {
+        "message": "Закладки импортированы",
+        "description": "Ask AI step: the agent imported bookmarks"
+    },
     "askAI_toolPropose": {
         "message": "Изменения подготовлены для вашего подтверждения",
         "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
@@ -7150,6 +7158,10 @@
     "askAI_approvalDeleteRule": {
         "message": "Удалить умное правило «$1»",
         "description": "Approval line: $1 is the deleted rule's name"
+    },
+    "askAI_approvalImport": {
+        "message": "Импортировать закладки из $1 в $2",
+        "description": "Approval line: $1 is the file format, $2 the folder imported into"
     },
     "askAI_ruleMissing": {
         "message": "Этого умного правила больше нет.",
@@ -8230,6 +8242,14 @@
     "actionName_deleteRule": {
         "message": "Удалить умное правило",
         "description": "Name of the action that deletes a Smart Rule"
+    },
+    "actionName_exportBookmarkFile": {
+        "message": "Экспортировать закладки",
+        "description": "Name of the action that exports bookmarks as text"
+    },
+    "actionName_importBookmarkFile": {
+        "message": "Импортировать закладки",
+        "description": "Name of the action that imports bookmarks from file text"
     },
     "actionName_proposeChanges": {
         "message": "Предлагать изменения на подтверждение",

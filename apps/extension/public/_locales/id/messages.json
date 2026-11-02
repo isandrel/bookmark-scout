@@ -6261,6 +6261,14 @@
         "message": "Menghapus Aturan Pintar",
         "description": "Ask AI step: the agent deleted a Smart Rule"
     },
+    "askAI_toolExportBookmarkFile": {
+        "message": "Mengekspor bookmark",
+        "description": "Ask AI step: the agent exported bookmarks"
+    },
+    "askAI_toolImportBookmarkFile": {
+        "message": "Mengimpor bookmark",
+        "description": "Ask AI step: the agent imported bookmarks"
+    },
     "askAI_toolPropose": {
         "message": "Menyiapkan perubahan untuk Anda setujui",
         "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
@@ -6352,6 +6360,10 @@
     "askAI_approvalDeleteRule": {
         "message": "Hapus Aturan Pintar “$1”",
         "description": "Approval line: $1 is the deleted rule's name"
+    },
+    "askAI_approvalImport": {
+        "message": "Impor bookmark dari $1 ke $2",
+        "description": "Approval line: $1 is the file format, $2 the folder imported into"
     },
     "askAI_ruleMissing": {
         "message": "Aturan Pintar itu sudah tidak ada.",
@@ -7420,6 +7432,14 @@
     "actionName_deleteRule": {
         "message": "Hapus Aturan Pintar",
         "description": "Name of the action that deletes a Smart Rule"
+    },
+    "actionName_exportBookmarkFile": {
+        "message": "Ekspor bookmark",
+        "description": "Name of the action that exports bookmarks as text"
+    },
+    "actionName_importBookmarkFile": {
+        "message": "Impor bookmark",
+        "description": "Name of the action that imports bookmarks from file text"
     },
     "actionName_proposeChanges": {
         "message": "Usulkan perubahan untuk disetujui",
