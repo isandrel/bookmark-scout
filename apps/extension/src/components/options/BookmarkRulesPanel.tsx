@@ -46,6 +46,32 @@ function ruleLimitMessage(): string {
   return t('rules_errorLimit', formatCount(MAX_BOOKMARK_RULES));
 }
 
+/**
+ * Saves a rule through `saveRule`, as the user in Options: the new one when `existingId` is
+ * absent. Returns why it failed, in the user's words, or undefined.
+ */
+async function saveRuleAsUser(
+  rule: Omit<BookmarkRule, 'id' | 'syntaxVersion'>,
+  existingId?: string,
+): Promise<string | undefined> {
+  const saved = await runUIAction(
+    'saveRule',
+    {
+      ...(existingId ? { id: existingId } : {}),
+      name: rule.name,
+      enabled: rule.enabled,
+      query: rule.query,
+      addTags: rule.addTags,
+      ...(rule.moveTo ? { moveTo: toFolderRef(rule.moveTo.folderId) } : {}),
+      ...(rule.autoMove ? { autoMove: true } : {}),
+    },
+    'options',
+  );
+  if (!isActionError(saved)) return undefined;
+  // The user may turn on every choice, so the only save refused as not allowed is a full list.
+  return saved.error.code === 'not_allowed' ? ruleLimitMessage() : t('rules_errorSaveFailed');
+}
+
 function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose: () => void }) {
   const [value, setValue] = useState<RuleDraft>(EMPTY_RULE_DRAFT);
   const [tagDraft, setTagDraft] = useState('');
@@ -109,14 +135,9 @@ function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose
     }
     setSaving(true);
     try {
-      await saveBookmarkRule(result.rule);
-      onClose();
-    } catch (saveError) {
-      setError(
-        saveError instanceof BookmarkRuleLimitError
-          ? ruleLimitMessage()
-          : t('rules_errorSaveFailed'),
-      );
+      const problem = await saveRuleAsUser(result.rule, draft.id);
+      if (problem) setError(problem);
+      else onClose();
     } finally {
       setSaving(false);
     }
@@ -334,21 +355,14 @@ export function BookmarkRulesPanel() {
       setEditing(ruleDraftOfTemplate(template, name));
       return;
     }
-    saveBookmarkRule({
-      id: createBookmarkRuleId(),
+    void saveRuleAsUser({
       name,
       // Templates start turned off: a rule acts only once the user chose it.
       enabled: false,
       query: template.query,
-      syntaxVersion: SEARCH_SYNTAX_VERSION,
       addTags: [...template.add_tags],
-    }).catch((saveError: unknown) => {
-      toast.error({
-        title:
-          saveError instanceof BookmarkRuleLimitError
-            ? ruleLimitMessage()
-            : t('rules_errorSaveFailed'),
-      });
+    }).then((problem) => {
+      if (problem) toast.error({ title: problem });
     });
   };
 
@@ -378,7 +392,12 @@ export function BookmarkRulesPanel() {
 
   const remove = async (rule: BookmarkRule) => {
     const index = rules.findIndex((entry) => entry.id === rule.id);
-    await deleteBookmarkRule(rule.id);
+    const deleted = await runUIAction('deleteRule', { id: rule.id }, 'options');
+    if (isActionError(deleted)) {
+      // Deleted in another tab already: the list follows storage.
+      if (deleted.error.code !== 'not_found') toast.error({ title: t('rules_errorDeleteFailed') });
+      return;
+    }
     offerRestore(rule, index, t('rules_deleted', rule.name));
   };
 
