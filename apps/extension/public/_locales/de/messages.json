@@ -6515,6 +6515,26 @@
         "message": "Nach privaten Werten gesucht",
         "description": "Ask AI step: the agent scanned bookmarks for private values"
     },
+    "askAI_toolListRules": {
+        "message": "Intelligente Regeln aufgelistet",
+        "description": "Ask AI step: the agent listed the Smart Rules"
+    },
+    "askAI_toolSaveRule": {
+        "message": "Intelligente Regel „$1“ gespeichert",
+        "description": "Ask AI step: the agent saved a Smart Rule; $1 is its name"
+    },
+    "askAI_toolDeleteRule": {
+        "message": "Intelligente Regel gelöscht",
+        "description": "Ask AI step: the agent deleted a Smart Rule"
+    },
+    "askAI_toolExportBookmarkFile": {
+        "message": "Lesezeichen exportiert",
+        "description": "Ask AI step: the agent exported bookmarks"
+    },
+    "askAI_toolImportBookmarkFile": {
+        "message": "Lesezeichen importiert",
+        "description": "Ask AI step: the agent imported bookmarks"
+    },
     "askAI_toolPropose": {
         "message": "Änderungen zur Freigabe vorbereitet",
         "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
@@ -6590,6 +6610,30 @@
     "askAI_approvalStartTool": {
         "message": "$1 für $2 ausführen",
         "description": "Approval line: $1 is the tool name, $2 the folder or all bookmarks"
+    },
+    "askAI_approvalRule": {
+        "message": "Intelligente Regel „$1“ speichern, Suche: $2",
+        "description": "Approval line: $1 is the rule's name, $2 its search"
+    },
+    "askAI_approvalRuleTags": {
+        "message": "Tags $1 hinzufügen",
+        "description": "Approval line: $1 is the tags the rule adds"
+    },
+    "askAI_approvalRuleMove": {
+        "message": "In $1 verschieben",
+        "description": "Approval line: $1 is the folder the rule moves bookmarks to"
+    },
+    "askAI_approvalDeleteRule": {
+        "message": "Intelligente Regel „$1“ löschen",
+        "description": "Approval line: $1 is the deleted rule's name"
+    },
+    "askAI_approvalImport": {
+        "message": "Lesezeichen aus $1 in $2 importieren",
+        "description": "Approval line: $1 is the file format, $2 the folder imported into"
+    },
+    "askAI_ruleMissing": {
+        "message": "Diese Intelligente Regel gibt es nicht mehr.",
+        "description": "Approval: the Smart Rule the agent names no longer exists"
     },
     "askAI_allBookmarks": {
         "message": "alle Lesezeichen",
@@ -7646,6 +7690,26 @@
     "actionName_scanPrivacy": {
         "message": "Nach privaten Werten suchen",
         "description": "Name of the action that runs the Privacy Scanner"
+    },
+    "actionName_listRules": {
+        "message": "Intelligente Regeln auflisten",
+        "description": "Name of the action that lists Smart Rules"
+    },
+    "actionName_saveRule": {
+        "message": "Intelligente Regel speichern",
+        "description": "Name of the action that saves a Smart Rule"
+    },
+    "actionName_deleteRule": {
+        "message": "Intelligente Regel löschen",
+        "description": "Name of the action that deletes a Smart Rule"
+    },
+    "actionName_exportBookmarkFile": {
+        "message": "Lesezeichen exportieren",
+        "description": "Name of the action that exports bookmarks as text"
+    },
+    "actionName_importBookmarkFile": {
+        "message": "Lesezeichen importieren",
+        "description": "Name of the action that imports bookmarks from file text"
     },
     "actionName_proposeChanges": {
         "message": "Änderungen zur Freigabe vorschlagen",

@@ -93,6 +93,36 @@ agent_description = "Find bookmarks whose addresses URL Cleaner would clean with
 agent_description = "Find bookmarks whose addresses or titles hold private values (tokens, passwords, emails, sensitive parameters) by the user's Privacy Scanner settings. Addresses are left out of the result. Nothing changes; to remove them, propose deletions with proposeChanges."
 findings = "What was found, such as sensitiveParam:token or email"
 
+[rule_view]
+move_to = "The folder the rule moves bookmarks to, by path"
+auto_move = "The user lets the rule move new bookmarks without a review"
+
+[list_rules]
+agent_description = "List the user's Smart Rules in the order they run: each rule's search, the tags it adds, the folder it moves bookmarks to, and whether it is on."
+
+[save_rule]
+agent_description = "Save a new Smart Rule, or change one by its id: a search (the same words and operators as searchBookmarks) and what to do with the bookmarks it finds, adding tags, moving them to a folder, or both. The user always approves first. Rules tag new bookmarks when the user lets them; running a rule on existing bookmarks stays with the user in the Tools sidebar."
+id = "The rule to change, from listRules; leave out for a new rule"
+query = "The search the rule matches bookmarks by"
+add_tags = "Tags to add to the bookmarks it finds"
+move_to = "A folder (ref or full path) to move them to"
+
+[delete_rule]
+agent_description = "Delete one of the user's Smart Rules, by its id from listRules. Bookmarks are not touched. The user always approves first."
+id = "The rule id"
+deleted = "The rule that was deleted"
+
+[export_bookmarks]
+agent_description = "Export all bookmarks or a folder as text, in one of the export formats (html, json, markdown, csv), with the user's export settings. JSON keeps tags and summaries. A large library may be too large to send; export a folder then."
+format = "The export format"
+
+[import_bookmarks]
+agent_description = "Import bookmarks from file text into a folder, as the Tools sidebar's import does: duplicates are skipped by default, and the import is one step the user can undo in the bookmark manager. The user always approves first. In JSON, give the shape exportBookmarkFile writes: a title and children, each a bookmark (title, url) or a folder (title, children)."
+format = "json, or html from Bookmark Scout's pages only"
+content = "The file's text"
+folder = "The folder (ref or full path) to import into"
+duplicates = "skip-anywhere: skip addresses already bookmarked anywhere; skip-in-target: only those already in the folder; import-all: keep every one"
+
 [undo_change]
 agent_description = "Undo a change made by saveBookmark or applyChanges, by its change id. Items changed since are left as they are. The user may be asked to approve it."
 change = "The change id a write returned"

@@ -31,6 +31,8 @@ max_tag_chars = 100
 max_tags_per_call = 100
 # Characters of a summary an action may write; above any summary the Content Summarizer writes
 max_summary_chars = 10000
+# Characters of bookmark file text one importBookmarkFile call may carry
+max_import_chars = 500000
 # Settings one listSettings call returns per page at most
 max_settings = 100
 # Settings one changeSettings call may change at once

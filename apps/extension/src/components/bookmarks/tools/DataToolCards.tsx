@@ -49,14 +49,7 @@ export function ExportToolCard({ environment, currentFolderName }: DataToolProps
       const metadata = format === jsonFormat ? await bookmarkMetadataValue.get() : undefined;
       const writeExport = (children: BookmarkTreeNode[]) => {
         const exportRoot = { ...root, children };
-        const content = exportBookmarks(exportRoot, format, {
-          includeDates: settings.exportIncludeDates,
-          includeUrls: settings.exportIncludeUrls,
-          jsonIndentSize: settings.exportJsonIndentSize,
-          htmlIndentSpaces: settings.exportHtmlIndentSpaces,
-          markdownIndentSpaces: settings.exportMarkdownIndentSpaces,
-          metadata,
-        });
+        const content = exportBookmarks(exportRoot, format, exportOptionsFor(settings, metadata));
         const scopeName =
           scope === 'folder' && currentFolderId
             ? currentFolderName || EXPORT_SCOPE_FILE_NAMES.folder

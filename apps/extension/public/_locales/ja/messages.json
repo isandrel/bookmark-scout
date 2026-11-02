@@ -6471,6 +6471,26 @@
         "message": "個人的な値をスキャンしました",
         "description": "Ask AI step: the agent scanned bookmarks for private values"
     },
+    "askAI_toolListRules": {
+        "message": "スマートルールを一覧表示しました",
+        "description": "Ask AI step: the agent listed the Smart Rules"
+    },
+    "askAI_toolSaveRule": {
+        "message": "スマートルール「$1」を保存しました",
+        "description": "Ask AI step: the agent saved a Smart Rule; $1 is its name"
+    },
+    "askAI_toolDeleteRule": {
+        "message": "スマートルールを削除しました",
+        "description": "Ask AI step: the agent deleted a Smart Rule"
+    },
+    "askAI_toolExportBookmarkFile": {
+        "message": "ブックマークをエクスポートしました",
+        "description": "Ask AI step: the agent exported bookmarks"
+    },
+    "askAI_toolImportBookmarkFile": {
+        "message": "ブックマークをインポートしました",
+        "description": "Ask AI step: the agent imported bookmarks"
+    },
     "askAI_toolPropose": {
         "message": "承認用の変更を用意しました",
         "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
@@ -6546,6 +6566,30 @@
     "askAI_approvalStartTool": {
         "message": "$2 で $1 を実行",
         "description": "Approval line: $1 is the tool name, $2 the folder or all bookmarks"
+    },
+    "askAI_approvalRule": {
+        "message": "スマートルール「$1」（検索: $2）を保存",
+        "description": "Approval line: $1 is the rule's name, $2 its search"
+    },
+    "askAI_approvalRuleTags": {
+        "message": "タグ $1 を追加",
+        "description": "Approval line: $1 is the tags the rule adds"
+    },
+    "askAI_approvalRuleMove": {
+        "message": "$1 に移動",
+        "description": "Approval line: $1 is the folder the rule moves bookmarks to"
+    },
+    "askAI_approvalDeleteRule": {
+        "message": "スマートルール「$1」を削除",
+        "description": "Approval line: $1 is the deleted rule's name"
+    },
+    "askAI_approvalImport": {
+        "message": "$1 のブックマークを $2 にインポート",
+        "description": "Approval line: $1 is the file format, $2 the folder imported into"
+    },
+    "askAI_ruleMissing": {
+        "message": "そのスマートルールはもうありません。",
+        "description": "Approval: the Smart Rule the agent names no longer exists"
     },
     "askAI_allBookmarks": {
         "message": "すべてのブックマーク",
@@ -7634,6 +7678,26 @@
     "actionName_scanPrivacy": {
         "message": "個人的な値をスキャン",
         "description": "Name of the action that runs the Privacy Scanner"
+    },
+    "actionName_listRules": {
+        "message": "スマートルールを一覧表示",
+        "description": "Name of the action that lists Smart Rules"
+    },
+    "actionName_saveRule": {
+        "message": "スマートルールを保存",
+        "description": "Name of the action that saves a Smart Rule"
+    },
+    "actionName_deleteRule": {
+        "message": "スマートルールを削除",
+        "description": "Name of the action that deletes a Smart Rule"
+    },
+    "actionName_exportBookmarkFile": {
+        "message": "ブックマークをエクスポート",
+        "description": "Name of the action that exports bookmarks as text"
+    },
+    "actionName_importBookmarkFile": {
+        "message": "ブックマークをインポート",
+        "description": "Name of the action that imports bookmarks from file text"
     },
     "actionName_proposeChanges": {
         "message": "承認用の変更を提案",
