@@ -138,6 +138,7 @@ export const ACTIONS = {
   ...CLEANER_ACTIONS,
   ...RULE_ACTIONS,
   ...DATA_ACTIONS,
+  ...SAVED_SEARCH_ACTIONS,
   runBatch,
 };
 

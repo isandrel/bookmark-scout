@@ -6373,6 +6373,34 @@
         "message": "Aturan Pintar itu sudah tidak ada.",
         "description": "Approval: the Smart Rule the agent names no longer exists"
     },
+    "askAI_toolListSavedSearches": {
+        "message": "Mencantumkan pencarian tersimpan",
+        "description": "Ask AI step: the agent listed the saved searches"
+    },
+    "askAI_toolSaveSearch": {
+        "message": "Menyimpan pencarian “$1”",
+        "description": "Ask AI step: the agent saved a search; $1 is its name"
+    },
+    "askAI_toolRenameSearch": {
+        "message": "Mengganti nama pencarian tersimpan menjadi “$1”",
+        "description": "Ask AI step: the agent renamed a saved search; $1 is the new name"
+    },
+    "askAI_toolDeleteSearch": {
+        "message": "Menghapus pencarian tersimpan",
+        "description": "Ask AI step: the agent deleted a saved search"
+    },
+    "askAI_approvalSaveSearch": {
+        "message": "Simpan pencarian “$1”: $2",
+        "description": "Approval line: $1 is the saved search name, $2 its search text or folder"
+    },
+    "askAI_approvalDeleteSearch": {
+        "message": "Hapus pencarian tersimpan “$1”",
+        "description": "Approval line: $1 is the deleted saved search's name"
+    },
+    "askAI_savedSearchMissing": {
+        "message": "Pencarian tersimpan itu sudah tidak ada.",
+        "description": "Approval: the saved search the agent names no longer exists"
+    },
     "askAI_allBookmarks": {
         "message": "semua bookmark",
         "description": "Approval: where a tool runs when no folder is named"
@@ -7440,6 +7468,22 @@
     "actionName_deleteRule": {
         "message": "Hapus Aturan Pintar",
         "description": "Name of the action that deletes a Smart Rule"
+    },
+    "actionName_listSavedSearches": {
+        "message": "Cantumkan pencarian tersimpan",
+        "description": "Name of the action that lists saved searches"
+    },
+    "actionName_saveSearch": {
+        "message": "Simpan pencarian",
+        "description": "Name of the action that saves a search"
+    },
+    "actionName_renameSearch": {
+        "message": "Ganti nama pencarian tersimpan",
+        "description": "Name of the action that renames a saved search"
+    },
+    "actionName_deleteSearch": {
+        "message": "Hapus pencarian tersimpan",
+        "description": "Name of the action that deletes a saved search"
     },
     "actionName_exportBookmarkFile": {
         "message": "Ekspor bookmark",

@@ -76,12 +76,19 @@ export async function getSavedSearches(): Promise<SavedSearch[]> {
   }
 }
 
-export type SavedSearchError =
-  | 'empty-name'
-  | 'duplicate-name'
-  | 'limit'
-  | 'invalid-query'
-  | 'not-found';
+/** Why a saved search could not be added, renamed, or put back. */
+export const SAVED_SEARCH_ERROR_IDS = [
+  'empty-name',
+  'duplicate-name',
+  'limit',
+  'invalid-query',
+  'not-found',
+] as const;
+export type SavedSearchError = (typeof SAVED_SEARCH_ERROR_IDS)[number];
+
+export function isSavedSearchError(value: unknown): value is SavedSearchError {
+  return SAVED_SEARCH_ERROR_IDS.includes(value as SavedSearchError);
+}
 
 export type SavedSearchResult =
   | { ok: true; searches: SavedSearch[]; search: SavedSearch }

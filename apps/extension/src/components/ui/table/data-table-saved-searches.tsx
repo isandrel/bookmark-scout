@@ -17,7 +17,7 @@ type DataTableSavedSearchesProps = {
   onApply: (query: SavedSearchQuery) => { missingFolderCount: number };
 };
 
-function describeError(error: SavedSearchError): string {
+function describeError(error: SavedSearchError | 'failed'): string {
   switch (error) {
     case 'empty-name':
       return t('savedSearches_errorEmptyName');
@@ -64,7 +64,7 @@ export function DataTableSavedSearches({ currentQuery, onApply }: DataTableSaved
     }
     setName('');
     setSaveError(null);
-    toast.success({ title: t('savedSearches_saved', result.search.name) });
+    toast.success({ title: t('savedSearches_saved', result.name) });
   };
 
   const handleApply = (search: SavedSearch) => {

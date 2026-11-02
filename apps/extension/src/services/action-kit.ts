@@ -119,13 +119,15 @@ export type ActionError = {
     message: string;
     hint?: string;
     candidates?: ActionFolder[];
+    /** Which of the feature's own failures this is, for Bookmark Scout's pages to word. */
+    reason?: string;
   };
 };
 
 export function actionError(
   code: ActionErrorCode,
   message: string,
-  extra: { hint?: string; candidates?: ActionFolder[] } = {},
+  extra: { hint?: string; candidates?: ActionFolder[]; reason?: string } = {},
 ): ActionError {
   return { error: { code, message, ...extra } };
 }
