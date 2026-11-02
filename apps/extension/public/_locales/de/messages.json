@@ -6527,6 +6527,14 @@
         "message": "Intelligente Regel gelöscht",
         "description": "Ask AI step: the agent deleted a Smart Rule"
     },
+    "askAI_toolExportBookmarkFile": {
+        "message": "Lesezeichen exportiert",
+        "description": "Ask AI step: the agent exported bookmarks"
+    },
+    "askAI_toolImportBookmarkFile": {
+        "message": "Lesezeichen importiert",
+        "description": "Ask AI step: the agent imported bookmarks"
+    },
     "askAI_toolPropose": {
         "message": "Änderungen zur Freigabe vorbereitet",
         "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
@@ -6618,6 +6626,10 @@
     "askAI_approvalDeleteRule": {
         "message": "Intelligente Regel „$1“ löschen",
         "description": "Approval line: $1 is the deleted rule's name"
+    },
+    "askAI_approvalImport": {
+        "message": "Lesezeichen aus $1 in $2 importieren",
+        "description": "Approval line: $1 is the file format, $2 the folder imported into"
     },
     "askAI_ruleMissing": {
         "message": "Diese Intelligente Regel gibt es nicht mehr.",
@@ -7690,6 +7702,14 @@
     "actionName_deleteRule": {
         "message": "Intelligente Regel löschen",
         "description": "Name of the action that deletes a Smart Rule"
+    },
+    "actionName_exportBookmarkFile": {
+        "message": "Lesezeichen exportieren",
+        "description": "Name of the action that exports bookmarks as text"
+    },
+    "actionName_importBookmarkFile": {
+        "message": "Lesezeichen importieren",
+        "description": "Name of the action that imports bookmarks from file text"
     },
     "actionName_proposeChanges": {
         "message": "Änderungen zur Freigabe vorschlagen",

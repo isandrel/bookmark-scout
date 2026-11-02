@@ -30,6 +30,7 @@ export const actionLimits = readConfig(
     max_tag_chars: z.number().int().positive(),
     max_tags_per_call: z.number().int().positive(),
     max_summary_chars: z.number().int().positive(),
+    max_import_chars: z.number().int().positive(),
     max_settings: z.number().int().positive(),
     max_setting_changes: z.number().int().positive(),
     guarded_settings: z.array(z.string().min(1)),

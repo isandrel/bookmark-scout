@@ -876,11 +876,11 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   exportFilenameMaxLength: tested(DATA_TOOLS, [
     unit('bookmark-export.test.ts', 'names files with the saved prefix and the local date'),
   ]),
-  exportJsonIndentSize: tested(DATA_TOOLS, [exportUnit]),
-  exportHtmlIndentSpaces: tested(DATA_TOOLS, [exportUnit]),
-  exportMarkdownIndentSpaces: tested(DATA_TOOLS, [exportUnit]),
-  exportIncludeDates: tested(DATA_TOOLS, [exportPreferences, exportUnit]),
-  exportIncludeUrls: tested(DATA_TOOLS, [exportPreferences]),
+  exportJsonIndentSize: tested('services/bookmark-export.ts', [exportUnit]),
+  exportHtmlIndentSpaces: tested('services/bookmark-export.ts', [exportUnit]),
+  exportMarkdownIndentSpaces: tested('services/bookmark-export.ts', [exportUnit]),
+  exportIncludeDates: tested('services/bookmark-export.ts', [exportPreferences, exportUnit]),
+  exportIncludeUrls: tested('services/bookmark-export.ts', [exportPreferences]),
   backupExportCategories: tested('hooks/use-backup-flow.tsx', [
     unit('backup-categories.test.ts', 'start a new backup without device-specific or secret parts'),
     e2e(

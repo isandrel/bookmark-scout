@@ -6527,6 +6527,14 @@
         "message": "Eliminó una regla inteligente",
         "description": "Ask AI step: the agent deleted a Smart Rule"
     },
+    "askAI_toolExportBookmarkFile": {
+        "message": "Exportó marcadores",
+        "description": "Ask AI step: the agent exported bookmarks"
+    },
+    "askAI_toolImportBookmarkFile": {
+        "message": "Importó marcadores",
+        "description": "Ask AI step: the agent imported bookmarks"
+    },
     "askAI_toolPropose": {
         "message": "Ha preparado cambios para que los apruebes",
         "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
@@ -6618,6 +6626,10 @@
     "askAI_approvalDeleteRule": {
         "message": "Eliminar la regla inteligente «$1»",
         "description": "Approval line: $1 is the deleted rule's name"
+    },
+    "askAI_approvalImport": {
+        "message": "Importar marcadores de $1 en $2",
+        "description": "Approval line: $1 is the file format, $2 the folder imported into"
     },
     "askAI_ruleMissing": {
         "message": "Esa regla inteligente ya no existe.",
@@ -7690,6 +7702,14 @@
     "actionName_deleteRule": {
         "message": "Eliminar una regla inteligente",
         "description": "Name of the action that deletes a Smart Rule"
+    },
+    "actionName_exportBookmarkFile": {
+        "message": "Exportar marcadores",
+        "description": "Name of the action that exports bookmarks as text"
+    },
+    "actionName_importBookmarkFile": {
+        "message": "Importar marcadores",
+        "description": "Name of the action that imports bookmarks from file text"
     },
     "actionName_proposeChanges": {
         "message": "Proponer cambios para aprobar",

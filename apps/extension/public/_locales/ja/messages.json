@@ -6483,6 +6483,14 @@
         "message": "スマートルールを削除しました",
         "description": "Ask AI step: the agent deleted a Smart Rule"
     },
+    "askAI_toolExportBookmarkFile": {
+        "message": "ブックマークをエクスポートしました",
+        "description": "Ask AI step: the agent exported bookmarks"
+    },
+    "askAI_toolImportBookmarkFile": {
+        "message": "ブックマークをインポートしました",
+        "description": "Ask AI step: the agent imported bookmarks"
+    },
     "askAI_toolPropose": {
         "message": "承認用の変更を用意しました",
         "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
@@ -6574,6 +6582,10 @@
     "askAI_approvalDeleteRule": {
         "message": "スマートルール「$1」を削除",
         "description": "Approval line: $1 is the deleted rule's name"
+    },
+    "askAI_approvalImport": {
+        "message": "$1 のブックマークを $2 にインポート",
+        "description": "Approval line: $1 is the file format, $2 the folder imported into"
     },
     "askAI_ruleMissing": {
         "message": "そのスマートルールはもうありません。",
@@ -7678,6 +7690,14 @@
     "actionName_deleteRule": {
         "message": "スマートルールを削除",
         "description": "Name of the action that deletes a Smart Rule"
+    },
+    "actionName_exportBookmarkFile": {
+        "message": "ブックマークをエクスポート",
+        "description": "Name of the action that exports bookmarks as text"
+    },
+    "actionName_importBookmarkFile": {
+        "message": "ブックマークをインポート",
+        "description": "Name of the action that imports bookmarks from file text"
     },
     "actionName_proposeChanges": {
         "message": "承認用の変更を提案",
