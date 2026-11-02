@@ -84,6 +84,15 @@ agent_description = "Undo a change made by saveBookmark or applyChanges, by its 
 change = "The change id a write returned"
 skipped = "Parts left alone because they changed since"
 
+[run_batch]
+agent_description = "Run several actions in order as one request: the user approves the whole list once when any step changes something, and the changes are one undo step. Stops at the first step that fails; the steps before it stay done. Not for applyChanges, undoChange, or another runBatch."
+steps = "The calls to run, in order"
+step_action = "An action name, as the tools are named"
+step_input = "That action's arguments"
+results = "Each step run and its result, in order"
+failed_at = "The index of the step that failed; later steps did not run"
+change = "The change id for undoChange, when a step changed bookmarks"
+
 [suggestion_input]
 kind = "ask: a next question the user may ask. option: one of several ideas or choices, whose text is sent to act on or ask about it. save: save a page to a folder. open: open a bookmark. show: show a bookmark or folder in the bookmark manager."
 label = "ask, option: short button text in the user's language"
