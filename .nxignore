@@ -1,3 +1,5 @@
-# Agent tool state, including git worktrees of this repository (.claude/worktrees/*). Without this
-# the Nx daemon watches every worktree's files and its log grows without bound.
+# Agent tool state and git worktrees of this repository (.worktrees/*, and .claude/worktrees/*
+# where Claude Code's own tools make them). Without this the Nx daemon watches every worktree's
+# files and its log grows without bound.
 .claude/
+.worktrees/
