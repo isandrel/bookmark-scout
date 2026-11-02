@@ -6479,6 +6479,30 @@
         "message": "Étiquettes et résumé définis",
         "description": "Ask AI step: the agent set a bookmark's tags or summary"
     },
+    "askAI_toolStartTool": {
+        "message": "$1 lancé",
+        "description": "Ask AI step: the agent started a tool; $1 is the tool name"
+    },
+    "askAI_toolListBackgroundJobs": {
+        "message": "Tâches en arrière-plan listées",
+        "description": "Ask AI step: the agent listed the background jobs"
+    },
+    "askAI_toolGetJobResults": {
+        "message": "Résultats d’une tâche lus",
+        "description": "Ask AI step: the agent read a job's results"
+    },
+    "askAI_toolPauseJob": {
+        "message": "Tâche mise en pause",
+        "description": "Ask AI step: the agent paused a job"
+    },
+    "askAI_toolResumeJob": {
+        "message": "Tâche reprise",
+        "description": "Ask AI step: the agent resumed a job"
+    },
+    "askAI_toolCancelJob": {
+        "message": "Tâche annulée",
+        "description": "Ask AI step: the agent cancelled a job"
+    },
     "askAI_toolPropose": {
         "message": "Préparation de modifications à approuver",
         "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
@@ -6550,6 +6574,14 @@
     "askAI_approvalTagsRemove": {
         "message": "Retirer $1 de $2 favoris",
         "description": "Approval line: $1 is the tags removed, $2 how many bookmarks"
+    },
+    "askAI_approvalStartTool": {
+        "message": "Exécuter $1 sur $2",
+        "description": "Approval line: $1 is the tool name, $2 the folder or all bookmarks"
+    },
+    "askAI_allBookmarks": {
+        "message": "tous les favoris",
+        "description": "Approval: where a tool runs when no folder is named"
     },
     "askAI_approvalUndo": {
         "message": "Annuler une modification précédente",
@@ -7562,6 +7594,30 @@
     "actionName_setBookmarkDetails": {
         "message": "Définir étiquettes et résumé",
         "description": "Name of the action that sets one bookmark's tags and summary"
+    },
+    "actionName_startTool": {
+        "message": "Lancer un outil",
+        "description": "Name of the action that starts a Tools sidebar tool as a background job"
+    },
+    "actionName_listBackgroundJobs": {
+        "message": "Lister les tâches en arrière-plan",
+        "description": "Name of the action that lists background jobs"
+    },
+    "actionName_getJobResults": {
+        "message": "Lire les résultats d’une tâche",
+        "description": "Name of the action that reads a background job's results"
+    },
+    "actionName_pauseJob": {
+        "message": "Mettre une tâche en pause",
+        "description": "Name of the action that pauses a background job"
+    },
+    "actionName_resumeJob": {
+        "message": "Reprendre une tâche",
+        "description": "Name of the action that resumes a background job"
+    },
+    "actionName_cancelJob": {
+        "message": "Annuler une tâche",
+        "description": "Name of the action that cancels a background job"
     },
     "actionName_proposeChanges": {
         "message": "Proposer des modifications à approuver",

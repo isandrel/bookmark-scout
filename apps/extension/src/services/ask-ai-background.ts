@@ -21,6 +21,7 @@ async function askAIContext(settings: Settings): Promise<ActionContext> {
     client: { kind: 'askAI' },
     settings,
     activeTab: activeTabPage,
+    jobCommand: runJobCommand,
     ...(readPages
       ? {
           readPage: async (url: string) =>

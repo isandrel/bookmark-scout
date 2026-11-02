@@ -7011,6 +7011,30 @@
         "message": "Заданы теги и описание",
         "description": "Ask AI step: the agent set a bookmark's tags or summary"
     },
+    "askAI_toolStartTool": {
+        "message": "Запущено: $1",
+        "description": "Ask AI step: the agent started a tool; $1 is the tool name"
+    },
+    "askAI_toolListBackgroundJobs": {
+        "message": "Показаны фоновые задачи",
+        "description": "Ask AI step: the agent listed the background jobs"
+    },
+    "askAI_toolGetJobResults": {
+        "message": "Прочитаны результаты задачи",
+        "description": "Ask AI step: the agent read a job's results"
+    },
+    "askAI_toolPauseJob": {
+        "message": "Задача приостановлена",
+        "description": "Ask AI step: the agent paused a job"
+    },
+    "askAI_toolResumeJob": {
+        "message": "Задача возобновлена",
+        "description": "Ask AI step: the agent resumed a job"
+    },
+    "askAI_toolCancelJob": {
+        "message": "Задача отменена",
+        "description": "Ask AI step: the agent cancelled a job"
+    },
     "askAI_toolPropose": {
         "message": "Изменения подготовлены для вашего подтверждения",
         "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
@@ -7082,6 +7106,14 @@
     "askAI_approvalTagsRemove": {
         "message": "Удалить $1 из закладок ($2)",
         "description": "Approval line: $1 is the tags removed, $2 how many bookmarks"
+    },
+    "askAI_approvalStartTool": {
+        "message": "Запустить $1: $2",
+        "description": "Approval line: $1 is the tool name, $2 the folder or all bookmarks"
+    },
+    "askAI_allBookmarks": {
+        "message": "все закладки",
+        "description": "Approval: where a tool runs when no folder is named"
     },
     "askAI_approvalUndo": {
         "message": "Отменить сделанное ранее изменение",
@@ -8102,6 +8134,30 @@
     "actionName_setBookmarkDetails": {
         "message": "Задать теги и описание",
         "description": "Name of the action that sets one bookmark's tags and summary"
+    },
+    "actionName_startTool": {
+        "message": "Запустить инструмент",
+        "description": "Name of the action that starts a Tools sidebar tool as a background job"
+    },
+    "actionName_listBackgroundJobs": {
+        "message": "Показать фоновые задачи",
+        "description": "Name of the action that lists background jobs"
+    },
+    "actionName_getJobResults": {
+        "message": "Прочитать результаты задачи",
+        "description": "Name of the action that reads a background job's results"
+    },
+    "actionName_pauseJob": {
+        "message": "Приостановить задачу",
+        "description": "Name of the action that pauses a background job"
+    },
+    "actionName_resumeJob": {
+        "message": "Возобновить задачу",
+        "description": "Name of the action that resumes a background job"
+    },
+    "actionName_cancelJob": {
+        "message": "Отменить задачу",
+        "description": "Name of the action that cancels a background job"
     },
     "actionName_proposeChanges": {
         "message": "Предлагать изменения на подтверждение",

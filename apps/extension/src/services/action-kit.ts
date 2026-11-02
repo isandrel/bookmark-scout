@@ -78,6 +78,11 @@ export type ActionContext = {
    * it a call is treated as coming from a conversation with unreviewed text and no known URLs.
    */
   conversation?: ActionConversation;
+  /**
+   * Carries out a background job command (`job-coordinator.ts`): the coordinator itself where the
+   * call runs in the background (Ask AI, local agents); without it, a page sends the command there.
+   */
+  jobCommand?: (command: JobCommand) => Promise<JobCommandResponse>;
 };
 
 /** What a chat's messages tell a call about where its arguments may have come from. */

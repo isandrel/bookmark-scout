@@ -112,8 +112,8 @@ export const ruleRunInputSchema = z.strictObject({
 });
 export type RuleRunInput = z.infer<typeof ruleRunInputSchema>;
 
-/** Where a job was started from, as far as the extension knows. */
-export const JOB_SOURCES = ['manager', 'popup', 'sidePanel', 'options'] as const;
+/** Where a job was started from, as far as the extension knows; `agent` is Ask AI or a local agent. */
+export const JOB_SOURCES = ['manager', 'popup', 'sidePanel', 'options', 'agent'] as const;
 
 /**
  * A job's state. `pause_requested` and `cancel_requested` hold while work already started

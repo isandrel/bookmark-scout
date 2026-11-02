@@ -6233,6 +6233,30 @@
         "message": "已設定標籤和摘要",
         "description": "Ask AI step: the agent set a bookmark's tags or summary"
     },
+    "askAI_toolStartTool": {
+        "message": "已啟動 $1",
+        "description": "Ask AI step: the agent started a tool; $1 is the tool name"
+    },
+    "askAI_toolListBackgroundJobs": {
+        "message": "已列出背景工作",
+        "description": "Ask AI step: the agent listed the background jobs"
+    },
+    "askAI_toolGetJobResults": {
+        "message": "已讀取工作結果",
+        "description": "Ask AI step: the agent read a job's results"
+    },
+    "askAI_toolPauseJob": {
+        "message": "已暫停工作",
+        "description": "Ask AI step: the agent paused a job"
+    },
+    "askAI_toolResumeJob": {
+        "message": "已繼續工作",
+        "description": "Ask AI step: the agent resumed a job"
+    },
+    "askAI_toolCancelJob": {
+        "message": "已取消工作",
+        "description": "Ask AI step: the agent cancelled a job"
+    },
     "askAI_toolPropose": {
         "message": "已準備待你核准的變更",
         "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
@@ -6304,6 +6328,14 @@
     "askAI_approvalTagsRemove": {
         "message": "從 $2 個書籤移除 $1",
         "description": "Approval line: $1 is the tags removed, $2 how many bookmarks"
+    },
+    "askAI_approvalStartTool": {
+        "message": "在 $2 上執行 $1",
+        "description": "Approval line: $1 is the tool name, $2 the folder or all bookmarks"
+    },
+    "askAI_allBookmarks": {
+        "message": "所有書籤",
+        "description": "Approval: where a tool runs when no folder is named"
     },
     "askAI_approvalUndo": {
         "message": "復原先前的一項變更",
@@ -7312,6 +7344,30 @@
     "actionName_setBookmarkDetails": {
         "message": "設定標籤和摘要",
         "description": "Name of the action that sets one bookmark's tags and summary"
+    },
+    "actionName_startTool": {
+        "message": "啟動工具",
+        "description": "Name of the action that starts a Tools sidebar tool as a background job"
+    },
+    "actionName_listBackgroundJobs": {
+        "message": "列出背景工作",
+        "description": "Name of the action that lists background jobs"
+    },
+    "actionName_getJobResults": {
+        "message": "讀取工作結果",
+        "description": "Name of the action that reads a background job's results"
+    },
+    "actionName_pauseJob": {
+        "message": "暫停工作",
+        "description": "Name of the action that pauses a background job"
+    },
+    "actionName_resumeJob": {
+        "message": "繼續工作",
+        "description": "Name of the action that resumes a background job"
+    },
+    "actionName_cancelJob": {
+        "message": "取消工作",
+        "description": "Name of the action that cancels a background job"
     },
     "actionName_proposeChanges": {
         "message": "提出待核准的變更",
