@@ -8,6 +8,7 @@
  */
 import { z } from 'zod';
 import type { SupportedBrowser } from './supported-browsers';
+import { MS_PER_SECOND } from './units';
 
 /** `[browsers] supported` of config/project.toml, in its order. */
 export const SUPPORTED_BROWSERS = z
@@ -36,6 +37,7 @@ const profileSchema = z.strictObject({
   bookmark_manager_url: optionalUrl(true),
   shortcut_settings_url: optionalUrl(false),
   omnibox_markup: z.boolean(),
+  chat_keep_alive_seconds: z.number().int().nonnegative(),
 });
 
 // Every supported browser has exactly one profile; an unknown or missing table fails the load.
@@ -62,6 +64,8 @@ export type BrowserProfile = {
   shortcutSettingsUrl: string | null;
   /** Address bar suggestions take XML markup for highlights; otherwise plain text. */
   omniboxMarkup: boolean;
+  /** How often an open Ask AI chat keeps the background awake, in ms; null where it need not. */
+  chatKeepAliveMs: number | null;
 };
 
 const BROWSER_PROFILES = Object.fromEntries(
@@ -77,6 +81,10 @@ const BROWSER_PROFILES = Object.fromEntries(
         bookmarkManagerUrl: profile.bookmark_manager_url || null,
         shortcutSettingsUrl: profile.shortcut_settings_url || null,
         omniboxMarkup: profile.omnibox_markup,
+        chatKeepAliveMs:
+          profile.chat_keep_alive_seconds > 0
+            ? profile.chat_keep_alive_seconds * MS_PER_SECOND
+            : null,
       } satisfies BrowserProfile),
     ];
   }),

@@ -2,7 +2,8 @@
  * The Ask AI chat as the popup and side panel show it, run in the AI host page on Pi Durable
  * (`services/ask-ai-host.lazy.ts`): the page keeps answering after this UI closes, and this UI
  * shows the chat again when it reopens. Connects over a port and reconnects when the page went
- * away (Firefox suspends its background); every action goes to the page, which owns the chat.
+ * away (Firefox suspends its background), and while open keeps Firefox's background from going
+ * idle (`chatKeepAliveMs`); every action goes to the page, which owns the chat.
  */
 import type { UIMessage } from 'ai';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -93,8 +94,19 @@ export function useAskAIChat({
       for (const message of pending.current.splice(0)) next.postMessage(message);
     };
     void connect();
+    // Where the background is an event page, an open chat keeps it from going idle mid-answer.
+    const keepAliveMs = browserProfile().chatKeepAliveMs;
+    const keepAlive =
+      keepAliveMs === null
+        ? undefined
+        : setInterval(() => {
+            void browser.runtime
+              .sendMessage({ type: ASK_AI_MESSAGE.keepAlive })
+              .catch(() => undefined);
+          }, keepAliveMs);
     return () => {
       closed = true;
+      clearInterval(keepAlive);
       port.current?.disconnect();
       port.current = undefined;
     };
