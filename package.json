@@ -4,10 +4,37 @@
   "version": "0.3.5",
   "type": "module",
   "packageManager": "bun@1.4.4",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "workspaces": {
+    "packages": [
+      "apps/*",
+      "packages/*"
+    ],
+    "catalog": {
+      "@biomejs/biome": "^2.6.4",
+      "@playwright/test": "^1.64.1",
+      "@tailwindcss/postcss": "^4.3.3",
+      "@types/bun": "1.4.4",
+      "@types/node": "^26.6.6",
+      "@types/react": "^19.3.0",
+      "@types/react-dom": "^19.3.0",
+      "lucide-react": "^1.66.0",
+      "next": "16.4.3",
+      "postcss": "^8.5.32",
+      "react": "^19.3.1",
+      "react-dom": "^19.3.1",
+      "smol-toml": "^1.9.1",
+      "tailwindcss": "^4.3.3",
+      "zod": "^4.6.7"
+    },
+    "catalogs": {
+      "ts6": {
+        "typescript": "^6.0.3"
+      },
+      "ts7": {
+        "typescript": "^7.0.2"
+      }
+    }
+  },
   "scripts": {
     "dev": "nx run extension:dev",
     "dev:firefox": "nx run extension:dev:firefox",
@@ -31,17 +58,17 @@
     "prepare": "husky"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.6.4",
+    "@biomejs/biome": "catalog:",
     "@bookmark-scout/config": "workspace:*",
     "@nx/js": "^24.0.3",
-    "@playwright/test": "^1.64.1",
-    "@types/bun": "1.4.4",
+    "@playwright/test": "catalog:",
+    "@types/bun": "catalog:",
     "github-slugger": "2.0.0",
     "husky": "^9.1.7",
     "lint-staged": "^17.6.0",
     "minijinja-js": "3.0.5",
     "nx": "^24.0.3",
-    "typescript": "^6.0.3"
+    "typescript": "catalog:ts6"
   },
   "lint-staged": {
     "apps/extension/src/**/*.{ts,tsx}": [

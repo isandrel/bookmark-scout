@@ -13,25 +13,25 @@
   },
   "dependencies": {
     "@bookmark-scout/config": "workspace:*",
-    "next": "16.4.3",
+    "next": "catalog:",
     "next-intl": "^4.14.9",
-    "react": "^19.3.1",
-    "react-dom": "^19.3.1",
-    "smol-toml": "^1.9.1"
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "smol-toml": "catalog:"
   },
   "devDependencies": {
     "@eslint/compat": "^2.1.1",
-    "@playwright/test": "^1.64.1",
-    "@tailwindcss/postcss": "^4.3.3",
-    "@types/bun": "1.4.4",
-    "@types/node": "^26.6.6",
-    "@types/react": "^19.3.0",
-    "@types/react-dom": "^19.3.0",
+    "@playwright/test": "catalog:",
+    "@tailwindcss/postcss": "catalog:",
+    "@types/bun": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "eslint": "^10.14.0",
     "eslint-config-next": "16.4.3",
     "sharp": "0.35.5",
-    "tailwindcss": "^4.3.3",
-    "typescript": "^6.0.3"
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:ts6"
   },
   "ignoreScripts": [
     "sharp",
