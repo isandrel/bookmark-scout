@@ -6257,6 +6257,10 @@
         "message": "已取消工作",
         "description": "Ask AI step: the agent cancelled a job"
     },
+    "askAI_toolDeleteJob": {
+        "message": "已刪除工作",
+        "description": "Ask AI step: the agent deleted a finished job"
+    },
     "askAI_toolChangeUrl": {
         "message": "已變更網址",
         "description": "Ask AI step: a bookmark's address was changed"
@@ -7428,6 +7432,10 @@
     "actionName_cancelJob": {
         "message": "取消工作",
         "description": "Name of the action that cancels a background job"
+    },
+    "actionName_deleteJob": {
+        "message": "刪除工作",
+        "description": "Name of the action that deletes a finished background job"
     },
     "actionName_changeUrl": {
         "message": "變更網址",

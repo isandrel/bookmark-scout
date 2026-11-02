@@ -102,11 +102,15 @@ function BookmarkDetailsContent({
     try {
       // A tag still being typed is saved too.
       const typed = addTokens(tags, parseBookmarkTags(tagDraft), { keyOf: tagKey });
-      const saved = await runUIAction('setBookmarkDetails', {
-        ref: toBookmarkRef(bookmark.id),
-        tags: typed,
-        summary,
-      });
+      const saved = await runUIAction(
+        'setBookmarkDetails',
+        {
+          ref: toBookmarkRef(bookmark.id),
+          tags: typed,
+          summary,
+        },
+        'manager',
+      );
       if (isActionError(saved)) throw new Error(saved.error.message);
       const { tags: savedTags, summary: savedSummary } = saved as {
         tags: string[];

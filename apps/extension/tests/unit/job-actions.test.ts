@@ -90,13 +90,48 @@ describe('job actions', () => {
     const started = await run(
       'startTool',
       { tool: 'deadLinks' },
-      { client: { kind: 'ui' }, jobCommand: undefined },
+      { client: { kind: 'ui', page: 'manager' }, jobCommand: undefined },
     );
     expect(sent).toEqual([
       expect.objectContaining({ command: expect.objectContaining({ source: 'manager' }) }),
     ]);
     const cancelled = await run('cancelJob', { id: started.id });
     expect(['cancelled', 'cancel_requested', 'succeeded']).toContain(cancelled.state);
+  });
+
+  it('runs on just the bookmarks and sites named, from the page the user used', async () => {
+    const sent: unknown[] = [];
+    vi.spyOn(fakeBrowser.runtime, 'sendMessage').mockImplementation(async (message: unknown) => {
+      sent.push(message);
+      return runJobCommand((message as { command: Parameters<typeof runJobCommand>[0] }).command);
+    });
+    await saveSettings({ pageTextEnabled: true });
+    const started = await run(
+      'startTool',
+      { tool: 'pageText', bookmarks: ['b:b2'], sites: ['e2e.invalid'] },
+      { client: { kind: 'ui', page: 'options' }, jobCommand: undefined },
+    );
+    expect(started).toMatchObject({ tool: 'pageText', total: 1 });
+    expect(sent).toEqual([
+      expect.objectContaining({
+        command: expect.objectContaining({
+          source: 'options',
+          scope: { mode: 'all' },
+          bookmarkIds: ['b2'],
+          sites: ['e2e.invalid'],
+        }),
+      }),
+    ]);
+    expect(await run('startTool', { tool: 'deadLinks', bookmarks: ['f:f'] })).toMatchObject({
+      error: { code: 'invalid_input' },
+    });
+  });
+
+  it('deletes a finished job and returns the one it deleted', async () => {
+    const started = await run('startTool', { tool: 'deadLinks' });
+    await whenJobsIdle();
+    expect(await run('deleteJob', { id: started.id })).toMatchObject({ id: started.id });
+    expect((await run('listBackgroundJobs', {})).jobs).toEqual([]);
   });
 
   it('names the tool and where it runs in the approval', () => {

@@ -111,17 +111,18 @@ function JobToolEntry({
   const Icon = tool.icon;
   const start = async (scope: BookmarkToolScope, sites?: string[]) => {
     const folderId = environment.currentFolderId;
-    const response = await sendJobCommand({
-      type: 'start',
-      // A new id per click: each click is a new run.
-      commandId: crypto.randomUUID(),
-      kind: jobTool.kind,
-      source: 'manager',
-      scope: scope === 'folder' && folderId ? { mode: 'folder', folderId } : { mode: 'all' },
-      ...(sites ? { sites } : {}),
-    }).catch(() => undefined);
-    if (!response?.ok) toast.error({ title: t('jobs_commandFailed') });
-    else setWatching(response.job?.id ?? null);
+    // Each click is a new run.
+    const started = await runUIAction(
+      'startTool',
+      {
+        tool: jobTool.kind,
+        ...(scope === 'folder' && folderId ? { folder: toFolderRef(folderId) } : {}),
+        ...(sites ? { sites } : {}),
+      },
+      'manager',
+    );
+    if (isActionError(started)) toast.error({ title: t('jobs_commandFailed') });
+    else setWatching((started as { id: string }).id);
   };
   const openReview = async (shown: JobRecord) => {
     const results = await readJobResults(shown.id);

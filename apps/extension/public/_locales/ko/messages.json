@@ -6495,6 +6495,10 @@
         "message": "작업을 취소했습니다",
         "description": "Ask AI step: the agent cancelled a job"
     },
+    "askAI_toolDeleteJob": {
+        "message": "작업을 삭제했습니다",
+        "description": "Ask AI step: the agent deleted a finished job"
+    },
     "askAI_toolChangeUrl": {
         "message": "주소를 변경했습니다",
         "description": "Ask AI step: a bookmark's address was changed"
@@ -7666,6 +7670,10 @@
     "actionName_cancelJob": {
         "message": "작업 취소",
         "description": "Name of the action that cancels a background job"
+    },
+    "actionName_deleteJob": {
+        "message": "작업 삭제",
+        "description": "Name of the action that deletes a finished background job"
     },
     "actionName_changeUrl": {
         "message": "주소 변경",

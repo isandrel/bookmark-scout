@@ -309,9 +309,13 @@ export async function runAction(
 }
 
 /** Runs an action for the user in Bookmark Scout's own pages: the `ui` client, never throwing. */
-export async function runUIAction(id: ActionId, input: unknown): Promise<unknown> {
+export async function runUIAction(
+  id: ActionId,
+  input: unknown,
+  page: ActionUIPage,
+): Promise<unknown> {
   return runAction(id, input, {
-    client: { kind: 'ui' },
+    client: { kind: 'ui', page },
     settings: await getSettings(),
     activeTab: activeTabPage,
   });

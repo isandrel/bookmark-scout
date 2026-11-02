@@ -55,7 +55,11 @@ describe('listSettings', () => {
       ),
     );
     // The user may change any of them.
-    const own = await run('listSettings', { keys: ['agentBridgeWrites'] }, { kind: 'ui' });
+    const own = await run(
+      'listSettings',
+      { keys: ['agentBridgeWrites'] },
+      { kind: 'ui', page: 'manager' },
+    );
     expect(own.settings).toEqual([expect.objectContaining({ changeable: true })]);
   });
 
@@ -97,12 +101,20 @@ describe('changeSettings', () => {
     });
     // The user changes guarded settings, but turns a permission switch on only once it is granted.
     expect(
-      await run('changeSettings', { changes: { askAiWebSearch: true } }, { kind: 'ui' }),
+      await run(
+        'changeSettings',
+        { changes: { askAiWebSearch: true } },
+        { kind: 'ui', page: 'manager' },
+      ),
     ).toMatchObject({
       changed: [{ key: 'askAiWebSearch', from: false, to: true }],
     });
     expect(
-      await run('changeSettings', { changes: { aiReadPageContent: true } }, { kind: 'ui' }),
+      await run(
+        'changeSettings',
+        { changes: { aiReadPageContent: true } },
+        { kind: 'ui', page: 'manager' },
+      ),
     ).toMatchObject({
       error: { code: 'not_allowed' },
     });

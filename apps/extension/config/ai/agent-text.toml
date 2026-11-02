@@ -162,6 +162,8 @@ problem = "Why the job stopped or waits for the user, such as a permission only 
 agent_description = "Start one of the Tools sidebar's background tools on all bookmarks or a folder: deadLinks checks whether links still work, metadataFetcher reads page titles and descriptions, siteIcons refreshes site icons, pageText indexes page text for search, reorganization asks the AI service for a folder plan. It keeps running in the background; follow it with listBackgroundJobs and read what it found with getJobResults. Applying what a tool found stays with the user in the Tools sidebar."
 tool = "Which tool to run"
 folder = "A folder (ref or full path) to run on; all bookmarks when left out"
+bookmarks = "Only these bookmarks (refs) of the folder or of all bookmarks"
+sites = "Only bookmarks on these sites (host names, such as example.com), for pageText"
 
 [list_background_jobs]
 agent_description = "List the background jobs with their tool, state, progress, and any problem, newest first."
@@ -175,6 +177,7 @@ results = "One entry per checked bookmark, as the tool stores it"
 pause = "Pause a running background job; resume it later with resumeJob."
 resume = "Resume a paused background job."
 cancel = "Cancel a background job; what it already found stays readable."
+delete = "Delete a finished background job and its results."
 
 [list_settings]
 agent_description = "Read Bookmark Scout's settings: each key, its label in the user's language, its value, where it is stored, whether you may change it, and its choices when it has a fixed set. Filter by keys or a word in the key or label."

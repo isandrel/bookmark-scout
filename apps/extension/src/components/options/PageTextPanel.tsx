@@ -50,16 +50,12 @@ export function PageTextPanel() {
     const start = async () => {
       setRetrying(true);
       try {
-        const response = await sendJobCommand({
-          type: 'start',
-          commandId: crypto.randomUUID(),
-          kind: 'pageText',
-          source: 'options',
-          scope: { mode: 'all' },
-          sites,
-          bookmarkIds: pages.map((item) => item.id),
-        }).catch(() => undefined);
-        if (!response?.ok) {
+        const result = await runUIAction(
+          'startTool',
+          { tool: 'pageText', sites, bookmarks: pages.map((item) => toBookmarkRef(item.id)) },
+          'options',
+        );
+        if (isActionError(result)) {
           toast.error({ title: t('jobs_commandFailed') });
           return;
         }

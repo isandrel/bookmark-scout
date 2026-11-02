@@ -7035,6 +7035,10 @@
         "message": "Задача отменена",
         "description": "Ask AI step: the agent cancelled a job"
     },
+    "askAI_toolDeleteJob": {
+        "message": "Задача удалена",
+        "description": "Ask AI step: the agent deleted a finished job"
+    },
     "askAI_toolChangeUrl": {
         "message": "Адрес изменён",
         "description": "Ask AI step: a bookmark's address was changed"
@@ -8218,6 +8222,10 @@
     "actionName_cancelJob": {
         "message": "Отменить задачу",
         "description": "Name of the action that cancels a background job"
+    },
+    "actionName_deleteJob": {
+        "message": "Удалить задачу",
+        "description": "Name of the action that deletes a finished background job"
     },
     "actionName_changeUrl": {
         "message": "Изменить адрес",

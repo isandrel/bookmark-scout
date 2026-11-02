@@ -55,6 +55,26 @@ const jobOutput = z.object({
   problem: z.string().optional().describe(agentText('job_view.problem')),
 });
 
+type StartTarget = Pick<Extract<JobCommand, { type: 'start' }>, 'scope' | 'bookmarkIds'>;
+
+/** The folder and bookmarks a start names, as the job command takes them, or why it cannot. */
+async function startTarget(input: {
+  folder?: string;
+  bookmarks?: string[];
+}): Promise<StartTarget | ActionError> {
+  if (!input.folder && !input.bookmarks) return { scope: { mode: 'all' } };
+  const library = await loadActionLibrary();
+  let scope: StartTarget['scope'] = { mode: 'all' };
+  if (input.folder) {
+    const folder = resolveActionFolder(library, input.folder);
+    if (isActionError(folder)) return folder;
+    scope = { mode: 'folder', folderId: folder.node.id };
+  }
+  if (!input.bookmarks) return { scope };
+  const bookmarkIds = resolveActionBookmarks(library, input.bookmarks);
+  return isActionError(bookmarkIds) ? bookmarkIds : { scope, bookmarkIds };
+}
+
 const startTool = defineAction({
   risk: 'write',
   labelKey: 'actionName_startTool',
@@ -63,6 +83,17 @@ const startTool = defineAction({
   input: z.object({
     tool: z.enum(SCAN_JOB_KINDS).describe(agentText('start_tool.tool')),
     folder: z.string().min(1).optional().describe(agentText('start_tool.folder')),
+    bookmarks: z
+      .array(z.string().min(1))
+      .min(1)
+      .max(JOB_LIMITS.maxItems)
+      .optional()
+      .describe(agentText('start_tool.bookmarks')),
+    sites: z
+      .array(urlSiteSchema)
+      .max(JOB_LIMITS.maxItems)
+      .optional()
+      .describe(agentText('start_tool.sites')),
   }),
   output: jobOutput,
   describe: (input) =>
@@ -76,23 +107,19 @@ const startTool = defineAction({
     ],
   },
   async precheck(input) {
-    if (!input.folder) return undefined;
-    const folder = resolveActionFolder(await loadActionLibrary(), input.folder);
-    return isActionError(folder) ? folder : undefined;
+    const target = await startTarget(input);
+    return isActionError(target) ? target : undefined;
   },
   async execute(input, context) {
-    let scope: Extract<JobCommand, { type: 'start' }>['scope'] = { mode: 'all' };
-    if (input.folder) {
-      const folder = resolveActionFolder(await loadActionLibrary(), input.folder);
-      if (isActionError(folder)) return folder;
-      scope = { mode: 'folder', folderId: folder.node.id };
-    }
+    const target = await startTarget(input);
+    if (isActionError(target)) return target;
     const job = await command(context, {
       type: 'start',
       commandId: crypto.randomUUID(),
       kind: input.tool,
-      source: context.client.kind === 'ui' ? 'manager' : 'agent',
-      scope,
+      source: context.client.kind === 'ui' ? context.client.page : 'agent',
+      ...target,
+      ...(input.sites ? { sites: input.sites } : {}),
     });
     if (isActionError(job)) return job;
     return job ? jobView(job) : COMMAND_ERRORS.store;
@@ -144,7 +171,7 @@ const getJobResults = defineAction({
 
 /** One of the commands that steer a job by its id. */
 function steerJob(
-  type: 'pause' | 'resume' | 'cancel',
+  type: 'pause' | 'resume' | 'cancel' | 'delete',
   description: string,
   labelKey: MessageKey,
   stepKey: MessageKey,
@@ -161,9 +188,12 @@ function steerJob(
       return (await getJob(input.id)) ? undefined : COMMAND_ERRORS['not-found'];
     },
     async execute(input, context) {
+      const before = await getJob(input.id);
       const job = await command(context, { type, jobId: input.id });
       if (isActionError(job)) return job;
-      return job ? jobView(job) : COMMAND_ERRORS['not-found'];
+      // A deleted job has no record left: the call returns the one it deleted.
+      const shown = job ?? (type === 'delete' ? before : null);
+      return shown ? jobView(shown) : COMMAND_ERRORS['not-found'];
     },
   });
 }
@@ -189,5 +219,11 @@ export const JOB_ACTIONS = {
     agentText('steer_job.cancel'),
     'actionName_cancelJob',
     'askAI_toolCancelJob',
+  ),
+  deleteJob: steerJob(
+    'delete',
+    agentText('steer_job.delete'),
+    'actionName_deleteJob',
+    'askAI_toolDeleteJob',
   ),
 };

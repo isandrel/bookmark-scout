@@ -6,11 +6,19 @@
 import { Pause, Play, Square, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
-/** Sends a command; a failure is told in a toast and never changes what the page shows. */
-async function sendCommand(command: JobCommand): Promise<void> {
-  const response = await sendJobCommand(command).catch(() => undefined);
-  if (!response?.ok) toast.error({ title: t('jobs_commandFailed') });
+/** Runs a command; a failure is told in a toast and never changes what the page shows. */
+async function runCommand(action: keyof typeof ACTION_IDS, jobId: string): Promise<void> {
+  // Shown in the manager only: on a tool card and in the Background tasks dialog.
+  const result = await runUIAction(ACTION_IDS[action], { id: jobId }, 'manager');
+  if (isActionError(result)) toast.error({ title: t('jobs_commandFailed') });
 }
+
+const ACTION_IDS = {
+  pause: 'pauseJob',
+  resume: 'resumeJob',
+  cancel: 'cancelJob',
+  delete: 'deleteJob',
+} as const satisfies Record<string, ActionId>;
 
 const ACTION_ICONS = { pause: Pause, resume: Play, cancel: Square, delete: Trash2 } as const;
 const ACTION_LABELS: Record<keyof typeof ACTION_ICONS, MessageKey> = {
@@ -41,7 +49,7 @@ export function JobStatus({
     setBusy(true);
     void granted
       .then((ok) => {
-        if (ok) return sendCommand({ type: action, jobId: job.id });
+        if (ok) return runCommand(action, job.id);
         if (permission) notifyPermissionDenied(permission);
       })
       .finally(() => setBusy(false));

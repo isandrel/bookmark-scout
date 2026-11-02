@@ -6503,6 +6503,10 @@
         "message": "Canceló una tarea",
         "description": "Ask AI step: the agent cancelled a job"
     },
+    "askAI_toolDeleteJob": {
+        "message": "Eliminó una tarea",
+        "description": "Ask AI step: the agent deleted a finished job"
+    },
     "askAI_toolChangeUrl": {
         "message": "Cambió una dirección",
         "description": "Ask AI step: a bookmark's address was changed"
@@ -7678,6 +7682,10 @@
     "actionName_cancelJob": {
         "message": "Cancelar una tarea",
         "description": "Name of the action that cancels a background job"
+    },
+    "actionName_deleteJob": {
+        "message": "Eliminar una tarea",
+        "description": "Name of the action that deletes a finished background job"
     },
     "actionName_changeUrl": {
         "message": "Cambiar una dirección",
