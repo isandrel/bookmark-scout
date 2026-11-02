@@ -12,6 +12,7 @@ import { DataTable } from '@/components/ui/table/data-table';
 import {
   getManagerColumnLayout,
   LEADING_MANAGER_COLUMN_IDS,
+  SORTABLE_COLUMN_IDS,
 } from '@/components/ui/table/table-config';
 import { setLanguage } from '@/hooks/use-i18n';
 import {
@@ -132,12 +133,23 @@ describe('bookmark table column registry', () => {
     ]);
   });
 
+  it('sorts only by configured columns whose cells have a value, with a sort header for each', () => {
+    for (const id of SORTABLE_COLUMN_IDS) {
+      expect(findBookmarkColumn(id)?.accessor, id).toBeTypeOf('function');
+    }
+    for (const column of BOOKMARK_COLUMNS) {
+      if (column.header === 'sortable')
+        expect(SORTABLE_COLUMN_IDS.has(column.id), column.id).toBe(true);
+    }
+  });
+
   it('offers the Cover column in the View menu, hidden at first, unsorted, and only in the list', () => {
     expect(LEADING_MANAGER_COLUMN_IDS).toEqual(['cover']);
     expect(HIDEABLE_COLUMN_IDS).toContain('cover');
     expect(defaultSettings.managerDefaultColumns).not.toContain('cover');
     const cover = findBookmarkColumn('cover');
-    expect(cover).toMatchObject({ labelKey: 'table_columnCover', enableSorting: false });
+    expect(cover).toMatchObject({ labelKey: 'table_columnCover' });
+    expect(SORTABLE_COLUMN_IDS.has('cover')).toBe(false);
     expect(cover?.size).toEqual(getManagerColumnLayout('cover').size);
     expect(getBookmarkColumnLabel('cover')).toBe('Cover');
     // The header is an icon, with the column's name for screen readers and as its tooltip.

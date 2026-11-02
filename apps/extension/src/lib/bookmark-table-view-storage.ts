@@ -19,11 +19,6 @@ export const BOOKMARK_TABLE_COLUMN_IDS: readonly string[] = SAVED_COLUMNS.map(
   (column) => column.id,
 );
 
-const SORTABLE_COLUMN_IDS = new Set(
-  SAVED_COLUMNS.filter((column) => column.accessor && column.enableSorting !== false).map(
-    (column) => column.id,
-  ),
-);
 const ALLOWED_COLUMN_IDS = new Set<string>(BOOKMARK_TABLE_COLUMN_IDS);
 
 /** Whether a column can sort the table (Default Sort may only name these; unit tested). */

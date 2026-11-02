@@ -92,8 +92,6 @@ export type BookmarkColumn = {
   cell?: (context: BookmarkCellContext, columnContext: BookmarkColumnContext) => ReactNode;
   filterFn?: FilterFn<BookmarkTableFeatures, Bookmark>;
   sortFn?: SortFn<BookmarkTableFeatures, Bookmark>;
-  /** Defaults to true for columns with an accessor. */
-  enableSorting?: boolean;
   /** Whether the View menu can hide it (default true). */
   enableHiding?: boolean;
   size?: BookmarkColumnSize;
@@ -179,7 +177,6 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
         aria-label={t('table_selectRow', getBookmarkDisplayTitle(row.original.title.trim()))}
       />
     ),
-    enableSorting: false,
     enableHiding: false,
     ...getManagerColumnLayout('select'),
   },
@@ -199,7 +196,6 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
     cell: ({ row }, { actionHost, coverPreview }) => (
       <BookmarkCoverCell item={row.original} host={actionHost} preview={coverPreview} />
     ),
-    enableSorting: false,
     ...getManagerColumnLayout('cover'),
   },
   {
@@ -279,7 +275,6 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
     id: DOMAIN_COLUMN_ID,
     accessor: getBookmarkDomain,
     enableHiding: false,
-    enableSorting: false,
     // Match by hostname so "bbc.co.uk" covers news.bbc.co.uk but not example.com/?q=bbc.co.uk.
     filterFn: (row, _id, value) => {
       const domains: string[] = Array.isArray(value) ? value : [];
@@ -380,7 +375,6 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
     accessor: (row) => row.id,
     header: 'label',
     cell: ({ row }) => <BookmarkTagsCell item={row.original} />,
-    enableSorting: false,
     ...getManagerColumnLayout('tags'),
   },
   {
@@ -389,7 +383,6 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
     accessor: (row) => row.id,
     header: 'label',
     cell: ({ row }) => <BookmarkSummaryCell item={row.original} />,
-    enableSorting: false,
     ...getManagerColumnLayout('summary'),
   },
   {
@@ -472,7 +465,7 @@ export function createColumns(
       ...(cell ? { cell: (cellContext: BookmarkCellContext) => cell(cellContext, context) } : {}),
       ...(column.filterFn ? { filterFn: column.filterFn } : {}),
       ...(column.sortFn ? { sortFn: column.sortFn } : {}),
-      ...(column.enableSorting !== undefined ? { enableSorting: column.enableSorting } : {}),
+      enableSorting: SORTABLE_COLUMN_IDS.has(column.id),
       ...(column.enableHiding !== undefined ? { enableHiding: column.enableHiding } : {}),
       ...getColumnSizeDef(column.size),
     } as ColumnDef<BookmarkTableFeatures, Bookmark>;

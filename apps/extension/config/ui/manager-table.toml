@@ -74,24 +74,26 @@ dateAddedAsc = { column = "dateAdded", desc = false, label = "settings_managerDe
 # resizes. `hide_below_width` hides the column while the table is narrower than that, in pixels.
 # `fill` columns share the room the other columns leave, in proportion to their `fill`, until the
 # user sizes them; their `size` is then the narrowest they fill to, not a fixed width.
+# `sortable` lets the user sort the table by the column, and a saved search or table view keep that
+# sort; it needs a column whose cells have a value (an accessor in columns.tsx).
 [columns]
 select = { fixed = 40 }
 # The thumbnail (24px tall at 1.91:1, 46px wide) and the cell's 12px padding on each side. It gives
 # way below 640px, where the checkbox, Title, Date Added, and the row menu alone fill the table
 cover = { fixed = 72, hide_below_width = 640 }
-type = { size = 120, min_size = 70 }
-id = { size = 100, min_size = 60 }
-parentId = { size = 180, min_size = 80 }
-folderPath = { size = 180, min_size = 80, hide_below_width = 960 }
+type = { size = 120, min_size = 70, sortable = true }
+id = { size = 100, min_size = 60, sortable = true }
+parentId = { size = 180, min_size = 80, sortable = true }
+folderPath = { size = 180, min_size = 80, hide_below_width = 960, sortable = true }
 # Title and URL share the spare width, Title a bit more (3:2), so neither one takes the whole
 # table on a wide window while the dates stay compact at the end
-url = { size = 200, min_size = 80, fill = 2, hide_below_width = 880 }
-title = { size = 160, min_size = 120, fill = 3 }
+url = { size = 200, min_size = 80, fill = 2, hide_below_width = 880, sortable = true }
+title = { size = 160, min_size = 120, fill = 3, sortable = true }
 # Fits a date and time ("12/28/2026, 12:23:31 PM", or a little longer in other languages) beside
 # the cell padding
-dateAdded = { size = 184, min_size = 100 }
-dateGroupModified = { size = 184, min_size = 100 }
-unmodifiable = { size = 130, min_size = 80 }
+dateAdded = { size = 184, min_size = 100, sortable = true }
+dateGroupModified = { size = 184, min_size = 100, sortable = true }
+unmodifiable = { size = 130, min_size = 80, sortable = true }
 # Tags keep a compact width; Summary also takes a share of any spare width, as Title and URL do.
 # With both on, every column still fits a 1400px window beside the folder tree (measured
 # 2026-10-22), so the pinned row menu never covers the end of a summary
