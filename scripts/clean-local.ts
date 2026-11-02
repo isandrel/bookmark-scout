@@ -65,13 +65,16 @@ async function sizeOf(target: string): Promise<number> {
 
 const megabytes = (bytes: number) => `${(bytes / 1024 / 1024).toFixed(0).padStart(6)} MB`;
 
+/** Where agent worktrees live: `.worktrees/`, and `.claude/worktrees/` where Claude Code's own tools make them. */
+const WORKTREE_DIRS = [".worktrees", ".claude/worktrees"];
+
 const checkouts = [
   root,
-  ...(existsSync(path.join(root, ".claude/worktrees"))
-    ? readdirSync(path.join(root, ".claude/worktrees")).map((name) =>
-        path.join(root, ".claude/worktrees", name),
-      )
-    : []),
+  ...WORKTREE_DIRS.flatMap((dir) =>
+    existsSync(path.join(root, dir))
+      ? readdirSync(path.join(root, dir)).map((name) => path.join(root, dir, name))
+      : [],
+  ),
 ];
 
 let total = 0;

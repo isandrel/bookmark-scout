@@ -52,8 +52,9 @@ test-results
 # TypeScript incremental build info
 *.tsbuildinfo
 
-# Agent tool state and local-only files (Claude Code, Codex, Cursor, etc.)
+# Agent tool state and local-only files (Claude Code, Codex, Cursor, etc.), and agent worktrees
 .claude/
+.worktrees/
 .codex/
 .cursor/
 .remember/

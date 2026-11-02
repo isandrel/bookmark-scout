@@ -7,7 +7,7 @@ root=$(/usr/bin/git rev-parse --show-toplevel)
 cd "$root"
 /usr/bin/git fetch -q origin
 branch=$(gh pr view "$pr" --json headRefName --jq .headRefName)
-wt="$root/.claude/worktrees/pr$pr"
+wt="$root/.worktrees/pr$pr"
 if [[ ! -d "$wt" ]]; then
   /usr/bin/git worktree add -q -b "fix/pr$pr-lock" "$wt" "origin/$branch"
 fi

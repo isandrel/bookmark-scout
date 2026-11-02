@@ -50,7 +50,7 @@ safe_to_drop() {
 /usr/bin/git worktree list --porcelain | awk 'BEGIN{RS=""} {w=""; b=""; l=0
     for (i=1;i<=NF;i++) { if ($i=="worktree") w=$(i+1); if ($i=="branch") { b=$(i+1); sub("refs/heads/","",b) }; if ($i=="locked") l=1 }
     if (b!="") print w" "b" "l }' \
-  | grep '/.claude/worktrees/' | while read -r wt br locked; do
+  | grep -E '/(\.claude/)?\.?worktrees/' | while read -r wt br locked; do
     if [[ ${pr_state[$br]:-} == OPEN ]] || [[ $br =~ $keep ]]; then continue; fi
     if [[ $locked == 1 ]]; then
       echo "keep locked worktree (unlock with 'git worktree unlock' once its agent has finished): $wt ($br)"; continue

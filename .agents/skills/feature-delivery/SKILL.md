@@ -9,9 +9,9 @@ This is the path every change follows, alone or with others in flight. The area 
 
 ## 1. Start clean
 
-- **Worktree.** Work in a worktree under `.claude/worktrees/<name>`, on a branch made from a fresh `origin/main`. Never edit the main checkout, whose `apps/extension/dist` the maintainer's browser loads.
+- **Worktree.** Work in a worktree under `.worktrees/<name>`, on a branch made from a fresh `origin/main`. Never edit the main checkout, whose `apps/extension/dist` the maintainer's browser loads. Not under `.claude/`: Claude Code asks before every edit there, even in bypass mode, so a session in `.claude/worktrees/` stopped for approval on each file (November 2026).
   ```bash
-  git fetch -q origin && git worktree add .claude/worktrees/<name> -b <type>/<topic> origin/main
+  git fetch -q origin && git worktree add .worktrees/<name> -b <type>/<topic> origin/main
   ```
   Then run `bun install --frozen-lockfile` in it, and again after merging a `main` that added a dependency (a stale worktree failed with `Cannot find package '@ai-sdk/azure'`).
 - **Plan.** For broad work, write a plan (`feature-research-planning`), with one PR per phase. Plans and scratch files never go in the repository: plans live in `plans/`, which is git-ignored, and scratch files in `~/.cache/bookmark-scout-<topic>/`.
@@ -71,7 +71,7 @@ As soon as your PR shows MERGED, before starting the next one:
 ```bash
 git -C <main-checkout> fetch -q origin --prune
 git -C <main-checkout> pull -q --ff-only origin main
-git worktree remove .claude/worktrees/<name>     # or reuse it: git switch -c <next> origin/main
+git worktree remove .worktrees/<name>            # or reuse it: git switch -c <next> origin/main
 git branch -D <type>/<topic>
 git push origin --delete <type>/<topic>          # skip if GitHub already deleted it
 (cd <main-checkout>/apps/extension && bun run build:chrome)  # refresh the build the maintainer loads
