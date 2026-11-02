@@ -32,9 +32,9 @@ beforeEach(async () => {
   setLanguage('en');
 });
 
-describe('getSettings', () => {
+describe('listSettings', () => {
   it('reads settings with their labels, values, scope, and whether an agent may change them', async () => {
-    const result = await run('getSettings', {
+    const result = await run('listSettings', {
       keys: ['theme', 'agentBridgeWrites', 'askAiWebSearch'],
     });
     expect(result.total).toBe(3);
@@ -55,14 +55,14 @@ describe('getSettings', () => {
       ),
     );
     // The user may change any of them.
-    const own = await run('getSettings', { keys: ['agentBridgeWrites'] }, { kind: 'ui' });
+    const own = await run('listSettings', { keys: ['agentBridgeWrites'] }, { kind: 'ui' });
     expect(own.settings).toEqual([expect.objectContaining({ changeable: true })]);
   });
 
   it('finds settings by a word in the key or label, a page at a time', async () => {
-    const found = await run('getSettings', { query: 'theme' });
+    const found = await run('listSettings', { query: 'theme' });
     expect((found.settings as { key: string }[]).map((entry) => entry.key)).toContain('theme');
-    const first = await run('getSettings', {});
+    const first = await run('listSettings', {});
     expect(first.settings).toHaveLength(actionLimits.max_settings);
     expect(first.nextCursor).toBeDefined();
   });

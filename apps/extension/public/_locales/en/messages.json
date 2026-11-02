@@ -6459,7 +6459,7 @@
         "message": "Ran $1 steps",
         "description": "Ask AI step: the agent ran several actions as one request; $1 is how many"
     },
-    "askAI_toolGetSettings": {
+    "askAI_toolListSettings": {
         "message": "Read the settings",
         "description": "Ask AI step: the agent read the settings"
     },
@@ -7523,7 +7523,7 @@
         "message": "Run several steps at once",
         "description": "Name of the bookmark action that runs several actions as one request, approved once and undone as one step"
     },
-    "actionName_getSettings": {
+    "actionName_listSettings": {
         "message": "Read settings",
         "description": "Name of the action that reads Bookmark Scout settings"
     },

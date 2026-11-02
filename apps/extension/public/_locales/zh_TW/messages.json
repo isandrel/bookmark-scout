@@ -6213,7 +6213,7 @@
         "message": "已執行 $1 個步驟",
         "description": "Ask AI step: the agent ran several actions as one request; $1 is how many"
     },
-    "askAI_toolGetSettings": {
+    "askAI_toolListSettings": {
         "message": "已讀取設定",
         "description": "Ask AI step: the agent read the settings"
     },
@@ -7273,7 +7273,7 @@
         "message": "一次執行多個步驟",
         "description": "Name of the bookmark action that runs several actions as one request, approved once and undone as one step"
     },
-    "actionName_getSettings": {
+    "actionName_listSettings": {
         "message": "讀取設定",
         "description": "Name of the action that reads Bookmark Scout settings"
     },

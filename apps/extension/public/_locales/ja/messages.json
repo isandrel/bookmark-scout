@@ -6415,7 +6415,7 @@
         "message": "$1 個の手順を実行しました",
         "description": "Ask AI step: the agent ran several actions as one request; $1 is how many"
     },
-    "askAI_toolGetSettings": {
+    "askAI_toolListSettings": {
         "message": "設定を読みました",
         "description": "Ask AI step: the agent read the settings"
     },
@@ -7511,7 +7511,7 @@
         "message": "複数の手順をまとめて実行",
         "description": "Name of the bookmark action that runs several actions as one request, approved once and undone as one step"
     },
-    "actionName_getSettings": {
+    "actionName_listSettings": {
         "message": "設定を読む",
         "description": "Name of the action that reads Bookmark Scout settings"
     },

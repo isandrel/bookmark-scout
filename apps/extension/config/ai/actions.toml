@@ -23,7 +23,7 @@ summary_chars = 300
 max_page_chars = 20000
 # Steps one runBatch call may hold; a batch is one approval and one undo step
 max_batch_steps = 20
-# Settings one getSettings call returns per page at most
+# Settings one listSettings call returns per page at most
 max_settings = 100
 # Settings one changeSettings call may change at once
 max_setting_changes = 20

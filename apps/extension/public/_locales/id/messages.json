@@ -6193,7 +6193,7 @@
         "message": "Menjalankan $1 langkah",
         "description": "Ask AI step: the agent ran several actions as one request; $1 is how many"
     },
-    "askAI_toolGetSettings": {
+    "askAI_toolListSettings": {
         "message": "Membaca setelan",
         "description": "Ask AI step: the agent read the settings"
     },
@@ -7253,7 +7253,7 @@
         "message": "Jalankan beberapa langkah sekaligus",
         "description": "Name of the bookmark action that runs several actions as one request, approved once and undone as one step"
     },
-    "actionName_getSettings": {
+    "actionName_listSettings": {
         "message": "Baca setelan",
         "description": "Name of the action that reads Bookmark Scout settings"
     },

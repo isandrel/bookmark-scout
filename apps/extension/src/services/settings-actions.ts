@@ -1,5 +1,5 @@
 /**
- * Settings as actions, for agents and Bookmark Scout's own pages alike: `getSettings` reads them
+ * Settings as actions, for agents and Bookmark Scout's own pages alike: `listSettings` reads them
  * with their labels, scope, and whether agents may change them; `changeSettings` changes several
  * at once through the same validation as Options (`validateSettingsUpdate`, `saveSettings`).
  *
@@ -34,23 +34,23 @@ const settingSchema = z.object({
   key: z.string(),
   label: z.string(),
   value: z.unknown(),
-  scope: z.enum(SETTING_SCOPES).describe(agentText('get_settings.scope')),
-  changeable: z.boolean().describe(agentText('get_settings.changeable')),
+  scope: z.enum(SETTING_SCOPES).describe(agentText('list_settings.scope')),
+  changeable: z.boolean().describe(agentText('list_settings.changeable')),
   choices: z.array(z.union([z.string(), z.number()])).optional(),
 });
 
-const getSettingsAction = defineAction({
+const listSettingsAction = defineAction({
   risk: 'read',
-  labelKey: 'actionName_getSettings',
+  labelKey: 'actionName_listSettings',
   targets: ['settings'],
-  agent: { description: agentText('get_settings.agent_description') },
+  agent: { description: agentText('list_settings.agent_description') },
   input: z.object({
     keys: z
       .array(z.string())
       .max(actionLimits.max_settings)
       .optional()
-      .describe(agentText('get_settings.keys')),
-    query: z.string().optional().describe(agentText('get_settings.query')),
+      .describe(agentText('list_settings.keys')),
+    query: z.string().optional().describe(agentText('list_settings.query')),
     cursor: z.string().optional().describe(agentText('cursor_input.self')),
   }),
   output: z.object({
@@ -58,7 +58,7 @@ const getSettingsAction = defineAction({
     total: z.number().int(),
     nextCursor: z.string().optional(),
   }),
-  describe: () => t('askAI_toolGetSettings'),
+  describe: () => t('askAI_toolListSettings'),
   async execute(input, context) {
     const meta = getSettingsFieldMeta();
     const query = input.query?.toLowerCase();
@@ -107,7 +107,7 @@ async function checkChanges(
   for (const key of Object.keys(changes)) {
     if (!isSettingsKey(key)) {
       return actionError('not_found', `There is no setting named ${key}.`, {
-        hint: 'Call getSettings to see the setting keys.',
+        hint: 'Call listSettings to see the setting keys.',
       });
     }
     if (context.client.kind !== 'ui' && GUARDED.has(key)) {
@@ -170,6 +170,6 @@ const changeSettingsAction = defineAction({
 });
 
 export const SETTINGS_ACTIONS = {
-  getSettings: getSettingsAction,
+  listSettings: listSettingsAction,
   changeSettings: changeSettingsAction,
 };
