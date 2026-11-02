@@ -6213,6 +6213,14 @@
         "message": "已运行 $1 个步骤",
         "description": "Ask AI step: the agent ran several actions as one request; $1 is how many"
     },
+    "askAI_toolListSettings": {
+        "message": "已读取设置",
+        "description": "Ask AI step: the agent read the settings"
+    },
+    "askAI_toolChangeSettings": {
+        "message": "已更改 $1 项设置",
+        "description": "Ask AI step: the agent changed settings; $1 is how many"
+    },
     "askAI_toolPropose": {
         "message": "准备了待你批准的更改",
         "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
@@ -6272,6 +6280,10 @@
     "askAI_approvalSave": {
         "message": "将“$1”保存到 $2",
         "description": "Ask AI approval line: saving a page as a bookmark. $1 is the page title or URL, $2 the folder path."
+    },
+    "askAI_approvalSetting": {
+        "message": "将“$1”设为 $2",
+        "description": "Approval line for a settings change: $1 is the setting name, $2 its new value"
     },
     "askAI_approvalUndo": {
         "message": "撤消之前的一项更改",
@@ -7260,6 +7272,14 @@
     "actionName_runBatch": {
         "message": "一次运行多个步骤",
         "description": "Name of the bookmark action that runs several actions as one request, approved once and undone as one step"
+    },
+    "actionName_listSettings": {
+        "message": "读取设置",
+        "description": "Name of the action that reads Bookmark Scout settings"
+    },
+    "actionName_changeSettings": {
+        "message": "更改设置",
+        "description": "Name of the action that changes Bookmark Scout settings"
     },
     "actionName_proposeChanges": {
         "message": "提出待批准的更改",

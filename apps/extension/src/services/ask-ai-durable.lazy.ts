@@ -79,6 +79,11 @@ export type AskAIDurableDeps = {
   providerTools?: () => Promise<ToolSet>;
   /** Runs an action in the background, with what the conversation so far allows. */
   callAction: (name: string, args: unknown, conversation: ActionConversation) => Promise<unknown>;
+  /**
+   * Why a call would be refused or fail now (`checkActionCall`), checked before the user is asked
+   * to approve it, so nobody approves a call that cannot work.
+   */
+  checkAction?: (name: string, args: unknown, conversation: ActionConversation) => Promise<unknown>;
   skills?: () => Promise<SkillRegistry>;
   context?: Context;
 };
@@ -270,6 +275,10 @@ export class AskAIDurable {
               const allowed = readDurableConversation(messages);
               const need = actionApproval(name, args, allowed);
               if (need !== 'none') {
+                const problem = await deps.checkAction?.(name, args, allowed);
+                if (isActionError(problem)) {
+                  return { output: [{ type: 'text', text: resultText(problem) }], isError: true };
+                }
                 const pending: PendingApproval = {
                   approval: 'requested',
                   reason: need,

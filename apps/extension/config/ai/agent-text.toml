@@ -93,6 +93,18 @@ results = "Each step run and its result, in order"
 failed_at = "The index of the step that failed; later steps did not run"
 change = "The change id for undoChange, when a step changed bookmarks"
 
+[list_settings]
+agent_description = "Read Bookmark Scout's settings: each key, its label in the user's language, its value, where it is stored, whether you may change it, and its choices when it has a fixed set. Filter by keys or a word in the key or label."
+keys = "Only these setting keys"
+query = "A word to look for in setting keys and labels"
+scope = "sync: follows the user's browser account; lists: a synced list; device: this computer only"
+changeable = "False for settings only the user can change in Options"
+
+[change_settings]
+agent_description = "Change Bookmark Scout settings: pass setting keys and their new values, as listSettings names them. The user always approves first and sees every change. Settings that control what AI and agents may do or see, and switches that need a browser permission, are refused: tell the user to change those in Options."
+changes = "Setting keys and their new values"
+changed = "The settings that changed, with their old and new values"
+
 [suggestion_input]
 kind = "ask: a next question the user may ask. option: one of several ideas or choices, whose text is sent to act on or ask about it. save: save a page to a folder. open: open a bookmark. show: show a bookmark or folder in the bookmark manager."
 label = "ask, option: short button text in the user's language"

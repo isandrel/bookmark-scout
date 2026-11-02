@@ -44,10 +44,12 @@ beforeEach(() => {
     value: { request: async (_name: string, task: () => Promise<void>) => task() },
   });
   vi.spyOn(fakeBrowser.runtime, 'sendMessage').mockImplementation(async (message: unknown) => {
-    const typed = message as { type: string; name?: string };
+    const typed = message as { type: string; name?: string; checkOnly?: true };
     messages.push(typed);
     if (typed.type === ASK_AI_MESSAGE.setup) return setup;
-    if (typed.type === ASK_AI_MESSAGE.callAction) return { ok: true, ran: typed.name };
+    if (typed.type === ASK_AI_MESSAGE.callAction) {
+      return typed.checkOnly ? null : { ok: true, ran: typed.name };
+    }
     return undefined;
   });
 });
@@ -105,7 +107,10 @@ describe('Ask AI in the AI host page', () => {
         approval: { id: 'call-applyChanges' },
       }),
     );
-    expect(messages.filter((m) => m.type === ASK_AI_MESSAGE.callAction)).toEqual([]);
+    // Only checked, so nobody approves a call that cannot work; nothing ran yet.
+    expect(messages.filter((m) => m.type === ASK_AI_MESSAGE.callAction)).toEqual([
+      expect.objectContaining({ name: 'applyChanges', checkOnly: true }),
+    ]);
     // The chat list hears about it, named by its first question.
     expect(messages).toContainEqual(
       expect.objectContaining({ type: ASK_AI_MESSAGE.chat, chatId, title: 'Apply it' }),
@@ -115,7 +120,7 @@ describe('Ask AI in the AI host page', () => {
     await vi.waitFor(() =>
       expect(latest()?.messages.at(-1)?.parts.at(-1)).toMatchObject({ text: 'Done' }),
     );
-    expect(messages.filter((m) => m.type === ASK_AI_MESSAGE.callAction)).toEqual([
+    expect(messages.filter((m) => m.type === ASK_AI_MESSAGE.callAction && !m.checkOnly)).toEqual([
       expect.objectContaining({ name: 'applyChanges', args: { planId: 'p1' }, chatId }),
     ]);
     expect(calls).toHaveLength(2);

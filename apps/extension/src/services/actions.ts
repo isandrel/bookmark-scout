@@ -132,6 +132,7 @@ export const ACTIONS = {
   ...WRITE_ACTIONS,
   ...PLAN_ACTIONS,
   ...CHAT_ACTIONS,
+  ...SETTINGS_ACTIONS,
   runBatch,
 };
 
@@ -326,7 +327,7 @@ export function actionApproval(
 ): 'none' | 'always' | 'untrusted' {
   if (!isActionId(id)) return 'none';
   const risk = callRisk(id, input);
-  if (risk === 'destructive') return 'always';
+  if (risk === 'destructive' || asksAlways(id, input)) return 'always';
   if (risk === 'write') return untrustedContentSeen ? 'untrusted' : 'none';
   return 'none';
 }
@@ -348,6 +349,17 @@ export function callRisk(id: ActionId, input: unknown): ActionRisk {
     (highest, risk) => (RISK_ORDER.indexOf(risk) > RISK_ORDER.indexOf(highest) ? risk : highest),
     'read',
   );
+}
+
+/** Whether a call always asks: its action says so, or for `runBatch`, any of its steps' does. */
+function asksAlways(id: ActionId, input: unknown): boolean {
+  if (id !== 'runBatch') return Boolean(getAction(id).alwaysAsk);
+  const parsed = batchInput.safeParse(input);
+  return parsed.success
+    ? parsed.data.steps.some(
+        (step) => isActionId(step.action) && asksAlways(step.action, step.input ?? {}),
+      )
+    : false;
 }
 
 /** Actions whose results carry text nobody reviewed (`agent.untrusted`). */

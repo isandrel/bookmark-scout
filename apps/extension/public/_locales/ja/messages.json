@@ -6415,6 +6415,14 @@
         "message": "$1 個の手順を実行しました",
         "description": "Ask AI step: the agent ran several actions as one request; $1 is how many"
     },
+    "askAI_toolListSettings": {
+        "message": "設定を読みました",
+        "description": "Ask AI step: the agent read the settings"
+    },
+    "askAI_toolChangeSettings": {
+        "message": "$1 件の設定を変更しました",
+        "description": "Ask AI step: the agent changed settings; $1 is how many"
+    },
     "askAI_toolPropose": {
         "message": "承認用の変更を用意しました",
         "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
@@ -6474,6 +6482,10 @@
     "askAI_approvalSave": {
         "message": "「$1」を $2 に保存",
         "description": "Ask AI approval line: saving a page as a bookmark. $1 is the page title or URL, $2 the folder path."
+    },
+    "askAI_approvalSetting": {
+        "message": "「$1」を $2 にする",
+        "description": "Approval line for a settings change: $1 is the setting name, $2 its new value"
     },
     "askAI_approvalUndo": {
         "message": "以前の変更を元に戻す",
@@ -7498,6 +7510,14 @@
     "actionName_runBatch": {
         "message": "複数の手順をまとめて実行",
         "description": "Name of the bookmark action that runs several actions as one request, approved once and undone as one step"
+    },
+    "actionName_listSettings": {
+        "message": "設定を読む",
+        "description": "Name of the action that reads Bookmark Scout settings"
+    },
+    "actionName_changeSettings": {
+        "message": "設定を変更",
+        "description": "Name of the action that changes Bookmark Scout settings"
     },
     "actionName_proposeChanges": {
         "message": "承認用の変更を提案",

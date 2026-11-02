@@ -26,6 +26,9 @@ export const actionLimits = readConfig(
     max_page_chars: z.number().int().positive(),
     max_result_chars: z.number().int().positive(),
     max_batch_steps: z.number().int().positive(),
+    max_settings: z.number().int().positive(),
+    max_setting_changes: z.number().int().positive(),
+    guarded_settings: z.array(z.string().min(1)),
     max_plan_operations: z.number().int().positive(),
     max_plans: z.number().int().positive(),
     plan_ttl_minutes: z.number().positive(),
@@ -122,7 +125,7 @@ export function isActionError(value: unknown): value is ActionError {
 export type ActionRisk = 'read' | 'write' | 'destructive';
 
 /** What an action acts on, so a surface offers it only where that is at hand. */
-export type ActionTarget = 'library' | 'bookmark' | 'folder' | 'page' | 'url';
+export type ActionTarget = 'library' | 'bookmark' | 'folder' | 'page' | 'url' | 'settings';
 
 /** How an action is offered to AI agents (Ask AI and local agents through the MCP bridge). */
 export type ActionAgentExposure = {
@@ -239,6 +242,8 @@ export type ActionDefinition<Input = unknown, Output = unknown> = {
    * approval (applying a plan, undoing a change), or a batch itself.
    */
   batch?: false;
+  /** An agent's call always waits for the user's approval, as a destructive one does. */
+  alwaysAsk?: true;
 } & (ActionCall<Input, Output> | { [Key in keyof ActionCall<Input, Output>]?: never });
 
 /** One line of a plan as the approval shows it; titles and paths, never the model's words. */

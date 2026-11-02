@@ -45,7 +45,7 @@ const relatedSettingKeys: Partial<Record<keyof Settings, keyof Settings>> = {
   aiMinItemsPerFolder: 'aiMaxItemsPerFolder',
 };
 
-function isSettingsKey(key: unknown): key is keyof Settings {
+export function isSettingsKey(key: unknown): key is keyof Settings {
   return typeof key === 'string' && key in settingsSchema.shape;
 }
 

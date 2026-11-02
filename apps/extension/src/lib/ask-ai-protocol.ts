@@ -70,6 +70,8 @@ export const askAICallActionSchema = z.object({
   args: z.unknown(),
   untrustedContentSeen: z.boolean(),
   knownUrls: z.array(z.string()),
+  /** Only check whether the call could run (`checkActionCall`), before the user is asked. */
+  checkOnly: z.literal(true).optional(),
 });
 
 /** A chat as the chat list keeps it. */
