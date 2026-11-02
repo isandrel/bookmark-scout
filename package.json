@@ -41,6 +41,7 @@
     "lint-staged": "^17.6.0",
     "minijinja-js": "3.0.5",
     "nx": "^24.0.3",
+    "smol-toml": "^1.9.1",
     "typescript": "^6.0.3"
   },
   "lint-staged": {

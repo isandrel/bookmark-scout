@@ -1,0 +1,31 @@
+# Storage migrations: moving settings an earlier store release kept in another place or shape to
+# where this release keeps them. Read by src/lib/storage/migrations/index.ts. Each table names one
+# module, src/lib/storage/migrations/<id>.ts (its id is its file name, `<yyyy-mm>-<name>`), which
+# holds only the migration's logic; the module and its table come and go together, and the loader
+# fails on a table without a module or a module without a table.
+#
+# Adding or removing one: .agents/skills/extension-stored-data/scripts/migration.ts add <name> |
+# remove <id>. New features carry no backward compatibility while they are developed; whether a
+# release carries a store release's data over is the maintainer's call when it is prepared.
+#
+# enabled       false keeps the module but stops running it (and stops keeping its old item, which
+#               the next update's cleanup then removes).
+# added_in      The first release that carries it.
+# remove_after  The first package version that no longer should: tests/unit/migrations/index.test.ts
+#               fails from then on, so that release deletes it, or moves this on while the store
+#               dashboards still show installs from before `added_in`.
+
+[defaults]
+# How many minor releases after `added_in` a new migration is kept by default (`remove_after`),
+# for users to have updated past it; the add script reads it.
+keep_minor_releases = 2
+
+[migrations."2026-10-sync-list-shards"]
+enabled = true
+added_in = "0.3.5"
+remove_after = "0.4.0"
+
+[migrations."2026-10-context-menu-recent-max"]
+enabled = true
+added_in = "0.3.5"
+remove_after = "0.4.0"

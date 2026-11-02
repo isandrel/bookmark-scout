@@ -15,16 +15,15 @@ import {
   settingsOverrideValues,
   undoResetSettings,
 } from '@/lib/settings-storage';
-import {
-  markItemMenu0_3_4,
-  syncListShards,
-} from '@/lib/storage/migrations/2026-10-sync-list-shards';
+import { getMigration } from '@/lib/storage/migrations';
+import { markItemMenu0_3_4 } from '@/lib/storage/migrations/2026-10-sync-list-shards';
 import { storageKey } from '@/lib/storage/registry';
 import { makeBackupFile, undoBackupImport } from '@/services/backup';
 import { installFakeBookmarks } from '../../fake-bookmarks';
 import { formatOneFile, restoreParts, stubManifestVersion } from '../backup-helpers';
 import { readStoredData, readStoredRaw, STORAGE_ITEMS, seedStored } from '../storage-helpers';
 
+const syncListShards = getMigration('2026-10-sync-list-shards');
 // biome-ignore lint/style/noNonNullAssertion: this migration reads an old item.
 const OLD_ITEM = syncListShards.legacy!.item;
 

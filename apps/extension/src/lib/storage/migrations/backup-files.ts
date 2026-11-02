@@ -4,7 +4,7 @@
  * converter is never removed. Kept apart from `./index.ts`, which every page loads, so only the
  * restore loads them.
  */
-import { backupParts } from './2026-10-backup-parts';
+import { backupParts } from './backup-2026-10-parts';
 import { type Envelope, upgradeBackupItems } from './index';
 
 /**
