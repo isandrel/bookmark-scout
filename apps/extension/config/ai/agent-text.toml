@@ -79,6 +79,20 @@ title = "Defaults to the URL"
 new_folder = "A folder to create inside `folder`"
 created = "False when the folder already had this URL"
 
+[change_url]
+ref = "A bookmark ref, b:<id>"
+url = "The bookmark's new web address, such as a cleaned one from findUrlCleanups"
+
+[cleaner_scope]
+folder = "A folder (ref or full path) to look in; all bookmarks when left out"
+
+[find_url_cleanups]
+agent_description = "Find bookmarks whose addresses URL Cleaner would clean with the user's settings: tracking parameters and the like removed. Nothing changes; to clean them, propose changeUrl changes with proposeChanges, which the user approves."
+
+[scan_privacy]
+agent_description = "Find bookmarks whose addresses or titles hold private values (tokens, passwords, emails, sensitive parameters) by the user's Privacy Scanner settings. Addresses are left out of the result. Nothing changes; to remove them, propose deletions with proposeChanges."
+findings = "What was found, such as sensitiveParam:token or email"
+
 [undo_change]
 agent_description = "Undo a change made by saveBookmark or applyChanges, by its change id. Items changed since are left as they are. The user may be asked to approve it."
 change = "The change id a write returned"
@@ -158,7 +172,7 @@ ref = "open (required): a bookmark, b:<id>. show (required): b:<id> or f:<id>"
 dropped = "Why suggestions were left out"
 
 [propose_changes]
-agent_description = "Propose bookmark changes for the user to approve: moves (optionally into a new folder), renames, deletions, and new folders, checked against the library now. Nothing changes yet. Returns a planId and the changes as the user will see them; then call applyChanges with the planId, which asks the user. Folders are named by ref or full path."
+agent_description = "Propose bookmark changes for the user to approve: moves (optionally into a new folder), renames, new addresses (changeUrl), deletions, and new folders, checked against the library now. Nothing changes yet. Returns a planId and the changes as the user will see them; then call applyChanges with the planId, which asks the user. Folders are named by ref or full path."
 summary = "One short sentence on what this does"
 
 [apply_changes]

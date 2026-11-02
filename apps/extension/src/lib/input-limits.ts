@@ -8,6 +8,7 @@ export const INPUT_LIMITS = readConfig(
   z.strictObject({
     chars: z.strictObject({
       bookmark_title: positive,
+      bookmark_url: positive,
       plan_summary: positive,
       folder_id: positive,
       agent_bridge_status_detail: positive,

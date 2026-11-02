@@ -6459,6 +6459,18 @@
         "message": "タスクをキャンセルしました",
         "description": "Ask AI step: the agent cancelled a job"
     },
+    "askAI_toolChangeUrl": {
+        "message": "アドレスを変更しました",
+        "description": "Ask AI step: a bookmark's address was changed"
+    },
+    "askAI_toolFindUrlCleanups": {
+        "message": "整理できるアドレスを探しました",
+        "description": "Ask AI step: the agent looked for addresses to clean"
+    },
+    "askAI_toolScanPrivacy": {
+        "message": "個人的な値をスキャンしました",
+        "description": "Ask AI step: the agent scanned bookmarks for private values"
+    },
     "askAI_toolPropose": {
         "message": "承認用の変更を用意しました",
         "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
@@ -6550,6 +6562,10 @@
     "askAI_planRename": {
         "message": "「$1」の名前を「$2」に変更",
         "description": "Ask AI approval line for a planned rename. $1 is the current title, $2 the new one."
+    },
+    "askAI_planChangeUrl": {
+        "message": "「$1」のアドレスを $2 に変更",
+        "description": "Plan line: $1 is the bookmark title, $2 its new address"
     },
     "askAI_planDelete": {
         "message": "$2 から「$1」を削除",
@@ -7606,6 +7622,18 @@
     "actionName_cancelJob": {
         "message": "タスクをキャンセル",
         "description": "Name of the action that cancels a background job"
+    },
+    "actionName_changeUrl": {
+        "message": "アドレスを変更",
+        "description": "Name of the action that changes a bookmark's address"
+    },
+    "actionName_findUrlCleanups": {
+        "message": "整理できるアドレスを探す",
+        "description": "Name of the action that finds addresses URL Cleaner would clean"
+    },
+    "actionName_scanPrivacy": {
+        "message": "個人的な値をスキャン",
+        "description": "Name of the action that runs the Privacy Scanner"
     },
     "actionName_proposeChanges": {
         "message": "承認用の変更を提案",

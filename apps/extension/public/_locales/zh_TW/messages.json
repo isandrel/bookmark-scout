@@ -6257,6 +6257,18 @@
         "message": "已取消工作",
         "description": "Ask AI step: the agent cancelled a job"
     },
+    "askAI_toolChangeUrl": {
+        "message": "已變更網址",
+        "description": "Ask AI step: a bookmark's address was changed"
+    },
+    "askAI_toolFindUrlCleanups": {
+        "message": "已尋找可清理的網址",
+        "description": "Ask AI step: the agent looked for addresses to clean"
+    },
+    "askAI_toolScanPrivacy": {
+        "message": "已掃描隱私資訊",
+        "description": "Ask AI step: the agent scanned bookmarks for private values"
+    },
     "askAI_toolPropose": {
         "message": "已準備待你核准的變更",
         "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
@@ -6348,6 +6360,10 @@
     "askAI_planRename": {
         "message": "將「$1」重新命名為「$2」",
         "description": "Ask AI approval line for a planned rename. $1 is the current title, $2 the new one."
+    },
+    "askAI_planChangeUrl": {
+        "message": "將「$1」的網址改為 $2",
+        "description": "Plan line: $1 is the bookmark title, $2 its new address"
     },
     "askAI_planDelete": {
         "message": "從 $2 刪除「$1」",
@@ -7368,6 +7384,18 @@
     "actionName_cancelJob": {
         "message": "取消工作",
         "description": "Name of the action that cancels a background job"
+    },
+    "actionName_changeUrl": {
+        "message": "變更網址",
+        "description": "Name of the action that changes a bookmark's address"
+    },
+    "actionName_findUrlCleanups": {
+        "message": "尋找可清理的網址",
+        "description": "Name of the action that finds addresses URL Cleaner would clean"
+    },
+    "actionName_scanPrivacy": {
+        "message": "掃描隱私資訊",
+        "description": "Name of the action that runs the Privacy Scanner"
     },
     "actionName_proposeChanges": {
         "message": "提出待核准的變更",

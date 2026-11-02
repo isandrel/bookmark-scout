@@ -182,6 +182,56 @@ const renameBookmark = defineAction({
   },
 });
 
+const changeUrl = defineAction({
+  risk: 'write',
+  labelKey: 'actionName_changeUrl',
+  targets: ['bookmark'],
+  input: z.object({
+    ref: z.string().describe(agentText('change_url.ref')),
+    url: z
+      .string()
+      .trim()
+      .min(1)
+      .max(INPUT_LIMITS.chars.bookmark_url)
+      .describe(agentText('change_url.url')),
+  }),
+  output: z.object({ ref: z.string(), url: z.string(), ...changeOutput }),
+  describe: () => t('askAI_toolChangeUrl'),
+  plan(input, library) {
+    const items = changeableItems(library, [input.ref]);
+    if (isActionError(items)) return items;
+    const [item] = items;
+    if (!item.bookmark)
+      return actionError(
+        'invalid_input',
+        `${input.ref} is a folder; only bookmarks have an address.`,
+      );
+    if (!isWebUrl(input.url))
+      return actionError('invalid_input', 'The new address must be a web address.');
+    return {
+      preview: [
+        { kind: 'changeUrl', title: titleOf(item), from: item.bookmark.node.url, to: input.url },
+      ],
+      expect: [expectOf(item.bookmark.node)],
+    };
+  },
+  async execute(input, context) {
+    const library = await loadActionLibrary();
+    const items = changeableItems(library, [input.ref]);
+    if (isActionError(items)) return items;
+    const [item] = items;
+    if (!item.bookmark || !isWebUrl(input.url)) {
+      return actionError('invalid_input', 'Only a bookmark can get a new web address.');
+    }
+    const { change } = await writeChange(
+      context,
+      { action: 'edit', title: titleOf(item) },
+      (writer) => writer.update(item.id, { url: input.url }),
+    );
+    return { ref: input.ref, url: input.url, ...(change ? { change } : {}) };
+  },
+});
+
 const deleteBookmarks = defineAction({
   risk: 'destructive',
   labelKey: 'actionName_deleteBookmarks',
@@ -387,6 +437,12 @@ const undoChange = defineAction({
 });
 
 /** The plannable changes, which agents make only through `proposeChanges`. */
-export const PLANNABLE_ACTIONS = { moveBookmarks, renameBookmark, deleteBookmarks, createFolder };
+export const PLANNABLE_ACTIONS = {
+  moveBookmarks,
+  renameBookmark,
+  changeUrl,
+  deleteBookmarks,
+  createFolder,
+};
 
 export const WRITE_ACTIONS = { ...PLANNABLE_ACTIONS, saveBookmark, undoChange };

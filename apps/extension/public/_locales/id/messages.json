@@ -6237,6 +6237,18 @@
         "message": "Membatalkan tugas",
         "description": "Ask AI step: the agent cancelled a job"
     },
+    "askAI_toolChangeUrl": {
+        "message": "Mengubah alamat",
+        "description": "Ask AI step: a bookmark's address was changed"
+    },
+    "askAI_toolFindUrlCleanups": {
+        "message": "Mencari alamat untuk dibersihkan",
+        "description": "Ask AI step: the agent looked for addresses to clean"
+    },
+    "askAI_toolScanPrivacy": {
+        "message": "Memindai nilai pribadi",
+        "description": "Ask AI step: the agent scanned bookmarks for private values"
+    },
     "askAI_toolPropose": {
         "message": "Menyiapkan perubahan untuk Anda setujui",
         "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
@@ -6328,6 +6340,10 @@
     "askAI_planRename": {
         "message": "Ganti nama “$1” menjadi “$2”",
         "description": "Ask AI approval line for a planned rename. $1 is the current title, $2 the new one."
+    },
+    "askAI_planChangeUrl": {
+        "message": "Ubah alamat “$1” menjadi $2",
+        "description": "Plan line: $1 is the bookmark title, $2 its new address"
     },
     "askAI_planDelete": {
         "message": "Hapus “$1” dari $2",
@@ -7348,6 +7364,18 @@
     "actionName_cancelJob": {
         "message": "Batalkan tugas",
         "description": "Name of the action that cancels a background job"
+    },
+    "actionName_changeUrl": {
+        "message": "Ubah alamat",
+        "description": "Name of the action that changes a bookmark's address"
+    },
+    "actionName_findUrlCleanups": {
+        "message": "Cari alamat untuk dibersihkan",
+        "description": "Name of the action that finds addresses URL Cleaner would clean"
+    },
+    "actionName_scanPrivacy": {
+        "message": "Pindai nilai pribadi",
+        "description": "Name of the action that runs the Privacy Scanner"
     },
     "actionName_proposeChanges": {
         "message": "Usulkan perubahan untuk disetujui",

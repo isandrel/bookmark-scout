@@ -6503,6 +6503,18 @@
         "message": "Tâche annulée",
         "description": "Ask AI step: the agent cancelled a job"
     },
+    "askAI_toolChangeUrl": {
+        "message": "Adresse modifiée",
+        "description": "Ask AI step: a bookmark's address was changed"
+    },
+    "askAI_toolFindUrlCleanups": {
+        "message": "Adresses à nettoyer recherchées",
+        "description": "Ask AI step: the agent looked for addresses to clean"
+    },
+    "askAI_toolScanPrivacy": {
+        "message": "Valeurs privées recherchées",
+        "description": "Ask AI step: the agent scanned bookmarks for private values"
+    },
     "askAI_toolPropose": {
         "message": "Préparation de modifications à approuver",
         "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
@@ -6594,6 +6606,10 @@
     "askAI_planRename": {
         "message": "Renommer « $1 » en « $2 »",
         "description": "Ask AI approval line for a planned rename. $1 is the current title, $2 the new one."
+    },
+    "askAI_planChangeUrl": {
+        "message": "Remplacer l’adresse de « $1 » par $2",
+        "description": "Plan line: $1 is the bookmark title, $2 its new address"
     },
     "askAI_planDelete": {
         "message": "Supprimer « $1 » de $2",
@@ -7618,6 +7634,18 @@
     "actionName_cancelJob": {
         "message": "Annuler une tâche",
         "description": "Name of the action that cancels a background job"
+    },
+    "actionName_changeUrl": {
+        "message": "Modifier une adresse",
+        "description": "Name of the action that changes a bookmark's address"
+    },
+    "actionName_findUrlCleanups": {
+        "message": "Trouver les adresses à nettoyer",
+        "description": "Name of the action that finds addresses URL Cleaner would clean"
+    },
+    "actionName_scanPrivacy": {
+        "message": "Rechercher des valeurs privées",
+        "description": "Name of the action that runs the Privacy Scanner"
     },
     "actionName_proposeChanges": {
         "message": "Proposer des modifications à approuver",
