@@ -19,7 +19,8 @@ description: Add or change a bookmark action in the Bookmark Scout extension's a
 8. **Id length:** at most 20 characters. Users' hide lists and AI permission lists are synced settings capped at 16 ids × 20 characters to fit the 8 KB sync item; `tests/unit/action-menus.test.ts` checks every id.
 9. **Locales:** every new string in every `public/_locales/*/messages.json`.
 10. **Tests:** calls in `tests/unit/actions.test.ts`, menus in `tests/unit/action-menus.test.ts`, agent behavior with the scripted-model harness `tests/unit/agent-eval.ts` (include a refusal and a prompt-injection case), and an E2E spec for each surface that shows it.
-11. **Docs:** if users see it, the docs page for that surface; if agents can call it, the local agents guide (`apps/docs/content/docs/guides/local-agents.mdx`).
+11. **Batches and the user's pages:** `runBatch` (in `actions.ts`) runs several calls as one request: its risk is its riskiest step (`callRisk`), so the caller asks once with every step listed, and its changes are one undo step. Set `batch: false` on an entry that keeps its own undo step or approval (`applyChanges`, `undoChange`). Bookmark Scout's own pages call `runAction` as the `ui` client, which skips the agent settings and the AI activity log but keeps every other check; move a feature's UI onto its action when you add one.
+12. **Docs:** if users see it, the docs page for that surface; if agents can call it, the local agents guide (`apps/docs/content/docs/guides/local-agents.mdx`).
 
 ## What the user controls
 

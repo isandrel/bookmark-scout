@@ -268,7 +268,7 @@ export class AskAIDurable {
                 };
               }
               const allowed = readDurableConversation(messages);
-              const need = actionApproval(name, allowed);
+              const need = actionApproval(name, args, allowed);
               if (need !== 'none') {
                 const pending: PendingApproval = {
                   approval: 'requested',

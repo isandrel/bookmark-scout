@@ -153,7 +153,7 @@ async function approvalFor(
   call: CallMessage,
   context: ActionContext,
 ): Promise<CallAnswer | undefined> {
-  if (!isActionId(call.tool) || getAction(call.tool).risk === 'read') return undefined;
+  if (!isActionId(call.tool) || callRisk(call.tool, call.args) === 'read') return undefined;
   const problem = await checkActionCall(call.tool, call.args, context);
   if (problem) return { isError: true, result: problem };
   const outcome = await requestAgentApproval({

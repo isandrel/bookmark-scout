@@ -6209,6 +6209,10 @@
         "message": "已復原一項變更",
         "description": "Ask AI step: the agent undid one of its changes"
     },
+    "askAI_toolBatch": {
+        "message": "已執行 $1 個步驟",
+        "description": "Ask AI step: the agent ran several actions as one request; $1 is how many"
+    },
     "askAI_toolPropose": {
         "message": "已準備待你核准的變更",
         "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
@@ -7252,6 +7256,10 @@
     "actionName_undoChange": {
         "message": "復原自己的變更",
         "description": "Name of the bookmark action that undoes a change the AI made"
+    },
+    "actionName_runBatch": {
+        "message": "一次執行多個步驟",
+        "description": "Name of the bookmark action that runs several actions as one request, approved once and undone as one step"
     },
     "actionName_proposeChanges": {
         "message": "提出待核准的變更",

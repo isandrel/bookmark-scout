@@ -21,6 +21,8 @@ max_candidates = 5
 summary_chars = 300
 # Characters of page text readPage returns; the page reader caps what it reads too
 max_page_chars = 20000
+# Steps one runBatch call may hold; a batch is one approval and one undo step
+max_batch_steps = 20
 # Characters one tool result may take as JSON; a larger one asks the agent to narrow it
 max_result_chars = 60000
 # Changes one proposeChanges plan may hold

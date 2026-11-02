@@ -7,7 +7,7 @@
  */
 
 type AgentActionsPanelProps = {
-  kind: ActionClient['kind'];
+  kind: AgentKind;
   setting: 'askAiDisabledActions' | 'agentBridgeDisabledActions';
   panelId: string;
   titleKey: MessageKey;
@@ -15,9 +15,7 @@ type AgentActionsPanelProps = {
 };
 
 /** The agent's actions, those that only look first, each group in registry order. */
-function agentActionGroups(
-  kind: ActionClient['kind'],
-): { titleKey: MessageKey; ids: ActionId[] }[] {
+function agentActionGroups(kind: AgentKind): { titleKey: MessageKey; ids: ActionId[] }[] {
   const ids = agentActionChoices(kind);
   return [
     { titleKey: 'settings_askAiReads' as const, ids: ids.filter((id) => !changesBookmarks(id)) },
