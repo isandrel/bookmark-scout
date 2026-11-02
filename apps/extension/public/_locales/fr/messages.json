@@ -6515,6 +6515,18 @@
         "message": "Valeurs privées recherchées",
         "description": "Ask AI step: the agent scanned bookmarks for private values"
     },
+    "askAI_toolListRules": {
+        "message": "Règles intelligentes listées",
+        "description": "Ask AI step: the agent listed the Smart Rules"
+    },
+    "askAI_toolSaveRule": {
+        "message": "Règle intelligente « $1 » enregistrée",
+        "description": "Ask AI step: the agent saved a Smart Rule; $1 is its name"
+    },
+    "askAI_toolDeleteRule": {
+        "message": "Règle intelligente supprimée",
+        "description": "Ask AI step: the agent deleted a Smart Rule"
+    },
     "askAI_toolPropose": {
         "message": "Préparation de modifications à approuver",
         "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
@@ -6590,6 +6602,26 @@
     "askAI_approvalStartTool": {
         "message": "Exécuter $1 sur $2",
         "description": "Approval line: $1 is the tool name, $2 the folder or all bookmarks"
+    },
+    "askAI_approvalRule": {
+        "message": "Enregistrer la règle intelligente « $1 », qui cherche $2",
+        "description": "Approval line: $1 is the rule's name, $2 its search"
+    },
+    "askAI_approvalRuleTags": {
+        "message": "Ajouter les étiquettes $1",
+        "description": "Approval line: $1 is the tags the rule adds"
+    },
+    "askAI_approvalRuleMove": {
+        "message": "Les déplacer vers $1",
+        "description": "Approval line: $1 is the folder the rule moves bookmarks to"
+    },
+    "askAI_approvalDeleteRule": {
+        "message": "Supprimer la règle intelligente « $1 »",
+        "description": "Approval line: $1 is the deleted rule's name"
+    },
+    "askAI_ruleMissing": {
+        "message": "Cette règle intelligente n'existe plus.",
+        "description": "Approval: the Smart Rule the agent names no longer exists"
     },
     "askAI_allBookmarks": {
         "message": "tous les favoris",
@@ -7646,6 +7678,18 @@
     "actionName_scanPrivacy": {
         "message": "Rechercher des valeurs privées",
         "description": "Name of the action that runs the Privacy Scanner"
+    },
+    "actionName_listRules": {
+        "message": "Lister les règles intelligentes",
+        "description": "Name of the action that lists Smart Rules"
+    },
+    "actionName_saveRule": {
+        "message": "Enregistrer une règle intelligente",
+        "description": "Name of the action that saves a Smart Rule"
+    },
+    "actionName_deleteRule": {
+        "message": "Supprimer une règle intelligente",
+        "description": "Name of the action that deletes a Smart Rule"
     },
     "actionName_proposeChanges": {
         "message": "Proposer des modifications à approuver",

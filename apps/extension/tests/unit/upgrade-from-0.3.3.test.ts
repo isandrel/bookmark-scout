@@ -28,7 +28,7 @@ import { getSettings } from '@/lib/settings-storage';
 import { registerStorageCleanup } from '@/lib/storage/cleanup';
 import { isRegisteredKey, STORAGE_ITEMS, type StorageItem } from '@/lib/storage/registry';
 import { ACTIONS } from '@/services/actions';
-import { RETIRED_SETTINGS } from './retired-settings';
+import { MOVED_SETTINGS, RETIRED_SETTINGS, withoutMoved } from './retired-settings';
 
 /** `STORAGE_ITEMS` as 0.3.3 shipped it (area, name, shape version, collection). */
 const ITEMS_0_3_3 = {
@@ -238,6 +238,10 @@ describe('updating from 0.3.3', () => {
         continue;
       }
       expect(key in defaultSettings, key).toBe(true);
+      if (key in MOVED_SETTINGS) {
+        expect(getSettingScope(key as keyof Settings), key).toBe(MOVED_SETTINGS[key].scope);
+        continue;
+      }
       // A setting moved to another scope would be ignored where 0.3.3 stored it, except lists,
       // which are still read from the settings item until the next save moves them.
       const scope = getSettingScope(key as keyof Settings);
@@ -270,7 +274,7 @@ describe('updating from 0.3.3', () => {
     await seed0_3_3Profile();
     const settings = await getSettings();
     const { managerMenuActions: _menu, ...synced } = SYNCED_OVERRIDES_0_3_3;
-    expect(settings).toMatchObject({ ...synced, ...DEVICE_OVERRIDES_0_3_3 });
+    expect(settings).toMatchObject(withoutMoved({ ...synced, ...DEVICE_OVERRIDES_0_3_3 }));
     // The item menu (the same as 0.3.4's) in the form menus are stored in now, the rest hidden.
     expect(settings.managerMenuActions).toEqual([
       '-edit',

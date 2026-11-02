@@ -136,6 +136,7 @@ export const ACTIONS = {
   ...METADATA_ACTIONS,
   ...JOB_ACTIONS,
   ...CLEANER_ACTIONS,
+  ...RULE_ACTIONS,
   runBatch,
 };
 
