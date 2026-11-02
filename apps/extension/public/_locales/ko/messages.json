@@ -10641,6 +10641,10 @@
         "message": "규칙을 저장하지 못했습니다.",
         "description": "Rule editor error: storage failed"
     },
+    "rules_errorDeleteFailed": {
+        "message": "규칙을 삭제할 수 없습니다.",
+        "description": "Error when deleting a smart rule fails"
+    },
     "rules_errorLimit": {
         "message": "규칙이 $1개로 최대 개수입니다. 새 규칙을 추가하려면 하나를 삭제하세요.",
         "description": "Rule editor and rules list error: the list already holds the most rules allowed; $1 is that number"

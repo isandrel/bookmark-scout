@@ -12,14 +12,14 @@ import type { ActionContext } from '@/services/action-kit';
 import { actionApproval, actionApprovalPreview, runAction } from '@/services/actions';
 import { installFakeBookmarks } from '../fake-bookmarks';
 
-const context = (): ActionContext => ({
-  client: { kind: 'askAI' },
+const context = (client: ActionContext['client'] = { kind: 'askAI' }): ActionContext => ({
+  client,
   settings: { ...defaultSettings, language: 'en' },
   activeTab: async () => undefined,
 });
 
-const run = (name: string, input: unknown) =>
-  runAction(name, input, context()) as Promise<Record<string, unknown>>;
+const run = (name: string, input: unknown, client?: ActionContext['client']) =>
+  runAction(name, input, context(client)) as Promise<Record<string, unknown>>;
 
 beforeEach(async () => {
   fakeBrowser.reset();
@@ -88,6 +88,26 @@ describe('rule actions', () => {
     });
     expect(
       await run('saveRule', { id: saved.id, name: 'Docs', query: 'docs', addTags: ['x'] }),
+    ).not.toHaveProperty('autoMove');
+  });
+
+  it('lets only the user in Options turn on moving new bookmarks without a review', async () => {
+    const input = { name: 'Docs', query: 'docs', moveTo: 'f:docs', autoMove: true };
+    expect(await run('saveRule', input)).toMatchObject({ error: { code: 'not_allowed' } });
+    const saved = await run('saveRule', input, { kind: 'ui', page: 'options' });
+    expect(saved).toMatchObject({ autoMove: true, moveTo: 'Bookmarks Bar/Docs' });
+    const off = await run(
+      'saveRule',
+      { id: saved.id, name: 'Docs', query: 'docs', moveTo: 'f:docs' },
+      { kind: 'ui', page: 'options' },
+    );
+    expect(off).not.toHaveProperty('autoMove');
+    expect(
+      await run(
+        'saveRule',
+        { name: 'Tags', query: 'x', addTags: ['x'], autoMove: true },
+        { kind: 'ui', page: 'options' },
+      ),
     ).not.toHaveProperty('autoMove');
   });
 

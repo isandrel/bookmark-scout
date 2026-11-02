@@ -10713,6 +10713,10 @@
         "message": "No se pudo guardar la regla.",
         "description": "Rule editor error: storage failed"
     },
+    "rules_errorDeleteFailed": {
+        "message": "No se pudo eliminar la regla.",
+        "description": "Error when deleting a smart rule fails"
+    },
     "rules_errorLimit": {
         "message": "Tienes $1 reglas, el máximo permitido. Elimina una para añadir otra.",
         "description": "Rule editor and rules list error: the list already holds the most rules allowed; $1 is that number"

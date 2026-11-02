@@ -106,6 +106,7 @@ id = "The rule to change, from listRules; leave out for a new rule"
 query = "The search the rule matches bookmarks by"
 add_tags = "Tags to add to the bookmarks it finds"
 move_to = "A folder (ref or full path) to move them to"
+auto_move = "Only the user can turn this on, in Options; leave it out"
 
 [delete_rule]
 agent_description = "Delete one of the user's Smart Rules, by its id from listRules. Bookmarks are not touched. The user always approves first."
