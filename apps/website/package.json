@@ -28,7 +28,7 @@
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "eslint": "^10.14.0",
-    "eslint-config-next": "16.4.3",
+    "eslint-config-next": "16.4.5",
     "sharp": "0.35.5",
     "tailwindcss": "catalog:",
     "typescript": "catalog:ts6"
