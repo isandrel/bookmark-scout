@@ -1,0 +1,131 @@
+/**
+ * Fuzzy Matching's edit distance (`bm25-search.ts`) and its word scan (`search-documents.ts`),
+ * which read text in place for speed: both must give what the plain definitions give, a full
+ * Damerau-Levenshtein table and the words a `[\p{L}\p{M}\p{N}]+` pattern finds.
+ */
+import { describe, expect, it } from 'vitest';
+import { editDistanceWithin, editDistanceWithinRange, searchMatchingOf } from '@/lib/bm25-search';
+import { buildSearchDocuments, compileSearchQuery } from '@/lib/search-documents';
+import { parseSearchQuery } from '@/lib/search-query';
+import { defaultSettings } from '@/lib/settings-schema';
+import type { BookmarkTreeNode } from '@/types';
+
+/** Damerau-Levenshtein (neighbour swaps count once) by its full table: the definition. */
+function plainDistance(a: string, b: string): number {
+  const rows = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array(b.length).fill(0)]);
+  for (let j = 1; j <= b.length; j++) rows[0][j] = j;
+  for (let i = 1; i <= a.length; i++) {
+    for (let j = 1; j <= b.length; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      rows[i][j] = Math.min(rows[i - 1][j] + 1, rows[i][j - 1] + 1, rows[i - 1][j - 1] + cost);
+      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) {
+        rows[i][j] = Math.min(rows[i][j], rows[i - 2][j - 2] + 1);
+      }
+    }
+  }
+  return rows[a.length][b.length];
+}
+
+/** A repeatable stream of numbers in [0, 1): the same words on every run. */
+function seeded(seed: number): () => number {
+  let state = seed;
+  return () => {
+    state = (state * 1_664_525 + 1_013_904_223) % 2 ** 32;
+    return state / 2 ** 32;
+  };
+}
+
+describe('edit distance', () => {
+  it('gives the plain distance up to the limit and one more than the limit beyond it', () => {
+    const random = seeded(7);
+    // Few letters, so random words are often close to each other.
+    const word = () =>
+      Array.from({ length: Math.floor(random() * 9) }, () => 'abcd'[Math.floor(random() * 4)]).join(
+        '',
+      );
+    const pairs: [string, string][] = [
+      ['react', 'recat'],
+      ['react', 'raect'],
+      ['example', 'exmaple'],
+      ['', 'ab'],
+      ['abc', ''],
+      ['書籤管理', '書簽管理'],
+      ...Array.from({ length: 3000 }, (): [string, string] => [word(), word()]),
+    ];
+    for (const [a, b] of pairs) {
+      const plain = plainDistance(a, b);
+      for (const limit of [0, 1, 2, 3]) {
+        expect(editDistanceWithin(a, b, limit), `${a}|${b}|${limit}`).toBe(
+          Math.min(plain, limit + 1),
+        );
+      }
+    }
+  });
+
+  it('reads a word in place, and a word longer than any before it', () => {
+    expect(editDistanceWithinRange('react', 'learn recat today', 6, 11, 2)).toBe(1);
+    const long = 'a'.repeat(300);
+    expect(editDistanceWithin(long, `${long}b`, 2)).toBe(1);
+    expect(editDistanceWithin(`${long}cc`, long, 1)).toBe(2);
+  });
+});
+
+describe('fuzzy matches in a title', () => {
+  const titles = [
+    'Recat hooks, explained',
+    'Café Réact — notes',
+    '学习 Raect 入门',
+    '🚀React🚀 quick start',
+    'reactive_streams react-dom',
+    'Nothing close',
+  ];
+  const tree: BookmarkTreeNode[] = [
+    {
+      id: '0',
+      title: '',
+      syncing: false,
+      children: [
+        {
+          id: '1',
+          parentId: '0',
+          title: 'Bar',
+          syncing: false,
+          children: titles.map((title, index) => ({
+            id: String(10 + index),
+            parentId: '1',
+            title,
+            url: `https://e2e.invalid/${index}`,
+            syncing: false,
+          })),
+        },
+      ],
+    },
+  ];
+  const documents = buildSearchDocuments(tree, {});
+  const matching = searchMatchingOf(defaultSettings);
+
+  /** The ranges a pattern for words finds, each within the same edits: the definition. */
+  function plainRanges(title: string, needle: string, budget: number): [number, number][] {
+    const ranges: [number, number][] = [];
+    for (const match of title.toLowerCase().matchAll(/[\p{L}\p{M}\p{N}]+/gu)) {
+      if (plainDistance(needle, match[0]) > budget) continue;
+      ranges.push([match.index, match.index + match[0].length]);
+    }
+    return ranges;
+  }
+
+  it('marks the same words a word pattern finds, in any script and beside emoji', () => {
+    // Longer than Fuzzy Matching's two-edit length, found in no title as typed.
+    const needle = 'reactx';
+    const budget = needle.length >= defaultSettings.searchFuzzyTwoEdits ? 2 : 1;
+    const match = compileSearchQuery(parseSearchQuery(needle).query, matching);
+    for (const document of documents) {
+      const expected = plainRanges(document.title, needle, budget);
+      const found = match(document)?.reasons.find((reason) => reason.field === 'title');
+      expect(found && 'ranges' in found ? found.ranges : [], document.title).toEqual(expected);
+    }
+    // The check above compares something: some titles match and one does not.
+    expect(documents.filter((document) => match(document)).length).toBeGreaterThanOrEqual(2);
+    expect(match(documents[documents.length - 1])).toBeUndefined();
+  });
+});
