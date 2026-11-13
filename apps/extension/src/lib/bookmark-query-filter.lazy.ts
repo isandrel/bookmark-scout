@@ -85,15 +85,20 @@ function documentsOf(
   return searchedLibrary.documents;
 }
 
-/** The words of the last library searched with Fuzzy Matching (`FuzzyWords`), built once. */
-let libraryWords: { documents: readonly SearchDocument[]; words: FuzzyWords } | undefined;
+/**
+ * The words of the library searched with Fuzzy Matching (`FuzzyWords`), and the documents they
+ * are up to date with. One list for the page: a rebuilt library reads again only the documents
+ * whose text changed.
+ */
+const libraryWords: { documents?: readonly SearchDocument[]; words: FuzzyWords } = {
+  words: createFuzzyWords(),
+};
 
-/** A library's word list, built the first time a search needs it unless made ahead (`prepareSearchDocuments`). */
+/** The word list, brought up to `documents` unless it is already (`prepareSearchDocuments` does it ahead). */
 function wordsOf(documents: readonly SearchDocument[]): FuzzyWords {
-  if (libraryWords?.documents !== documents) {
-    const words: FuzzyWords = new Map();
-    for (const document of documents) addFuzzyWords(words, document);
-    libraryWords = { documents, words };
+  if (libraryWords.documents !== documents) {
+    syncFuzzyWords(libraryWords.words, documents);
+    libraryWords.documents = documents;
   }
   return libraryWords.words;
 }
@@ -200,7 +205,7 @@ function nearLengthened(
   previous: SearchQuery,
   next: SearchQuery,
   documents: readonly SearchDocument[],
-): ReadonlySet<SearchDocument> | undefined {
+): ReadonlySet<string> | undefined {
   const last = previous.terms.length - 1;
   const before = previous.terms[last];
   const after = next.terms[last];
@@ -222,7 +227,7 @@ function narrowedCandidates(
   const near = nearLengthened(previous.query, next, documents);
   if (!near || near.size === 0) return previous.found;
   const found = new Set(previous.found);
-  return documents.filter((document) => found.has(document) || near.has(document));
+  return documents.filter((document) => found.has(document) || near.has(document.id));
 }
 
 /**
@@ -266,8 +271,8 @@ let preparing:
       pageTexts: SearchPageTexts;
       pending: Iterator<SearchDocument>;
       documents: SearchDocument[];
-      /** The library's words, gathered with the documents while Fuzzy Matching is on. */
-      words: FuzzyWords | undefined;
+      /** Whether the documents' words are gathered with them: while Fuzzy Matching is on. */
+      words: boolean;
     }
   | undefined;
 
@@ -300,21 +305,19 @@ export function prepareSearchDocuments(
       pageTexts,
       pending: searchDocumentsOf(nodes, metadata, pageTexts),
       documents: [],
-      words: currentMatching().fuzzy ? new Map() : undefined,
+      words: currentMatching().fuzzy,
     };
   }
   while (!shouldYield()) {
     const next = preparing.pending.next();
     if (next.done) {
       searchedLibrary = { nodes, metadata, pageTexts, documents: preparing.documents };
-      if (preparing.words) {
-        libraryWords = { documents: preparing.documents, words: preparing.words };
-      }
+      if (preparing.words) wordsOf(preparing.documents);
       preparing = undefined;
       return true;
     }
     foldSearchDocument(next.value);
-    if (preparing.words) addFuzzyWords(preparing.words, next.value);
+    if (preparing.words) addFuzzyWords(libraryWords.words, next.value);
     preparing.documents.push(next.value);
   }
   return false;

@@ -212,4 +212,22 @@ describe('typing on in a search box with Fuzzy Matching', () => {
     expect(found.has('900')).toBe(true);
     expect(found.has('901')).toBe(false);
   });
+
+  it('follows a renamed bookmark and a library that shrank', () => {
+    const before = makeTree();
+    expect(typed(before, 'reakt').has('100')).toBe(true);
+    // The same bookmark under another title: its old word is no match, its new one is.
+    const renamed = makeTree();
+    const first = renamed[0]?.children?.[0]?.children?.[0];
+    if (first) first.title = 'Svelte handbook';
+    expect([...typed(renamed, 'reakt')]).toEqual([...plainMatches(renamed, 'reakt')]);
+    expect(typed(renamed, 'reakt').has('100')).toBe(false);
+    expect([...typed(renamed, 'sveltee').keys()]).toEqual(['100']);
+    // Far fewer bookmarks than the word list remembers: it is made afresh, and still right.
+    const small = makeTree();
+    const bar = small[0]?.children?.[0];
+    if (bar?.children) bar.children = bar.children.slice(0, 20);
+    expect([...typed(small, 'reakt')]).toEqual([...plainMatches(small, 'reakt')]);
+    expect(typed(small, 'reakt').size).toBeGreaterThan(0);
+  });
 });

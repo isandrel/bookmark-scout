@@ -279,13 +279,11 @@ type CompiledText = {
    */
   fuzzyBudget: number;
   /**
-   * The documents with a word that near, from the library's words (`FuzzyWords`), read the first
-   * time a document does not hold the word as typed; absent when the search has no word list, so
-   * every document is read.
+   * The ids of the documents with a word that near, from the library's words (`FuzzyWords`), read
+   * the first time a document does not hold the word as typed; absent when the search has no word
+   * list, so every document is read.
    */
-  fuzzyDocuments?: ReadonlySet<SearchDocument>;
-  /** How many documents were read for a near spelling before the word list was (`matchPlain`). */
-  fuzzyReads: number;
+  fuzzyDocuments?: ReadonlySet<string>;
 };
 /** A query's tree with each term worked out once: `all` and `any` as in `SearchNode`. */
 type CompiledNode =
@@ -328,7 +326,6 @@ function compileTerm(term: SearchTerm, matching: SearchMatching | undefined): Co
     kind: 'text',
     term,
     fuzzyBudget: fuzzyBudgetOf(term, matching),
-    fuzzyReads: 0,
     needle: term.value.toLowerCase(),
     contentNeedle: term.value.toLowerCase().replace(/\s+/gu, ' '),
     tagKey: tagKey(term.value),
@@ -436,37 +433,78 @@ function fuzzyFieldsOf(document: SearchDocument): FoldedText[] {
   ];
 }
 
-/**
- * Every word of a library's fuzzy fields with the documents that hold it. A search box keeps one
- * per library, so a near spelling is compared with each different word once, not with each word of
- * every bookmark, and a document with no near word is not read at all.
- */
-export type FuzzyWords = Map<string, SearchDocument[]>;
+/** Whether two documents give Fuzzy Matching the same text to read (`fuzzyFieldsOf`). */
+function sameFuzzyText(left: SearchDocument, right: SearchDocument): boolean {
+  return (
+    left.title === right.title &&
+    left.summary === right.summary &&
+    left.folderPath === right.folderPath &&
+    left.folders.length > 0 === right.folders.length > 0 &&
+    left.tags.length === right.tags.length &&
+    left.tags.every((tag, index) => tag === right.tags[index])
+  );
+}
 
-/** Adds a document's words to a library's word list (`FuzzyWords`). */
+/**
+ * Every word of a library's fuzzy fields with the ids of the documents that hold it. A search box
+ * keeps one, so a near spelling is compared with each different word once, not with each word of
+ * every bookmark, and a document with no near word is not read at all.
+ *
+ * It is kept up as documents are rebuilt (`addFuzzyWords`): only a document whose text changed is
+ * read again. The words a document had before stay, so the list may name a document that no
+ * longer holds a word, never miss one that does: matching still reads the document itself.
+ */
+export type FuzzyWords = {
+  holders: Map<string, string[]>;
+  /** The document last read for each id, to tell whether its text changed. */
+  read: Map<string, SearchDocument>;
+};
+
+export function createFuzzyWords(): FuzzyWords {
+  return { holders: new Map(), read: new Map() };
+}
+
+/** Adds a document's words to a word list, unless it holds this text for the document already. */
 export function addFuzzyWords(words: FuzzyWords, document: SearchDocument): void {
+  const before = words.read.get(document.id);
+  if (before === document) return;
+  words.read.set(document.id, document);
+  if (before && sameFuzzyText(before, document)) return;
   for (const { text } of fuzzyFieldsOf(document)) {
     forEachWord(text, (start, end) => {
       const word = text.slice(start, end);
-      const holders = words.get(word);
-      if (!holders) words.set(word, [document]);
-      else if (holders[holders.length - 1] !== document) holders.push(document);
+      const holders = words.holders.get(word);
+      if (!holders) words.holders.set(word, [document.id]);
+      else if (holders[holders.length - 1] !== document.id) holders.push(document.id);
     });
   }
 }
 
-/** The documents holding a word within `budget` edits of `needle`. */
-function documentsNear(words: FuzzyWords, needle: string, budget: number): Set<SearchDocument> {
-  const near = new Set<SearchDocument>();
-  for (const [word, holders] of words) {
+/**
+ * Brings a word list up to a library's documents, and makes it afresh once it remembers far more
+ * documents than the library has (`FUZZY_WORD_LIST_REBUILD_RATIO`), so removed bookmarks' words
+ * do not pile up.
+ */
+export function syncFuzzyWords(words: FuzzyWords, documents: readonly SearchDocument[]): void {
+  for (const document of documents) addFuzzyWords(words, document);
+  if (words.read.size <= documents.length * FUZZY_WORD_LIST_REBUILD_RATIO) return;
+  words.holders.clear();
+  words.read.clear();
+  for (const document of documents) addFuzzyWords(words, document);
+}
+
+/** The ids of the documents holding a word within `budget` edits of `needle`. */
+function documentsNear(words: FuzzyWords, needle: string, budget: number): Set<string> {
+  const near = new Set<string>();
+  for (const [word, holders] of words.holders) {
     if (editDistanceWithin(needle, word, budget) > budget) continue;
-    for (const document of holders) near.add(document);
+    for (const id of holders) near.add(id);
   }
   return near;
 }
 
 /**
- * The documents a term can match by a near spelling, from the library's words; undefined for a
+ * The ids of the documents a term can match by a near spelling, from the library's words; undefined for a
  * term that only matches as typed. A search box that typed on adds these to the documents its
  * last query found, since a longer word may be near a word the shorter one was not
  * (`rec`, then `rect` for React).
@@ -475,7 +513,7 @@ export function fuzzyDocumentsOf(
   term: SearchNode,
   matching: SearchMatching,
   words: FuzzyWords,
-): ReadonlySet<SearchDocument> | undefined {
+): ReadonlySet<string> | undefined {
   if (term.kind === 'all' || term.kind === 'any') return undefined;
   const budget = fuzzyBudgetOf(term, matching);
   if (budget === 0 || term.kind !== 'text') return undefined;
@@ -712,13 +750,9 @@ type LibraryWords = (() => FuzzyWords) | undefined;
 function matchPlain(document: SearchDocument, text: CompiledText, words: LibraryWords): TermMatch {
   const exact = matchText(document, text);
   if (exact.matched || text.fuzzyBudget === 0) return exact;
-  // The first documents are read directly: a search of the few a bookmark change replaced never
-  // builds the word list, a search of the library reads it from then on.
-  if (words && text.fuzzyReads >= FUZZY_WORD_LIST_AFTER_DOCUMENTS) {
+  if (words) {
     text.fuzzyDocuments ??= documentsNear(words(), text.needle, text.fuzzyBudget);
-    if (!text.fuzzyDocuments.has(document)) return NO_MATCH;
-  } else {
-    text.fuzzyReads += 1;
+    if (!text.fuzzyDocuments.has(document.id)) return NO_MATCH;
   }
   return matchFuzzy(document, text);
 }
