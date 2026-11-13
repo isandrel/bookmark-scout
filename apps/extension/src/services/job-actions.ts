@@ -99,10 +99,10 @@ const startTool = defineAction({
   describe: (input) =>
     t('askAI_toolStartTool', input.tool ? jobTitle({ kind: input.tool, options: undefined }) : ''),
   approvalPreview: {
-    lines: (input) => [
+    lines: (input, folderName = String) => [
       t('askAI_approvalStartTool', [
         input.tool ? jobTitle({ kind: input.tool, options: undefined }) : '',
-        input.folder ?? t('askAI_allBookmarks'),
+        input.folder ? folderName(input.folder) : t('askAI_allBookmarks'),
       ]),
     ],
   },

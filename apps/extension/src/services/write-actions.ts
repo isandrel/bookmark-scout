@@ -343,8 +343,10 @@ const saveBookmark = defineAction({
   }),
   describe: (input) => t('askAI_toolSave', input.title || input.url || ''),
   approvalPreview: {
-    lines: (input) => {
-      const folder = [input.folder, input.newFolder].filter(Boolean).join(AI_FOLDER_PATH_SEPARATOR);
+    lines: (input, folderName = String) => {
+      const folder = [input.folder && folderName(input.folder), input.newFolder]
+        .filter(Boolean)
+        .join(AI_FOLDER_PATH_SEPARATOR);
       return [t('askAI_approvalSave', [String(input.title || input.url || ''), folder])];
     },
     url: (input) => (typeof input.url === 'string' ? input.url : undefined),

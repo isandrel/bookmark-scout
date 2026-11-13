@@ -114,8 +114,11 @@ const saveSearch = defineAction({
   output: savedSearchOutput,
   describe: (input) => t('askAI_toolSaveSearch', input.name ?? ''),
   approvalPreview: {
-    lines: (input) => [
-      t('askAI_approvalSaveSearch', [input.name ?? '', input.search ?? input.folder ?? '']),
+    lines: (input, folderName = String) => [
+      t('askAI_approvalSaveSearch', [
+        input.name ?? '',
+        input.search ?? (input.folder ? folderName(input.folder) : ''),
+      ]),
     ],
   },
   async precheck(input) {

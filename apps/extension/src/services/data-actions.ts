@@ -102,8 +102,11 @@ const importBookmarksAction = defineAction({
   }),
   describe: () => t('askAI_toolImportBookmarkFile'),
   approvalPreview: {
-    lines: (input) => [
-      t('askAI_approvalImport', [String(input.format ?? ''), String(input.folder ?? '')]),
+    lines: (input, folderName = String) => [
+      t('askAI_approvalImport', [
+        String(input.format ?? ''),
+        input.folder ? folderName(String(input.folder)) : '',
+      ]),
     ],
   },
   async precheck(input) {

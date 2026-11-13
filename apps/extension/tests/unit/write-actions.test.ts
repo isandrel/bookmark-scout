@@ -4,7 +4,8 @@ import { setLanguage, t } from '@/hooks/use-i18n';
 import { aiActivityValue } from '@/lib/ai-activity-storage';
 import { defaultSettings } from '@/lib/settings-schema';
 import { saveSettings } from '@/lib/settings-storage';
-import type { ActionContext } from '@/services/action-kit';
+import { type ActionContext, approvalFolderName } from '@/services/action-kit';
+import { loadActionLibrary } from '@/services/action-library';
 import { actionApproval, actionApprovalPreview, runAction } from '@/services/actions';
 import { readDurableConversation } from '@/services/ask-ai-durable.lazy';
 import { bookmarkHistoryValue, describeBookmarkHistoryLabel } from '@/services/bookmark-history';
@@ -294,6 +295,31 @@ describe('approval previews (actionApprovalPreview)', () => {
     expect(preview?.lines?.(input)).toEqual([t('askAI_approvalSave', ['New page', 'Work'])]);
     expect(preview?.url?.(input)).toBe('https://e2e.invalid/new');
     expect(preview?.stored).toBeUndefined();
+  });
+
+  it('names a folder given by reference by its path, in every approval that names one', async () => {
+    const folderName = approvalFolderName(await loadActionLibrary());
+    expect(folderName('f:work')).toBe('Bookmarks Bar/Work');
+    expect(folderName('Work')).toBe('Bookmarks Bar/Work');
+    // Gone since the call was checked: shown as the agent named it.
+    expect(folderName('f:gone')).toBe('f:gone');
+    const lines = (id: string, input: Record<string, unknown>) =>
+      actionApprovalPreview(id)?.lines?.(input, folderName);
+    expect(
+      lines('saveBookmark', { title: 'New page', folder: 'f:work', newFolder: 'Specs' }),
+    ).toEqual([t('askAI_approvalSave', ['New page', 'Bookmarks Bar/Work/Specs'])]);
+    expect(lines('saveRule', { name: 'Docs', query: 'docs', moveTo: 'f:work' })).toContain(
+      t('askAI_approvalRuleMove', 'Bookmarks Bar/Work'),
+    );
+    expect(lines('startTool', { tool: 'deadLinks', folder: 'f:old' })?.[0]).toContain(
+      'Bookmarks Bar/Old',
+    );
+    expect(lines('saveSearch', { name: 'Old ones', folder: 'f:old' })?.[0]).toContain(
+      'Bookmarks Bar/Old',
+    );
+    expect(lines('importBookmarkFile', { format: 'json', folder: 'f:work' })?.[0]).toContain(
+      'Bookmarks Bar/Work',
+    );
   });
 
   it('reads a plan an apply names from storage, and nothing once it is gone', async () => {
