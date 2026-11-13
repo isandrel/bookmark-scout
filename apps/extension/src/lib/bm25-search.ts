@@ -91,24 +91,68 @@ export function buildRankedIndex<Document>(
   };
 }
 
+// The three rows the distance is worked out in, reused by every call and grown when a word is
+// longer: searching compares every word of every bookmark, so a call must not allocate.
+const DISTANCE_ROW_LENGTH = 64;
+const newDistanceRows = (length: number) =>
+  [new Int32Array(length), new Int32Array(length), new Int32Array(length)] as const;
+let distanceRows = newDistanceRows(DISTANCE_ROW_LENGTH);
+
 /**
- * Damerau-Levenshtein distance, or `limit + 1` when the lengths alone differ by more than
- * `limit`, which is all fuzzy matching needs.
+ * Damerau-Levenshtein distance between `a` and the part of `b` from `start` to `end`, or
+ * `limit + 1` once it is known to be more than `limit`, which is all fuzzy matching needs. It
+ * reads `b` in place, so a caller scanning a text for words slices nothing.
  */
-export function editDistanceWithin(a: string, b: string, limit: number): number {
-  if (Math.abs(a.length - b.length) > limit) return limit + 1;
-  const rows = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array(b.length).fill(0)]);
-  for (let j = 1; j <= b.length; j++) rows[0][j] = j;
-  for (let i = 1; i <= a.length; i++) {
-    for (let j = 1; j <= b.length; j++) {
-      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-      rows[i][j] = Math.min(rows[i - 1][j] + 1, rows[i][j - 1] + 1, rows[i - 1][j - 1] + cost);
-      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) {
-        rows[i][j] = Math.min(rows[i][j], rows[i - 2][j - 2] + 1);
-      }
-    }
+export function editDistanceWithinRange(
+  a: string,
+  b: string,
+  start: number,
+  end: number,
+  limit: number,
+): number {
+  const aLength = a.length;
+  const bLength = end - start;
+  if (Math.abs(aLength - bLength) > limit) return limit + 1;
+  if (distanceRows[0].length <= bLength) {
+    // Twice the word, so a run of ever longer words grows the rows only now and then.
+    distanceRows = newDistanceRows(bLength * 2 + 1);
   }
-  return rows[a.length][b.length];
+  // `before` is the row two back (for a swap of neighbours), `previous` the row above.
+  let [before, previous, current] = distanceRows;
+  for (let j = 0; j <= bLength; j++) previous[j] = j;
+  for (let i = 1; i <= aLength; i++) {
+    const aChar = a.charCodeAt(i - 1);
+    current[0] = i;
+    let least = i;
+    for (let j = 1; j <= bLength; j++) {
+      const bChar = b.charCodeAt(start + j - 1);
+      let edits = Math.min(
+        previous[j] + 1,
+        current[j - 1] + 1,
+        previous[j - 1] + (aChar === bChar ? 0 : 1),
+      );
+      if (
+        i > 1 &&
+        j > 1 &&
+        aChar === b.charCodeAt(start + j - 2) &&
+        a.charCodeAt(i - 2) === bChar
+      ) {
+        edits = Math.min(edits, before[j - 2] + 1);
+      }
+      current[j] = edits;
+      if (edits < least) least = edits;
+    }
+    // No later row goes back under the limit: a row's least value is at most one more than the
+    // row above's, so the row above is at the limit too, and a swap from it costs one more.
+    if (least > limit) return limit + 1;
+    [before, previous, current] = [previous, current, before];
+  }
+  return Math.min(previous[bLength], limit + 1);
+}
+
+/** Damerau-Levenshtein distance between two words, or `limit + 1` when it is more than `limit`. */
+export function editDistanceWithin(a: string, b: string, limit: number): number {
+  return editDistanceWithinRange(a, b, 0, b.length, limit);
 }
 
 /** Search Matching as the settings hold it. */

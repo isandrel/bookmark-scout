@@ -319,29 +319,70 @@ function folderReadings(value: string): (readonly string[])[] {
 
 type TermMatch = { matched: boolean; score: number; reasons: SearchMatchReason[] };
 
-/** A run of letters, combining marks, and digits: one word of a field's text. */
-const TEXT_WORD = /[\p{L}\p{M}\p{N}]+/gu;
+/** A letter, combining mark, or digit: what a word of a field's text is made of. */
+const WORD_CHARACTER = /[\p{L}\p{M}\p{N}]/u;
+
+/** How many characters ASCII has: the ones looked up in `ASCII_WORD_CHARACTERS`. */
+const ASCII_SIZE = 128;
+/** The last character one UTF-16 unit holds; a character after it takes two. */
+const LAST_SINGLE_UNIT_CHARACTER = 0xffff;
+
+/** Whether each ASCII character is part of a word, by its code. */
+const ASCII_WORD_CHARACTERS = Uint8Array.from({ length: ASCII_SIZE }, (_, code) =>
+  WORD_CHARACTER.test(String.fromCharCode(code)) ? 1 : 0,
+);
+
+// Whether each character beyond ASCII seen so far is part of a word, so the pattern runs once
+// per distinct character, not once per character of every bookmark.
+const wordCharacters = new Map<number, boolean>();
+
+/** Whether the character at `codePoint` is part of a word (`WORD_CHARACTER`). */
+function isWordCharacter(codePoint: number): boolean {
+  if (codePoint < ASCII_SIZE) return ASCII_WORD_CHARACTERS[codePoint] === 1;
+  let known = wordCharacters.get(codePoint);
+  if (known === undefined) {
+    known = WORD_CHARACTER.test(String.fromCodePoint(codePoint));
+    wordCharacters.set(codePoint, known);
+  }
+  return known;
+}
+
+/** No word was close enough; shared, and never added to. */
+const NO_RANGES: SearchMatchRange[] = [];
 
 /**
  * The words of `folded` within `budget` edits of `needle` (Damerau-Levenshtein), as ranges in
  * the original text, and the fewest edits any of them took; none when no word is close enough.
+ * Every search-box keystroke runs this on each field of every bookmark the query did not find as
+ * typed, so it reads the text in place: no pattern match and no slice per word.
  */
 function fuzzyWordRanges(
   folded: FoldedText,
   needle: string,
   budget: number,
 ): { ranges: SearchMatchRange[]; edits: number } {
-  const ranges: SearchMatchRange[] = [];
+  const { text } = folded;
+  let ranges: SearchMatchRange[] | undefined;
   let fewest = budget + 1;
-  for (const match of folded.text.matchAll(TEXT_WORD)) {
-    const edits = editDistanceWithin(needle, match[0], budget);
-    if (edits > budget) continue;
-    const at = match.index ?? 0;
-    const last = at + match[0].length - 1;
-    ranges.push([folded.starts?.[at] ?? at, folded.ends?.[last] ?? last + 1]);
-    fewest = Math.min(fewest, edits);
+  let wordStart = -1;
+  for (let at = 0; at <= text.length; ) {
+    const codePoint = at < text.length ? (text.codePointAt(at) as number) : -1;
+    const width = codePoint > LAST_SINGLE_UNIT_CHARACTER ? 2 : 1;
+    if (codePoint >= 0 && isWordCharacter(codePoint)) {
+      if (wordStart < 0) wordStart = at;
+    } else if (wordStart >= 0) {
+      const edits = editDistanceWithinRange(needle, text, wordStart, at, budget);
+      if (edits <= budget) {
+        const last = at - 1;
+        ranges ??= [];
+        ranges.push([folded.starts?.[wordStart] ?? wordStart, folded.ends?.[last] ?? last + 1]);
+        fewest = Math.min(fewest, edits);
+      }
+      wordStart = -1;
+    }
+    at += width;
   }
-  return { ranges, edits: fewest };
+  return { ranges: ranges ?? NO_RANGES, edits: fewest };
 }
 
 /**
