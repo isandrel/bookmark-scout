@@ -12,3 +12,8 @@ fuzzy_weight = { value = 0.45, min = 0, max = 1 }
 # Most library words one typed word may stand for (whole, start, or fuzzy), best first, so a short
 # prefix in a large library does not score thousands of words.
 max_expansions = { value = 50, min = 1, max = 500 }
+# A search box keeps a list of the library's words, so a near spelling is compared with each
+# different word once (src/lib/search-documents.ts, FuzzyWords). One search reads the list only
+# after this many documents did not hold the word as typed: the few a bookmark change replaces are
+# read directly, and the list (about 10 to 35 ms for 20,000 bookmarks) is built for a whole search.
+fuzzy_word_list_after_documents = 64

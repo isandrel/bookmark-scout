@@ -85,6 +85,19 @@ function documentsOf(
   return searchedLibrary.documents;
 }
 
+/** The words of the last library searched with Fuzzy Matching (`FuzzyWords`), built once. */
+let libraryWords: { documents: readonly SearchDocument[]; words: FuzzyWords } | undefined;
+
+/** A library's word list, built the first time a search needs it unless made ahead (`prepareSearchDocuments`). */
+function wordsOf(documents: readonly SearchDocument[]): FuzzyWords {
+  if (libraryWords?.documents !== documents) {
+    const words: FuzzyWords = new Map();
+    for (const document of documents) addFuzzyWords(words, document);
+    libraryWords = { documents, words };
+  }
+  return libraryWords.words;
+}
+
 /**
  * The last query searched and what it found per document, so a tree update (a save, a move)
  * matches only the documents it replaced. Documents are rebuilt when their bookmark, folder path,
@@ -93,6 +106,8 @@ function documentsOf(
 let searchedQuery:
   | {
       text: string;
+      /** The library `match` reads its words from. */
+      documents: readonly SearchDocument[];
       match: (document: SearchDocument) => SearchResult | undefined;
       results: WeakMap<SearchDocument, SearchResult | null>;
     }
@@ -106,16 +121,22 @@ function currentMatching(): SearchMatching {
   return searchMatchingOf(getStoredValueStore(settingsValue).getSnapshot().value);
 }
 
-function resultOf(text: string, query: SearchQuery, document: SearchDocument) {
+function resultOf(
+  text: string,
+  query: SearchQuery,
+  document: SearchDocument,
+  documents: readonly SearchDocument[],
+) {
   const matching = currentMatching();
   // A changed setting matches afresh, as a changed query does.
   const key = `${text}\n${JSON.stringify(matching)}`;
+  const match = () => compileSearchQuery(query, matching, () => wordsOf(documents));
   if (searchedQuery?.text !== key) {
-    searchedQuery = {
-      text: key,
-      match: compileSearchQuery(query, matching),
-      results: new WeakMap(),
-    };
+    searchedQuery = { text: key, documents, match: match(), results: new WeakMap() };
+  } else if (searchedQuery.documents !== documents) {
+    // A changed library has other words; what a kept document matched is still true of it.
+    searchedQuery.documents = documents;
+    searchedQuery.match = match();
   }
   let result = searchedQuery.results.get(document);
   if (result === undefined) {
@@ -152,13 +173,12 @@ function needsText(term: SearchNode): term is SearchTerm & { kind: 'text' } {
 }
 
 /**
- * Whether `next` can only match documents `previous` matched: typing on, it keeps every term of
- * `previous`, may lengthen the last one, and may add more (all terms must match). Terms in an OR
- * or a group are not compared, so typing on in one checks the whole library again.
+ * Whether `next` can only match, as typed, documents `previous` matched: typing on, it keeps
+ * every term of `previous`, may lengthen the last one, and may add more (all terms must match).
+ * Terms in an OR or a group are not compared, so typing on in one checks the whole library again.
+ * A lengthened word may also match near spellings the shorter one did not (`nearLengthened`).
  */
 function narrows(previous: SearchQuery, next: SearchQuery): boolean {
-  // A longer word may match a near spelling the shorter one did not (`rec`, then `rect` for React).
-  if (currentMatching().fuzzy) return false;
   const last = previous.terms.length - 1;
   if (last < 0 || next.terms.length < previous.terms.length) return false;
   return previous.terms.every((term, index) => {
@@ -169,6 +189,40 @@ function narrows(previous: SearchQuery, next: SearchQuery): boolean {
       ? following.value.toLowerCase().startsWith(term.value.toLowerCase())
       : following.value === term.value;
   });
+}
+
+/**
+ * The documents the lengthened last word of `next` may match by a near spelling (Fuzzy
+ * Matching), which `previous` need not have found (`rec`, then `rect` for React); undefined when
+ * the word was not lengthened or only matches as typed.
+ */
+function nearLengthened(
+  previous: SearchQuery,
+  next: SearchQuery,
+  documents: readonly SearchDocument[],
+): ReadonlySet<SearchDocument> | undefined {
+  const last = previous.terms.length - 1;
+  const before = previous.terms[last];
+  const after = next.terms[last];
+  if (!before || !after || before.kind !== 'text' || after.kind !== 'text') return undefined;
+  if (after.value === before.value) return undefined;
+  const matching = currentMatching();
+  return matching.fuzzy ? fuzzyDocumentsOf(after, matching, wordsOf(documents)) : undefined;
+}
+
+/**
+ * The documents to check for `next` after `previous` over the same library: the ones `previous`
+ * found, with those a lengthened word may match by a near spelling, in the library's order.
+ */
+function narrowedCandidates(
+  previous: { query: SearchQuery; found: SearchDocument[] },
+  next: SearchQuery,
+  documents: readonly SearchDocument[],
+): readonly SearchDocument[] {
+  const near = nearLengthened(previous.query, next, documents);
+  if (!near || near.size === 0) return previous.found;
+  const found = new Set(previous.found);
+  return documents.filter((document) => found.has(document) || near.has(document));
 }
 
 /**
@@ -190,12 +244,12 @@ function matchQuery(
   const documents = documentsOf(nodes, metadata);
   const candidates =
     lastMatch?.documents === documents && narrows(lastMatch.query, query)
-      ? lastMatch.found
+      ? narrowedCandidates(lastMatch, query, documents)
       : documents;
   const results = new Map<string, SearchResult>();
   const found: SearchDocument[] = [];
   for (const document of candidates) {
-    const result = resultOf(text, query, document);
+    const result = resultOf(text, query, document, documents);
     if (!result) continue;
     results.set(document.id, result);
     found.push(document);
@@ -212,6 +266,8 @@ let preparing:
       pageTexts: SearchPageTexts;
       pending: Iterator<SearchDocument>;
       documents: SearchDocument[];
+      /** The library's words, gathered with the documents while Fuzzy Matching is on. */
+      words: FuzzyWords | undefined;
     }
   | undefined;
 
@@ -244,16 +300,21 @@ export function prepareSearchDocuments(
       pageTexts,
       pending: searchDocumentsOf(nodes, metadata, pageTexts),
       documents: [],
+      words: currentMatching().fuzzy ? new Map() : undefined,
     };
   }
   while (!shouldYield()) {
     const next = preparing.pending.next();
     if (next.done) {
       searchedLibrary = { nodes, metadata, pageTexts, documents: preparing.documents };
+      if (preparing.words) {
+        libraryWords = { documents: preparing.documents, words: preparing.words };
+      }
       preparing = undefined;
       return true;
     }
     foldSearchDocument(next.value);
+    if (preparing.words) addFuzzyWords(preparing.words, next.value);
     preparing.documents.push(next.value);
   }
   return false;

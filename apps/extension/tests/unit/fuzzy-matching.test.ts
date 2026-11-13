@@ -1,10 +1,14 @@
 /**
  * Fuzzy Matching's edit distance (`bm25-search.ts`) and its word scan (`search-documents.ts`),
  * which read text in place for speed: both must give what the plain definitions give, a full
- * Damerau-Levenshtein table and the words a `[\p{L}\p{M}\p{N}]+` pattern finds.
+ * Damerau-Levenshtein table and the words a `[\p{L}\p{M}\p{N}]+` pattern finds. And a search
+ * box typing on (`bookmark-query-filter.lazy.ts`), which checks only what the last query found
+ * plus the documents the library's word list says are near: it must find what a search of the
+ * whole library finds.
  */
 import { describe, expect, it } from 'vitest';
 import { editDistanceWithin, editDistanceWithinRange, searchMatchingOf } from '@/lib/bm25-search';
+import { matchBookmarkTreeQuery } from '@/lib/bookmark-query-filter.lazy';
 import { buildSearchDocuments, compileSearchQuery } from '@/lib/search-documents';
 import { parseSearchQuery } from '@/lib/search-query';
 import { defaultSettings } from '@/lib/settings-schema';
@@ -127,5 +131,85 @@ describe('fuzzy matches in a title', () => {
     // The check above compares something: some titles match and one does not.
     expect(documents.filter((document) => match(document)).length).toBeGreaterThanOrEqual(2);
     expect(match(documents[documents.length - 1])).toBeUndefined();
+  });
+});
+
+describe('typing on in a search box with Fuzzy Matching', () => {
+  // More documents than one search reads before it uses the library's word list.
+  const words = ['react', 'recat', 'raect', 'reach', 'redux', 'rect', 'recipe', 'reading', 'tread'];
+  const makeTree = (extra: string[] = []): BookmarkTreeNode[] => [
+    {
+      id: '0',
+      title: '',
+      syncing: false,
+      children: [
+        {
+          id: '1',
+          parentId: '0',
+          title: 'Bar',
+          syncing: false,
+          children: [
+            ...Array.from({ length: 240 }, (_, index) => ({
+              id: String(100 + index),
+              parentId: '1',
+              title: `${words[index % words.length]} notes ${index % 7}`,
+              url: `https://e2e.invalid/${index}`,
+              syncing: false,
+            })),
+            ...extra.map((title, index) => ({
+              id: String(900 + index),
+              parentId: '1',
+              title,
+              url: `https://e2e.invalid/extra/${index}`,
+              syncing: false,
+            })),
+          ],
+        },
+      ],
+    },
+  ];
+  const matching = searchMatchingOf(defaultSettings);
+
+  /** What a query matches when every document is read with no word list and no earlier query. */
+  function plainMatches(tree: BookmarkTreeNode[], text: string) {
+    const match = compileSearchQuery(parseSearchQuery(text).query, matching);
+    const found = new Map<string, unknown>();
+    for (const document of buildSearchDocuments(tree, {})) {
+      const result = match(document);
+      if (result) found.set(document.id, result.reasons);
+    }
+    return found;
+  }
+
+  // One object, as a page holds it: typing on reuses the last query's documents only for the same
+  // tree and the same tags and summaries.
+  const metadata = {};
+  const typed = (tree: BookmarkTreeNode[], text: string) =>
+    new Map(matchBookmarkTreeQuery(tree, text, metadata) ?? []);
+
+  it('finds what a fresh search of the whole library finds, at every letter', () => {
+    const tree = makeTree();
+    for (const word of ['react', 'rectt', 'redux notes 3', 'treadd', 'recipee 5', 'zzzzz']) {
+      for (let length = 1; length <= word.length; length++) {
+        const text = word.slice(0, length);
+        if (!text.trim() || text.endsWith(' ')) continue;
+        expect([...typed(tree, text)], text).toEqual([...plainMatches(tree, text)]);
+      }
+    }
+    // The case narrowing alone would miss: `rec` is in no `react`, `rect` is one edit from it.
+    typed(tree, 'rec');
+    const ids = [...typed(tree, 'rect').keys()];
+    expect(ids).toContain('100');
+    expect(typed(tree, 'rec').has('100')).toBe(false);
+  });
+
+  it('finds a near spelling in a bookmark added after the last search', () => {
+    const before = makeTree();
+    expect([...typed(before, 'reakt')]).toEqual([...plainMatches(before, 'reakt')]);
+    const after = makeTree(['Reakt handbook', 'Unrelated']);
+    const found = typed(after, 'reakt');
+    expect([...found]).toEqual([...plainMatches(after, 'reakt')]);
+    expect(found.has('900')).toBe(true);
+    expect(found.has('901')).toBe(false);
   });
 });

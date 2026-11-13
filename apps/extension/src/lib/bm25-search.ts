@@ -18,8 +18,12 @@ const searchConfig = readConfig(
     prefix_weight: boundedNumber({ integer: false }),
     fuzzy_weight: boundedNumber({ integer: false }),
     max_expansions: boundedNumber({ integer: true }),
+    fuzzy_word_list_after_documents: z.number().int().nonnegative(),
   }),
 );
+
+/** How many documents one search reads directly before it reads the library's word list. */
+export const FUZZY_WORD_LIST_AFTER_DOCUMENTS = searchConfig.fuzzy_word_list_after_documents;
 
 /** How typed words match and how BM25 scores (Settings > Saving & Search > Search Matching). */
 export type SearchMatching = {
