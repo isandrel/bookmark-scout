@@ -14,9 +14,9 @@
   },
   "dependencies": {
     "@bookmark-scout/config": "workspace:*",
-    "fumadocs-core": "16.17.9",
-    "fumadocs-mdx": "15.4.10",
-    "fumadocs-ui": "16.17.9",
+    "fumadocs-core": "16.18.0",
+    "fumadocs-mdx": "15.5.0",
+    "fumadocs-ui": "16.18.0",
     "lucide-react": "catalog:",
     "next": "catalog:",
     "react": "catalog:",
