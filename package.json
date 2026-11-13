@@ -10,8 +10,8 @@
       "packages/*"
     ],
     "catalog": {
-      "@biomejs/biome": "^2.6.4",
-      "@playwright/test": "^1.64.1",
+      "@biomejs/biome": "^2.6.6",
+      "@playwright/test": "^1.65.0",
       "@tailwindcss/postcss": "^4.3.4",
       "@types/bun": "1.4.4",
       "@types/node": "^26.6.6",
@@ -60,14 +60,14 @@
   "devDependencies": {
     "@biomejs/biome": "catalog:",
     "@bookmark-scout/config": "workspace:*",
-    "@nx/js": "^24.0.3",
+    "@nx/js": "^24.0.5",
     "@playwright/test": "catalog:",
     "@types/bun": "catalog:",
     "github-slugger": "2.0.0",
     "husky": "^9.1.7",
     "lint-staged": "^17.6.0",
     "minijinja-js": "3.0.5",
-    "nx": "^24.0.3",
+    "nx": "^24.0.5",
     "smol-toml": "catalog:",
     "typescript": "catalog:ts6"
   },
