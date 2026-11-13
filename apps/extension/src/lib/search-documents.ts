@@ -272,6 +272,18 @@ type CompiledText = {
    * named `CI/CD` is found too. The item matches when any of them names folders it is in.
    */
   folders: readonly (readonly string[])[];
+  /**
+   * How many edits a near spelling of this word may take (Fuzzy Matching): 0 for a word that only
+   * matches as typed (one with an operator, an exclusion, a phrase with a space, a short word, or
+   * any word while Fuzzy Matching is off or the search has none, as Smart Rules).
+   */
+  fuzzyBudget: number;
+  /**
+   * The ids of the documents with a word that near, from the library's words (`FuzzyWords`), read
+   * the first time a document does not hold the word as typed; absent when the search has no word
+   * list, so every document is read.
+   */
+  fuzzyDocuments?: ReadonlySet<string>;
 };
 /** A query's tree with each term worked out once: `all` and `any` as in `SearchNode`. */
 type CompiledNode =
@@ -280,21 +292,40 @@ type CompiledNode =
   | { kind: 'all'; nodes: CompiledNode[]; negate: boolean }
   | { kind: 'any'; branches: CompiledNode[]; negate: boolean };
 
-function compileNode(node: SearchNode): CompiledNode {
+function compileNode(node: SearchNode, matching: SearchMatching | undefined): CompiledNode {
   if (node.kind === 'all') {
-    return { kind: 'all', nodes: node.nodes.map(compileNode), negate: node.negate };
+    return {
+      kind: 'all',
+      nodes: node.nodes.map((inner) => compileNode(inner, matching)),
+      negate: node.negate,
+    };
   }
   if (node.kind === 'any') {
-    return { kind: 'any', branches: node.branches.map(compileNode), negate: node.negate };
+    return {
+      kind: 'any',
+      branches: node.branches.map((branch) => compileNode(branch, matching)),
+      negate: node.negate,
+    };
   }
-  return compileTerm(node);
+  return compileTerm(node, matching);
 }
 
-function compileTerm(term: SearchTerm): CompiledNode {
+/**
+ * How many edits a near spelling of a term may take: only a plain word, with no operator, no
+ * exclusion, and no space, matches near spellings, and only as Search Matching says.
+ */
+function fuzzyBudgetOf(term: SearchTerm, matching: SearchMatching | undefined): number {
+  if (!matching || term.kind !== 'text' || term.field !== undefined || term.negate) return 0;
+  const needle = term.value.toLowerCase();
+  return /\s/u.test(needle) ? 0 : fuzzyBudget(needle.length, matching);
+}
+
+function compileTerm(term: SearchTerm, matching: SearchMatching | undefined): CompiledNode {
   if (term.kind !== 'text') return { kind: 'condition', term };
   return {
     kind: 'text',
     term,
+    fuzzyBudget: fuzzyBudgetOf(term, matching),
     needle: term.value.toLowerCase(),
     contentNeedle: term.value.toLowerCase().replace(/\s+/gu, ' '),
     tagKey: tagKey(term.value),
@@ -364,6 +395,19 @@ function fuzzyWordRanges(
   const { text } = folded;
   let ranges: SearchMatchRange[] | undefined;
   let fewest = budget + 1;
+  forEachWord(text, (start, end) => {
+    const edits = editDistanceWithinRange(needle, text, start, end, budget);
+    if (edits > budget) return;
+    const last = end - 1;
+    ranges ??= [];
+    ranges.push([folded.starts?.[start] ?? start, folded.ends?.[last] ?? last + 1]);
+    fewest = Math.min(fewest, edits);
+  });
+  return { ranges: ranges ?? NO_RANGES, edits: fewest };
+}
+
+/** Calls `visit` with where each word of `text` starts and ends (`WORD_CHARACTER` runs). */
+function forEachWord(text: string, visit: (start: number, end: number) => void): void {
   let wordStart = -1;
   for (let at = 0; at <= text.length; ) {
     const codePoint = at < text.length ? (text.codePointAt(at) as number) : -1;
@@ -371,18 +415,109 @@ function fuzzyWordRanges(
     if (codePoint >= 0 && isWordCharacter(codePoint)) {
       if (wordStart < 0) wordStart = at;
     } else if (wordStart >= 0) {
-      const edits = editDistanceWithinRange(needle, text, wordStart, at, budget);
-      if (edits <= budget) {
-        const last = at - 1;
-        ranges ??= [];
-        ranges.push([folded.starts?.[wordStart] ?? wordStart, folded.ends?.[last] ?? last + 1]);
-        fewest = Math.min(fewest, edits);
-      }
+      visit(wordStart, at);
       wordStart = -1;
     }
     at += width;
   }
-  return { ranges: ranges ?? NO_RANGES, edits: fewest };
+}
+
+/** The fields Fuzzy Matching reads of a document, without case: where near spellings are looked for. */
+function fuzzyFieldsOf(document: SearchDocument): FoldedText[] {
+  const folded = foldedOf(document);
+  return [
+    folded.title,
+    ...folded.tags,
+    ...(document.folders.length > 0 ? [folded.folderPath] : []),
+    ...(folded.summary ? [folded.summary] : []),
+  ];
+}
+
+/** Whether two documents give Fuzzy Matching the same text to read (`fuzzyFieldsOf`). */
+function sameFuzzyText(left: SearchDocument, right: SearchDocument): boolean {
+  return (
+    left.title === right.title &&
+    left.summary === right.summary &&
+    left.folderPath === right.folderPath &&
+    left.folders.length > 0 === right.folders.length > 0 &&
+    left.tags.length === right.tags.length &&
+    left.tags.every((tag, index) => tag === right.tags[index])
+  );
+}
+
+/**
+ * Every word of a library's fuzzy fields with the ids of the documents that hold it. A search box
+ * keeps one, so a near spelling is compared with each different word once, not with each word of
+ * every bookmark, and a document with no near word is not read at all.
+ *
+ * It is kept up as documents are rebuilt (`addFuzzyWords`): only a document whose text changed is
+ * read again. The words a document had before stay, so the list may name a document that no
+ * longer holds a word, never miss one that does: matching still reads the document itself.
+ */
+export type FuzzyWords = {
+  holders: Map<string, string[]>;
+  /** The document last read for each id, to tell whether its text changed. */
+  read: Map<string, SearchDocument>;
+};
+
+export function createFuzzyWords(): FuzzyWords {
+  return { holders: new Map(), read: new Map() };
+}
+
+/** Adds a document's words to a word list, unless it holds this text for the document already. */
+export function addFuzzyWords(words: FuzzyWords, document: SearchDocument): void {
+  const before = words.read.get(document.id);
+  if (before === document) return;
+  words.read.set(document.id, document);
+  if (before && sameFuzzyText(before, document)) return;
+  for (const { text } of fuzzyFieldsOf(document)) {
+    forEachWord(text, (start, end) => {
+      const word = text.slice(start, end);
+      const holders = words.holders.get(word);
+      if (!holders) words.holders.set(word, [document.id]);
+      else if (holders[holders.length - 1] !== document.id) holders.push(document.id);
+    });
+  }
+}
+
+/**
+ * Brings a word list up to a library's documents, and makes it afresh once it remembers far more
+ * documents than the library has (`FUZZY_WORD_LIST_REBUILD_RATIO`), so removed bookmarks' words
+ * do not pile up.
+ */
+export function syncFuzzyWords(words: FuzzyWords, documents: readonly SearchDocument[]): void {
+  for (const document of documents) addFuzzyWords(words, document);
+  if (words.read.size <= documents.length * FUZZY_WORD_LIST_REBUILD_RATIO) return;
+  words.holders.clear();
+  words.read.clear();
+  for (const document of documents) addFuzzyWords(words, document);
+}
+
+/** The ids of the documents holding a word within `budget` edits of `needle`. */
+function documentsNear(words: FuzzyWords, needle: string, budget: number): Set<string> {
+  const near = new Set<string>();
+  for (const [word, holders] of words.holders) {
+    if (editDistanceWithin(needle, word, budget) > budget) continue;
+    for (const id of holders) near.add(id);
+  }
+  return near;
+}
+
+/**
+ * The ids of the documents a term can match by a near spelling, from the library's words; undefined for a
+ * term that only matches as typed. A search box that typed on adds these to the documents its
+ * last query found, since a longer word may be near a word the shorter one was not
+ * (`rec`, then `rect` for React).
+ */
+export function fuzzyDocumentsOf(
+  term: SearchNode,
+  matching: SearchMatching,
+  words: FuzzyWords,
+): ReadonlySet<string> | undefined {
+  if (term.kind === 'all' || term.kind === 'any') return undefined;
+  const budget = fuzzyBudgetOf(term, matching);
+  if (budget === 0 || term.kind !== 'text') return undefined;
+  return documentsNear(words, term.value.toLowerCase(), budget);
 }
 
 /**
@@ -391,14 +526,8 @@ function fuzzyWordRanges(
  * its field is and less for each edit. Addresses and page text are left out, where near spellings
  * are mostly noise.
  */
-function matchFuzzy(
-  document: SearchDocument,
-  compiled: CompiledText,
-  matching: SearchMatching,
-): TermMatch {
-  const { needle } = compiled;
-  const budget = /\s/u.test(needle) ? 0 : fuzzyBudget(needle.length, matching);
-  if (budget === 0) return NO_MATCH;
+function matchFuzzy(document: SearchDocument, compiled: CompiledText): TermMatch {
+  const { needle, fuzzyBudget: budget } = compiled;
   const folded = foldedOf(document);
   const reasons: SearchMatchReason[] = [];
   let score = 0;
@@ -574,12 +703,12 @@ function excludes(node: CompiledNode): boolean {
 function matchAll(
   document: SearchDocument,
   nodes: readonly CompiledNode[],
-  matching: SearchMatching | undefined,
+  words: LibraryWords,
 ): TermMatch {
   let score = 0;
   const reasons: SearchMatchReason[] = [];
   for (const node of nodes) {
-    const match = matchNode(document, node, matching);
+    const match = matchNode(document, node, words);
     if (!match.matched) return NO_MATCH;
     score += match.score;
     reasons.push(...match.reasons);
@@ -595,13 +724,13 @@ function matchAll(
 function matchAny(
   document: SearchDocument,
   branches: readonly CompiledNode[],
-  matching: SearchMatching | undefined,
+  words: LibraryWords,
 ): TermMatch {
   let matched = false;
   let score = 0;
   const reasons: SearchMatchReason[] = [];
   for (const branch of branches) {
-    const match = matchNode(document, branch, matching);
+    const match = matchNode(document, branch, words);
     if (!match.matched) continue;
     matched = true;
     score += match.score;
@@ -610,31 +739,37 @@ function matchAny(
   return matched ? { matched, score, reasons } : NO_MATCH;
 }
 
+/** The library's word list, read when a search first needs it; absent for a search without one. */
+type LibraryWords = (() => FuzzyWords) | undefined;
+
 /**
- * A node against a document, its exclusion applied: an excluded node never gives reasons. A plain
- * word found nowhere as typed may match a near spelling when `matching` allows it; a word
- * excluded with `-` never does, so it excludes only what it names.
+ * A plain word against a document: as typed, or, found nowhere as typed, by a near spelling when
+ * the term allows one (`fuzzyBudget`). With the library's words, a document none of whose words
+ * is near is told so without being read.
  */
-function matchNode(
-  document: SearchDocument,
-  node: CompiledNode,
-  matching: SearchMatching | undefined,
-): TermMatch {
-  const plain = (text: CompiledText) => {
-    const exact = matchText(document, text);
-    if (exact.matched || !matching || text.term.field !== undefined || text.term.negate) {
-      return exact;
-    }
-    return matchFuzzy(document, text, matching);
-  };
+function matchPlain(document: SearchDocument, text: CompiledText, words: LibraryWords): TermMatch {
+  const exact = matchText(document, text);
+  if (exact.matched || text.fuzzyBudget === 0) return exact;
+  if (words) {
+    text.fuzzyDocuments ??= documentsNear(words(), text.needle, text.fuzzyBudget);
+    if (!text.fuzzyDocuments.has(document.id)) return NO_MATCH;
+  }
+  return matchFuzzy(document, text);
+}
+
+/**
+ * A node against a document, its exclusion applied: an excluded node never gives reasons. A word
+ * excluded with `-` never matches a near spelling, so it excludes only what it names.
+ */
+function matchNode(document: SearchDocument, node: CompiledNode, words: LibraryWords): TermMatch {
   const match =
     node.kind === 'text'
-      ? plain(node)
+      ? matchPlain(document, node, words)
       : node.kind === 'condition'
         ? { matched: holds(node.term, document), score: 0, reasons: [] }
         : node.kind === 'all'
-          ? matchAll(document, node.nodes, matching)
-          : matchAny(document, node.branches, matching);
+          ? matchAll(document, node.nodes, words)
+          : matchAny(document, node.branches, words);
   if (!excludes(node)) return match;
   return match.matched ? NO_MATCH : EXCLUDED;
 }
@@ -642,15 +777,18 @@ function matchNode(
 /**
  * A query read once, to match documents one at a time: undefined for one that does not match.
  * With `matching` (a search box's or AI's search), plain words also match near spellings as
- * Search Matching says; without it (Smart Rules), only what is typed matches.
+ * Search Matching says; without it (Smart Rules), only what is typed matches. `words` gives the
+ * word list of the library the documents come from (`FuzzyWords`), which makes near spellings
+ * cheap on a large library; every document matched must be in it.
  */
 export function compileSearchQuery(
   query: SearchQuery,
   matching?: SearchMatching,
+  words?: () => FuzzyWords,
 ): (document: SearchDocument) => SearchResult | undefined {
-  const nodes = query.terms.map(compileNode);
+  const nodes = query.terms.map((node) => compileNode(node, matching));
   return (document) => {
-    const match = matchAll(document, nodes, matching);
+    const match = matchAll(document, nodes, words);
     if (!match.matched) return undefined;
     return { document, score: match.score, reasons: mergeReasons(match.reasons) };
   };

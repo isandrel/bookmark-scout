@@ -18,8 +18,12 @@ const searchConfig = readConfig(
     prefix_weight: boundedNumber({ integer: false }),
     fuzzy_weight: boundedNumber({ integer: false }),
     max_expansions: boundedNumber({ integer: true }),
+    fuzzy_word_list_rebuild_ratio: z.number().positive(),
   }),
 );
+
+/** A library's word list is made afresh once it remembers this many times its documents. */
+export const FUZZY_WORD_LIST_REBUILD_RATIO = searchConfig.fuzzy_word_list_rebuild_ratio;
 
 /** How typed words match and how BM25 scores (Settings > Saving & Search > Search Matching). */
 export type SearchMatching = {

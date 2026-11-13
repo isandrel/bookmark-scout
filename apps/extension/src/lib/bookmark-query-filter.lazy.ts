@@ -86,6 +86,24 @@ function documentsOf(
 }
 
 /**
+ * The words of the library searched with Fuzzy Matching (`FuzzyWords`), and the documents they
+ * are up to date with. One list for the page: a rebuilt library reads again only the documents
+ * whose text changed.
+ */
+const libraryWords: { documents?: readonly SearchDocument[]; words: FuzzyWords } = {
+  words: createFuzzyWords(),
+};
+
+/** The word list, brought up to `documents` unless it is already (`prepareSearchDocuments` does it ahead). */
+function wordsOf(documents: readonly SearchDocument[]): FuzzyWords {
+  if (libraryWords.documents !== documents) {
+    syncFuzzyWords(libraryWords.words, documents);
+    libraryWords.documents = documents;
+  }
+  return libraryWords.words;
+}
+
+/**
  * The last query searched and what it found per document, so a tree update (a save, a move)
  * matches only the documents it replaced. Documents are rebuilt when their bookmark, folder path,
  * or tags and summary change (`buildSearchDocuments`), so a kept one has the same result.
@@ -93,6 +111,8 @@ function documentsOf(
 let searchedQuery:
   | {
       text: string;
+      /** The library `match` reads its words from. */
+      documents: readonly SearchDocument[];
       match: (document: SearchDocument) => SearchResult | undefined;
       results: WeakMap<SearchDocument, SearchResult | null>;
     }
@@ -106,21 +126,31 @@ function currentMatching(): SearchMatching {
   return searchMatchingOf(getStoredValueStore(settingsValue).getSnapshot().value);
 }
 
-function resultOf(text: string, query: SearchQuery, document: SearchDocument) {
+/**
+ * The last query searched, set up for `text` over `documents`, to match documents with. Worked
+ * out once per search, never per document: it reads the settings.
+ */
+function searchFor(text: string, query: SearchQuery, documents: readonly SearchDocument[]) {
   const matching = currentMatching();
   // A changed setting matches afresh, as a changed query does.
   const key = `${text}\n${JSON.stringify(matching)}`;
+  const match = () => compileSearchQuery(query, matching, () => wordsOf(documents));
   if (searchedQuery?.text !== key) {
-    searchedQuery = {
-      text: key,
-      match: compileSearchQuery(query, matching),
-      results: new WeakMap(),
-    };
+    searchedQuery = { text: key, documents, match: match(), results: new WeakMap() };
+  } else if (searchedQuery.documents !== documents) {
+    // A changed library has other words; what a kept document matched is still true of it.
+    searchedQuery.documents = documents;
+    searchedQuery.match = match();
   }
-  let result = searchedQuery.results.get(document);
+  return searchedQuery;
+}
+
+/** What a search found in a document, read once per document. */
+function resultOf(searched: NonNullable<typeof searchedQuery>, document: SearchDocument) {
+  let result = searched.results.get(document);
   if (result === undefined) {
-    result = searchedQuery.match(document) ?? null;
-    searchedQuery.results.set(document, result);
+    result = searched.match(document) ?? null;
+    searched.results.set(document, result);
   }
   return result;
 }
@@ -152,13 +182,12 @@ function needsText(term: SearchNode): term is SearchTerm & { kind: 'text' } {
 }
 
 /**
- * Whether `next` can only match documents `previous` matched: typing on, it keeps every term of
- * `previous`, may lengthen the last one, and may add more (all terms must match). Terms in an OR
- * or a group are not compared, so typing on in one checks the whole library again.
+ * Whether `next` can only match, as typed, documents `previous` matched: typing on, it keeps
+ * every term of `previous`, may lengthen the last one, and may add more (all terms must match).
+ * Terms in an OR or a group are not compared, so typing on in one checks the whole library again.
+ * A lengthened word may also match near spellings the shorter one did not (`nearLengthened`).
  */
 function narrows(previous: SearchQuery, next: SearchQuery): boolean {
-  // A longer word may match a near spelling the shorter one did not (`rec`, then `rect` for React).
-  if (currentMatching().fuzzy) return false;
   const last = previous.terms.length - 1;
   if (last < 0 || next.terms.length < previous.terms.length) return false;
   return previous.terms.every((term, index) => {
@@ -169,6 +198,40 @@ function narrows(previous: SearchQuery, next: SearchQuery): boolean {
       ? following.value.toLowerCase().startsWith(term.value.toLowerCase())
       : following.value === term.value;
   });
+}
+
+/**
+ * The documents the lengthened last word of `next` may match by a near spelling (Fuzzy
+ * Matching), which `previous` need not have found (`rec`, then `rect` for React); undefined when
+ * the word was not lengthened or only matches as typed.
+ */
+function nearLengthened(
+  previous: SearchQuery,
+  next: SearchQuery,
+  documents: readonly SearchDocument[],
+): ReadonlySet<string> | undefined {
+  const last = previous.terms.length - 1;
+  const before = previous.terms[last];
+  const after = next.terms[last];
+  if (!before || !after || before.kind !== 'text' || after.kind !== 'text') return undefined;
+  if (after.value === before.value) return undefined;
+  const matching = currentMatching();
+  return matching.fuzzy ? fuzzyDocumentsOf(after, matching, wordsOf(documents)) : undefined;
+}
+
+/**
+ * The documents to check for `next` after `previous` over the same library: the ones `previous`
+ * found, with those a lengthened word may match by a near spelling, in the library's order.
+ */
+function narrowedCandidates(
+  previous: { query: SearchQuery; found: SearchDocument[] },
+  next: SearchQuery,
+  documents: readonly SearchDocument[],
+): readonly SearchDocument[] {
+  const near = nearLengthened(previous.query, next, documents);
+  if (!near || near.size === 0) return previous.found;
+  const found = new Set(previous.found);
+  return documents.filter((document) => found.has(document) || near.has(document.id));
 }
 
 /**
@@ -190,12 +253,13 @@ function matchQuery(
   const documents = documentsOf(nodes, metadata);
   const candidates =
     lastMatch?.documents === documents && narrows(lastMatch.query, query)
-      ? lastMatch.found
+      ? narrowedCandidates(lastMatch, query, documents)
       : documents;
   const results = new Map<string, SearchResult>();
   const found: SearchDocument[] = [];
+  const searched = searchFor(text, query, documents);
   for (const document of candidates) {
-    const result = resultOf(text, query, document);
+    const result = resultOf(searched, document);
     if (!result) continue;
     results.set(document.id, result);
     found.push(document);
@@ -215,10 +279,35 @@ let preparing:
     }
   | undefined;
 
+/** How far the word list has been brought up to a library ahead of a search that needs it. */
+let preparingWords: { documents: readonly SearchDocument[]; next: number } | undefined;
+
 /**
- * Builds and folds a library's search documents ahead of the first search, a slice at a time:
- * it stops when `shouldYield` says so and goes on from there on the next call. True once they
- * are ready, so the first keystroke only matches.
+ * Brings the word list up to `documents` a slice at a time, after the documents themselves are
+ * ready (the first keystroke needs those; only a word long enough for a near spelling needs
+ * these). True once done, or when Fuzzy Matching is off. A search that needs the words sooner
+ * reads the rest itself (`wordsOf`).
+ */
+function prepareWords(documents: readonly SearchDocument[], shouldYield: () => boolean): boolean {
+  if (libraryWords.documents === documents || !currentMatching().fuzzy) return true;
+  if (preparingWords?.documents !== documents) preparingWords = { documents, next: 0 };
+  while (!shouldYield()) {
+    const document = documents[preparingWords.next];
+    if (!document) {
+      preparingWords = undefined;
+      wordsOf(documents);
+      return true;
+    }
+    addFuzzyWords(libraryWords.words, document);
+    preparingWords.next += 1;
+  }
+  return false;
+}
+
+/**
+ * Builds and folds a library's search documents ahead of the first search, then its word list,
+ * a slice at a time: it stops when `shouldYield` says so and goes on from there on the next call.
+ * True once both are ready, so a keystroke only matches.
  */
 export function prepareSearchDocuments(
   nodes: readonly BookmarkTreeNode[],
@@ -231,7 +320,7 @@ export function prepareSearchDocuments(
     searchedLibrary.metadata === metadata &&
     searchedLibrary.pageTexts === pageTexts
   ) {
-    return true;
+    return prepareWords(searchedLibrary.documents, shouldYield);
   }
   if (
     preparing?.nodes !== nodes ||
@@ -251,7 +340,7 @@ export function prepareSearchDocuments(
     if (next.done) {
       searchedLibrary = { nodes, metadata, pageTexts, documents: preparing.documents };
       preparing = undefined;
-      return true;
+      return prepareWords(searchedLibrary.documents, shouldYield);
     }
     foldSearchDocument(next.value);
     preparing.documents.push(next.value);
