@@ -126,12 +126,11 @@ function currentMatching(): SearchMatching {
   return searchMatchingOf(getStoredValueStore(settingsValue).getSnapshot().value);
 }
 
-function resultOf(
-  text: string,
-  query: SearchQuery,
-  document: SearchDocument,
-  documents: readonly SearchDocument[],
-) {
+/**
+ * The last query searched, set up for `text` over `documents`, to match documents with. Worked
+ * out once per search, never per document: it reads the settings.
+ */
+function searchFor(text: string, query: SearchQuery, documents: readonly SearchDocument[]) {
   const matching = currentMatching();
   // A changed setting matches afresh, as a changed query does.
   const key = `${text}\n${JSON.stringify(matching)}`;
@@ -143,10 +142,15 @@ function resultOf(
     searchedQuery.documents = documents;
     searchedQuery.match = match();
   }
-  let result = searchedQuery.results.get(document);
+  return searchedQuery;
+}
+
+/** What a search found in a document, read once per document. */
+function resultOf(searched: NonNullable<typeof searchedQuery>, document: SearchDocument) {
+  let result = searched.results.get(document);
   if (result === undefined) {
-    result = searchedQuery.match(document) ?? null;
-    searchedQuery.results.set(document, result);
+    result = searched.match(document) ?? null;
+    searched.results.set(document, result);
   }
   return result;
 }
@@ -253,8 +257,9 @@ function matchQuery(
       : documents;
   const results = new Map<string, SearchResult>();
   const found: SearchDocument[] = [];
+  const searched = searchFor(text, query, documents);
   for (const document of candidates) {
-    const result = resultOf(text, query, document, documents);
+    const result = resultOf(searched, document);
     if (!result) continue;
     results.set(document.id, result);
     found.push(document);
