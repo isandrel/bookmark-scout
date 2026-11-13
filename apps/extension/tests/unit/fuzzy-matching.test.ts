@@ -8,7 +8,7 @@
  */
 import { describe, expect, it } from 'vitest';
 import { editDistanceWithin, editDistanceWithinRange, searchMatchingOf } from '@/lib/bm25-search';
-import { matchBookmarkTreeQuery } from '@/lib/bookmark-query-filter.lazy';
+import { matchBookmarkTreeQuery, prepareSearchDocuments } from '@/lib/bookmark-query-filter.lazy';
 import { buildSearchDocuments, compileSearchQuery } from '@/lib/search-documents';
 import { parseSearchQuery } from '@/lib/search-query';
 import { defaultSettings } from '@/lib/settings-schema';
@@ -211,6 +211,29 @@ describe('typing on in a search box with Fuzzy Matching', () => {
     expect([...found]).toEqual([...plainMatches(after, 'reakt')]);
     expect(found.has('900')).toBe(true);
     expect(found.has('901')).toBe(false);
+  });
+
+  it('prepares the documents and then the word list in slices, and a search in between is right', () => {
+    // A few documents per slice, as an idle callback with little time left gives.
+    const slice = (tree: BookmarkTreeNode[]) => {
+      let left = 30;
+      return prepareSearchDocuments(tree, metadata, () => left-- <= 0);
+    };
+    const tree = makeTree(['Reakt extra']);
+    let slices = 1;
+    while (!slice(tree) && slices < 200) slices += 1;
+    // More than the documents alone take: the word list has slices of its own.
+    expect(slices).toBeGreaterThan(Math.ceil(241 / 30));
+    expect(slice(tree)).toBe(true);
+    expect([...typed(tree, 'reakt')]).toEqual([...plainMatches(tree, 'reakt')]);
+    expect(typed(tree, 'reakt').has('900')).toBe(true);
+
+    // A search before the preparation is done reads what is left itself.
+    const early = makeTree(['Reakt early']);
+    slice(early);
+    slice(early);
+    expect([...typed(early, 'reakt')]).toEqual([...plainMatches(early, 'reakt')]);
+    expect(typed(early, 'reakt').has('900')).toBe(true);
   });
 
   it('follows a renamed bookmark and a library that shrank', () => {

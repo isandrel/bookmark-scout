@@ -276,15 +276,38 @@ let preparing:
       pageTexts: SearchPageTexts;
       pending: Iterator<SearchDocument>;
       documents: SearchDocument[];
-      /** Whether the documents' words are gathered with them: while Fuzzy Matching is on. */
-      words: boolean;
     }
   | undefined;
 
+/** How far the word list has been brought up to a library ahead of a search that needs it. */
+let preparingWords: { documents: readonly SearchDocument[]; next: number } | undefined;
+
 /**
- * Builds and folds a library's search documents ahead of the first search, a slice at a time:
- * it stops when `shouldYield` says so and goes on from there on the next call. True once they
- * are ready, so the first keystroke only matches.
+ * Brings the word list up to `documents` a slice at a time, after the documents themselves are
+ * ready (the first keystroke needs those; only a word long enough for a near spelling needs
+ * these). True once done, or when Fuzzy Matching is off. A search that needs the words sooner
+ * reads the rest itself (`wordsOf`).
+ */
+function prepareWords(documents: readonly SearchDocument[], shouldYield: () => boolean): boolean {
+  if (libraryWords.documents === documents || !currentMatching().fuzzy) return true;
+  if (preparingWords?.documents !== documents) preparingWords = { documents, next: 0 };
+  while (!shouldYield()) {
+    const document = documents[preparingWords.next];
+    if (!document) {
+      preparingWords = undefined;
+      wordsOf(documents);
+      return true;
+    }
+    addFuzzyWords(libraryWords.words, document);
+    preparingWords.next += 1;
+  }
+  return false;
+}
+
+/**
+ * Builds and folds a library's search documents ahead of the first search, then its word list,
+ * a slice at a time: it stops when `shouldYield` says so and goes on from there on the next call.
+ * True once both are ready, so a keystroke only matches.
  */
 export function prepareSearchDocuments(
   nodes: readonly BookmarkTreeNode[],
@@ -297,7 +320,7 @@ export function prepareSearchDocuments(
     searchedLibrary.metadata === metadata &&
     searchedLibrary.pageTexts === pageTexts
   ) {
-    return true;
+    return prepareWords(searchedLibrary.documents, shouldYield);
   }
   if (
     preparing?.nodes !== nodes ||
@@ -310,19 +333,16 @@ export function prepareSearchDocuments(
       pageTexts,
       pending: searchDocumentsOf(nodes, metadata, pageTexts),
       documents: [],
-      words: currentMatching().fuzzy,
     };
   }
   while (!shouldYield()) {
     const next = preparing.pending.next();
     if (next.done) {
       searchedLibrary = { nodes, metadata, pageTexts, documents: preparing.documents };
-      if (preparing.words) wordsOf(preparing.documents);
       preparing = undefined;
-      return true;
+      return prepareWords(searchedLibrary.documents, shouldYield);
     }
     foldSearchDocument(next.value);
-    if (preparing.words) addFuzzyWords(libraryWords.words, next.value);
     preparing.documents.push(next.value);
   }
   return false;
