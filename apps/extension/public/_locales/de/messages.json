@@ -6667,6 +6667,22 @@
         "message": "Diese gespeicherte Suche gibt es nicht mehr.",
         "description": "Approval: the saved search the agent names no longer exists"
     },
+    "askAI_toolListHistory": {
+        "message": "Lesezeichen-Verlauf aufgelistet",
+        "description": "Ask AI step: the agent listed the History of bookmark changes"
+    },
+    "askAI_toolGetHistoryChange": {
+        "message": "Änderung aus dem Verlauf gelesen",
+        "description": "Ask AI step: the agent read one change from the History"
+    },
+    "askAI_toolGetStatistics": {
+        "message": "Lesezeichen-Statistik gelesen",
+        "description": "Ask AI step: the agent read Bookmark Statistics"
+    },
+    "askAI_toolPackContext": {
+        "message": "Lesezeichen als KI-Kontext gepackt",
+        "description": "Ask AI step: the agent read the AI Context Packer's text"
+    },
     "askAI_allBookmarks": {
         "message": "alle Lesezeichen",
         "description": "Approval: where a tool runs when no folder is named"
@@ -7754,6 +7770,22 @@
     "actionName_deleteSearch": {
         "message": "Gespeicherte Suche löschen",
         "description": "Name of the action that deletes a saved search"
+    },
+    "actionName_listHistory": {
+        "message": "Lesezeichen-Verlauf auflisten",
+        "description": "Name of the action that lists the History of bookmark changes"
+    },
+    "actionName_getHistoryChange": {
+        "message": "Änderung aus dem Verlauf lesen",
+        "description": "Name of the action that reads one change from the History"
+    },
+    "actionName_getStatistics": {
+        "message": "Lesezeichen-Statistik lesen",
+        "description": "Name of the action that reads Bookmark Statistics"
+    },
+    "actionName_packContext": {
+        "message": "Lesezeichen als KI-Kontext packen",
+        "description": "Name of the action that gets the AI Context Packer's text"
     },
     "actionName_exportBookmarkFile": {
         "message": "Lesezeichen exportieren",

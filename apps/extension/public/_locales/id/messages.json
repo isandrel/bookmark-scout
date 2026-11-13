@@ -6401,6 +6401,22 @@
         "message": "Penelusuran tersimpan itu sudah tidak ada.",
         "description": "Approval: the saved search the agent names no longer exists"
     },
+    "askAI_toolListHistory": {
+        "message": "Mencantumkan histori bookmark",
+        "description": "Ask AI step: the agent listed the History of bookmark changes"
+    },
+    "askAI_toolGetHistoryChange": {
+        "message": "Membaca satu perubahan dari histori",
+        "description": "Ask AI step: the agent read one change from the History"
+    },
+    "askAI_toolGetStatistics": {
+        "message": "Membaca statistik bookmark",
+        "description": "Ask AI step: the agent read Bookmark Statistics"
+    },
+    "askAI_toolPackContext": {
+        "message": "Mengemas bookmark sebagai konteks AI",
+        "description": "Ask AI step: the agent read the AI Context Packer's text"
+    },
     "askAI_allBookmarks": {
         "message": "semua bookmark",
         "description": "Approval: where a tool runs when no folder is named"
@@ -7484,6 +7500,22 @@
     "actionName_deleteSearch": {
         "message": "Hapus penelusuran tersimpan",
         "description": "Name of the action that deletes a saved search"
+    },
+    "actionName_listHistory": {
+        "message": "Cantumkan histori bookmark",
+        "description": "Name of the action that lists the History of bookmark changes"
+    },
+    "actionName_getHistoryChange": {
+        "message": "Baca satu perubahan dari histori",
+        "description": "Name of the action that reads one change from the History"
+    },
+    "actionName_getStatistics": {
+        "message": "Baca statistik bookmark",
+        "description": "Name of the action that reads Bookmark Statistics"
+    },
+    "actionName_packContext": {
+        "message": "Kemas bookmark sebagai konteks AI",
+        "description": "Name of the action that gets the AI Context Packer's text"
     },
     "actionName_exportBookmarkFile": {
         "message": "Ekspor bookmark",

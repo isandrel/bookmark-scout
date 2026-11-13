@@ -6421,6 +6421,22 @@
         "message": "該已儲存的搜尋已不存在。",
         "description": "Approval: the saved search the agent names no longer exists"
     },
+    "askAI_toolListHistory": {
+        "message": "已列出書籤記錄",
+        "description": "Ask AI step: the agent listed the History of bookmark changes"
+    },
+    "askAI_toolGetHistoryChange": {
+        "message": "已讀取記錄中的一項變更",
+        "description": "Ask AI step: the agent read one change from the History"
+    },
+    "askAI_toolGetStatistics": {
+        "message": "已讀取書籤統計",
+        "description": "Ask AI step: the agent read Bookmark Statistics"
+    },
+    "askAI_toolPackContext": {
+        "message": "已將書籤打包為 AI 脈絡",
+        "description": "Ask AI step: the agent read the AI Context Packer's text"
+    },
     "askAI_allBookmarks": {
         "message": "所有書籤",
         "description": "Approval: where a tool runs when no folder is named"
@@ -7504,6 +7520,22 @@
     "actionName_deleteSearch": {
         "message": "刪除已儲存的搜尋",
         "description": "Name of the action that deletes a saved search"
+    },
+    "actionName_listHistory": {
+        "message": "列出書籤記錄",
+        "description": "Name of the action that lists the History of bookmark changes"
+    },
+    "actionName_getHistoryChange": {
+        "message": "讀取記錄中的一項變更",
+        "description": "Name of the action that reads one change from the History"
+    },
+    "actionName_getStatistics": {
+        "message": "讀取書籤統計",
+        "description": "Name of the action that reads Bookmark Statistics"
+    },
+    "actionName_packContext": {
+        "message": "將書籤打包為 AI 脈絡",
+        "description": "Name of the action that gets the AI Context Packer's text"
     },
     "actionName_exportBookmarkFile": {
         "message": "匯出書籤",

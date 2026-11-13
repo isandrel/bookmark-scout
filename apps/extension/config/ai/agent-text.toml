@@ -136,6 +136,28 @@ agent_description = "Rename one of the saved searches, by its id from listSavedS
 agent_description = "Delete one of the saved searches, by its id from listSavedSearches. Bookmarks are not touched."
 deleted = "The saved search that was deleted"
 
+[history_view]
+what = "What the change did, in the user's language"
+summary = "How many items it changed, or what a data change covered"
+by = "Who made it: the user, Ask AI, a local agent, the extension itself, or unknown (made outside Bookmark Scout)"
+agent = "The name a local agent gave itself; not verified"
+
+[list_history]
+agent_description = "List the History of bookmark changes on this device, newest first: what each change did, when, who made it, and its state. Read one change's items with getHistoryChange. The History is a record; it changes nothing."
+
+[get_history_change]
+agent_description = "Read one change from the History: each bookmark or folder it added, removed, edited, or moved, with what it was before and after. To revert one of your own changes, use undoChange."
+id = "The change id from listHistory"
+before = "The item before the change: its title, address, and folder"
+after = "The item after the change"
+omitted = "Items the record left out because the change was very large"
+
+[get_statistics]
+agent_description = "Count the library, or a folder: bookmarks, folders, the deepest folder level, and, as the user's Statistics settings allow, the top sites, the largest folders, protocols, duplicates, and bookmarks per level."
+
+[pack_context]
+agent_description = "Get the AI Context Packer's text for all bookmarks or a folder: the bookmarks as Markdown or XML, with the fields and limits the user chose in Settings. Use it for an overview in one call; a large library may be cut to the user's item limit."
+
 [export_bookmarks]
 agent_description = "Export all bookmarks or a folder as text, in one of the export formats (html, json, markdown, csv), with the user's export settings. JSON keeps tags and summaries. A large library may be too large to send; export a folder then."
 format = "The export format"

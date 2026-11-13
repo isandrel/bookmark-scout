@@ -6667,6 +6667,22 @@
         "message": "That saved search no longer exists.",
         "description": "Approval: the saved search the agent names no longer exists"
     },
+    "askAI_toolListHistory": {
+        "message": "Listed the bookmark history",
+        "description": "Ask AI step: the agent listed the History of bookmark changes"
+    },
+    "askAI_toolGetHistoryChange": {
+        "message": "Read a change from the history",
+        "description": "Ask AI step: the agent read one change from the History"
+    },
+    "askAI_toolGetStatistics": {
+        "message": "Read the bookmark statistics",
+        "description": "Ask AI step: the agent read Bookmark Statistics"
+    },
+    "askAI_toolPackContext": {
+        "message": "Packed bookmarks as AI context",
+        "description": "Ask AI step: the agent read the AI Context Packer's text"
+    },
     "askAI_allBookmarks": {
         "message": "all bookmarks",
         "description": "Approval: where a tool runs when no folder is named"
@@ -7754,6 +7770,22 @@
     "actionName_deleteSearch": {
         "message": "Delete a saved search",
         "description": "Name of the action that deletes a saved search"
+    },
+    "actionName_listHistory": {
+        "message": "List the bookmark history",
+        "description": "Name of the action that lists the History of bookmark changes"
+    },
+    "actionName_getHistoryChange": {
+        "message": "Read a change from the history",
+        "description": "Name of the action that reads one change from the History"
+    },
+    "actionName_getStatistics": {
+        "message": "Read bookmark statistics",
+        "description": "Name of the action that reads Bookmark Statistics"
+    },
+    "actionName_packContext": {
+        "message": "Pack bookmarks as AI context",
+        "description": "Name of the action that gets the AI Context Packer's text"
     },
     "actionName_exportBookmarkFile": {
         "message": "Export bookmarks",
