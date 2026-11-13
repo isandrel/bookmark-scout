@@ -226,11 +226,27 @@ export type ActionApprovalPreview<Input> = {
     /** What the approval says when it is gone; it cannot be approved then. */
     missingKey: MessageKey;
   };
-  /** The lines for a call that names no stored record. */
-  lines?: (input: Partial<Input>) => string[];
+  /**
+   * The lines for a call that names no stored record. A folder the input names goes through
+   * `folderName`, so the user reads its path, never a reference such as `f:13`.
+   */
+  lines?: (input: Partial<Input>, folderName?: ApprovalFolderName) => string[];
   /** An address shown in full under the lines, since a title can hide it. */
   url?: (input: Partial<Input>) => string | undefined;
 };
+
+/** A folder an input names by reference or path, as its path now; the input's own text otherwise. */
+export type ApprovalFolderName = (spec: string) => string;
+
+/** Names folders for an approval from the library as it is now (`ActionApprovalPreview.lines`). */
+export function approvalFolderName(library: ActionLibrary): ApprovalFolderName {
+  return (spec) => {
+    const folder = resolveActionFolder(library, spec);
+    // A call naming a folder that is gone is refused before it is asked about (`checkActionCall`);
+    // one deleted since shows as the agent named it.
+    return isActionError(folder) ? spec : folder.path;
+  };
+}
 
 /**
  * One bookmark action. Every surface takes what it needs from the same entry: a call for agents
