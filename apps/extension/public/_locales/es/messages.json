@@ -6667,6 +6667,22 @@
         "message": "Esa búsqueda guardada ya no existe.",
         "description": "Approval: the saved search the agent names no longer exists"
     },
+    "askAI_toolListHistory": {
+        "message": "Listó el historial de marcadores",
+        "description": "Ask AI step: the agent listed the History of bookmark changes"
+    },
+    "askAI_toolGetHistoryChange": {
+        "message": "Leyó un cambio del historial",
+        "description": "Ask AI step: the agent read one change from the History"
+    },
+    "askAI_toolGetStatistics": {
+        "message": "Leyó las estadísticas de marcadores",
+        "description": "Ask AI step: the agent read Bookmark Statistics"
+    },
+    "askAI_toolPackContext": {
+        "message": "Empaquetó marcadores como contexto para IA",
+        "description": "Ask AI step: the agent read the AI Context Packer's text"
+    },
     "askAI_allBookmarks": {
         "message": "todos los marcadores",
         "description": "Approval: where a tool runs when no folder is named"
@@ -7754,6 +7770,22 @@
     "actionName_deleteSearch": {
         "message": "Eliminar una búsqueda guardada",
         "description": "Name of the action that deletes a saved search"
+    },
+    "actionName_listHistory": {
+        "message": "Listar el historial de marcadores",
+        "description": "Name of the action that lists the History of bookmark changes"
+    },
+    "actionName_getHistoryChange": {
+        "message": "Leer un cambio del historial",
+        "description": "Name of the action that reads one change from the History"
+    },
+    "actionName_getStatistics": {
+        "message": "Leer las estadísticas de marcadores",
+        "description": "Name of the action that reads Bookmark Statistics"
+    },
+    "actionName_packContext": {
+        "message": "Empaquetar marcadores como contexto para IA",
+        "description": "Name of the action that gets the AI Context Packer's text"
     },
     "actionName_exportBookmarkFile": {
         "message": "Exportar marcadores",

@@ -139,6 +139,7 @@ export const ACTIONS = {
   ...RULE_ACTIONS,
   ...DATA_ACTIONS,
   ...SAVED_SEARCH_ACTIONS,
+  ...INSIGHT_ACTIONS,
   runBatch,
 };
 

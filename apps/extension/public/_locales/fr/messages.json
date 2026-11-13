@@ -6667,6 +6667,22 @@
         "message": "Cette recherche enregistrée n’existe plus.",
         "description": "Approval: the saved search the agent names no longer exists"
     },
+    "askAI_toolListHistory": {
+        "message": "Historique des favoris listé",
+        "description": "Ask AI step: the agent listed the History of bookmark changes"
+    },
+    "askAI_toolGetHistoryChange": {
+        "message": "Modification de l’historique lue",
+        "description": "Ask AI step: the agent read one change from the History"
+    },
+    "askAI_toolGetStatistics": {
+        "message": "Statistiques des favoris lues",
+        "description": "Ask AI step: the agent read Bookmark Statistics"
+    },
+    "askAI_toolPackContext": {
+        "message": "Favoris préparés comme contexte IA",
+        "description": "Ask AI step: the agent read the AI Context Packer's text"
+    },
     "askAI_allBookmarks": {
         "message": "tous les favoris",
         "description": "Approval: where a tool runs when no folder is named"
@@ -7754,6 +7770,22 @@
     "actionName_deleteSearch": {
         "message": "Supprimer une recherche enregistrée",
         "description": "Name of the action that deletes a saved search"
+    },
+    "actionName_listHistory": {
+        "message": "Lister l’historique des favoris",
+        "description": "Name of the action that lists the History of bookmark changes"
+    },
+    "actionName_getHistoryChange": {
+        "message": "Lire une modification de l’historique",
+        "description": "Name of the action that reads one change from the History"
+    },
+    "actionName_getStatistics": {
+        "message": "Lire les statistiques des favoris",
+        "description": "Name of the action that reads Bookmark Statistics"
+    },
+    "actionName_packContext": {
+        "message": "Préparer les favoris comme contexte IA",
+        "description": "Name of the action that gets the AI Context Packer's text"
     },
     "actionName_exportBookmarkFile": {
         "message": "Exporter des favoris",

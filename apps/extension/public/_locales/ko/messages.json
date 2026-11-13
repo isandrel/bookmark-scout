@@ -6659,6 +6659,22 @@
         "message": "해당 저장된 검색이 더 이상 없습니다.",
         "description": "Approval: the saved search the agent names no longer exists"
     },
+    "askAI_toolListHistory": {
+        "message": "북마크 기록을 나열했습니다",
+        "description": "Ask AI step: the agent listed the History of bookmark changes"
+    },
+    "askAI_toolGetHistoryChange": {
+        "message": "기록의 변경 내용을 읽었습니다",
+        "description": "Ask AI step: the agent read one change from the History"
+    },
+    "askAI_toolGetStatistics": {
+        "message": "북마크 통계를 읽었습니다",
+        "description": "Ask AI step: the agent read Bookmark Statistics"
+    },
+    "askAI_toolPackContext": {
+        "message": "북마크를 AI 컨텍스트로 묶었습니다",
+        "description": "Ask AI step: the agent read the AI Context Packer's text"
+    },
     "askAI_allBookmarks": {
         "message": "모든 북마크",
         "description": "Approval: where a tool runs when no folder is named"
@@ -7742,6 +7758,22 @@
     "actionName_deleteSearch": {
         "message": "저장된 검색 삭제",
         "description": "Name of the action that deletes a saved search"
+    },
+    "actionName_listHistory": {
+        "message": "북마크 기록 나열",
+        "description": "Name of the action that lists the History of bookmark changes"
+    },
+    "actionName_getHistoryChange": {
+        "message": "기록의 변경 내용 읽기",
+        "description": "Name of the action that reads one change from the History"
+    },
+    "actionName_getStatistics": {
+        "message": "북마크 통계 읽기",
+        "description": "Name of the action that reads Bookmark Statistics"
+    },
+    "actionName_packContext": {
+        "message": "북마크를 AI 컨텍스트로 묶기",
+        "description": "Name of the action that gets the AI Context Packer's text"
     },
     "actionName_exportBookmarkFile": {
         "message": "북마크 내보내기",
