@@ -12,7 +12,7 @@
  * Like every `*.lazy.ts` file it is left out of auto-imports; import it only with `import()`.
  */
 import { BACKGROUND_CONTEXT, type Context } from '@earendil-works/chord/context';
-import { createModels, type Message, type TSchema } from '@earendil-works/pi-ai';
+import { createModels, type Message } from '@earendil-works/pi-ai';
 import {
   type Conversation,
   type ConversationView,
@@ -231,7 +231,7 @@ export class AskAIDurable {
           return defineTool({
             name,
             description: agent?.description ?? name,
-            parameters: (input ? z.toJSONSchema(input) : { type: 'object' }) as TSchema,
+            parameters: (input ? z.toJSONSchema(input) : { type: 'object' }) as object,
             // As the AI SDK did: the action's own schema drops fields a model guessed, so one bad
             // item fails on its own in `execute` instead of failing the whole call.
             prepareArguments: (args: unknown) => {
@@ -314,7 +314,7 @@ export class AskAIDurable {
                   properties: { name: { type: 'string' }, resource: { type: 'string' } },
                   required: ['name'],
                   additionalProperties: false,
-                } as unknown as TSchema,
+                } as object,
                 replay: 'safe',
                 execute: async (args) => {
                   const skills = await deps.skills?.();

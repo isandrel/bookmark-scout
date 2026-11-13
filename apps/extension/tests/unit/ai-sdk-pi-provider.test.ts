@@ -1,10 +1,5 @@
 import { BACKGROUND_CONTEXT } from '@earendil-works/chord/context';
-import {
-  type AssistantMessageEvent,
-  createModels,
-  normalizeContext,
-  Type,
-} from '@earendil-works/pi-ai';
+import { type AssistantMessageEvent, createModels, normalizeContext } from '@earendil-works/pi-ai';
 import {
   createRegistry,
   defineExtension,
@@ -19,6 +14,13 @@ import { createAISdkPiProvider, toAISdkRequest } from '@/services/ai-sdk-pi-prov
 import { finishPart, scriptedStreamModel, textParts } from './scripted-stream-model';
 
 const piModel = { id: 'm', contextWindow: 32_000, maxTokens: 1_000 };
+
+/** The JSON Schema of a tool taking one number, as pi-ai takes tool parameters. */
+const numberSchema = (name: string) => ({
+  type: 'object',
+  properties: { [name]: { type: 'number' } },
+  required: [name],
+});
 
 async function collect(answers: unknown[][], context = 'Hello') {
   const { model, calls } = scriptedStreamModel(answers);
@@ -126,7 +128,7 @@ describe('AI SDK models as a pi-ai provider', () => {
           {
             name: 'listFolders',
             description: 'List folders',
-            parameters: Type.Object({ depth: Type.Number() }),
+            parameters: numberSchema('depth'),
           },
         ],
         messages: [
@@ -202,8 +204,10 @@ describe('AI SDK models as a pi-ai provider', () => {
     const count = defineTool({
       name: 'count',
       description: 'Count to n',
-      parameters: Type.Object({ n: Type.Number() }),
-      execute: async (args) => ({ output: [{ type: 'text', text: `1..${args.n}` }] }),
+      parameters: numberSchema('n'),
+      execute: async (args) => ({
+        output: [{ type: 'text', text: `1..${(args as { n: number }).n}` }],
+      }),
     });
     const registry = createRegistry();
     registry.install(defineExtension({ name: 'counting', tools: [count] }));

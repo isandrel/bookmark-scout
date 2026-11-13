@@ -183,7 +183,10 @@ function openChat(chatId: string, ephemeral: boolean): Promise<OpenChat> {
       },
     };
     const target = open;
-    watch.start(async (value) => {
+    watch.start(async (call) => {
+      // A failure the source recovers from: the view keeps the last value until the next one.
+      if (call.kind === 'failed') return;
+      const { value } = call;
       const wasRunning = isRunning(target);
       target.view = toView(chatId, value);
       for (const port of target.ports) port.postMessage(target.view);
