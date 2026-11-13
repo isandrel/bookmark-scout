@@ -16,10 +16,39 @@ type ApprovalProps = {
   onRespond: (approved: boolean) => void;
 };
 
-/** What a call that names no stored record would do, from its unchecked input. */
-function directLines(toolName: string, input: Record<string, unknown>): string[] {
+/**
+ * What a call that names no stored record would do, from its unchecked input, with the folders
+ * it names shown by their path now.
+ */
+function directLines(
+  toolName: string,
+  input: Record<string, unknown>,
+  folderName: ApprovalFolderName,
+): string[] {
   const lines = actionApprovalPreview(toolName)?.lines;
-  return lines ? lines(input) : [describeActionCall(toolName, input) ?? toolName];
+  return lines ? lines(input, folderName) : [describeActionCall(toolName, input) ?? toolName];
+}
+
+/**
+ * Names the folders a request refers to, from the bookmarks as they are now; undefined while they
+ * are read. An agent may name a folder by reference (`f:13`), which tells the user nothing.
+ */
+function useFolderNames(): ApprovalFolderName | undefined {
+  const [folderName, setFolderName] = useState<ApprovalFolderName>();
+  useEffect(() => {
+    let active = true;
+    void loadActionLibrary()
+      .then(approvalFolderName)
+      // Unreadable bookmarks: the request still shows, as the agent worded it.
+      .catch((): ApprovalFolderName => String)
+      .then((name) => {
+        if (active) setFolderName(() => name);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+  return folderName;
 }
 
 /**
@@ -54,9 +83,17 @@ export function ActionApprovalRequest({ toolName, input, reason, onRespond }: Ap
   const headingId = useId();
   const args = isPlainObject(input) ? input : {};
   const stored = useStoredChangeLines(toolName, args);
+  const folderName = useFolderNames();
   const [answered, setAnswered] = useState(false);
 
-  const lines = stored ? (stored.loaded?.lines ?? []) : directLines(toolName, args);
+  // Nothing is approved before it reads as it will be done: a stored record once loaded, a
+  // direct call once its folders have names.
+  const loading = stored ? stored.loaded === undefined : !folderName;
+  const lines = stored
+    ? (stored.loaded?.lines ?? [])
+    : folderName
+      ? directLines(toolName, args, folderName)
+      : [];
   const summary = stored?.loaded?.summary;
   const missing = stored?.loaded === null;
   const url = actionApprovalPreview(toolName)?.url?.(args) ?? '';
@@ -96,11 +133,7 @@ export function ActionApprovalRequest({ toolName, input, reason, onRespond }: Ap
         </p>
       )}
       <div className="flex gap-2">
-        <Button
-          size="sm"
-          disabled={answered || missing || (stored !== undefined && stored.loaded === undefined)}
-          onClick={() => respond(true)}
-        >
+        <Button size="sm" disabled={answered || missing || loading} onClick={() => respond(true)}>
           {t('askAI_approve')}
         </Button>
         <Button size="sm" variant="outline" disabled={answered} onClick={() => respond(false)}>

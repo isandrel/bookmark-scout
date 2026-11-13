@@ -210,7 +210,9 @@ test('a local agent saves a page only after the user approves it in the approval
   const approvals = await opened;
   const request = approvals.getByTestId('agent-approval');
   await expect(request).toContainText('From “E2E agent” (the name the agent gave)');
-  await expect(request).toContainText('Save “Approved page” to');
+  // The agent named the folder by reference; the user reads its path.
+  await expect(request).toContainText(/Save “Approved page” to .*Agent Inbox/);
+  await expect(request).not.toContainText(`f:${folderId}`);
   // Nothing is saved before the answer.
   expect(await childTitles(extensionWorker, folderId)).toEqual([]);
   await answer(approvals, 'Approve');

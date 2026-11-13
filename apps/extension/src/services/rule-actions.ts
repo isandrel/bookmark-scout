@@ -132,10 +132,10 @@ const saveRule = defineAction({
   output: ruleOutput,
   describe: (input) => t('askAI_toolSaveRule', input.name ?? ''),
   approvalPreview: {
-    lines: (input) => [
+    lines: (input, folderName = String) => [
       t('askAI_approvalRule', [input.name ?? '', input.query ?? '']),
       ...(input.addTags?.length ? [t('askAI_approvalRuleTags', input.addTags.join(', '))] : []),
-      ...(input.moveTo ? [t('askAI_approvalRuleMove', input.moveTo)] : []),
+      ...(input.moveTo ? [t('askAI_approvalRuleMove', folderName(input.moveTo))] : []),
     ],
   },
   async precheck(input, context) {
