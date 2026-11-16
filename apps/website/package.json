@@ -14,7 +14,7 @@
   "dependencies": {
     "@bookmark-scout/config": "workspace:*",
     "next": "catalog:",
-    "next-intl": "^4.14.9",
+    "next-intl": "^4.15.1",
     "react": "catalog:",
     "react-dom": "catalog:",
     "smol-toml": "catalog:"
