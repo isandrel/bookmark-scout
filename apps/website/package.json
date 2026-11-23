@@ -14,7 +14,7 @@
   "dependencies": {
     "@bookmark-scout/config": "workspace:*",
     "next": "catalog:",
-    "next-intl": "^4.15.1",
+    "next-intl": "^4.15.3",
     "react": "catalog:",
     "react-dom": "catalog:",
     "smol-toml": "catalog:"
@@ -27,7 +27,7 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "eslint": "^10.14.0",
+    "eslint": "^10.15.0",
     "eslint-config-next": "16.4.6",
     "sharp": "0.35.5",
     "tailwindcss": "catalog:",
